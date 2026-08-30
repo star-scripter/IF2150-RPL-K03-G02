@@ -9,21 +9,21 @@ TOPIC BRAINSTORMING
 
 ## _Nama Perangkat Lunak_
 
-### Untuk: _[Nama Asisten]_
+### Untuk: Aurelia Jennifer Gunawan
 
 Dipersiapkan oleh:
 | Informasi | Keterangan |
 | --- | --- |
-| Kelas | _\[Kelas\]_ |
-| Kelompok | _\[Nomor Kelompok\]_ |
+| Kelas | _K-03_ |
+| Kelompok | _G-02_ |
 
-| NIM       | Nama               |
-| --------- | ------------------ |
-| _[NIM 1]_ | _[Nama Anggota 1]_ |
-| _[NIM 2]_ | _[Nama Anggota 2]_ |
-| _[NIM 3]_ | _[Nama Anggota 3]_ |
-| _[NIM 4]_ | _[Nama Anggota 4]_ |
-| _[NIM 5]_ | _[Nama Anggota 5]_ |
+| NIM      | Nama                      |
+| -------- | ------------------------- |
+| 13525027 | Faishal Ahmad Nurdin      |
+| 13525042 | Justin William            |
+| 13525060 | M. Aqsha Bagus R.I.B.     |
+| 13525087 | Jovan Nathanael           |
+| 13525147 | Muhammad Dhafin Al Khairy |
 
 ---
 
@@ -53,7 +53,17 @@ Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapa
 
 ## 2.2 Asumsi dan Batasan
 
-Definisikan secara tegas asumsi (baik teknis maupun dari sisi pengguna) yang menjadi dasar pengembangan. Tuliskan batasan seperti regulasi/hukum, keterbatasan sumber daya, dan ruang lingkup solusi.
+### 2.2.1 Asumsi
+
+- Pengguna memiliki HP, akses ke internet, dan memiliki pengetahuan dasar mengenai teknologi (tidak gagap teknologi) sehingga dapat mengakses software serta menggunakan fitur-fitur didalamnya.
+- Pengguna bersedia ikut serta dalam kegiatan membersihkan sampah dan juga melaporkannya dengan jujur.
+- Gamifikasi dan sistem bounty dapat meningkatkan motivasi pengguna dalam membersihkan sampah.
+
+### 2.2.2 Batasan
+
+- Software hanya berfokus pada sampah-sampah domestik yang dapat ditangani dengan keikutsertaan masyarakat. Pelanggaran/pencemaran pada ekosistem perairan lain seperti illegal fishing, dan sebagainya tidak termasuk ruang lingkup sistem.
+- Verifikasi pada media bukti ditinjau oleh operatornya langsung, sehingga bisa mengurangi efisiensi.
+- Waktu kerja yang terbatas sehingga kemungkinan hanya fitur utama yang akan ditambahkan.
 
 ---
 

@@ -33,10 +33,11 @@
 **Periode:** [Tanggal Mulai] - [Tanggal Selesai]
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
-| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- | --- |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 30-08-2026   | M. Aqsha     | Menulis deskripsi perangkat lunak | 1 jam        | Done, open to changes | Beberapa poin masih harus diperjelas dengan diskusi kelompok |
+| 30-08-2026   | Justin William | Menulis asumsi dan batasan perangkat lunak | 30-45 menit | Done, open to changes | Beberapa poin masih harus diperjelas dengan diskusi kelompok |
 | _05-05-2026_ | _John Doe_   | _Mendesain diagram kelas_         | _3_          | _Done_                | _-_                                                          |
-|              |              |                                   |              |                       |                                                              |     |
+|              |              |                                   |              |                       |                                                              |
 
 **Catatan/Evaluasi Milestone 1:**
 

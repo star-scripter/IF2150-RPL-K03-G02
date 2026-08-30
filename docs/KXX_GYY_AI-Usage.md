@@ -36,17 +36,17 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 ### Milestone 1
 
 | Tool AI     | Tujuan Penggunaan              | Contoh Prompt Utama                                                                                  | Modifikasi & Validasi Manusia                                                                                                                   |
-| :---------- | :----------------------------- | :--------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| :---------- | :----------------------------- | :--------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
 | _[Nama AI]_ | _[Sertakan Tujuan Penggunaan]_ | _[Tuliskan Prompt Utama]_                                                                            | _[Tuliskan Keputusan Hasil Validasi]_                                                                                                           |
 | _Gemini_    | _Mengecek relasi antar class_  | _"Apakah relasi antara class User dan Order dalam UML ini seharusnya composition atau aggregation?"_ | _AI menyarankan composition, tapi setelah dicek kembali ke requirement, kami menggunakan aggregation karena Order masih bisa eksis di history._ |
-|             |                                |                                                                                                      |                                                                                                                                                 |     |
+|             |                                |                                                                                                      |                                                                                                                                                 |   
 
 ### Milestone 2
 
-| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |
-| :------ | :---------------- | :------------------ | :---------------------------- | --- |
-|         |                   |                     |                               |     |
-|         |                   |                     |                               |     |
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
+| :------ | :---------------- | :------------------ | :---------------------------- |
+|         |                   |                     |                               | 
+|         |                   |                     |                               | 
 
 ---
 
