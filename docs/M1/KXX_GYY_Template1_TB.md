@@ -34,7 +34,9 @@ Dipersiapkan oleh:
 
 ## 1.1 Latar Belakang Masalah
 
-Tuliskan deskripsi permasalahan yang kalian pilih secara naratif dan spesifik. Tambahkan keterkaitan permasalahan tersebut dengan Tujuan Pembangunan Berkelanjutan (SDGs) yang telah disepakati. Dukung argumen kalian dengan data yang kredibel, serta jelaskan urgensi mengapa masalah ini perlu dan layak untuk segera diselesaikan.
+Permasalahan utama yang diangkat dalam proyek perangkat lunak ini adalah masih tingginya tingkat pembuangan dan kebocoran sampah ke ekosistem perairan seperti laut dan sungai, serta belum optimalnya media pelaporan maupun insentif bagi masyarakat pinggir perairan untuk berpartisipasi aktif dalam penanggulangannya.
+
+Indonesia sedang menghadapi krisis polusi laut yang sangat dahsyat. Berdasarkan laporan dari World Bank, Indonesia menghasilkan sekitar 7,8 juta ton sampah plastik setiap tahunnya, dan diperkirakan 346.000 ton di antaranya bocor dan mencemari ekosistem laut.
 
 ## 1.2 Analisis Kondisi Saat Ini
 
@@ -93,4 +95,3 @@ Buatlah _Activity Diagram_ atau _Swimlane Diagram_ yang menunjukkan alur kerja p
 # Referensi
 
 - Diagram UML: https://www.drawio.com/, https://staruml.io/
-

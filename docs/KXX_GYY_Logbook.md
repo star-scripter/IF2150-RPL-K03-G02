@@ -2,12 +2,12 @@
 
 ## Tugas Besar IF2150 - Rekayasa Perangkat Lunak
 
-| Informasi            | Keterangan            |
-| -------------------- | --------------------- |
-| Kelas                | _K-03_                |
-| Nomor Kelompok       | _G-02_                |
-| Nama Kelompok        | _DapinKoding_         |
-| Nama Perangkat Lunak | _Sedang Didiskusikan_ |
+| Informasi            | Keterangan    |
+| -------------------- | ------------- |
+| Kelas                | _K-03_        |
+| Nomor Kelompok       | _G-02_        |
+| Nama Kelompok        | _DapinKoding_ |
+| Nama Perangkat Lunak | _[Nama P/L]_  |
 
 **Anggota Kelompok:**
 
@@ -45,4 +45,3 @@
 ---
 
 `Gunakan format penulisan Logbook yang sama untuk setiap Milestone dan pastikan pembuatan Daftar Isi juga sudah sesuai sebelum Logbook dikumpulkan. `
-
