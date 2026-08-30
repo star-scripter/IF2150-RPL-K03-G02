@@ -65,8 +65,9 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 
 | Aktor   | Deskripsi                                                                                                                                                                                                                         |
 | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _Kasir_ | _Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memproses transaksi harian dan melayani pembayaran pelanggan. Karakteristik dari pengguna ini adalah mengutamakan kecepatan dan keakuratan saat bertransaksi._ |
-| ...     | ...                                                                                                                                                                                                                               |
+| Operator | _Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memvalidasi laporan dari ReportIt dan CleanIt. Karakteristik dari pengguna ini adalah mengutamakan kecepatan untuk memverifikasi laporan dalam jumlah yang banyak._ |
+| Masyarakat (Pelapor) | _Pengguna ini bertindak sebagai pihak yang melaporkan pencemaran di ekosistem laut dan sungai. Karakteristik dari pengguna ini adalah mengutamakan kemudahan pelaporan._ |
+| Masyarakat (Relawan) | _Pengguna ini bertindak sebagai pihak yang beraksi di lokasi pencemaran untuk membersihkan sampah tersebut. Karakteristik dari pengguna ini adalah mengutamakan kemudahan melihat lokasi dan membuat laporan._ |
 
 ## 3.2 Kebutuhan Pengguna Awal
 
