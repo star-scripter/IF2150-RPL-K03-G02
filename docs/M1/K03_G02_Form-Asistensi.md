@@ -4,23 +4,23 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | *\[Hari\]* |
-| **Tanggal** | *\[DD/MM/YYYY\]* |
-| **Kelas** | *\[Kelas\]* |
-| **Nomor Kelompok** | *\[Nomor Kelompok\]*  |
-| **Nama Kelompok** | *\[Nama Kelompok\]*  |
+| **Hari** | Senin |
+| **Tanggal** | 31/08/2026 |
+| **Kelas** | K-03 |
+| **Nomor Kelompok** | G-02 |
+| **Nama Kelompok** | DapinKoding  |
 | **Nama Perangkat Lunak** | *\[Nama P/L\]*  |
-| **Dokumen** | *\[Nama Dokumen yang diasistensikan\]*  |
+| **Dokumen** | [K03_G02_Template1_TB.md](./K03_G02_Template1_TB.md) |
 
 ### Anggota Kelompok
 
-| NIM | Nama |
-| --- | --- |
-| *\[NIM 1\]* | *\[Nama Anggota 1\]* |
-| *\[NIM 2\]* | *\[Nama Anggota 2\]* |
-| *\[NIM 3\]* | *\[Nama Anggota 3\]* |
-| *\[NIM 4\]* | *\[Nama Anggota 4\]* |
-| *\[NIM 5\]* | *\[Nama Anggota 5\]* |
+| NIM      | Nama                      |
+| -------- | ------------------------- |
+| 13525027 | Faishal Ahmad Nurdin      |
+| 13525042 | Justin William            |
+| 13525060 | M. Aqsha Bagus R.I.B.     |
+| 13525087 | Jovan Nathanael           |
+| 13525147 | Muhammad Dhafin Al Khairy |
 
 ### Catatan
 
@@ -40,16 +40,16 @@
 | 12. model proses bisnis diperhatikan disesuaikan sama contoh, kasih link tempat pengerjaannya |
 | 13. yang 2 jenis user report sama relawan bisa digabungin aja (keputusan bersama) |
 
-**Notes for this section:**  
+<!-- **Notes for this section:**  
 *Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
 
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi-1.jpeg" width="100%">
 </p>
 
 <p align="center">
-  <i>Gambar 1. Dokumentasi kegiatan asistensi.</i>
+  <i>Gambar 1. Dokumentasi kegiatan asistensi 1.</i>
 </p>
