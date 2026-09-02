@@ -7,7 +7,7 @@
 | Kelas                | _K-03_                |
 | Nomor Kelompok       | _G-02_                |
 | Nama Kelompok        | _DapinKoding_         |
-| Nama Perangkat Lunak | _Sedang Didiskusikan_ |
+| Nama Perangkat Lunak | _SoClean_ |
 
 **Anggota Kelompok:**
 
@@ -37,8 +37,6 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 
 | Tool AI     | Tujuan Penggunaan              | Contoh Prompt Utama                                                                                  | Modifikasi & Validasi Manusia                                                                                                                   |
 | :---------- | :----------------------------- | :--------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
-| _[Nama AI]_ | _[Sertakan Tujuan Penggunaan]_ | _[Tuliskan Prompt Utama]_                                                                            | _[Tuliskan Keputusan Hasil Validasi]_                                                                                                           |
-| _Gemini_    | _Mengecek relasi antar class_  | _"Apakah relasi antara class User dan Order dalam UML ini seharusnya composition atau aggregation?"_ | _AI menyarankan composition, tapi setelah dicek kembali ke requirement, kami menggunakan aggregation karena Order masih bisa eksis di history._ |
 |             |                                |                                                                                                      |                                                                                                                                                 |   
 
 ### Milestone 2

@@ -7,7 +7,7 @@
 | Kelas                | _K-03_        |
 | Nomor Kelompok       | _G-02_        |
 | Nama Kelompok        | _DapinKoding_ |
-| Nama Perangkat Lunak | _[Nama P/L]_  |
+| Nama Perangkat Lunak | _SoClean_  |
 
 **Anggota Kelompok:**
 
@@ -30,7 +30,7 @@
 
 ### Milestone 1
 
-**Periode:** [Tanggal Mulai] - [Tanggal Selesai]
+**Periode:** 30/08/2026 - 02/09/2026
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
