@@ -52,8 +52,8 @@ Menanggapi lambatnya respon dari pemerintah, peran masyarkat setempat menjadi sa
 
 ## 2.1 Deskripsi Perangkat Lunak
 
-<italic>Blm tau nama softwarenya apa &trade;</italic> adalah perangkat lunak berbasis <italic>crowdsourcing</italic> yang menyediakan sarana bagi publik untuk berkontribusi dalam upaya pelestarian lingkungan laut melalui pembersihan laut dari sampah-sampah domestik. Dalam implementasinya, perangkat lunak ini menggunakan metode gamifikasi yang kolaboratif sebagai bentuk dorongan komunal dalam usaha memajukan progres SDG ke-14.
-Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapat melakukan registrasi serta <italic>log in</italic> menggunakan kredensial akunnya. Terdapat dua fitur utama dalam perangkat lunak ini: 1) laporan pembersihan sampah secara langsung (sementara disebut CleanIt), dan 2) laporan daerah penuh sampah (sementara disebut ReportIt). CleanIt merupakan fitur yang memungkinkan pengguna untuk melaporkan kontribusi langsungnya dalam membersihkan laut. Kontribusi tersebut dapat dikonfirmasi dengan mengunggah bukti, seperti foto atau video yang kemudian ditinjau oleh operator. Setelah hasil CleanIt-nya dinyatakan valid oleh operator, pengguna memperoleh poin untuk akunnya. ReportIt merupakan sarana bagi pengguna untuk melaporkan daerah lautan yang terkontaminasi sampah tanpa harus membersihkan secara langsung daerah tersebut. Pelaporan tersebut bersifat seperti <italic>bounty</italic> yang dapat diambil oleh pengguna lainnya untuk mendapatkan poin.
+*Blablabla* adalah perangkat lunak berbasis *crowdsourcing* yang menyediakan sarana bagi publik untuk berkontribusi dalam upaya pelestarian lingkungan laut melalui pembersihan laut dari sampah-sampah domestik. Dalam implementasinya, perangkat lunak ini menggunakan metode gamifikasi yang kolaboratif sebagai bentuk dorongan komunal dalam usaha memajukan progres SDG ke-14.
+Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapat melakukan registrasi serta *log in* menggunakan kredensial akunnya. Terdapat dua fitur utama dalam perangkat lunak ini: 1) laporan pembersihan sampah secara langsung (sementara disebut CleanIt), dan 2) laporan daerah penuh sampah (sementara disebut ReportIt). CleanIt merupakan fitur yang memungkinkan pengguna untuk melaporkan kontribusi langsungnya dalam membersihkan laut. Kontribusi tersebut dapat dikonfirmasi dengan mengunggah bukti, seperti foto atau video yang kemudian ditinjau oleh operator. Setelah hasil CleanIt-nya dinyatakan valid oleh operator, pengguna memperoleh poin untuk akunnya. ReportIt merupakan sarana bagi pengguna untuk melaporkan daerah lautan yang terkontaminasi sampah tanpa harus membersihkan secara langsung daerah tersebut. Pelaporan tersebut bersifat seperti *bounty* yang dapat diambil oleh pengguna lainnya untuk mendapatkan poin.
 
 ## 2.2 Asumsi dan Batasan
 
@@ -94,7 +94,19 @@ Definisikan apa yang ingin dicapai oleh pengguna saat menggunakan sistem ini dal
 | US-04 | _Masyarakat_ | _Melihat daftar laporan lokasi pencemaran yang tersedia di sekitar lokasi (CleanIt)_ | _Mudah mencari dan menuju ke lokasi pencemaran_ |
 | US-05 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
 
-## 3.3 Model Proses Bisnis
+## 3.3 Deskripsi Aktivitas
+Buatlah daftar seluruh aktivitas yang terdapat dalam sistem solusi, lengkap dengan ID dan penjelasan. Telusuri hubungan aktivitas tersebut dengan *user story* yang sudah dituliskan sebelumnya. Bisa dibuat dalam bentuk tabel.
+| ID | Aktivitas | Penjelasan | ID User Story |
+| :--- | :--- | :--- | :--- |
+| A01 | *Masuk ke antarmuka perangkat lunak* | *Pengguna masyarakat dapat melakukan registrasi bila belum mempunyai akun atau melakukan log in jika sudah. Jika kredensial valid, pengguna masuk ke dalam sistem* | *US-02* |
+| A02 | *Melakukan pelaporan lokasi sampah di laut (ReportIt)* | *Jika pengguna masyarakat menemukan lokasi di laut yang terkontaminasi sampah, kirim request validasi ke operator* | *US-03*|
+| A03 | *Verifikasi laporan ReportIt* | *Operator melakukan verifikasi validitas laporan dari pengguna masyarakat. Jika valid, maka laporan diteruskan secara global dan ditampilkan pada peta untuk semua user* | *US-01* |
+| A04 | *Pembersihan sampah (CleanIt)* | *Pengguna masyarakat dapat memilih lokasi yang terkontaminasi sampah untuk kemudian dibersihkan* | *US-04* |
+| A05 | *Pengiriman bukti CleanIt* | *Pengguna masyarakat yang telah membersihkan lokasi terdampak kontaminasi sampah dapat mengirimkan dokumentasi kegiatan melalui sistem untuk diverifikasi* | *US-05* |
+| A06 | *Verifikasi laporan CleanIt* | *Operator melakukan verifikasi validitas hasil pembersihan CleanIt. Jika valid, maka laporan status dinyatakan selesai dan masuk ke tahap reward* | *US-01* |
+| A07 | *Reward CleanIt* | *Sistem menghitung poin reward kemudian mengirim poin serta notifikasinya ke akun pengguna masyarakat bersangkutan* | *blm ada*|
+
+## 3.4 Model Proses Bisnis
 Berikut adalah model proses bisnis yang kami canangkan.
 
 ```mermaid
