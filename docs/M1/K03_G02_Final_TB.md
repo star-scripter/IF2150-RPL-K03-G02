@@ -7,7 +7,7 @@ TOPIC BRAINSTORMING
 </h1>
 <br>
 
-## _Nama Perangkat Lunak_
+## _SoClean_
 
 ### Untuk: Aurelia Jennifer Gunawan
 
