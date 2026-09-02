@@ -40,7 +40,9 @@ Indonesia sedang menghadapi krisis polusi laut yang sangat dahsyat. Berdasarkan 
 
 ## 1.2 Analisis Kondisi Saat Ini
 
-Lakukan analisis terhadap proses yang berjalan saat ini di dunia nyata, baik itu sistem lama ataupun solusi yang sudah ada. Soroti kesenjangan atau celah dari kondisi tersebut yang nantinya akan diselesaikan oleh perangkat lunak kalian.
+Saat inio sistem pelaporan untuk kerusakan lingkungan baik itu di darat maupun perairan sudah dapat dilakukan secara online. Masyarakat dapat melaporkannya pada beberapa saluran yang disediakan oleh pemerintah seperti [S4AN-Lapor](https://kemenlh.lapor.go.id/), [e-GAKKUM LH](https://egakkum.kemenlh.go.id/), dan saluran pelaporan Dinas Lingkungan Hidup Setempat. Walaupun saluran-saluran tersebut sudah dapat menyalurkan aspirasi masyarakat terkait kerusakan lingkungan kepada pemerintah, tetapi respon pemerintah terhadap laporan tersebut masih sangat kurang. Kurangnya respon ini dapat dibuktikan dengan ditemukannya kasus penundaan berlarut oleh Dinas Lingkungan Hidup dan Kehutanan Provinsi Sumartra Utara dalam menindaklanjuti laporan masyarakat terkait pencemaran lingkungan oleh PT Universal Gloves. 
+
+Menanggapi lambatnya respon dari pemerintah, peran masyarkat setempat menjadi sangat penting dalam menanggapi masalah lingkungan, terutama di ekosistem perairan. Oleh karena itu, sistem pelaporan kerusakan ekosistem perairan yang dapat diakses oleh masyarakat setempat menjadi sangat penting agar mereka dapat membantu dalam menanganinya. Sudah terdapat beberapa _software_ yang dibuat untuk tujuan ini, salah satu contohnya adalah Clean Swell. Tetapi _software-software_ tersebut kurang memberikan insentif nyata kepada masyarakat setempat sehingga mereka kurang terdorong untuk membantu menjaga ekosistem perairan.
 
 ---
 
