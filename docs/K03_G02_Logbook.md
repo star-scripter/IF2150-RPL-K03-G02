@@ -37,8 +37,10 @@
 | 30-08-2026   | M. Aqsha     | Menulis deskripsi perangkat lunak | 1 jam        | Done, open to changes | Beberapa poin masih harus diperjelas dengan diskusi kelompok |
 | 30-08-2026   | Justin William | Menulis asumsi dan batasan perangkat lunak | 30-45 menit | Done, open to changes | Beberapa poin masih harus diperjelas dengan diskusi kelompok |
 | 30-08-2026 | Jovan Nathanael   | Menulis kerangka latar belakang permasalahan | 30 menit | Unfinished | _-_                                                          |
+| 30-08-2026 | Faishal Ahmad Nurdin | Menulis analisis kondisi saat ini | 1 jam | Unfinished | Beberapa poin masih harus diperjelas dan detail perangkat lunak belum dimasukkan |
 | 02-09-2026 | Jovan Nathanael   | Menyelesaikan latar belakang + Model proses bisnis | 1 Jam | Done, open to changes |_-_                                                              | 
 | 02-09-2026 | Justin William   | Menyelesaikan asumsi dan batasan | 1 Jam | Done, open to changes | _-_                                                              | 
+| 02-09-2026 | Faishal Ahmad Nurdin | Menyelesaikan analisis kondisi saat ini | 30-45 menit | Done, open to changes | _-_ |
 
 **Catatan/Evaluasi Milestone 1:**
 
