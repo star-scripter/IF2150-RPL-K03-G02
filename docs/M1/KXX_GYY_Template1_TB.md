@@ -76,8 +76,7 @@ Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan s
 | Aktor   | Deskripsi                                                                                                                                                                                                                         |
 | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Operator | _Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memvalidasi laporan dari ReportIt dan CleanIt. Karakteristik dari pengguna ini adalah mengutamakan kecepatan untuk memverifikasi laporan dalam jumlah yang banyak._ |
-| Masyarakat (Pelapor) | _Pengguna ini bertindak sebagai pihak yang melaporkan pencemaran di ekosistem laut dan sungai. Karakteristik dari pengguna ini adalah mengutamakan kemudahan pelaporan._ |
-| Masyarakat (Relawan) | _Pengguna ini bertindak sebagai pihak yang beraksi di lokasi pencemaran untuk membersihkan sampah tersebut. Karakteristik dari pengguna ini adalah mengutamakan kemudahan melihat lokasi dan membuat laporan._ |
+| Masyarakat | _Pengguna ini bertindak sebagai pihak yang melaporkan pencemaran (Pelapor) maupun beraksi membersihkan sampah (Relawan) di ekosistem laut dan sungai. Karakteristik dari pengguna ini adalah mengutamakan kemudahan pelaporan dan melihat lokasi._ |
 
 ## 3.2 Kebutuhan Pengguna Awal
 
@@ -85,9 +84,11 @@ Definisikan apa yang ingin dicapai oleh pengguna saat menggunakan sistem ini dal
 
 | ID    | Aktor          | Kebutuhan / Aktivitas     | Tujuan / Nilai                                |
 | :---- | :------------- | :------------------------ | :-------------------------------------------- |
-| US-01 | _Kasir_        | _Memindai barcode barang_ | _Proses pembayaran berjalan cepat dan akurat_ |
-| US-02 | _[Nama Aktor]_ | _[Kebutuhan pengguna]_    | _[Tujuan yang dicapai pengguna]_              |
-| ...   | ...            | ...                       | ...                                           |
+| US-01 | _Operator_ | _Melihat laporan (foto/video) yang masuk dan menentukan valid/tidak_ | _Melakukan verifikasi dengan cepat_ |
+| US-02 | _Masyarakat_ | _Mendaftar akun baru dan masuk ke dalam sistem_ | _Mengakses fitur ReportIt dan CleanIt_ |
+| US-03 | _Masyarakat_ | _Mengupload foto/video serta menandai titik lokasi pencemaran (ReportIt)_ | _Lokasi tersebut dapat diverifikasi dan dijadikan bounty_ |
+| US-04 | _Masyarakat_ | _Melihat daftar laporan lokasi pencemaran yang tersedia di sekitar lokasi (CleanIt)_ | _Mudah mencari dan menuju ke lokasi pencemaran_ |
+| US-05 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
 
 ## 3.3 Model Proses Bisnis
 
