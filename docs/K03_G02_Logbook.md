@@ -41,6 +41,7 @@
 | 02-09-2026 | Jovan Nathanael   | Menyelesaikan latar belakang + Model proses bisnis | 1 Jam | Done, open to changes |_-_                                                              | 
 | 02-09-2026 | Justin William   | Menyelesaikan asumsi dan batasan | 1 Jam | Done, open to changes | _-_                                                              | 
 | 02-09-2026 | Faishal Ahmad Nurdin | Menyelesaikan analisis kondisi saat ini | 30-45 menit | Done, open to changes | _-_ |
+| 02-09-2026 | M. Aqsha | Mengerjakan deskripsi aktivitas, minor adjustments formatting, etc etc | 1-2 jam | Done | _-_ |
 
 **Catatan/Evaluasi Milestone 1:**
 
