@@ -95,8 +95,51 @@ Definisikan apa yang ingin dicapai oleh pengguna saat menggunakan sistem ini dal
 | US-05 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
 
 ## 3.3 Model Proses Bisnis
+Berikut adalah model proses bisnis yang kami canangkan.
 
-Buatlah _Activity Diagram_ atau _Swimlane Diagram_ yang menunjukkan alur kerja proses bisnis dari sistem solusi. Diagram ini harus memvisualisasikan bagaimana alur operasional di dunia nyata berjalan lebih efisien dengan adanya interaksi antara aktor (yang didefinisikan pada poin 3.1) dan sistem perangkat lunak. Perhatikan notasi yang digunakan dalam pembuatannya.
+```mermaid
+graph TD
+    classDef startend fill:#D81B60,stroke:#880E4F,stroke-width:2px,color:transparent;
+    classDef action fill:#8E24AA,stroke:#6A1B9A,stroke-width:2px,color:white;
+    classDef decision fill:#F8BBD0,stroke:#C2185B,stroke-width:2px,color:black;
+
+    subgraph Relawan
+        Start(( )):::startend
+        R_login[Login / Registrasi]:::action
+        R_laporan[Buat Laporan Sampah <br> Foto & Lokasi]:::action
+        R_pilih[Pilih Laporan Sampah <br> untuk Dibersihkan]:::action
+        R_pembersihan[Sukarela Membersihkan & <br> Upload Bukti Sesudah]:::action
+        R_poin[Dapatkan Notifikasi & <br> Lihat Poin Reward]:::action
+        End_Relawan((( ))):::startend
+    end
+
+    subgraph "Sistem Aplikasi"
+        S_simpan[Terima & Simpan <br> Draft Laporan]:::action
+        S_validasi{"Validasi Laporan <br> (Kotor & Valid?)"}:::decision
+        S_publish[Tampilkan Laporan <br> Valid di Peta]:::action
+        S_confirm[Update Status Laporan <br> ke Selesai]:::action
+        S_hitung[Hitung Poin Reward]:::action
+        S_tambah_poin[Tambahkan Poin <br> ke Saldo Relawan]:::action
+    end
+
+    Start --> R_login
+    R_login --> R_laporan
+    R_laporan --> S_simpan
+    S_simpan --> S_validasi
+    
+    S_validasi --->|"Tolak / Laporan Palsu (No)"| R_laporan
+    S_validasi -->|"Valid (Yes)"| S_publish
+    
+    S_publish --> R_pilih
+    R_pilih --> R_pembersihan
+    R_pembersihan --> S_confirm
+    S_confirm --> S_hitung
+    S_hitung --> S_tambah_poin
+    S_tambah_poin --> R_poin
+    R_poin --> End_Relawan
+```
+
+<!-- Buatlah _Activity Diagram_ atau _Swimlane Diagram_ yang menunjukkan alur kerja proses bisnis dari sistem solusi. Diagram ini harus memvisualisasikan bagaimana alur operasional di dunia nyata berjalan lebih efisien dengan adanya interaksi antara aktor (yang didefinisikan pada poin 3.1) dan sistem perangkat lunak. Perhatikan notasi yang digunakan dalam pembuatannya.
 <br>
 
 <p align="center">
@@ -111,3 +154,5 @@ Buatlah _Activity Diagram_ atau _Swimlane Diagram_ yang menunjukkan alur kerja p
 # Referensi
 
 - Diagram UML: https://www.drawio.com/, https://staruml.io/
+
+-->
