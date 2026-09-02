@@ -59,15 +59,19 @@ Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapa
 
 ### 2.2.1 Asumsi
 
-- Pengguna memiliki HP, akses ke internet, dan memiliki pengetahuan dasar mengenai teknologi (tidak gagap teknologi) sehingga dapat mengakses software serta menggunakan fitur-fitur didalamnya.
-- Pengguna bersedia ikut serta dalam kegiatan membersihkan sampah dan juga melaporkannya dengan jujur.
-- Gamifikasi dan sistem bounty dapat meningkatkan motivasi pengguna dalam membersihkan sampah.
-
+- Pengguna memiliki perangkat elektronik, akses ke internet, dan memiliki pengetahuan dasar mengenai teknologi (tidak gagap teknologi) sehingga dapat mengakses software dan menggunakan fitur didalamnya seperti CleanIt, ReportIt, dan lain-lain.
+- Pengguna bersedia ikut serta dalam kegiatan membersihkan sampah dan juga melaporkan bukti dengan jujur sesuai dengan kondisi di lapangan.
+- Terdapat seorang operator yang dapat memverifikasi dan memvalidasi bukti/laporan CleanIt yang diberikan oleh pengguna untuk menyatakan validitas kontribusi sebelum memberikan reward berupa poin.
+- Gamifikasi dan sistem bounty diasumsikan dapat meningkatkan motivasi pengguna dalam membersihkan sampah.
+- Terdapat sistem pendanaan yang pasti untuk menunjang keberlangsungan operasional software termasuk pemberian insentif/reward untuk pengguna.
 ### 2.2.2 Batasan
 
 - Software hanya berfokus pada sampah-sampah domestik yang dapat ditangani dengan keikutsertaan masyarakat. Pelanggaran/pencemaran pada ekosistem perairan lain seperti illegal fishing, dan sebagainya tidak termasuk ruang lingkup sistem.
-- Verifikasi pada media bukti ditinjau oleh operatornya langsung, sehingga bisa mengurangi efisiensi.
-- Waktu kerja yang terbatas sehingga kemungkinan hanya fitur utama yang akan ditambahkan.
+- Software juga hanya berfokus pada sampah atau limbah yang tidak memerlukan penanganan khusus. Karena berdasarkan UU Nomor 32 Tahun 2009 Pasal 59, pengelolaan limbah B3 butuh dikelola dengan baik dan benar sesuai ketentuan yang berlaku. Oleh karena itu, CleanIt hanya berfokus pada sampah-sampah domestik yang bisa ditangani masyarakat.
+- Hukum atau regulasi dapat bervariasi di tiap wilayah sehingga adaptasi/penyesuaian software terhadap perubahan regulasi berada diluar ruang lingkup fungsi software.
+- Fitur CleanIt membutuhkan verifikasi langsung dari operator sebelum kontribusinya dinyatakan valid. Oleh karena itu, sistem mungkin akan membutuhkan waktu yang lebih lama untuk memvalidasi bukti yang dikirimkan oleh pengguna.
+- Implementasi fitur-fitur perangkat lunak dibatasi pada fitur utama seperti CleanIt, ReportIt, sistem bounty dan verifikasi sesuai dengan waktu yang diberikan.
+- Software hanya mencakup wilayah pada area yang bekerja sama atau pada area tertentu, sehingga cakupan wilayahnya terbatas.
 
 ---
 
