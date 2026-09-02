@@ -37,7 +37,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 
 | Tool AI     | Tujuan Penggunaan              | Contoh Prompt Utama                                                                                  | Modifikasi & Validasi Manusia                                                                                                                   |
 | :---------- | :----------------------------- | :--------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
-|             |                                |                                                                                                      |                                                                                                                                                 |   
+| Gemini  | Merapikan mermaid diagram | "Tolong rapikan format mermaid diagram yang sudah saya buat." | AI merapikan mermaid diagram agar lebih rapi dan estetik secara visual. |   
 
 ### Milestone 2
 
