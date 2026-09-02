@@ -90,11 +90,13 @@ Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapa
 
 | ID    | Aktor          | Kebutuhan / Aktivitas     | Tujuan / Nilai                                |
 | :---- | :------------- | :------------------------ | :-------------------------------------------- |
-| US-01 | _Operator_ | _Melihat laporan (foto/video) yang masuk dan menentukan valid/tidak_ | _Melakukan verifikasi dengan cepat_ |
-| US-02 | _Masyarakat_ | _Mendaftar akun baru dan masuk ke dalam sistem_ | _Mengakses fitur ReportIt dan CleanIt_ |
-| US-03 | _Masyarakat_ | _Mengupload foto/video serta menandai titik lokasi pencemaran (ReportIt)_ | _Lokasi tersebut dapat diverifikasi dan dijadikan bounty_ |
-| US-04 | _Masyarakat_ | _Melihat daftar laporan lokasi pencemaran yang tersedia di sekitar lokasi (CleanIt)_ | _Mudah mencari dan menuju ke lokasi pencemaran_ |
-| US-05 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
+| US-01 | _Operator_ | _Masuk ke dalam sistem_ | _Mengakses laporan yang masuk_ |
+| US-02 | _Operator_ | _Melihat laporan (foto/video) yang masuk dan menentukan valid/tidak_ | _Melakukan verifikasi dengan cepat_ |
+| US-03 | _Masyarakat_ | _Mendaftar akun baru dan masuk ke dalam sistem_ | _Mengakses fitur ReportIt dan CleanIt_ |
+| US-04 | _Masyarakat_ | _Mengupload foto/video serta menandai titik lokasi pencemaran (ReportIt)_ | _Lokasi tersebut dapat diverifikasi dan dijadikan bounty_ |
+| US-05 | _Masyarakat_ | _Melihat daftar laporan lokasi pencemaran yang tersedia di sekitar lokasi (CleanIt)_ | _Mudah mencari dan menuju ke lokasi pencemaran_ |
+| US-06 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
+| US-07 | _Masyarakat_ | _Melihat jumlah poin dan melakukan penukaran poin dengan reward tertentu_ | _Merealisasikan reward yang didapat_ |
 
 ## 3.3 Deskripsi Aktivitas
 
