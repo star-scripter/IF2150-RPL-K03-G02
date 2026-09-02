@@ -53,6 +53,7 @@ Menanggapi lambatnya respon dari pemerintah, peran masyarkat setempat menjadi sa
 ## 2.1 Deskripsi Perangkat Lunak
 
 *Blablabla* adalah perangkat lunak berbasis *crowdsourcing* yang menyediakan sarana bagi publik untuk berkontribusi dalam upaya pelestarian lingkungan laut melalui pembersihan laut dari sampah-sampah domestik. Dalam implementasinya, perangkat lunak ini menggunakan metode gamifikasi yang kolaboratif sebagai bentuk dorongan komunal dalam usaha memajukan progres SDG ke-14.
+
 Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapat melakukan registrasi serta *log in* menggunakan kredensial akunnya. Terdapat dua fitur utama dalam perangkat lunak ini: 1) laporan pembersihan sampah secara langsung (sementara disebut CleanIt), dan 2) laporan daerah penuh sampah (sementara disebut ReportIt). CleanIt merupakan fitur yang memungkinkan pengguna untuk melaporkan kontribusi langsungnya dalam membersihkan laut. Kontribusi tersebut dapat dikonfirmasi dengan mengunggah bukti, seperti foto atau video yang kemudian ditinjau oleh operator. Setelah hasil CleanIt-nya dinyatakan valid oleh operator, pengguna memperoleh poin untuk akunnya. ReportIt merupakan sarana bagi pengguna untuk melaporkan daerah lautan yang terkontaminasi sampah tanpa harus membersihkan secara langsung daerah tersebut. Pelaporan tersebut bersifat seperti *bounty* yang dapat diambil oleh pengguna lainnya untuk mendapatkan poin.
 
 ## 2.2 Asumsi dan Batasan
@@ -64,6 +65,7 @@ Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapa
 - Terdapat seorang operator yang dapat memverifikasi dan memvalidasi bukti/laporan CleanIt yang diberikan oleh pengguna untuk menyatakan validitas kontribusi sebelum memberikan reward berupa poin.
 - Gamifikasi dan sistem bounty diasumsikan dapat meningkatkan motivasi pengguna dalam membersihkan sampah.
 - Terdapat sistem pendanaan yang pasti untuk menunjang keberlangsungan operasional software termasuk pemberian insentif/reward untuk pengguna.
+
 ### 2.2.2 Batasan
 
 - Software hanya berfokus pada sampah-sampah domestik yang dapat ditangani dengan keikutsertaan masyarakat. Pelanggaran/pencemaran pada ekosistem perairan lain seperti illegal fishing, dan sebagainya tidak termasuk ruang lingkup sistem.
@@ -79,16 +81,12 @@ Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapa
 
 ## 3.1 Identifikasi Aktor
 
-Buatlah daftar seluruh aktor (pengguna) yang akan berinteraksi langsung dengan sistem solusi yang kalian kembangkan. Berikan penjelasan singkat mengenai peran dan karakteristik dari masing-masing aktor tersebut.
-
 | Aktor   | Deskripsi                                                                                                                                                                                                                         |
 | :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Operator | _Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memvalidasi laporan dari ReportIt dan CleanIt. Karakteristik dari pengguna ini adalah mengutamakan kecepatan untuk memverifikasi laporan dalam jumlah yang banyak._ |
 | Masyarakat | _Pengguna ini bertindak sebagai pihak yang melaporkan pencemaran (Pelapor) maupun beraksi membersihkan sampah (Relawan) di ekosistem laut dan sungai. Karakteristik dari pengguna ini adalah mengutamakan kemudahan pelaporan dan melihat lokasi._ |
 
 ## 3.2 Kebutuhan Pengguna Awal
-
-Definisikan apa yang ingin dicapai oleh pengguna saat menggunakan sistem ini dalam format _User Story_ (Sebagai [Aktor], saya ingin [Aktivitas/Kebutuhan], sehingga [Tujuan/Nilai]). Pastikan kalian berfokus pada "apa yang ingin dilakukan pengguna".
 
 | ID    | Aktor          | Kebutuhan / Aktivitas     | Tujuan / Nilai                                |
 | :---- | :------------- | :------------------------ | :-------------------------------------------- |
@@ -99,7 +97,7 @@ Definisikan apa yang ingin dicapai oleh pengguna saat menggunakan sistem ini dal
 | US-05 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
 
 ## 3.3 Deskripsi Aktivitas
-Buatlah daftar seluruh aktivitas yang terdapat dalam sistem solusi, lengkap dengan ID dan penjelasan. Telusuri hubungan aktivitas tersebut dengan *user story* yang sudah dituliskan sebelumnya. Bisa dibuat dalam bentuk tabel.
+
 | ID | Aktivitas | Penjelasan | ID User Story |
 | :--- | :--- | :--- | :--- |
 | A01 | *Masuk ke antarmuka perangkat lunak* | *Pengguna masyarakat dapat melakukan registrasi bila belum mempunyai akun atau melakukan log in jika sudah. Jika kredensial valid, pengguna masuk ke dalam sistem* | *US-02* |
@@ -111,6 +109,7 @@ Buatlah daftar seluruh aktivitas yang terdapat dalam sistem solusi, lengkap deng
 | A07 | *Reward CleanIt* | *Sistem menghitung poin reward kemudian mengirim poin serta notifikasinya ke akun pengguna masyarakat bersangkutan* | *blm ada*|
 
 ## 3.4 Model Proses Bisnis
+
 Berikut adalah model proses bisnis yang kami canangkan.
 
 ```mermaid
