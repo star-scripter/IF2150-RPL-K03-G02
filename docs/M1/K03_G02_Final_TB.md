@@ -56,6 +56,8 @@ SoClean adalah perangkat lunak berbasis *crowdsourcing* yang menyediakan sarana 
 
 Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapat melakukan registrasi serta *log in* menggunakan kredensial akunnya. Terdapat dua fitur utama dalam perangkat lunak ini: 1) laporan pembersihan sampah secara langsung (sementara disebut CleanIt), dan 2) laporan daerah penuh sampah (sementara disebut ReportIt). CleanIt merupakan fitur yang memungkinkan pengguna untuk melaporkan kontribusi langsungnya dalam membersihkan laut. Kontribusi tersebut dapat dikonfirmasi dengan mengunggah bukti, seperti foto atau video yang kemudian ditinjau oleh operator. Setelah hasil CleanIt-nya dinyatakan valid oleh operator, pengguna memperoleh poin untuk akunnya. ReportIt merupakan sarana bagi pengguna untuk melaporkan daerah lautan yang terkontaminasi sampah tanpa harus membersihkan secara langsung daerah tersebut. Pelaporan tersebut bersifat seperti *bounty* yang dapat diambil oleh pengguna lainnya untuk mendapatkan poin.
 
+Perangkat lunak SoClean tersedia sebagai web app yang dapat digunakan oleh pengguna desktop maupun mobile
+
 ## 2.2 Asumsi dan Batasan
 
 ### 2.2.1 Asumsi
