@@ -1,0 +1,175 @@
+<h1>
+IF2150 REKAYASA PERANGKAT LUNAK
+<br>
+TUGAS 1
+<br>
+TOPIC BRAINSTORMING
+</h1>
+<br>
+
+## _SoClean_
+
+### Untuk: Aurelia Jennifer Gunawan
+
+Dipersiapkan oleh:
+| Informasi | Keterangan |
+| --- | --- |
+| Kelas | _K-03_ |
+| Kelompok | _G-02_ |
+
+| NIM      | Nama                      |
+| -------- | ------------------------- |
+| 13525027 | Faishal Ahmad Nurdin      |
+| 13525042 | Justin William            |
+| 13525060 | M. Aqsha Bagus R.I.B.     |
+| 13525087 | Jovan Nathanael           |
+| 13525147 | Muhammad Dhafin Al Khairy |
+
+---
+
+<br>
+<br>
+
+# BAB 1: Analisis Permasalahan
+
+## 1.1 Latar Belakang Masalah
+
+Indonesia sedang menghadapi krisis polusi laut yang sangat dahsyat. Berdasarkan [laporan dari World Bank](https://www.worldbank.org/en/country/indonesia/publication/plastic-waste-discharges-from-rivers-and-coastlines-in-indonesia), Indonesia menghasilkan sekitar 7,8 juta ton sampah plastik setiap tahunnya, dan diperkirakan 346.000 ton di antaranya bocor dan mencemari ekosistem laut. Tingginya angka kebocoran ini sebagian besar berasal dari aktivitas darat dan pemukiman di sekitar aliran sungai atau daerah pesisir yang belum terjangkau oleh infrastruktur pengelolaan sampah yang memadai.
+
+Permasalahan utama yang diangkat dalam proyek perangkat lunak ini adalah masih tingginya tingkat pembuangan dan kebocoran sampah ke ekosistem perairan seperti laut dan sungai, serta belum optimalnya media pelaporan bagi masyarakat pinggir perairan. Meskipun kesadaran lingkungan sebagian warga mulai tumbuh, tidak adanya sistem yang terintegrasi dan insentif ekonomi membuat masyarakat kurang termotivasi untuk berpartisipasi aktif dalam penanggulangan dan pembersihan tumpukan sampah liar di sekitar mereka.
+
+Pengembangan perangkat lunak berkontribusi langsung pada pencapaian Sustainable Development Goals (SDGs) Tujuan 14: Life Below Water (Ekosistem Lautan). Proyek ini secara spesifik beririsan dengan [Target 14.1](https://globalgoals.org/goals/14-life-below-water/) yang berfokus pada upaya mencegah dan mengurangi segala jenis polusi perairan, khususnya polusi yang berasal dari aktivitas darat (*land-based activities*). Lantas, diharapkan aplikasi ini mampu menekan laju kebocoran sampah plastik dari darat ke perairan, sembari menjaga ekosistem perairan Indonesia.
+
+## 1.2 Analisis Kondisi Saat Ini
+
+Saat ini sistem pelaporan untuk kerusakan lingkungan baik itu di darat maupun perairan sudah dapat dilakukan secara online. Masyarakat dapat melaporkannya pada beberapa saluran yang disediakan oleh pemerintah seperti [S4AN-Lapor](https://kemenlh.lapor.go.id/), [e-GAKKUM LH](https://egakkum.kemenlh.go.id/), dan saluran pelaporan Dinas Lingkungan Hidup Setempat. Saluran-saluran ini memungkinkan masyarakat untuk melaporkan saat terjadinya kerusakan lingkungan beserta keterangan lengkapnya seperti lokasi, waktu, dan sumbernya kerusakan. Walaupun bagitu, saluran tersebut tidak menyediakan sarana bagi masyarakat untuk berpartisipasi aktif dalam menangani kerusakan lingkungan. Respon pemerintah terhadap laporan kerusakan lingkuna juga masih sangat kurang yang dibuktikan dengan laporan dari [DRberita.id](https://www.drberita.id/hukum/ombudsman-ri-perwakilan-sumut-minta-inspektorat-periksa-kepala-dinas-lhk-terkait-pt-universal-gloves/) terkait kasus penundaan berlarut oleh Dinas Lingkungan Hidup dan Kehutanan Provinsi Sumatera Utara dalam menindaklanjuti laporan masyarakat terkait pencemaran lingkungan oleh PT Universal Gloves. 
+
+Lambatnya respon dari pemerintah membuat peran masyarkat setempat menjadi sangat penting dalam menanggapi masalah lingkungan, terutama di ekosistem perairan. Oleh karena itu, sistem pelaporan kerusakan ekosistem perairan yang dapat diakses oleh masyarakat setempat menjadi sangat penting agar mereka dapat membantu dalam menanganinya. Sudah terdapat beberapa _software_ yang dibuat untuk tujuan ini, salah satu contohnya adalah Clean Swell. _Software_ Clean Swell memungkinkan pengguna untuk mengetahui lokasi pembersihan, mencatat berat sampah yang berhasil dibersihkan, membagikan hasil aksi ke media sosial, dan bahkan memberikan lencana virtual atau _badges_ sebagai bentuk apresiasi. Meskipun begitu, _software-software_ tersebut kurang memberikan insentif nyata kepada masyarakat dan hanya bergantung pada sukarelawan. Oleh karena itu, masyarakat setempat kurang  merasa terdorong dalam melakukan aksi untuk menjaga ekosistem perairan.
+
+---
+
+# BAB 2: Analisis Solusi
+
+## 2.1 Deskripsi Perangkat Lunak
+
+*Blablabla* adalah perangkat lunak berbasis *crowdsourcing* yang menyediakan sarana bagi publik untuk berkontribusi dalam upaya pelestarian lingkungan laut melalui pembersihan laut dari sampah-sampah domestik. Dalam implementasinya, perangkat lunak ini menggunakan metode gamifikasi yang kolaboratif sebagai bentuk dorongan komunal dalam usaha memajukan progres SDG ke-14.
+
+Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapat melakukan registrasi serta *log in* menggunakan kredensial akunnya. Terdapat dua fitur utama dalam perangkat lunak ini: 1) laporan pembersihan sampah secara langsung (sementara disebut CleanIt), dan 2) laporan daerah penuh sampah (sementara disebut ReportIt). CleanIt merupakan fitur yang memungkinkan pengguna untuk melaporkan kontribusi langsungnya dalam membersihkan laut. Kontribusi tersebut dapat dikonfirmasi dengan mengunggah bukti, seperti foto atau video yang kemudian ditinjau oleh operator. Setelah hasil CleanIt-nya dinyatakan valid oleh operator, pengguna memperoleh poin untuk akunnya. ReportIt merupakan sarana bagi pengguna untuk melaporkan daerah lautan yang terkontaminasi sampah tanpa harus membersihkan secara langsung daerah tersebut. Pelaporan tersebut bersifat seperti *bounty* yang dapat diambil oleh pengguna lainnya untuk mendapatkan poin.
+
+## 2.2 Asumsi dan Batasan
+
+### 2.2.1 Asumsi
+
+- Pengguna memiliki perangkat elektronik, akses ke internet, dan memiliki pengetahuan dasar mengenai teknologi (tidak gagap teknologi) sehingga dapat mengakses software dan menggunakan fitur didalamnya seperti CleanIt, ReportIt, dan lain-lain.
+- Pengguna bersedia ikut serta dalam kegiatan membersihkan sampah dan juga melaporkan bukti dengan jujur sesuai dengan kondisi di lapangan.
+- Terdapat seorang operator yang dapat memverifikasi dan memvalidasi bukti/laporan CleanIt yang diberikan oleh pengguna untuk menyatakan validitas kontribusi sebelum memberikan reward berupa poin.
+- Gamifikasi dan sistem bounty diasumsikan dapat meningkatkan motivasi pengguna dalam membersihkan sampah.
+- Terdapat sistem pendanaan yang pasti untuk menunjang keberlangsungan operasional software termasuk pemberian insentif/reward untuk pengguna.
+
+### 2.2.2 Batasan
+
+- Software hanya berfokus pada sampah-sampah domestik yang dapat ditangani dengan keikutsertaan masyarakat. Pelanggaran/pencemaran pada ekosistem perairan lain seperti illegal fishing, dan sebagainya tidak termasuk ruang lingkup sistem.
+- Software juga hanya berfokus pada sampah atau limbah yang tidak memerlukan penanganan khusus. Karena berdasarkan UU Nomor 32 Tahun 2009 Pasal 59, pengelolaan limbah B3 butuh dikelola dengan baik dan benar sesuai ketentuan yang berlaku. Oleh karena itu, CleanIt hanya berfokus pada sampah-sampah domestik yang bisa ditangani masyarakat.
+- Hukum atau regulasi dapat bervariasi di tiap wilayah sehingga adaptasi/penyesuaian software terhadap perubahan regulasi berada diluar ruang lingkup fungsi software.
+- Fitur CleanIt membutuhkan verifikasi langsung dari operator sebelum kontribusinya dinyatakan valid. Oleh karena itu, sistem mungkin akan membutuhkan waktu yang lebih lama untuk memvalidasi bukti yang dikirimkan oleh pengguna.
+- Implementasi fitur-fitur perangkat lunak dibatasi pada fitur utama seperti CleanIt, ReportIt, sistem bounty dan verifikasi sesuai dengan waktu yang diberikan.
+- Software hanya mencakup wilayah pada area yang bekerja sama atau pada area tertentu, sehingga cakupan wilayahnya terbatas.
+
+---
+
+# BAB 3: Spesifikasi Kebutuhan dan Proses Bisnis
+
+## 3.1 Identifikasi Aktor
+
+| Aktor   | Deskripsi                                                                                                                                                                                                                         |
+| :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Operator | _Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memvalidasi laporan dari ReportIt dan CleanIt. Karakteristik dari pengguna ini adalah mengutamakan kecepatan untuk memverifikasi laporan dalam jumlah yang banyak._ |
+| Masyarakat | _Pengguna ini bertindak sebagai pihak yang melaporkan pencemaran (Pelapor) maupun beraksi membersihkan sampah (Relawan) di ekosistem laut dan sungai. Karakteristik dari pengguna ini adalah mengutamakan kemudahan pelaporan dan melihat lokasi._ |
+
+## 3.2 Kebutuhan Pengguna Awal
+
+| ID    | Aktor          | Kebutuhan / Aktivitas     | Tujuan / Nilai                                |
+| :---- | :------------- | :------------------------ | :-------------------------------------------- |
+| US-01 | _Operator_ | _Masuk ke dalam sistem_ | _Mengakses laporan yang masuk_ |
+| US-02 | _Operator_ | _Melihat laporan (foto/video) yang masuk dan menentukan valid/tidak_ | _Melakukan verifikasi dengan cepat_ |
+| US-03 | _Masyarakat_ | _Mendaftar akun baru dan masuk ke dalam sistem_ | _Mengakses fitur ReportIt dan CleanIt_ |
+| US-04 | _Masyarakat_ | _Mengupload foto/video serta menandai titik lokasi pencemaran (ReportIt)_ | _Lokasi tersebut dapat diverifikasi dan dijadikan bounty_ |
+| US-05 | _Masyarakat_ | _Melihat daftar laporan lokasi pencemaran yang tersedia di sekitar lokasi (CleanIt)_ | _Mudah mencari dan menuju ke lokasi pencemaran_ |
+| US-06 | _Masyarakat_ | _Mengupload foto/video setelah lokasi pencemaran dibersihkan (CleanIt)_ | _Memberikan bukti penyelesaian_ |
+| US-07 | _Masyarakat_ | _Melihat jumlah poin dan melakukan penukaran poin dengan reward tertentu_ | _Merealisasikan reward yang didapat_ |
+
+## 3.3 Deskripsi Aktivitas
+
+| ID | Aktivitas | Penjelasan | ID User Story |
+| :--- | :--- | :--- | :--- |
+| A01 | *Masuk ke antarmuka perangkat lunak* | *Pengguna masyarakat dapat melakukan registrasi bila belum mempunyai akun atau melakukan log in jika sudah. Jika kredensial valid, pengguna masuk ke dalam sistem* | *US-02* |
+| A02 | *Melakukan pelaporan lokasi sampah di laut (ReportIt)* | *Jika pengguna masyarakat menemukan lokasi di laut yang terkontaminasi sampah, kirim request validasi ke operator* | *US-03*|
+| A03 | *Verifikasi laporan ReportIt* | *Operator melakukan verifikasi validitas laporan dari pengguna masyarakat. Jika valid, maka laporan diteruskan secara global dan ditampilkan pada peta untuk semua user* | *US-01* |
+| A04 | *Pembersihan sampah (CleanIt)* | *Pengguna masyarakat dapat memilih lokasi yang terkontaminasi sampah untuk kemudian dibersihkan* | *US-04* |
+| A05 | *Pengiriman bukti CleanIt* | *Pengguna masyarakat yang telah membersihkan lokasi terdampak kontaminasi sampah dapat mengirimkan dokumentasi kegiatan melalui sistem untuk diverifikasi* | *US-05* |
+| A06 | *Verifikasi laporan CleanIt* | *Operator melakukan verifikasi validitas hasil pembersihan CleanIt. Jika valid, maka laporan status dinyatakan selesai dan masuk ke tahap reward* | *US-01* |
+| A07 | *Reward CleanIt* | *Sistem menghitung poin reward kemudian mengirim poin serta notifikasinya ke akun pengguna masyarakat bersangkutan* | *blm ada*|
+
+## 3.4 Model Proses Bisnis
+
+Berikut adalah model proses bisnis yang kami canangkan.
+
+```mermaid
+graph TD
+    classDef startend fill:#D81B60,stroke:#880E4F,stroke-width:2px,color:transparent;
+    classDef action fill:#8E24AA,stroke:#6A1B9A,stroke-width:2px,color:white;
+    classDef decision fill:#F8BBD0,stroke:#C2185B,stroke-width:2px,color:black;
+
+    subgraph Relawan
+        Start(( )):::startend
+        R_login[Login / Registrasi]:::action
+        R_laporan[Buat Laporan Sampah <br> Foto & Lokasi]:::action
+        R_pilih[Pilih Laporan Sampah <br> untuk Dibersihkan]:::action
+        R_pembersihan[Sukarela Membersihkan & <br> Upload Bukti Sesudah]:::action
+        R_poin[Dapatkan Notifikasi & <br> Lihat Poin Reward]:::action
+        End_Relawan((( ))):::startend
+    end
+
+    subgraph "Sistem Aplikasi"
+        S_simpan[Terima & Simpan <br> Draft Laporan]:::action
+        S_validasi{"Validasi Laporan <br> (Kotor & Valid?)"}:::decision
+        S_publish[Tampilkan Laporan <br> Valid di Peta]:::action
+        S_confirm[Update Status Laporan <br> ke Selesai]:::action
+        S_hitung[Hitung Poin Reward]:::action
+        S_tambah_poin[Tambahkan Poin <br> ke Saldo Relawan]:::action
+    end
+
+    Start --> R_login
+    R_login --> R_laporan
+    R_laporan --> S_simpan
+    S_simpan --> S_validasi
+    
+    S_validasi --->|"Tolak / Laporan Palsu (No)"| R_laporan
+    S_validasi -->|"Valid (Yes)"| S_publish
+    
+    S_publish --> R_pilih
+    R_pilih --> R_pembersihan
+    R_pembersihan --> S_confirm
+    S_confirm --> S_hitung
+    S_hitung --> S_tambah_poin
+    S_tambah_poin --> R_poin
+    R_poin --> End_Relawan
+```
+
+<!-- Buatlah _Activity Diagram_ atau _Swimlane Diagram_ yang menunjukkan alur kerja proses bisnis dari sistem solusi. Diagram ini harus memvisualisasikan bagaimana alur operasional di dunia nyata berjalan lebih efisien dengan adanya interaksi antara aktor (yang didefinisikan pada poin 3.1) dan sistem perangkat lunak. Perhatikan notasi yang digunakan dalam pembuatannya.
+<br>
+
+<p align="center">
+<img alt="Contoh Activity Diagram" src="./assets/diagram/diagram-act-1.avif" width="70%">
+</p>
+<p align="center">
+<i>Gambar 1. Contoh Activity Diagram</i>
+</p>
+
+<br>
+
+# Referensi
+
+- Diagram UML: https://www.drawio.com/, https://staruml.io/
+
+-->
