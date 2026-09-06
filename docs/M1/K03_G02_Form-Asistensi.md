@@ -9,7 +9,7 @@
 | **Kelas** | K-03 |
 | **Nomor Kelompok** | G-02 |
 | **Nama Kelompok** | DapinKoding  |
-| **Nama Perangkat Lunak** | *\[Nama P/L\]*  |
+| **Nama Perangkat Lunak** | SoClean |
 | **Dokumen** | [K03_G02_Template1_TB.md](./K03_G02_Template1_TB.md) |
 
 ### Anggota Kelompok
