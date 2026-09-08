@@ -58,8 +58,10 @@
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 07-09-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan user requirements | 30 Menit | Unfinished | - |
 | 08-09-2026 | Justin William   | Menyelesaikan asumsi dan batasan | 1 Jam | Done, open to changes | _-_ |
 | 08-09-2026 | Faishal Ahmad Nurdin | Mengerjakan kebutuhan fungsional | 2 Jam | Unfinished | Masih ada beberapa kebutuhan lagi yang mungkin perlu ditambahkan |
+| 08-09-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan user requirements | 1 Jam | Done | - |
 
 **Catatan/Evaluasi Milestone 2:**
 
