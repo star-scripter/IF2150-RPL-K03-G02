@@ -10,7 +10,7 @@
 | **Nomor Kelompok** | G-02 |
 | **Nama Kelompok** | DapinKoding  |
 | **Nama Perangkat Lunak** | SoClean |
-| **Dokumen** | *\[Nama Dokumen yang diasistensikan\]*  |
+| **Dokumen** | K-03_G02_RG  |
 
 ### Anggota Kelompok
 
