@@ -62,9 +62,10 @@
 | 08-09-2026 | Justin William   | Menyelesaikan asumsi dan batasan | 1 Jam | Done, open to changes | _-_ |
 | 08-09-2026 | Faishal Ahmad Nurdin | Mengerjakan kebutuhan fungsional | 2 Jam | Unfinished | Masih ada beberapa kebutuhan lagi yang mungkin perlu ditambahkan |
 | 08-09-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan user requirements | 1 Jam | Done | - |
+| 08-09-2026 | Muhammad Dhafin Al Khairy | Mengerjakan system requirements | 1 Jam | Done | - |
 | 08-09-2026 | Jovan Nathanael | Menngerjakan dan menyelesaikan kebutuhan nonfungsional | 1 Jam | Done, open to changes | - |
 | 09-09-2026 | Faishal Ahmad Nurdin | Menyelesaikan kebutuhan fungsional | 30 menit | Done, open to changes | _-_ |
-| 09-09-2026 | M. Aqsha Bagus R.I.B., M. Dhafin Al-Khairy, dan Jovan Nathanael| Menyesuaikan deskripsi aktivitas dan user requirements | 1 Jam | Done | - |
+| 09-09-2026 | M. Aqsha Bagus R.I.B., M. Dhafin Al Khairy, dan Jovan Nathanael| Menyesuaikan deskripsi aktivitas dan user requirements | 1 Jam | Done | - |
 
 **Catatan/Evaluasi Milestone 2:**
 
