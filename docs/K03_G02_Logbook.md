@@ -70,3 +70,17 @@
 **Catatan/Evaluasi Milestone 2:**
 
 - _(Isi jika ada catatan khusus untuk asisten atau evaluasi singkat kerja tim)_
+
+---
+
+### Milestone 3
+
+**Periode:** 09/09/2026 - 09/16/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 12-09-2026 | Jovan Nathanael | Mengerjakan identifikasi use case | 40 Menit | Finished, open to changes | - |
+
+**Catatan/Evaluasi Milestone 3:**
+
+- _(Isi jika ada catatan khusus untuk asisten atau evaluasi singkat kerja tim)_
