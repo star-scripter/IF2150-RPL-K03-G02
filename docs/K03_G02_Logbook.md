@@ -25,6 +25,7 @@
 
 - [Milestone 1](#milestone-1)
 - [Milestone 2](#milestone-2)
+- [Milestone 3](#milestone-3)
 - Notes: Copy bagian Daftar Isi seperti Milestone 1 untuk Milestone berikutnya, contoh `* [Milestone 2](#milestone-2)`. Ketika Daftar isi diklik maka akan langsung diarahkan ke bagian bawah sesuai dengan Milestone tujuan.
 
 ---
@@ -80,6 +81,7 @@
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 12-09-2026 | Jovan Nathanael | Mengerjakan identifikasi use case | 40 Menit | Finished, open to changes | - |
+| 12-09-2026 | Justin William | Mengerjakan skenario use case UC03 dan UC04 | 30 Menit | Finished, open to changes | - |
 
 **Catatan/Evaluasi Milestone 3:**
 
