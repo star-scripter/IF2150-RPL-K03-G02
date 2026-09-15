@@ -26,10 +26,10 @@
 
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
-| 4. ... |
+| 1. *KF banyak detail implementasi. Preferably gk terlalu teknis. KF03 persoalan database bisa dihapus. KF04 seperti keputusan arsitektur/desain, bisa disimplifikasi aja. Kalimat teknis (database) mending dihapus aja. KF11 -> Penyesuaian jumlah poin pengguna*  |
+| 2. *Use case diagram dirapiin, bisa pake draw.io* |
+| 3. *UC07 BOLEH dipisah melihat saldo poin, daftar reward tersedia, sama penukaran reward* |
+| 4. *Diagram pake nama Sistem SoClean (opsional)* |
 
 **Notes for this section:**  
 *Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
