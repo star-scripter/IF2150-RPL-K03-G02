@@ -82,8 +82,10 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 12-09-2026 | Jovan Nathanael | Mengerjakan identifikasi use case | 40 Menit | Finished, open to changes | - |
 | 12-09-2026 | Justin William | Mengerjakan skenario use case UC03 dan UC04 | 30 Menit | Finished, open to changes | - |
+| 15-09-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan diagram use case dan UC07 | 1 jam | Finished but might need changes | - |
 | 15-09-2026 | Muhammad Dhafin Al Khairy | Mengerjakan skenario use case UC05 dan UC06 | 45 Menit | Finished, open to changes | - |
 | 16-09-2026 | Muhammad Dhafin Al Khairy | Menyesuaikan skenario use case UC07 terdekomposisi menjadi UC07, UC08, dan UC09 | 45 Menit | Finished, open to changes | - |
+| 16-09-2026 | M. Aqsha Bagus R.I.B. | Memperbarui diagram use case | 45 menit | Finished | - |
 
 **Catatan/Evaluasi Milestone 3:**
 
