@@ -92,3 +92,11 @@
 **Catatan/Evaluasi Milestone 3:**
 
 - _(Isi jika ada catatan khusus untuk asisten atau evaluasi singkat kerja tim)_
+
+### Milestone 4
+
+**Periode:** 09/16/2026 - 09/23/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+22-09-2026 | Jovan Nathanael | Use Case Diagram 07, 08, 09 | 1 jam | Finished, open to changes | - |

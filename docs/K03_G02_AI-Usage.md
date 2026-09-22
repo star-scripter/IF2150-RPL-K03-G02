@@ -53,6 +53,12 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Claude | Merapikan dan memverifikasi diagram | "Rapikan use case diagram berikut <kode uml>" | Menyesuaikan include yang dikoreksi oleh Claude, menggunakan desain sendiri di draw.io  | 
 | Claude | Memverifikasi diagram | "<kode uml> apakah hubungan sudah aman?", "UC2, UC7, UC8 apakah perlu ada association ke actor masyarakat? Atau diinclude saja dari UC yang bersesuaian?"  | Menyesuaikan include yang dikoreksi Claude | 
 
+### Milestone 4
+
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
+| :------ | :---------------- | :------------------ | :---------------------------- |
+| Claude | Merapikan dan memverifikasi diagram | "Tolong rapikan diagram ini \<kode uml>; sesuaikan dengan konteks proyek ini" | Menyesuaikan diagram yang dikoreksi oleh Claude
+
 ---
 
 ### Pernyataan Integritas dan Persetujuan
