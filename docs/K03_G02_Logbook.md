@@ -100,3 +100,4 @@
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 22-09-2026 | Jovan Nathanael | Use Case Diagram 07, 08, 09 | 1 jam | Finished, open to changes | - |
+23-09-2026 | Justin William | Bab 5 Traceability | 1 jam | Done, open to changes | - |
