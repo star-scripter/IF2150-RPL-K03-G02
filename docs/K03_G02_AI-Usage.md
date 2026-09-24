@@ -58,6 +58,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
 | :------ | :---------------- | :------------------ | :---------------------------- |
 | Claude | Merapikan dan memverifikasi diagram | "Tolong rapikan diagram ini \<kode uml>; sesuaikan dengan konteks proyek ini" | Menyesuaikan diagram yang dikoreksi oleh Claude
+| Copilot | Diagram: Gabungan, penambahan atribut sesuai tabel (grunt work), penyesuaian ulang traceability dan pasangan class-UC |  - | Pengecekan ulang |
 
 ---
 
