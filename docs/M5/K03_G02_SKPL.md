@@ -94,6 +94,12 @@ Bagian ini dapat disalin dari BAB 1.1 *Deskripsi Umum Sistem* pada dokumen *Requ
 <i>Gambar 1. Contoh Activity Diagram Proses Bisnis</i>
 </p>
 
+SoClean adalah perangkat lunak berbasis *crowdsourcing* yang menyediakan sarana bagi publik untuk berkontribusi dalam upaya pelestarian lingkungan laut melalui pembersihan laut dari sampah-sampah domestik. Dalam implementasinya, perangkat lunak ini menggunakan metode gamifikasi yang kolaboratif sebagai bentuk dorongan komunal dalam usaha memajukan progres SDG ke-14.
+
+Sebelum mendapatkan akses terhadap fitur-fitur di perangkat lunak, pengguna dapat melakukan registrasi serta *log in* menggunakan kredensial akunnya. Terdapat dua fitur utama dalam perangkat lunak ini: 1) laporan pembersihan sampah secara langsung (sementara disebut CleanIt), dan 2) laporan daerah penuh sampah (sementara disebut ReportIt). CleanIt merupakan fitur yang memungkinkan pengguna untuk melaporkan kontribusi langsungnya dalam membersihkan laut. Kontribusi tersebut dapat dikonfirmasi dengan mengunggah bukti, seperti foto atau video yang kemudian ditinjau oleh operator. Setelah hasil CleanIt-nya dinyatakan valid oleh operator, pengguna memperoleh poin untuk akunnya. ReportIt merupakan sarana bagi pengguna untuk melaporkan daerah lautan yang terkontaminasi sampah tanpa harus membersihkan secara langsung daerah tersebut. Pelaporan tersebut bersifat seperti *bounty* yang dapat diambil oleh pengguna lainnya untuk mendapatkan poin.
+
+Perangkat lunak SoClean tersedia sebagai web app yang dapat digunakan oleh pengguna desktop maupun mobile.
+
 ## 2.2 Deskripsi Umum Perangkat Lunak
 Diisi dengan deskripsi umum perangkat lunak untuk mendukung proses bisnis yang telah diuraikan pada sub-bab sebelumnya. Uraian harus menunjukkan lingkup perangkat lunak, mencakup keterkaitan perangkat lunak dengan sistem lain di luar (misalnya *Payment Gateway* atau layanan pihak ketiga lain yang dipakai).
 
@@ -130,7 +136,26 @@ Spesifikasi *operating system* atau lingkungan yang dibutuhkan P/L untuk beroper
 # BAB 3: Deskripsi Kebutuhan Perangkat Lunak
 
 ## 3.1 Kebutuhan Fungsional (KF)
-Salin ulang **seluruh Kebutuhan Fungsional (KF)** versi terbaru dari BAB 2.1 dokumen *Class Diagram* (sudah versi final dan sudah memakai format EARS). Pastikan ID Kebutuhan (kolom "ID Kebutuhan") juga konsisten dengan ID pada tabel Pemetaan Kebutuhan di dokumen *Requirement Gathering*.
+
+Tabel 2.1. Daftar Kebutuhan Fungsional
+
+| ID KF | ID Kebutuhan | Penjelasan |
+| :--- | :--- | :--- |
+| *KF01* | *R01* | *Perangkat lunak dapat menampilkan antarmuka pembuatan laporan ketika pengguna memilih fitur ReportIt* |
+| *KF02* | *R01* | *Perangkat lunak memiliki fitur untuk terhubung dengan kamera device dan mengambil foto yang disertai watermark dan timestamp ketika pengguna ingin mengambil bukti* |
+| *KF03* | *R02* | *Perangkat lunak dapat mengecek kelengkapan laporan sebelum pengguna dapat mengirimkannya* |
+| *KF04* | *R03* | *Perangkat lunak dapat menyimpan informasi laporan dan foto/video bukti yang dilampirkan pada laporan ketika dikirimkan oleh pengguna* |
+| *KF05* | *R04* | *Perangkat lunak dapat menampilkan antarmuka daftar laporan ketika operator ingin memverifikasi laporan* |
+| *KF06* | *R06* | *Perangkat lunak dapat menampilkan daftar laporan yang telah diverifikasi ketika memilih fitur CleanIt* |
+| *KF07* | *R06* | *Perangkat lunak dapat menampilkan antarmuka yang berisi informasi lengkap mengenai laporan (lokasi, waktu, sumber, bukti) ketika pengguna memilih laporan pada fitur CleanIt* |
+| *KF08* | *R08* | *Perangkat lunak dapat menampilkan antarmuka pembuatan laporan bukti pembersihan ketika pengguna ingin melaporkan penyelesaian pembersihan* |
+| *KF09* | *R11* | *Perangkat lunak dapat menampilkan antarmuka daftar penyelesaian katika operator ingin memverifkasinya* |
+| *KF10* | *R13* | *Perangkat lunak memberikan poin yang dapat ditukarkan dengan reward kepada pengguna setelah laporan pembersihan diverifikasi* |
+| *KF11* | *R13* | *Perangkat lunak dapat menyesuaikan jumlah poin pengguna serta jumlah persediaan reward yang tersedia ketika terjadi penambahan atau pengurangan* |
+| *KF12* | *R15* | *Perangkat lunak dapat menampilkan antarmuka penukaran reward yang menampilkan jumlah poin pengguna dan reward yang tersedia untuk ditukarkan ketika pengguna memilih fitur penukaran* |
+| *KF13* | *R15* | *Perangkat lunak dapat menukarkan koin dengan reward yang tersedia ketika pengguna mengonfirmasi penukaran* |
+
+<!-- Salin ulang **seluruh Kebutuhan Fungsional (KF)** versi terbaru dari BAB 2.1 dokumen *Class Diagram* (sudah versi final dan sudah memakai format EARS). Pastikan ID Kebutuhan (kolom "ID Kebutuhan") juga konsisten dengan ID pada tabel Pemetaan Kebutuhan di dokumen *Requirement Gathering*.
 
 Tabel 3.1. Kebutuhan Fungsional
 
@@ -144,8 +169,20 @@ Tabel 3.1. Kebutuhan Fungsional
 | *KF06* | *R05* | *Ketika pelanggan membuka menu riwayat pesanan, sistem harus menampilkan daftar pesanan beserta statusnya.* |
 | *KFXX* | *...* | *...* |
 
+-->
+
 ## 3.2 Kebutuhan Non-Fungsional (KNF)
-Salin ulang Kebutuhan Non-Fungsional dari BAB 2.5 dokumen *Requirement Gathering*, sesuaikan ID Kebutuhan (kolom "ID Kebutuhan") apabila terjadi perubahan penomoran pada BAB 3.1 di atas.
+| ID KNF | ID Kebutuhan | Parameter | Deskripsi Kebutuhan |
+| :--- | :--- | :--- | :--- |
+| KNF01 | R04 | *Response time* | *Ketika operator membuka interface daftar laporan yang menunggu verifikasi, sistem harus menampilkan seluruh laporan dalam waktu maksimal 2 detik meskipun jumlah laporan tertunda mencapai ratusan.* |
+| KNF02 | R06 | *Response time* | *Ketika pengguna membuka peta lokasi pencemaran pada fitur CleanIt, sistem harus menampilkan seluruh titik laporan di sekitar lokasi pengguna dalam waktu maksimal 3 detik.* |
+| KNF03 | R01 | *Portability* | *Sistem harus dapat diakses dan berfungsi dengan baik melalui browser pada perangkat desktop maupun mobile tanpa memerlukan install tambahan.* |
+| KNF04 | R08 | *Reliability* | *Bila proses unggah foto/video bukti laporan gagal, maka sistem harus menampilkan notifikasi kegagalan kepada pengguna dan mencegah laporan berubah status menjadi "terkirim".* |
+| KNF05 | R16 | *Reliability* | *Bila terjadi kegagalan jaringan atau sistem selama proses penukaran poin berlangsung, maka sistem harus membatalkan seluruh transaksi (rollback) sehingga saldo poin pengguna tidak berkurang tanpa reward yang tercatat.* |
+| KNF06 | R01 | *Availability* | *Sistem harus tersedia (uptime) minimal 99% setiap bulan agar masyarakat dapat mengirimkan laporan ReportIt kapan saja.* |
+| KNF07 | R01 | *Reliability* | *Selama perangkat pengguna terputus dari koneksi internet saat mengisi form ReportIt, sistem harus menyimpan sementara input pengguna secara lokal (cache).* |
+
+<!-- Salin ulang Kebutuhan Non-Fungsional dari BAB 2.5 dokumen *Requirement Gathering*, sesuaikan ID Kebutuhan (kolom "ID Kebutuhan") apabila terjadi perubahan penomoran pada BAB 3.1 di atas.
 
 Tabel 3.2. Kebutuhan Non-Fungsional
 
@@ -156,6 +193,8 @@ Tabel 3.2. Kebutuhan Non-Fungsional
 | *...* | *...* | *...* | *...* |
 
 <sub>*Silakan pilih parameter yang relevan dengan P/L kalian (Availability, Reliability, Ergonomy, Portability, Memory, Response time, Safety, Security, dsb), tidak perlu semua parameter diisi. Lihat kembali dokumen Requirement Gathering untuk penjelasan tiap parameter.*<sub>
+
+-->
 
 ---
 
