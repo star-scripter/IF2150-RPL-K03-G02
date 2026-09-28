@@ -85,13 +85,51 @@ Tuliskan sistematika pembahasan dokumen SKPL ini secara runut (misalnya: BAB 2 m
 # BAB 2: Deskripsi Perangkat Lunak
 
 ## 2.1 Deskripsi Umum Sistem
-Bagian ini dapat disalin dari BAB 1.1 *Deskripsi Umum Sistem* pada dokumen *Requirement Gathering*, disesuaikan bila ada perubahan alur bisnis. Lengkapi dengan gambaran proses bisnis dalam bentuk *Activity Diagram* (boleh disalin dan diperbarui dari 3.3 *Model Proses Bisnis* pada dokumen *Topic Brainstorming*).
+<!-- Bagian ini dapat disalin dari BAB 1.1 *Deskripsi Umum Sistem* pada dokumen *Requirement Gathering*, disesuaikan bila ada perubahan alur bisnis. Lengkapi dengan gambaran proses bisnis dalam bentuk *Activity Diagram* (boleh disalin dan diperbarui dari 3.3 *Model Proses Bisnis* pada dokumen *Topic Brainstorming*). -->
 
+```mermaid
+graph TD
+    classDef startend fill:#D81B60,stroke:#880E4F,stroke-width:2px,color:transparent;
+    classDef action fill:#8E24AA,stroke:#6A1B9A,stroke-width:2px,color:white;
+    classDef decision fill:#F8BBD0,stroke:#C2185B,stroke-width:2px,color:black;
+
+    subgraph Relawan
+        Start(( )):::startend
+        R_login[Login / Registrasi]:::action
+        R_laporan[Buat Laporan Sampah <br> Foto & Lokasi]:::action
+        R_pilih[Pilih Laporan Sampah <br> untuk Dibersihkan]:::action
+        R_pembersihan[Sukarela Membersihkan & <br> Upload Bukti Sesudah]:::action
+        R_poin[Dapatkan Notifikasi & <br> Lihat Poin Reward]:::action
+        End_Relawan((( ))):::startend
+    end
+
+    subgraph "Sistem Aplikasi"
+        S_simpan[Terima & Simpan <br> Draft Laporan]:::action
+        S_validasi{"Validasi Laporan <br> (Kotor & Valid?)"}:::decision
+        S_publish[Tampilkan Laporan <br> Valid di Peta]:::action
+        S_confirm[Update Status Laporan <br> ke Selesai]:::action
+        S_hitung[Hitung Poin Reward]:::action
+        S_tambah_poin[Tambahkan Poin <br> ke Saldo Relawan]:::action
+    end
+
+    Start --> R_login
+    R_login --> R_laporan
+    R_laporan --> S_simpan
+    S_simpan --> S_validasi
+    
+    S_validasi --->|"Tolak / Laporan Palsu (No)"| R_laporan
+    S_validasi -->|"Valid (Yes)"| S_publish
+    
+    S_publish --> R_pilih
+    R_pilih --> R_pembersihan
+    R_pembersihan --> S_confirm
+    S_confirm --> S_hitung
+    S_hitung --> S_tambah_poin
+    S_tambah_poin --> R_poin
+    R_poin --> End_Relawan
+```
 <p align="center">
-<img alt="Contoh Activity Diagram" src="./assets/diagram/diagram-act-1.avif" width="70%">
-</p>
-<p align="center">
-<i>Gambar 1. Contoh Activity Diagram Proses Bisnis</i>
+<i>Gambar 1. Activity Diagram Proses Bisnis</i>
 </p>
 
 SoClean adalah perangkat lunak berbasis *crowdsourcing* yang menyediakan sarana bagi publik untuk berkontribusi dalam upaya pelestarian lingkungan laut melalui pembersihan laut dari sampah-sampah domestik. Dalam implementasinya, perangkat lunak ini menggunakan metode gamifikasi yang kolaboratif sebagai bentuk dorongan komunal dalam usaha memajukan progres SDG ke-14.
@@ -106,12 +144,18 @@ Diisi dengan deskripsi umum perangkat lunak untuk mendukung proses bisnis yang t
 *Contoh narasi:* "*[Nama P/L]* merupakan aplikasi *[deskripsi singkat]* yang berinteraksi dengan *Payment Gateway (dummy)* untuk memproses otorisasi pembayaran. Sistem menerima input dari *Pelanggan* melalui antarmuka aplikasi dan mengirimkan permintaan transaksi ke *Payment Gateway* setiap kali pelanggan melakukan checkout."
 
 ## 2.3 Pengguna dan Kebutuhan Pengguna Perangkat Lunak
-Tuliskan seluruh jenis pengguna (*role*/aktor) yang terlibat dalam perangkat lunak (P/L), beserta kebutuhannya secara umum. Bagian ini dapat disalin dari 1.2 *Deskripsi Pengguna Perangkat Lunak* (dokumen Requirement Gathering) atau 3.1 *Identifikasi Aktor* (dokumen Use Case), pastikan sudah konsisten dengan aktor final yang dipakai di BAB 4.
+<!-- Tuliskan seluruh jenis pengguna (*role*/aktor) yang terlibat dalam perangkat lunak (P/L), beserta kebutuhannya secara umum. Bagian ini dapat disalin dari 1.2 *Deskripsi Pengguna Perangkat Lunak* (dokumen Requirement Gathering) atau 3.1 *Identifikasi Aktor* (dokumen Use Case), pastikan sudah konsisten dengan aktor final yang dipakai di BAB 4.
 
 | Pengguna | Kebutuhan |
 | :--- | :--- |
 | *Pelanggan* | *Pelanggan harus dapat memesan produk, mengelola keranjang, dan menyelesaikan pembayaran melalui sistem.* |
-| *...* | *...* |
+| *...* | *...* | -->
+
+| Aktor   | Deskripsi                                                                                                                                                                                                                         |
+| :------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Operator | _Pengguna ini bertindak sebagai pihak yang bertanggung jawab untuk memvalidasi laporan dari ReportIt dan CleanIt. Karakteristik dari pengguna ini adalah mengutamakan kecepatan untuk memverifikasi laporan dalam jumlah yang banyak._ |
+| Masyarakat | _Pengguna ini bertindak sebagai pihak yang melaporkan pencemaran (Pelapor) maupun beraksi membersihkan sampah (Relawan) di ekosistem laut dan sungai. Karakteristik dari pengguna ini adalah mengutamakan kemudahan pelaporan dan melihat lokasi._ |
+
 
 ## 2.4 Batasan Perangkat Lunak
 Batasan yang harus dituliskan, di antaranya:
@@ -256,7 +300,197 @@ Salin ulang daftar aktor final dari BAB 3.1 dokumen *Use Case & Scenario Use Cas
 <br>
 
 ## 4.4 Skenario Use Case
-Salin ulang skenario **setiap** use case (skenario normal dan alternatif) dari BAB 3.4 dokumen *Use Case & Scenario Use Case*, sesuaikan dengan daftar UC final pada 4.2. Jika use case melibatkan lebih dari satu aktor manusia yang benar-benar berinteraksi langsung (misalnya *Kasir* yang memverifikasi transaksi setelah *Pelanggan* membayar), tambahkan kolom aksi tersendiri untuk aktor tersebut di samping kolom "Reaksi Perangkat Lunak". Sistem eksternal otomatis seperti *payment gateway* **bukan aktor**, sehingga interaksinya cukup dituliskan sebagai bagian dari "Reaksi Perangkat Lunak", bukan kolom aktor terpisah.
+
+## 3.4 Skenario Use Case
+
+### 3.4.1 Skenario UC01
+
+**Nama Use Case:** *Membuat Laporan Pencemaran*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu ReportIt* | *Sistem menampilkan form pembuatan laporan* |
+| 2 | *Pengguna mengisi informasi pada laporan* | *Sistem mengonfirmasi kecocokan informasi dengan format* |
+| 4 | *Pengguna mengirimkan laporan* | *Sistem mengecek kelengkapan laporan, menampilkan notifikasi laporan dikirimkan, dan menampilkan instruksi untuk menunggu konfirmasi* |
+
+
+<br>
+
+**Skenario Alternatif 1: Informasi Tidak Sesuai Format**
+
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu ReportIt* | *Sistem menampilkan form pembuatan laporan* |
+| 2 | *Pengguna mengisi informasi pada laporan* | *Sistem mengirimkan notifikasi bahwa informasi tidak sesuai dan menampilkan contoh format yang sesuai* |
+| 3 | *Pengguna memperbaiki informasi pada laporan* | *Sistem mengonfirmasi kecocokan informasi dengan format* |
+| 4 | *Pengguna mengirimkan laporan* | *Sistem mengecek kelengkapan laporan, menampilkan notifikasi laporan dikirimkan, dan menampilkan instruksi untuk menunggu konfirmasi* |
+
+<br>
+
+**Skenario Alternatif 2: Informasi Pada Laporan Tidak Lengkap**
+
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu ReportIt* | *Sistem menampilkan form pembuatan laporan* |
+| 2 | *Pengguna mengisi informasi pada laporan* | *Sistem mengonfirmasi kecocokan informasi dengan format* |
+| 3 | *Pengguna mengirimkan laporan* | *Sistem menampilkan notifikasi bahwa masih ada informasi yang belum diisi atau tidak lengkap dan menandakannya menggunakan penanda warna(?)* |
+| 4 | *Pengguna melengkapi isi laporan* | *Sistem mengecek kelengkapan laporan, menampilkan notifikasi laporan dikirimkan, dan menampilkan instruksi untuk menunggu konfirmasi* |
+
+### 3.4.2 Skenario UC02
+
+**Nama Use Case:** *Mengambil Bukti Foto/Video*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu pengambilan gambar* | *Sistem menampilkan antarmuka pengambilan gambar yang terdiri dari fitur kamera dan timestamp pada bagian kanan bawah* |
+| 2 | *Pengguna menekan tombol pengambilan gambar* | *Perangkat akan mengambil foto/video yang disertai timestamp dan menyimpan hasilnya pada penyimpanan perangkat* |
+
+<br>
+
+**Skenario Alternatif 1: Penyimpanan Perangkat Penuh**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu pengambilan gambar* | *Sistem menampilkan antarmuka pengambilan gambar yang terdiri dari fitur kamera dan timestamp pada bagian kanan bawah* |
+| 2 | *Pengguna menekan tombol pengambilan gambar* | *Sistem menampilkan notifikasi bahwa penyimpanan perangkat penuh dan foto/video tidak tersimpan* |
+
+### 3.4.3 Skenario UC03
+
+**Nama Use Case:** *Memverifikasi Laporan ReportIt*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Operator memilih menu verifikasi laporan ReportIt* | *Sistem menampilkan daftar laporan yang belum diverifikasi* |
+| 2 | *Operator memilih salah satu laporan ReportIt* | *Sistem menampilkan detail dan informasi laporan seperti bukti foto/video* |
+| 3 | *Operator memeriksa validitas laporan* | *Sistem menampilkan pilihan untuk menyatakan valid/tidak* |
+| 4 | *Operator menyatakan laporan valid* | *Sistem menyimpan status laporan sebagai valid dan menampilkan lokasi di laporan sebagai lokasi pencemaran yang dapat dipilih pada CleanIt* |
+
+<br>
+
+**Skenario Alternatif 1: Laporan Tidak Valid**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Operator memilih menu verifikasi laporan ReportIt* | *Sistem menampilkan daftar laporan yang belum diverifikasi* |
+| 2 | *Operator memilih salah satu laporan ReportIt* | *Sistem menampilkan detail dan informasi laporan seperti bukti foto/video* |
+| 3 | *Operator memeriksa validitas laporan* | *Sistem menampilkan pilihan untuk menyatakan valid/tidak* |
+| 4 | *Operator menyatakan laporan tidak valid* | *Sistem menyimpan status laporan sebagai tidak valid dan tidak menampilkan lokasi di daftar lokasi untuk dibersihkan* |
+
+
+### 3.4.4 Skenario UC04
+
+**Nama Use Case:** *Melihat Daftar Lokasi Pencemaran (CleanIt)*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih fitur CleanIt* | *Sistem menampilkan daftar lokasi pencemaran yang telah diverifikasi* |
+| 2 | *Pengguna memilih salah satu lokasi* | *Sistem menampilkan informasi lengkap terkait lokasi tersebut* |
+| 3 | *Pengguna memilih lokasi untuk dibersihkan* | *Sistem menampilkan konfirmasi bahwa lokasi tersebut dipilih untuk dibersihkan* |
+
+<br>
+
+**Skenario Alternatif 1: Tidak Ada Lokasi Pencemaran di Daftar**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih fitur CleanIt* | *Sistem tidak menemukan lokasi pencemaran yang telah diverifikasi* |
+| 2 | - |  *Sistem menampilkan notifikasi bahwa belum terdapat lokasi pencemaran yang tersedia untuk dibersihkan* |
+
+### 3.4.5 Skenario UC05
+
+**Nama Use Case:** *Mengirimkan Bukti Pembersihan (CleanIt)*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu CleanIt* | *Sistem menampilkan antarmuka untuk mengirimkan bukti pembersihan* |
+| 2 | *Pengguna mengisi informasi bukti pembersihan* | *Sistem mengonfirmasi kecocokan informasi dengan format yang benar* |
+| 3 | *Pengguna mengirimkan bukti pembersihan* | *Sistem menyimpan bukti pembersihan dan memberikan konfirmasi kepada pengguna* |
+
+<br>
+
+**Skenario Alternatif 1: Pengiriman Bukti Pembersihan Gagal (misal: file terlalu besar)**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih menu CleanIt* | *Sistem menampilkan antarmuka untuk mengirimkan bukti pembersihan* |
+| 2 | *Pengguna mengisi informasi bukti pembersihan* | *Sistem mengonfirmasi kecocokan informasi dengan format yang benar* |
+| 3 | *Pengguna mengirimkan bukti pembersihan* | *Sistem menampilkan notifikasi bahwa pengiriman bukti pembersihan gagal* |
+
+### 3.4.6 Skenario UC06
+
+**Nama Use Case:** *Memverifikasi Laporan Pembersihan (CleanIt)*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Operator membuka menu untuk melihat laporan masuk* | *Sistem menampilkan daftar laporan pembersihan yang masuk* |
+| 2 | *Operator memilih laporan untuk diperiksa* | *Sistem menampilkan detail laporan pembersihan* |
+| 3 | *Operator menyetujui laporan* | *Sistem menyimpan perubahan dan memberikan poin ke akun pengguna* |
+
+<br>
+
+**Skenario Alternatif 1: Operator menolak laporan karena bukti tidak sah**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Operator membuka menu untuk melihat laporan masuk* | *Sistem menampilkan daftar laporan pembersihan yang masuk* |
+| 2 | *Operator memilih laporan untuk diperiksa* | *Sistem menampilkan detail laporan pembersihan* |
+| 3 | *Operator menolak laporan karena bukti tidak sah dan mengisi alasan* | *Sistem menyimpan perubahan dan dan mengirimkan notifikasi alasan penolakan kepada pengguna* |
+
+### 3.4.7 Skenario UC07
+
+**Nama Use Case:** *Melihat Saldo Poin*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna membuka menu untuk melihat saldo poin* | *Sistem menampilkan saldo poin pengguna* |
+
+### 3.4.8 Skenario UC08
+
+**Nama Use Case:** *Melihat Reward yang Tersedia*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna membuka menu untuk melihat reward yang tersedia* | *Sistem menampilkan daftar reward yang tersedia* |
+
+### 3.4.9 Skenario UC09
+
+**Nama Use Case:** *Menukarkan Poin dengan Reward*
+
+**Skenario Normal**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih hadiah untuk diklaim* | *Sistem melakukan pengecekan terhadap jumlah poin pengguna dan harga poin hadiah* |
+| 2 | *-* | *Apabila jumlah poin pengguna dan harga poin hadiah sesuai, poin pengguna dipotong dan hadiah diklaim oleh pengguna* |
+
+<br>
+
+**Skenario Alternatif 1: Poin tidak cukup**
+
+| No | Aksi Aktor | Reaksi Perangkat Lunak |
+| :--- | :--- | :--- |
+| 1 | *Pengguna memilih hadiah untuk diklaim* | *Sistem melakukan pengecekan terhadap jumlah poin pengguna dan harga poin hadiah* |
+| 2 | *-* | *Sistem mengirimkan notifikasi gagal mengklaim produk akibat jumlah poin yang kurang* |
+
+<!-- Salin ulang skenario **setiap** use case (skenario normal dan alternatif) dari BAB 3.4 dokumen *Use Case & Scenario Use Case*, sesuaikan dengan daftar UC final pada 4.2. Jika use case melibatkan lebih dari satu aktor manusia yang benar-benar berinteraksi langsung (misalnya *Kasir* yang memverifikasi transaksi setelah *Pelanggan* membayar), tambahkan kolom aksi tersendiri untuk aktor tersebut di samping kolom "Reaksi Perangkat Lunak". Sistem eksternal otomatis seperti *payment gateway* **bukan aktor**, sehingga interaksinya cukup dituliskan sebagai bagian dari "Reaksi Perangkat Lunak", bukan kolom aktor terpisah.
 
 ### 4.4.1 Skenario UC01
 
@@ -280,22 +514,553 @@ Salin ulang skenario **setiap** use case (skenario normal dan alternatif) dari B
 
 <sub>*Lanjutkan pola 4.4.x ini untuk setiap ID UC pada 4.2, sampai seluruh use case memiliki skenarionya masing-masing.*<sub>
 
+-->
+
 ---
 
 # BAB 5: Pemodelan Kelas
 
 ## 5.1 Identifikasi Kelas
-Salin ulang seluruh kelas yang telah diidentifikasi dari BAB 4.1 dokumen *Class Diagram*.
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas | ID Use Case |
+| :--- | :--- | :--- | :--- |
+| C01 | *FormLaporan* | *Menyediakan tampilan serta fungsionalitas formulir input untuk laporan (baik CleanIt maupun ReportIt) bagi pengguna masyarakat* | *UC01, UC02, UC05* |
+| C02 | *Laporan* | *Menyimpan informasi yang berada di laporan yang telah dikirim oleh pengguna masyarakat, yaitu bukti, lokasi, waktu, keterangan* | *UC01, UC03, UC05, UC06* |
+| C03 | *Media* | *Menyediakan kemampuan pengambilan bukti (foto/video) yang akan dicantumkan dalam laporan* | *UC02* |
+| C04 | *DaftarLaporan* | *Menyimpan dan menampilkan daftar submisi laporan* | *UC01, UC03, UC05, UC06* |
+| C05 | *ValidatorLaporan* | *Menyediakan kemampuan bagi operator untuk mengubah status validitas sebuah laporan dan memetakan lokasi pencemaran* | *UC03, UC06* |
+| C06 | *Lokasi* | *Menyimpan informasi posisi pencemaran pada daftar lokasi* | *UC03, UC04* |
+| C07 | *DaftarLokasi* | *Menyimpan dan menampilkan daftar lokasi pencemaran* | *UC04* |
+| C08 | *Pengguna* | *Menyimpan informasi terkait poin yang dimiliki* | *UC07, UC09* |
+| C09 | *Reward* | *Menyimpan informasi terkait jenis, jumlah, dan harga reward itu sendiri* | *UC08, UC09* |
+| C10 | *DaftarReward* | *Menyimpan dan menampilkan daftar reward yang tersedia* | *UC08, UC09* |
+| C11 | *ManagerPoin* | *Mengatur perhitungan poin dalam transaksi reward* | *UC07, UC08, UC09* |
+| C12 | *HalamanPenukaran* | *Menyediakan tampilan bagi pengguna masyarakat untuk melihat saldo poin dan daftar reward yang tersedia, memilih reward yang ingin ditukarkan, serta menampilkan notifikasi hasil penukaran* | *UC07, UC08, UC09* |
+| C13 | *Penukaran* | *Menyimpan catatan satu transaksi penukaran poin dengan reward, yaitu pengguna yang menukarkan, reward yang ditukarkan, jumlah poin yang dipakai, dan waktu penukaran, sebagai bukti klaim reward* | *UC09* |
+
+<!-- Salin ulang seluruh kelas yang telah diidentifikasi dari BAB 4.1 dokumen *Class Diagram*.
 
 | ID Kelas | Nama Kelas | Deskripsi Kelas | ID Use Case |
 | :--- | :--- | :--- | :--- |
 | *C01* | *Pelanggan* | *Menyimpan data akun pelanggan yang membuat pesanan.* | *UC01, UC05* |
 | *C02* | *Pesanan* | *Menyimpan data pesanan beserta status pembayarannya.* | *UC01, UC03, UC05* |
 | *C03* | *Keranjang* | *Menyimpan sementara item yang dipilih sebelum checkout.* | *UC01, UC02* |
-| *...* | *...* | *...* | *...* |
+| *...* | *...* | *...* | *...* | -->
 
 ## 5.2 Diagram Kelas per Use Case
-Salin ulang diagram kelas untuk setiap use case dari BAB 4.2 dokumen *Class Diagram*, lengkap dengan tabel atribut dan metode/operasinya.
+
+### 5.2.1 Use Case UC01
+
+**Nama Use Case:** *Membuat Laporan Pencemaran*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *Menyediakan tampilan serta fungsionalitas formulir input untuk laporan (baik CleanIt maupun ReportIt) bagi pengguna masyarakat.* |
+| *C02* | *Laporan* | *Menyimpan informasi yang berada di laporan yang telah dikirim oleh pengguna masyarakat, yaitu bukti, lokasi, waktu, keterangan.* |
+| *C04* | *DaftarLaporan* | *Menyimpan dan menampilkan daftar submisi laporan* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class FormLaporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+            buatLaporan()
+            isTerisi()
+        }
+    }
+    namespace ApplicationServices {
+        class Laporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+            simpanLaporan()
+        }
+    }
+    namespace DomainServices {
+        class DaftarLaporan {
+            idLaporan
+            daftarLaporan()
+        }
+    }
+
+    <<UserInterfacer>> FormLaporan
+    <<Structurer>> DaftarLaporan 
+    <<InformationHolder>> Laporan
+
+    FormLaporan --> Laporan : membuat
+    DaftarLaporan o-- "0..*" Laporan : menyimpan
+```
+<p align="center">
+<i>Gambar 2. Diagram Kelas Use Case UC01</i>
+</p>
+<br>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *lokasi, waktu, idMedia, sumber* | *buatLaporan(), isTerisi()* |
+| *C02* | *Laporan* | *lokasi, waktu, idMedia, sumber* | *simpanLaporan()* |
+| *C04* | *DaftarLaporan* | *idLaporan* | *daftarLaporan()* |
+
+### 5.2.2 Use Case UC02
+
+**Nama Use Case:** *Mengambil Bukti Foto/Video*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *Menyediakan tampilan serta fungsionalitas formulir input untuk laporan (baik CleanIt maupun ReportIt) bagi pengguna masyarakat.* |
+| *C03* | *Media* | *Menyediakan kemampuan pengambilan bukti (foto/video) yang akan dicantumkan dalam laporan* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class FormLaporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+        }
+        class Media {
+            idMedia
+            typeMedia
+            inputMedia()
+        }
+    }
+    <<UserInterfacer>> FormLaporan
+    <<InformationHolder>> Media
+
+    FormLaporan --> Media : menginput
+```
+</p>
+<p align="center">
+<i>Gambar 3. Diagram Kelas Use Case UC02</i>
+</p>
+<br>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *lokasi, waktu, idMedia, sumber* | *-* |
+| *C03* | *Media* | *idMedia, typeMedia* | *inputMedia()* |
+
+### 5.2.3 Use Case UC03
+
+**Nama Use Case:** *Memverifikasi Laporan ReportIt*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C02* | *Laporan* | *Menyimpan informasi yang berada di laporan yang telah dikirim oleh pengguna masyarakat, yaitu bukti, lokasi, waktu, keterangan.* |
+| *C04* | *DaftarLaporan* | *Menyimpan dan menampilkan daftar submisi laporan* |
+| *C05* | *ValidatorLaporan* | *Menyediakan kemampuan bagi operator untuk mengubah status validitas sebuah laporan dan memetakan lokasi pencemaran* |
+| *C06* | *Lokasi* | *Menyimpan informasi posisi pencemaran pada daftar lokasi* | 
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class ValidatorLaporan {
+            validasi()
+            setujui(idLaporan)
+            tolak(idLaporan)
+        }
+    }
+    namespace ApplicationServices {
+        class Laporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+            tampilkanLaporan()
+            simpanLaporan()
+            isValid()
+        }
+        class Lokasi {
+            lokasi
+            simpanLokasi()
+        }
+    }
+
+    namespace DomainServices {
+        class DaftarLaporan {
+            idLaporan
+        }
+    }
+
+    <<Controller>> ValidatorLaporan
+    <<Structurer>> DaftarLaporan
+    <<InformationHolder>> Laporan
+    <<InformationHolder>> Lokasi
+
+    ValidatorLaporan --> Laporan : validasi
+    Laporan --|> Lokasi : menyimpan lokasi
+    Laporan  --o DaftarLaporan : memuat
+```
+</p>
+<p align="center">
+<i>Gambar 4. Diagram Kelas Use Case UC03</i>
+</p>
+<br>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C02* | *Laporan* | *lokasi, waktu, idMedia, sumber* | *tampilkanLaporan(), simpanLaporan(), isValid()* |
+| *C04* | *DaftarLaporan* | *idLaporan* | *-* |
+| *C05* | *ValidatorLaporan* | - | *validasi(), setujui(idLaporan), tolak(idLaporan)* |
+| *C06* | *Lokasi* | *lokasi* | *simpanLokasi()* |
+
+### 5.2.4 Use Case UC04
+
+**Nama Use Case:** *Melihat Daftar Lokasi Pencemaran (CleanIt)*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C07* | *DaftarLokasi* | *Menyimpan dan menampilkan daftar lokasi pencemaran* |
+| *C06* | *Lokasi* | *Menyimpan informasi posisi pencemaran pada daftar lokasi* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace DomainServices {
+        class DaftarLokasi {
+            idLokasi
+            daftarLokasi()
+        }
+        class Lokasi {
+            idLokasi
+            koordinat
+            status
+            tampilkanLokasi()
+        }
+    }
+    <<Structurer>> DaftarLokasi
+    <<InformationHolder>> Lokasi
+
+    DaftarLokasi "1" o-- "0..*" Lokasi : memuat
+```
+
+<p align="center">
+<i>Gambar X. Diagram Kelas Use Case UC04</i>
+</p>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C07* | *DaftarLokasi* | *idLokasi* | *daftarLokasi()* |
+| *C06* | *Lokasi* | *idLokasi, koordinat, status* | *tampilkanLokasi()* |
+
+### 5.2.5 Use Case UC05
+
+**Nama Use Case:** *Mengirimkan Bukti Pembersihan (CleanIt)*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *Menyediakan tampilan serta fungsionalitas formulir input untuk laporan (baik CleanIt maupun ReportIt) bagi pengguna masyarakat.* |
+| *C02* | *Laporan* | *Menyimpan informasi yang berada di laporan yang telah dikirim oleh pengguna masyarakat, yaitu bukti, lokasi, waktu, keterangan.* |
+| *C04* | *DaftarLaporan* | *Menyimpan dan menampilkan daftar submisi laporan* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class FormLaporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+            buatLaporan()
+            isTerisi()
+        }
+    }
+    namespace ApplicationServices {
+        class Laporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+            simpanLaporan()
+        }
+    }
+    namespace DomainServices {
+        class DaftarLaporan {
+            idLaporan
+            daftarLaporan()
+        }
+    }
+
+    <<UserInterfacer>> FormLaporan
+    <<Structurer>> DaftarLaporan 
+    <<InformationHolder>> Laporan
+
+    FormLaporan --> Laporan : membuat
+    DaftarLaporan o-- "0..*" Laporan : menyimpan
+```
+<p align="center">
+<i>Gambar 2. Diagram Kelas Use Case UC01</i>
+</p>
+<br>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *lokasi, waktu, idMedia, sumber* | *buatLaporan(), isTerisi()* |
+| *C02* | *Laporan* | *lokasi, waktu, idMedia, sumber* | *simpanLaporan()* |
+| *C04* | *DaftarLaporan* | *idLaporan* | *daftarLaporan()* |
+
+### 5.2.6 Use Case UC06
+
+**Nama Use Case:** *Memverifikasi Laporan Pembersihan (CleanIt)*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C02* | *Laporan* | *Menyimpan informasi yang berada di laporan yang telah dikirim oleh pengguna masyarakat, yaitu bukti, lokasi, waktu, keterangan* |
+| *C04* | *DaftarLaporan* | *Menyimpan dan menampilkan daftar submisi laporan* |
+| *C05* | *ValidatorLaporan* | *Menyediakan kemampuan bagi operator untuk mengubah status validitas sebuah laporan dan memetakan lokasi pencemaran* |
+| *C11* | *ManagerPoin* | *Mengatur perhitungan poin dalam transaksi reward* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class ValidatorLaporan {
+            validasi()
+            setujui(idLaporan)
+            tolak(idLaporan)
+        }
+    }
+    namespace ApplicationServices {
+        class Laporan {
+            idLaporan
+            status
+            idMedia
+            lokasi
+            tampilkanLaporan()
+            ubahStatus()
+        }
+        class ManagerPoin {
+            tambahPoin(idPengguna, jumlahPoin)
+        }
+    }
+    namespace DomainServices {
+        class DaftarLaporan {
+            idLaporan
+            daftarLaporan()
+        }
+    }
+    <<Controller>> ValidatorLaporan
+    <<InformationHolder>> Laporan
+    <<Controller>> ManagerPoin
+    <<Structurer>> DaftarLaporan
+
+    ValidatorLaporan --> DaftarLaporan : memvalidasi
+    ValidatorLaporan --> Laporan : mengubah status
+    ValidatorLaporan --> ManagerPoin : menambah poin
+    DaftarLaporan o-- Laporan : memuat
+```
+
+<p align="center">
+<i>Gambar X. Diagram Kelas Use Case UC06</i>
+</p>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C02* | *Laporan* | *idLaporan, status, idMedia, lokasi* | *tampilkanLaporan(), ubahStatus()* |
+| *C04* | *DaftarLaporan* | *idLaporan* | *daftarLaporan()* |
+| *C05* | *ValidatorLaporan* | *-* | *validasi(), setujui(idLaporan), tolak(idLaporan)* |
+| *C11* | *ManagerPoin* | *-* | *tambahPoin(idPengguna, jumlahPoin)* |
+
+### 5.2.7 Use Case UC07
+
+**Nama Use Case:** *Melihat Saldo Poin*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C12* | *HalamanReward* | *Menampilkan saldo poin pengguna pada menu poin dan reward.* |
+| *C08* | *Pengguna* | *Menyimpan informasi akun pengguna beserta saldo poinnya.* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class HalamanReward
+    }
+    namespace DomainServices {
+        class Pengguna {
+            idPengguna
+            nama
+            saldoPoin
+            getSaldoPoin()
+        }
+    }
+
+    <<UserInterfacer>> HalamanReward
+    <<InformationHolder>> Pengguna
+
+    HalamanReward "1" --> "1" Pengguna : membaca saldo poin
+```
+
+<p align="center">
+<i>Gambar 8. Diagram Kelas Use Case UC07</i>
+</p>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C12* | *HalamanReward* | *-* | *tampilkanSaldo(saldo)* |
+| *C08* | *Pengguna* | *idPengguna, nama, saldoPoin* | *getSaldoPoin()* |
+
+### 5.2.8 Use Case UC08
+
+**Nama Use Case:** *Melihat Reward yang Tersedia*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C12* | *HalamanReward* | *Menampilkan daftar reward yang tersedia untuk ditukarkan.* |
+| *C10* | *DaftarReward* | *Menyimpan kumpulan reward dan menyaring reward yang masih tersedia.* |
+| *C09* | *Reward* | *Menyimpan informasi nama, jenis, harga poin, dan stok sebuah reward.* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class HalamanReward
+    }
+    namespace DomainServices {
+        class DaftarReward {
+            kumpulanReward
+            getRewardTersedia()
+        }
+        class Reward {
+            idReward
+            nama
+            jenis
+            hargaPoin
+            stok
+            tersedia()
+        }
+    }
+
+    <<UserInterfacer>> HalamanReward
+    <<Structurer>> DaftarReward
+    <<InformationHolder>> Reward
+
+    HalamanReward "1" --> "1" DaftarReward : meminta reward tersedia
+    DaftarReward "1" o-- "0..*" Reward : memuat
+```
+
+<p align="center">
+<i>Gambar 9. Diagram Kelas Use Case UC08</i>
+</p>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C12* | *HalamanReward* | *-* | *tampilkanDaftarReward(daftar)* |
+| *C10* | *DaftarReward* | *kumpulanReward* | *getRewardTersedia()* |
+| *C09* | *Reward* | *idReward, nama, jenis, hargaPoin, stok* | *tersedia()* |
+
+### 5.2.9 Use Case UC09
+
+**Nama Use Case:** *Menukarkan Poin dengan Reward*
+
+#### Identifikasi Kelas
+
+| ID Kelas | Nama Kelas | Deskripsi Kelas |
+| :--- | :--- | :--- |
+| *C12* | *HalamanReward* | *Menerima pilihan reward dari pengguna dan menampilkan notifikasi berhasil atau gagalnya penukaran.* |
+| *C11* | *ManagerPoin* | *Mengatur jalannya transaksi penukaran: memastikan poin dipotong, stok dikurangi, dan penukaran tercatat sekaligus, atau tidak ada perubahan sama sekali.* |
+| *C08* | *Pengguna* | *Menyimpan saldo poin dan memutuskan apakah poinnya cukup untuk suatu harga.* |
+| *C09* | *Reward* | *Menyimpan informasi reward dan memutuskan apakah stoknya masih tersedia.* |
+| *C13* | *Penukaran* | *Merepresentasikan satu peristiwa penukaran poin dengan reward sebagai bukti klaim pengguna.* |
+
+#### Diagram Kelas
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class HalamanReward
+    }
+    namespace ApplicationServices {
+        class ManagerPoin {
+            daftarReward
+            tukarPoin(pengguna, idReward)
+        }
+    }
+    namespace DomainServices {
+        class Pengguna
+        class Reward
+        class Penukaran
+    }
+
+    <<UserInterfacer>> HalamanReward
+    <<Controller>> ManagerPoin
+    <<InformationHolder>> Pengguna
+    <<InformationHolder>> Reward
+    <<InformationHolder>> Penukaran
+
+    HalamanReward "1" --> "1" ManagerPoin : meminta penukaran
+    HalamanReward ..> Reward : reward yang dipilih
+    ManagerPoin ..> Pengguna : cukupPoin() / kurangiPoin()
+    ManagerPoin ..> Reward : tersedia() / kurangiStok()
+    ManagerPoin ..> Penukaran : «create»
+    Pengguna "1" -- "0..*" Penukaran : memiliki riwayat
+    Penukaran "0..*" --> "1" Reward : menukarkan
+```
+
+<p align="center">
+<i>Gambar 10. Diagram Kelas Use Case UC09</i>
+</p>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C12* | *HalamanReward* | *-* | *pilihReward(reward), tampilkanNotifikasi(pesan)* |
+| *C11* | *ManagerPoin* | *-* | *tukarPoin(pengguna, reward)* |
+| *C08* | *Pengguna* | *idPengguna, nama, saldoPoin* | *cukupPoin(harga), kurangiPoin(jumlah)* |
+| *C09* | *Reward* | *idReward, nama, jenis, hargaPoin, stok* | *getHargaPoin(), tersedia(), kurangiStok()* |
+| *C13* | *Penukaran* | *idPenukaran, waktuPenukaran, poinDipakai* | *buatPenukaran(pengguna, reward)* |
+
+<!-- Salin ulang diagram kelas untuk setiap use case dari BAB 4.2 dokumen *Class Diagram*, lengkap dengan tabel atribut dan metode/operasinya.
 
 ### 5.2.1 Use Case UC01
 
@@ -314,10 +1079,167 @@ Salin ulang diagram kelas untuk setiap use case dari BAB 4.2 dokumen *Class Diag
 | *C03* | *Keranjang* | *daftarItem* | *tambahItem(), checkout()* |
 | *...* | *...* | *...* | *...* |
 
-> Lanjutkan pola **5.2.x** untuk setiap use case pada 4.2.
+> Lanjutkan pola **5.2.x** untuk setiap use case pada 4.2.-->
 
 ## 5.3 Diagram Kelas Keseluruhan
-Gabungkan seluruh kelas dan hubungan antarkelas dari BAB 4.3 dokumen *Class Diagram* menjadi satu diagram kelas keseluruhan. Pastikan tidak ada kelas yang terduplikasi atau tertinggal.
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace Presentation {
+        class FormLaporan {
+            lokasi
+            waktu
+            idMedia
+            sumber
+            buatLaporan()
+            isTerisi()
+        }
+        class ValidatorLaporan {
+            validasi()
+            setujui(idLaporan)
+            tolak(idLaporan)
+        }
+        class HalamanPenukaran {
+            tampilkanSaldo(saldo)
+            tampilkanDaftarReward(daftar)
+            pilihReward(idReward)
+            tampilkanNotifikasi(pesan)
+        }
+    }
+
+    namespace ApplicationServices {
+        class Laporan {
+            idLaporan
+            lokasi
+            waktu
+            idMedia
+            sumber
+            status
+            tampilkanLaporan()
+            simpanLaporan()
+            isValid()
+            ubahStatus()
+        }
+        class Lokasi {
+            idLokasi
+            lokasi
+            koordinat
+            status
+            simpanLokasi()
+            tampilkanLokasi()
+        }
+        class ManagerPoin {
+            daftarReward
+            lihatSaldo(pengguna)
+            lihatRewardTersedia()
+            tambahPoin(idPengguna, jumlahPoin)
+            tukarPoin(pengguna, idReward)
+        }
+    }
+
+    namespace DomainServices {
+        class Media {
+            idMedia
+            typeMedia
+            inputMedia()
+        }
+        class DaftarLaporan {
+            idLaporan
+            daftarLaporan()
+        }
+        class DaftarLokasi {
+            idLokasi
+            daftarLokasi()
+        }
+        class Pengguna {
+            idPengguna
+            nama
+            saldoPoin
+            getSaldoPoin()
+            cukupPoin(harga)
+            kurangiPoin(jumlah)
+        }
+        class Reward {
+            idReward
+            nama
+            jenis
+            hargaPoin
+            stok
+            tersedia()
+            getHargaPoin()
+            kurangiStok()
+        }
+        class DaftarReward {
+            kumpulanReward
+            getRewardTersedia()
+            cariReward(idReward)
+        }
+        class Penukaran {
+            idPenukaran
+            waktuPenukaran
+            poinDipakai
+            buatPenukaran(pengguna, reward)
+        }
+    }
+
+    <<UserInterfacer>> FormLaporan
+    <<UserInterfacer>> HalamanPenukaran
+    <<Controller>> ValidatorLaporan
+    <<Controller>> ManagerPoin
+    <<InformationHolder>> Laporan
+    <<InformationHolder>> Lokasi
+    <<InformationHolder>> Media
+    <<InformationHolder>> Pengguna
+    <<InformationHolder>> Reward
+    <<InformationHolder>> Penukaran
+    <<Structurer>> DaftarLaporan
+    <<Structurer>> DaftarLokasi
+    <<Structurer>> DaftarReward
+
+    FormLaporan --> Media : menginput
+    FormLaporan --> Laporan : membuat
+    DaftarLaporan o-- "0..*" Laporan : menyimpan
+    ValidatorLaporan --> DaftarLaporan : memvalidasi
+    ValidatorLaporan --> Laporan : mengubah status
+    ValidatorLaporan --> ManagerPoin : menambah poin
+    Laporan --|> Lokasi : menyimpan lokasi
+    Laporan --o DaftarLaporan : memuat
+    DaftarLokasi "1" o-- "0..*" Lokasi : memuat
+    HalamanPenukaran --> ManagerPoin : meminta layanan poin
+    ManagerPoin ..> Pengguna : mengelola poin
+    ManagerPoin "1" --> "1" DaftarReward : mengelola reward
+    DaftarReward "1" o-- "0..*" Reward : memuat
+    ManagerPoin ..> Reward : mengelola stok
+    ManagerPoin ..> Penukaran : «create»
+    Pengguna "1" -- "0..*" Penukaran : melakukan
+    Penukaran "0..*" --> "1" Reward : menukarkan
+```
+
+<p align="center">
+<i>Gambar X. Diagram Kelas Keseluruhan</i>
+</p>
+<br>
+
+| ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
+| :--- | :--- | :--- | :--- |
+| *C01* | *FormLaporan* | *lokasi, waktu, idMedia, sumber* | *buatLaporan(), isTerisi()* |
+| *C02* | *Laporan* | *idLaporan, lokasi, waktu, idMedia, sumber, status* | *tampilkanLaporan(), simpanLaporan(), isValid(), ubahStatus()* |
+| *C03* | *Media* | *idMedia, typeMedia* | *inputMedia()* |
+| *C04* | *DaftarLaporan* | *idLaporan* | *daftarLaporan()* |
+| *C05* | *ValidatorLaporan* | *-* | *validasi(), setujui(idLaporan), tolak(idLaporan)* |
+| *C06* | *Lokasi* | *idLokasi, lokasi, koordinat, status* | *simpanLokasi(), tampilkanLokasi()* |
+| *C07* | *DaftarLokasi* | *idLokasi* | *daftarLokasi()* |
+| *C08* | *Pengguna* | *idPengguna, nama, saldoPoin* | *getSaldoPoin(), cukupPoin(harga), kurangiPoin(jumlah)* |
+| *C09* | *Reward* | *idReward, nama, jenis, hargaPoin, stok* | *tersedia(), getHargaPoin(), kurangiStok()* |
+| *C10* | *DaftarReward* | *kumpulanReward* | *getRewardTersedia(), cariReward(idReward)* |
+| *C11* | *ManagerPoin* | *daftarReward* | *lihatSaldo(pengguna), lihatRewardTersedia(), tambahPoin(idPengguna, jumlahPoin), tukarPoin(pengguna, idReward)* |
+| *C12* | *HalamanPenukaran* | *-* | *tampilkanSaldo(saldo), tampilkanDaftarReward(daftar), pilihReward(idReward), tampilkanNotifikasi(pesan)* |
+| *C13* | *Penukaran* | *idPenukaran, waktuPenukaran, poinDipakai* | *buatPenukaran(pengguna, reward)* |
+
+
+<!-- Gabungkan seluruh kelas dan hubungan antarkelas dari BAB 4.3 dokumen *Class Diagram* menjadi satu diagram kelas keseluruhan. Pastikan tidak ada kelas yang terduplikasi atau tertinggal.
 
 <p align="center">
 <img alt="Contoh Class Diagram Keseluruhan" src="./assets/diagram/contoh-class-diagram.webp" width="70%">
@@ -330,19 +1252,36 @@ Gabungkan seluruh kelas dan hubungan antarkelas dari BAB 4.3 dokumen *Class Diag
 | :--- | :--- | :--- | :--- |
 | *C01* | *Pelanggan* | *idPelanggan, nama, email* | *lihatRiwayatPesanan()* |
 | *C02* | *Pesanan* | *idPesanan, total, status* | *hitungTotal(), perbaruiStatus()* |
-| *...* | *...* | *...* | *...* |
+| *...* | *...* | *...* | *...* | -->
 
 ---
 
 # BAB 6: Traceability
-Salin ulang tabel Traceability dari BAB 5 dokumen *Class Diagram*, cocokkan setiap Kebutuhan Fungsional, Use Case, dan Kelas yang saling terkait.
+
+| ID Kelas | ID Use Case | ID KF |
+| :---| :---| :---|
+| C01 | *UC01, UC02, UC05* | *KF01, KF02, KF03, KF04, KF08* |
+| C02 | *UC01, UC03, UC05, UC06* | *KF01, KF03, KF04, KF05, KF08, KF09, KF10, KF11* |
+| C03 | *UC02* | *KF02* |
+| C04 | *UC01, UC03, UC05, UC06* | *KF01, KF03, KF04, KF05, KF08, KF09, KF10, KF11* |
+| C05 | *UC03, UC06* | *KF05, KF09, KF10, KF11* |
+| C06 | *UC03, UC04* | *KF05, KF06, KF07* |
+| C07 | *UC04* | *KF06, KF07* |
+| C08 | *UC07, UC09* | *KF11, KF12, KF13* |
+| C09 | *UC08, UC09* | *KF11, KF12, KF13* |
+| C10 | *UC08, UC09* | *KF11, KF12, KF13* |
+| C11 | *UC07, UC08, UC09* | *KF11, KF12, KF13* |
+| C12 | *UC07, UC08, UC09* | *KF11, KF12, KF13* |
+| C13 | *UC09* | *KF11, KF12, KF13* |
+
+<!-- Salin ulang tabel Traceability dari BAB 5 dokumen *Class Diagram*, cocokkan setiap Kebutuhan Fungsional, Use Case, dan Kelas yang saling terkait.
 
 | ID Kelas | ID Use Case | ID KF |
 | :--- | :--- | :--- |
 | *C01* | *UC01, UC05* | *KF01, KF06* |
 | *C02* | *UC01, UC03, UC05* | *KF01, KF02, KF05, KF06* |
 | *C03* | *UC01, UC02* | *KF01, KF02* |
-| *...* | *...* | *...* |
+| *...* | *...* | *...* | -->
 
 ---
 
