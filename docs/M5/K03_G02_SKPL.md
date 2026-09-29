@@ -159,10 +159,12 @@ Diisi dengan deskripsi umum perangkat lunak untuk mendukung proses bisnis yang t
 
 ## 2.4 Batasan Perangkat Lunak
 Batasan yang harus dituliskan, di antaranya:
-1. *P/L harus memakai file data/API dari sistem lain (sebutkan, misal Payment Gateway dummy).*
-2. *P/L harus memakai format data yang sama dengan sistem lain.*
-3. *P/L harus berfungsi pada platform tertentu (misal: web browser modern, atau desktop Windows dan Linux).*
-4. *...*
+- Software hanya berfokus pada sampah-sampah domestik yang dapat ditangani dengan keikutsertaan masyarakat. Pelanggaran/pencemaran pada ekosistem perairan lain seperti illegal fishing, dan sebagainya tidak termasuk ruang lingkup sistem.
+- Software juga hanya berfokus pada sampah atau limbah yang tidak memerlukan penanganan khusus. Karena berdasarkan UU Nomor 32 Tahun 2009 Pasal 59, pengelolaan limbah B3 butuh dikelola dengan baik dan benar sesuai ketentuan yang berlaku. Oleh karena itu, CleanIt hanya berfokus pada sampah-sampah domestik yang bisa ditangani masyarakat.
+- Hukum atau regulasi dapat bervariasi di tiap wilayah sehingga adaptasi/penyesuaian software terhadap perubahan regulasi berada diluar ruang lingkup fungsi software.
+- Fitur CleanIt membutuhkan verifikasi langsung dari operator sebelum kontribusinya dinyatakan valid. Oleh karena itu, sistem mungkin akan membutuhkan waktu yang lebih lama untuk memvalidasi bukti yang dikirimkan oleh pengguna.
+- Implementasi fitur-fitur perangkat lunak dibatasi pada fitur utama seperti CleanIt, ReportIt, sistem bounty dan verifikasi sesuai dengan waktu yang diberikan.
+- Software hanya mencakup wilayah pada area yang bekerja sama atau pada area tertentu, sehingga cakupan wilayahnya terbatas.
 
 ## 2.5 Lingkungan Operasi Perangkat Lunak
 Spesifikasi *operating system* atau lingkungan yang dibutuhkan P/L untuk beroperasi. Bagian ini digunakan untuk memastikan pengguna memiliki spesifikasi yang cukup untuk menjalankan P/L. Misalnya mencakup komponen server, client, OS, DBMS, tetapi tidak menutupi kemungkinan komponen lain.
