@@ -53,7 +53,6 @@ SoClean adalah perangkat lunak berbasis web yang dapat diakses melalui perangkat
 <!-- Tuliskan dengan ringkas nama aplikasi dan deskripsi singkatnya. Bagian ini maksimal berisi satu paragraf, dapat diringkas dari BAB 1 *Analisis Permasalahan* pada dokumen *Topic Brainstorming*. -->
 
 ## 1.3 Definisi, Istilah, dan Singkatan
-Semua definisi dan singkatan yang digunakan dalam dokumen ini beserta penjelasannya.
 
 Tabel 1.3. Definisi Istilah dan Singkatan
 
@@ -65,21 +64,24 @@ Tabel 1.3. Definisi Istilah dan Singkatan
 | *KNF* | *Singkatan dari Kebutuhan Non-Fungsional.* |
 | *UC* | *Singkatan dari Use Case.* |
 | *EARS* | *Easy Approach to Requirements Syntax, yaitu pola penulisan kebutuhan agar konsisten dan mudah diuji.* |
-| *...* | *...* |
+| *SDG* | *Sustainable Development Goals, yaitu 17 tujuan utama dan 169 target yang disepakati oleh negara-negara anggota PBB untuk mencapai kesejahteraan manusia dan pelestarian lingkungan.* |
+| *SoClean* | *Nama perangkat lunak berbais web yang sedang dirancang  untuk menekan kebocoran sampah domestik ke ekosistem perairan.* |
+| *ReportIt* | *Fitur untuk melaporkan pencemaran perairan pada perangkat lunak SoClean* |
+| *CleanIt* | *Fitur pada perangkat lunak SoClean tempat masyarakat memilih lokasi tercemar, membersihkannya, lalu mengunggah bukti pembersihan untuk diverifikasi.* |
+| *B3* | *Bahan Berbahaya dan Beracun, yaitu kategori sampah yang mengandung zat  atau komponen yang memiliki sifat dapat membahayakan lingkungan hidup, makhluk hidup, dan kesehatan.* |
 
 ## 1.4 Aturan Penomoran
-Tuliskan aturan penomoran (ID) yang digunakan dalam dokumen ini. Gunakan pola ID yang **sama** dengan yang sudah dipakai pada dokumen-dokumen sebelumnya, jangan membuat pola baru di dokumen ini.
 
 Tabel 1.4. Aturan Penomoran
 
 | Hal/Bagian | Penomoran | Keterangan |
 | :--- | :--- | :--- |
-| *Kebutuhan Fungsional* | *KFXX* | |
-| *Kebutuhan Non-Fungsional* | *KNFXX* | |
-| *Aktor* | *AXX* | |
-| *Use Case* | *UCXX* | |
-| *Kelas* | *CXX* | |
-| *...* | *...* |
+| *Kebutuhan Fungsional* | *KFXX* | *Digunakan untuk menomori Kebutuhan Fungsional, dengan 'XX' adalah dua digit angka berurutan.* |
+| *Kebutuhan Non-Fungsional* | *KNFXX* | *Digunakan untuk menomori Kebutuhan Non-Fungsional, dengan 'XX' adalah dua digit angka berurutan.* |
+| *Aktor* | *AXX* | *Digunakan untuk menomori Aktor, dengan 'XX' adalah dua digit angka berurutan.* |
+| *Use Case* | *UCXX* | *Digunakan untuk menomori Use Case, dengan 'XX' adalah dua digit angka berurutan.* |
+| *Kelas* | *CXX* | *Digunakan untuk menomori Kelas, dengan 'XX' adalah dua digit angka berurutan.* |
+| *Kebutuhan* | *RXX* | *Digunakan untuk menomori Kebutuhan/Requirements, dengan 'XX' adalah dua digit angka berurutan.* |
 
 ## 1.5 Referensi
 Dokumentasi P/L yang dirujuk oleh dokumen ini. Referensi dapat berupa buku, panduan, ataupun dokumentasi lain yang dipakai dalam pengembangan P/L ini.
