@@ -40,10 +40,17 @@ Dipersiapkan oleh:
 # BAB 1: Pendahuluan
 
 ## 1.1 Tujuan Penulisan Dokumen
-Tuliskan dengan ringkas tujuan dokumen SKPL ini dibuat dan siapa saja yang akan menggunakan dokumen ini.
+Dokumen Spesifikasi Kebutuhan Perangkat Lunak (SKPL) disusun untuk mendefinisikan kebutuhan perangkat lunak *SoClean* secara lengkap, konsisten, dan rapi; meliputi deskripsi umum sistem, kebutuhan fungsional dan nonfungsional, pemodelan use case, pemodelan kelas, serta *traceability* antar kelas tersebut. Dokumen ini kemudian dapat dijadikan acuan tunggal (*single-source of truth*) dalam tahap perancangan, implementasi, hingga pengujian perangkat lunak.
+
+Dokumen ini ditujukan untuk digunakan oleh tim pengembang (kelompok kami) sebagai acuan dasar dalam merancang, mengimplementasikan, dan menguji fitur-fitur SoClean agar sesuai dengan kebutuhan yang disepakati. Dokumen ini juga dapat digunakan oleh penguji perangkat lunak sebagai dasar penyusunan *test-case* untuk memverifikasi seluruh kebutuhan fungsional dan nonfungsional dari perangkat lunak ini telah terpenuhi. Selain itu, pemangku kepentingan (*stakeholder*) seperti pihak pengelola *SoClean* yang berperan sebagai Operator dapat menggunakan dokumen SKPL ini sebagai acuan gambaran dasar mengenai lingkup, kemampuan, dan batasan sistem yang akan dibangun.
+
+<!-- Tuliskan dengan ringkas tujuan dokumen SKPL ini dibuat dan siapa saja yang akan menggunakan dokumen ini. -->
 
 ## 1.2 Lingkup Masalah
-Tuliskan dengan ringkas nama aplikasi dan deskripsi singkatnya. Bagian ini maksimal berisi satu paragraf, dapat diringkas dari BAB 1 *Analisis Permasalahan* pada dokumen *Topic Brainstorming*.
+
+SoClean adalah perangkat lunak berbasis web yang dapat diakses melalui perangkat desktop maupun mobile untuk menekan kebocoran sampah domestik dari aktivitas darat ke ekosistem perairan Indonesia. Permasalahan ini tergolong mendesak: World Bank memperkirakan Indonesia menghasilkan sekitar 7,8 juta ton sampah plastik setiap tahun dengan sekitar 346.000 ton di antaranya bocor ke laut, sementara kanal pelaporan pemerintah yang tersedia seperti SP4N-LAPOR! dan e-GAKKUM LH hanya menampung laporan tanpa melibatkan masyarakat dalam penanganannya dan kerap lambat ditindaklanjuti, sedangkan aplikasi sejenis seperti Clean Swell hanya bergantung pada sukarelawan tanpa insentif nyata. SoClean menjawab celah tersebut melalui pendekatan crowdsourcing dan gamifikasi dengan dua fitur utama, yaitu ReportIt, tempat masyarakat melaporkan lokasi perairan tercemar beserta bukti foto/video yang kemudian diverifikasi oleh Operator dan dipublikasikan sebagai bounty, serta CleanIt, tempat masyarakat memilih lokasi tercemar tersebut, membersihkannya, lalu mengunggah bukti pembersihan untuk diverifikasi oleh Operator; setiap kontribusi yang dinyatakan valid diganjar poin yang dapat ditukarkan dengan reward. Lingkup sistem dibatasi pada sampah domestik yang dapat ditangani langsung oleh masyarakat (tidak mencakup limbah B3 maupun pelanggaran lain seperti illegal fishing) serta pada wilayah yang bekerja sama, sejalan dengan SDG 14 Target 14.1 mengenai pengurangan polusi laut yang bersumber dari aktivitas darat.
+
+<!-- Tuliskan dengan ringkas nama aplikasi dan deskripsi singkatnya. Bagian ini maksimal berisi satu paragraf, dapat diringkas dari BAB 1 *Analisis Permasalahan* pada dokumen *Topic Brainstorming*. -->
 
 ## 1.3 Definisi, Istilah, dan Singkatan
 Semua definisi dan singkatan yang digunakan dalam dokumen ini beserta penjelasannya.
