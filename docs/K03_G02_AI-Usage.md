@@ -60,6 +60,12 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Claude | Merapikan dan memverifikasi diagram | "Tolong rapikan diagram ini \<kode uml>; sesuaikan dengan konteks proyek ini" | Menyesuaikan diagram yang dikoreksi oleh Claude
 | Copilot | Diagram: Gabungan, penambahan atribut sesuai tabel (grunt work), penyesuaian ulang traceability dan pasangan class-UC |  - | Pengecekan ulang |
 
+### Milestone 5
+
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
+| :------ | :---------------- | :------------------ | :---------------------------- |
+| Claude | Merapikan bahasa untuk bab 1.2 | Tolong rapikan teks yang telah dibuat sebelumnya agar lebih mengalir | Beberapa hal terlalu panjang jadi harus dipersingkat/di-*drop*.
+
 ---
 
 ### Pernyataan Integritas dan Persetujuan
