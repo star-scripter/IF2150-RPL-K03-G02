@@ -31,7 +31,7 @@ Dipersiapkan oleh:
 | Revisi | Deskripsi |
 | :--- | :--- |
 | *A* | *Pemisahan deskripsi sistem dengan deskripsi perangkat l* |
-| *B* |  |
+| *B* | *Penyesuaian diagram UC09, untuk atribut dan metode-metodenya* |
 | *C* |  |
 | ... |  |
 
@@ -1026,7 +1026,10 @@ classDiagram
     direction TB
 
     namespace Presentation {
-        class HalamanReward
+        class HalamanReward {
+            pilihReward(reward) 
+            tampilkanNotifikasi(pesan)
+        }
     }
     namespace ApplicationServices {
         class ManagerPoin {
@@ -1035,9 +1038,29 @@ classDiagram
         }
     }
     namespace DomainServices {
-        class Pengguna
-        class Reward
-        class Penukaran
+        class Pengguna {
+            idPengguna
+            nama
+            saldoPoin
+            cukupPoin(harga)
+            kurangiPoin(jumlah)
+        }
+        class Reward {
+            idReward
+            nama
+            jenis
+            hargaPoin
+            stok
+            getHargaPoin()
+            tersedia()
+            kurangiStok()
+        }
+        class Penukaran {
+            idPenukaran
+            waktuPenukaran
+            poinDipakai
+            buatPenukaran(pengguna, reward)
+        }
     }
 
     <<UserInterfacer>> HalamanReward
