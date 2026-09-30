@@ -114,3 +114,4 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 30-09-2026 | M. Aqsha | Batasan P/L, penyesuaian deskripsi umum sistem, ikhtisar, revisi minor desain UC09 | 1 jam | Done | - |
 | 30-09-2026 | Faishal Ahmad Nurdin | 30 menit | Definisi, Istilah, dan Singkatan serta Aturan Penomoran | Finished, open to changes | - |
+| 30-09-2026 | Justin William | Penyesuaian deskripsi umum perangkat lunak | 30 menit | Done, open to changes | - |
