@@ -104,4 +104,12 @@
 | 22-09-2026 | Faishal Ahmad Nurdin | Use case diagram UC1, UC2, UC3 | 1 jam 30 menit | Unfinished | Class diagram masih belum sesuai |
 | 23-09-2026 | Justin William | Bab 5 Traceability | 1 jam | Done, open to changes | - |
 | 23-09-2026 | Faishal Ahmad Nurdin | Use case diagram UC1, UC2, UC3| 1 jam | Done, open to changes | - |
-| 23-09-2026 | M. Aqsha | Review dan saran perbaikan diagram kelas | Asinkron | In-progress | - |
+| 23-09-2026 | M. Aqsha | Review dan saran perbaikan diagram kelas | Asinkron | 1 jam | Keterbatasan waktu di bagian akhir sehingga beberapa grunt work seperti menggabungkan diagram diberikan ke kakas |
+
+### Milestone 5
+
+**Periode:** 09/23/2026 - 09/30/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 30-09-2026 | M. Aqsha | Batasan P/L, penyesuaian deskripsi umum sistem, ikhtisar, revisi minor desain UC09 | 1 jam | Done | - |
