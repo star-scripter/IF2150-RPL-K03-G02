@@ -105,6 +105,7 @@
 | 23-09-2026 | Justin William | Bab 5 Traceability | 1 jam | Done, open to changes | - |
 | 23-09-2026 | Faishal Ahmad Nurdin | Use case diagram UC1, UC2, UC3| 1 jam | Done, open to changes | - |
 | 23-09-2026 | M. Aqsha | Review dan saran perbaikan diagram kelas | Asinkron | 1 jam | Keterbatasan waktu di bagian akhir sehingga beberapa grunt work seperti menggabungkan diagram diberikan ke kakas |
+| 23-09-2026 | Muhammad Dhafin Al Khairy | Use case diagram UC4, UC5, UC6 | 1 jam | Done, open to changes | - |
 
 ### Milestone 5
 
@@ -114,3 +115,4 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 30-09-2026 | M. Aqsha | Batasan P/L, penyesuaian deskripsi umum sistem, ikhtisar, revisi minor desain UC09 | 1 jam | Done | - |
 | 30-09-2026 | Faishal Ahmad Nurdin | 30 menit | Definisi, Istilah, dan Singkatan serta Aturan Penomoran | Finished, open to changes | - |
+| 30-09-2026 | Muhammad Dhafin Al Khairy | Lingkungan Operasi Perangkat Lunak | 30 menit | Done, open to changes | - |
