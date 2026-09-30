@@ -65,6 +65,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
 | :------ | :---------------- | :------------------ | :---------------------------- |
 | Claude | Merapikan bahasa untuk bab 1.2 | Tolong rapikan teks yang telah dibuat sebelumnya agar lebih mengalir | Beberapa hal terlalu panjang jadi harus dipersingkat/di-*drop*.
+| Claude | Mengetahui | "Maksud diperinci dan diorientasikan kepada P/L pada batasan dalam konteks dokumen kami" | Menyesuaikan saran dari Claude berdasarkan konteks sistem, menambahkan beberapa saran yang cukup saja, menulis dengan bahasa sendiri
 
 ---
 
