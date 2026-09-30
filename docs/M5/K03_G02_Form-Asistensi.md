@@ -26,8 +26,8 @@
 
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
+| 1. *Deskripsi umum sistem an dari fokus ke sistem secara keseluruhan dari sisi bisnis, P/L fokus ke implementasi P/L*  |
+| 2. *Batasan P/L diambil dari M1 dan diperinci dan berorientasi pada P/L* |
 | 3. ... |
 | 4. ... |
 
@@ -37,10 +37,4 @@
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
-<p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
-</p>
-
-<p align="center">
-  <i>Gambar 1. Dokumentasi kegiatan asistensi.</i>
-</p>
+<p>Asistensi dilakukan melalui chat</p>

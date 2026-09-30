@@ -32,7 +32,7 @@ Dipersiapkan oleh:
 | :--- | :--- |
 | *A* | *Pemisahan deskripsi sistem dengan deskripsi perangkat l* |
 | *B* | *Penyesuaian diagram UC09, untuk atribut dan metode-metodenya* |
-| *C* |  |
+| *C* | *Ubah kata-kata "peta" ke "daftar" agar lebih sesuai dengan konsep* |
 | ... |  |
 
 <br>
@@ -84,7 +84,7 @@ Tabel 1.4. Aturan Penomoran
 | *Kebutuhan* | *RXX* | *Digunakan untuk menomori Kebutuhan/Requirements, dengan 'XX' adalah dua digit angka berurutan.* |
 
 ## 1.5 Referensi
-Dokumentasi P/L yang dirujuk oleh dokumen ini. Referensi dapat berupa buku, panduan, ataupun dokumentasi lain yang dipakai dalam pengembangan P/L ini.
+Dokumen ini merujuk pada dokumen milestone sebelumnya (M1, M2, M3, dan M4).
 
 ## 1.6 Deskripsi Umum Dokumen (Ikhtisar)
 Bab 1 (Pendahuluan) memuat tujuan penulisan dokumen, lingkup masalah, definisi dan istilah spesifik di dalam dokumen, aturan penomoran, referensi, serta ikhtisar dokumen.
@@ -120,7 +120,7 @@ graph TD
     subgraph "Sistem Aplikasi"
         S_simpan[Terima & Simpan <br> Draft Laporan]:::action
         S_validasi{"Validasi Laporan <br> (Kotor & Valid?)"}:::decision
-        S_publish[Tampilkan Laporan <br> Valid di Peta]:::action
+        S_publish[Tampilkan Laporan <br> Valid di Daftar Lokasi]:::action
         S_confirm[Update Status Laporan <br> ke Selesai]:::action
         S_hitung[Hitung Poin Reward]:::action
         S_tambah_poin[Tambahkan Poin <br> ke Saldo Relawan]:::action
@@ -159,9 +159,9 @@ SoClean merupakan perangkat lunak berbasis web yang digunakan untuk mendukung pr
 
 SoClean menyediakan fitur ReportIt yang memungkinkan Masyarakat membuat laporan pencemaran dengan memasukkan informasi lokasi, waktu, sumber, dan bukti berupa foto atau video. Dalam pengambilan bukti, SoClean berinteraksi dengan kamera pada perangkat pengguna untuk memperoleh media yang dilengkapi timestamp dan watermark sebagai lampiran laporan. Perangkat lunak memeriksa kelengkapan laporan sebelum dikirim, lalu menyimpan laporan beserta media untuk ditampilkan kepada Operator dalam proses verifikasi. Apabila koneksi internet terputus saat pengisian, input disimpan sementara pada perangkat pengguna, sedangkan pengiriman laporan tetap membutuhkan koneksi internet.
 
-SoClean juga menyediakan fitur CleanIt yang memungkinkan Masyarakat melihat daftar lokasi pencemaran yang telah diverifikasi pada peta [nama layanan peta], melihat informasi lokasi, memilih lokasi untuk dibersihkan, serta mengirimkan bukti pembersihan. Laporan ReportIt yang dinyatakan tidak valid tidak ditampilkan dalam daftar lokasi. Bukti pembersihan ditampilkan kepada Operator untuk diverifikasi. Apabila dinyatakan valid, perangkat lunak memperbarui status laporan dan menambahkan poin ke saldo pengguna. Apabila ditolak, perangkat lunak mengirimkan notifikasi beserta alasan penolakan kepada pengguna.
+SoClean juga menyediakan fitur CleanIt yang memungkinkan Masyarakat melihat daftar lokasi pencemaran yang telah diverifikasi, melihat informasi lokasi, memilih lokasi untuk dibersihkan, serta mengirimkan bukti pembersihan. Laporan ReportIt yang dinyatakan tidak valid tidak ditampilkan dalam daftar lokasi. Bukti pembersihan ditampilkan kepada Operator untuk diverifikasi. Apabila dinyatakan valid, perangkat lunak memperbarui status laporan dan menambahkan poin ke saldo pengguna. Apabila ditolak, perangkat lunak mengirimkan notifikasi beserta alasan penolakan kepada pengguna.
 
-Selain itu, SoClean menyediakan fitur untuk melihat saldo poin, melihat reward yang tersedia, dan menukarkan poin dengan reward. Dalam proses penukaran, perangkat lunak memeriksa kecukupan poin pengguna dan ketersediaan reward, kemudian mengurangi saldo poin dan persediaan reward serta mencatat transaksi penukaran. Selain kamera dan layanan peta, SoClean tidak terhubung dengan sistem eksternal lain; karena reward berupa dummy, tidak terdapat integrasi dengan payment gateway maupun penyedia reward.
+Selain itu, SoClean menyediakan fitur untuk melihat saldo poin, melihat reward yang tersedia, dan menukarkan poin dengan reward. Dalam proses penukaran, perangkat lunak memeriksa kecukupan poin pengguna dan ketersediaan reward, kemudian mengurangi saldo poin dan persediaan reward serta mencatat transaksi penukaran. Selain kamera, SoClean tidak terhubung dengan sistem eksternal lain; karena reward berupa dummy, tidak terdapat integrasi dengan payment gateway maupun penyedia reward.
 
 ## 2.3 Pengguna dan Kebutuhan Pengguna Perangkat Lunak
 <!-- Tuliskan seluruh jenis pengguna (*role*/aktor) yang terlibat dalam perangkat lunak (P/L), beserta kebutuhannya secara umum. Bagian ini dapat disalin dari 1.2 *Deskripsi Pengguna Perangkat Lunak* (dokumen Requirement Gathering) atau 3.1 *Identifikasi Aktor* (dokumen Use Case), pastikan sudah konsisten dengan aktor final yang dipakai di BAB 4.
@@ -244,7 +244,7 @@ Tabel 3.1. Kebutuhan Fungsional
 | ID KNF | ID Kebutuhan | Parameter | Deskripsi Kebutuhan |
 | :--- | :--- | :--- | :--- |
 | KNF01 | R04 | *Response time* | *Ketika operator membuka interface daftar laporan yang menunggu verifikasi, sistem harus menampilkan seluruh laporan dalam waktu maksimal 2 detik meskipun jumlah laporan tertunda mencapai ratusan.* |
-| KNF02 | R06 | *Response time* | *Ketika pengguna membuka peta lokasi pencemaran pada fitur CleanIt, sistem harus menampilkan seluruh titik laporan di sekitar lokasi pengguna dalam waktu maksimal 3 detik.* |
+| KNF02 | R06 | *Response time* | *Ketika pengguna membuka daftar lokasi pencemaran pada fitur CleanIt, sistem harus menampilkan seluruh titik laporan di sekitar lokasi pengguna dalam waktu maksimal 3 detik.* |
 | KNF03 | R01 | *Portability* | *Sistem harus dapat diakses dan berfungsi dengan baik melalui browser pada perangkat desktop maupun mobile tanpa memerlukan install tambahan.* |
 | KNF04 | R08 | *Reliability* | *Bila proses unggah foto/video bukti laporan gagal, maka sistem harus menampilkan notifikasi kegagalan kepada pengguna dan mencegah laporan berubah status menjadi "terkirim".* |
 | KNF05 | R16 | *Reliability* | *Bila terjadi kegagalan jaringan atau sistem selama proses penukaran poin berlangsung, maka sistem harus membatalkan seluruh transaksi (rollback) sehingga saldo poin pengguna tidak berkurang tanpa reward yang tercatat.* |
@@ -291,7 +291,7 @@ Salin ulang daftar aktor final dari BAB 3.1 dokumen *Use Case & Scenario Use Cas
 | :--- | :--- | :--- | :--- | :--- |
 | *UC01* | *Membuat Laporan Pencemaran (konsep ReportIt)* | *Masyarakat melaporkan lokasi perairan yang terkontaminasi sampah beserta bukti foto/video untuk diajukan ke Operator.* | *Masyarakat* | *KF01, KF03, KF04* |
 | *UC02* | *Mengambil Bukti Foto/Video* | *Sistem menggunakan kamera device pengguna untuk mengambil foto/video bukti yang otomatis diberi watermark dan timestamp, digunakan sebagai lampiran pada laporan ReportIt maupun CleanIt.* | *Masyarakat* | *KF02* |
-| *UC03* | *Memverifikasi Laporan ReportIt* | *Operator meninjau laporan pencemaran yang masuk beserta buktinya dan menentukan validitasnya agar laporan valid dapat ditampilkan sebagai bounty di peta.* | *Operator* | *KF05* |
+| *UC03* | *Memverifikasi Laporan ReportIt* | *Operator meninjau laporan pencemaran yang masuk beserta buktinya dan menentukan validitasnya agar laporan valid dapat ditampilkan sebagai bounty di daftar lokasi.* | *Operator* | *KF05* |
 | *UC04* | *Melihat Daftar Lokasi Pencemaran (CleanIt)* | *Masyarakat periksa daftar lokasi tercemar yang telah terverifikasi beserta detail informasinya (lokasi, waktu, sumber, bukti) sebelum memilih lokasi untuk dibersihkan.* | *Masyarakat* | *KF06, KF07* |
 | *UC05* | *Mengirimkan Bukti Pembersihan (CleanIt)* | *Masyarakat yang telah membersihkan lokasi tercemar mengirimkan laporan penyelesaian beserta bukti foto/video pembersihan untuk diverifikasi Operator.* | *Masyarakat* | *KF08* |
 | *UC06* | *Memverifikasi Laporan Pembersihan (CleanIt)* | *Operator meninjau laporan penyelesaian CleanIt yang masuk dan menentukan validitasnya. Apabila laporan valid, sistem memberikan poin reward ke akun Masyarakat terkait.* | *Operator* | *KF09, KF10, KF11* |
@@ -317,14 +317,12 @@ Salin ulang daftar aktor final dari BAB 3.1 dokumen *Use Case & Scenario Use Cas
 
 <br>
 <p align="center">
-<img alt="Use Case Diagram" src="./assets/UseCaseDiagram.svg" width="80%">
+<img alt="Use Case Diagram" src="./assets/diagram/UseCaseDiagram.svg" width="80%">
 </p>
 <p align="center">
-<i>Gambar 1. Use Case Diagram</i>
+<i>Gambar 2. Use Case Diagram</i>
 </p>
 <br>
-
-## 4.4 Skenario Use Case
 
 ## 3.4 Skenario Use Case
 
@@ -626,7 +624,7 @@ classDiagram
     DaftarLaporan o-- "0..*" Laporan : menyimpan
 ```
 <p align="center">
-<i>Gambar 2. Diagram Kelas Use Case UC01</i>
+<i>Gambar 3. Diagram Kelas Use Case UC01</i>
 </p>
 <br>
 
@@ -673,7 +671,7 @@ classDiagram
 ```
 </p>
 <p align="center">
-<i>Gambar 3. Diagram Kelas Use Case UC02</i>
+<i>Gambar 4. Diagram Kelas Use Case UC02</i>
 </p>
 <br>
 
@@ -741,7 +739,7 @@ classDiagram
 ```
 </p>
 <p align="center">
-<i>Gambar 4. Diagram Kelas Use Case UC03</i>
+<i>Gambar 5. Diagram Kelas Use Case UC03</i>
 </p>
 <br>
 
@@ -788,7 +786,7 @@ classDiagram
 ```
 
 <p align="center">
-<i>Gambar X. Diagram Kelas Use Case UC04</i>
+<i>Gambar 6. Diagram Kelas Use Case UC04</i>
 </p>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
@@ -848,7 +846,7 @@ classDiagram
     DaftarLaporan o-- "0..*" Laporan : menyimpan
 ```
 <p align="center">
-<i>Gambar 2. Diagram Kelas Use Case UC01</i>
+<i>Gambar 7. Diagram Kelas Use Case UC01</i>
 </p>
 <br>
 
@@ -915,7 +913,7 @@ classDiagram
 ```
 
 <p align="center">
-<i>Gambar X. Diagram Kelas Use Case UC06</i>
+<i>Gambar 8. Diagram Kelas Use Case UC06</i>
 </p>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
@@ -961,7 +959,7 @@ classDiagram
 ```
 
 <p align="center">
-<i>Gambar 8. Diagram Kelas Use Case UC07</i>
+<i>Gambar 9. Diagram Kelas Use Case UC07</i>
 </p>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
@@ -1014,7 +1012,7 @@ classDiagram
 ```
 
 <p align="center">
-<i>Gambar 9. Diagram Kelas Use Case UC08</i>
+<i>Gambar 10. Diagram Kelas Use Case UC08</i>
 </p>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
@@ -1097,7 +1095,7 @@ classDiagram
 ```
 
 <p align="center">
-<i>Gambar 10. Diagram Kelas Use Case UC09</i>
+<i>Gambar 11. Diagram Kelas Use Case UC09</i>
 </p>
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
@@ -1266,7 +1264,7 @@ classDiagram
 ```
 
 <p align="center">
-<i>Gambar X. Diagram Kelas Keseluruhan</i>
+<i>Gambar 12. Diagram Kelas Keseluruhan</i>
 </p>
 <br>
 
@@ -1332,6 +1330,3 @@ classDiagram
 | *...* | *...* | *...* | -->
 
 ---
-
-# Referensi
-- Diagram UML: [https://www.drawio.com/](https://www.drawio.com/), [https://staruml.io/](https://staruml.io/)
