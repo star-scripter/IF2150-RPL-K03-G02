@@ -30,7 +30,7 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
+| *A* | *Pemisahan deskripsi sistem dengan deskripsi perangkat l* |
 | *B* |  |
 | *C* |  |
 | ... |  |
@@ -161,13 +161,15 @@ Perangkat lunak SoClean tersedia sebagai web app yang dapat digunakan oleh pengg
 
 
 ## 2.4 Batasan Perangkat Lunak
-Batasan yang harus dituliskan, di antaranya:
-- Software hanya berfokus pada sampah-sampah domestik yang dapat ditangani dengan keikutsertaan masyarakat. Pelanggaran/pencemaran pada ekosistem perairan lain seperti illegal fishing, dan sebagainya tidak termasuk ruang lingkup sistem.
-- Software juga hanya berfokus pada sampah atau limbah yang tidak memerlukan penanganan khusus. Karena berdasarkan UU Nomor 32 Tahun 2009 Pasal 59, pengelolaan limbah B3 butuh dikelola dengan baik dan benar sesuai ketentuan yang berlaku. Oleh karena itu, CleanIt hanya berfokus pada sampah-sampah domestik yang bisa ditangani masyarakat.
-- Hukum atau regulasi dapat bervariasi di tiap wilayah sehingga adaptasi/penyesuaian software terhadap perubahan regulasi berada diluar ruang lingkup fungsi software.
-- Fitur CleanIt membutuhkan verifikasi langsung dari operator sebelum kontribusinya dinyatakan valid. Oleh karena itu, sistem mungkin akan membutuhkan waktu yang lebih lama untuk memvalidasi bukti yang dikirimkan oleh pengguna.
-- Implementasi fitur-fitur perangkat lunak dibatasi pada fitur utama seperti CleanIt, ReportIt, sistem bounty dan verifikasi sesuai dengan waktu yang diberikan.
-- Software hanya mencakup wilayah pada area yang bekerja sama atau pada area tertentu, sehingga cakupan wilayahnya terbatas.
+Batasan dalam pengembangan perangkat lunak meliputi:
+- Software hanya berfokus pada sampah-sampah domestik, sehingga operator hanya menerima laporan ReportIt atau CleanIt dengan bukti sampah domestik.
+- Software juga hanya berfokus pada sampah atau limbah yang tidak memerlukan penanganan khusus. Karena berdasarkan UU Nomor 32 Tahun 2009 Pasal 59, pengelolaan limbah B3 butuh dikelola dengan baik dan benar sesuai ketentuan yang berlaku. Operator hanya menerima laporan dengan bukti sampah non-B3.
+- Verifikasi laporan dilakukan oleh manusia (operator) sehingga penambahan daerah tercemar (melalui ReportIt) maupun pemberian poin (melalui CleanIt) hanya dapat dilakukan setelah operator menilai sebuah laporan valid.
+- Software hanya menyediakan daerah operasional tertentu sehingga laporan hanya dapat dibuat pada wilayah yang terdaftar.
+- Berjalan sebagai web app dan berfungsi pada desktop maupun platform mobile.
+- Reward yang dapat ditukarkan berupa dummy reward
+- Perangkat lunak dapat digunakan dalam mode offline (mengupload media di lokal), namun untuk pengiriman bukti tetap membutuhkan koneksi internet.
+
 
 ## 2.5 Lingkungan Operasi Perangkat Lunak
 Spesifikasi *operating system* atau lingkungan yang dibutuhkan P/L untuk beroperasi. Bagian ini digunakan untuk memastikan pengguna memiliki spesifikasi yang cukup untuk menjalankan P/L. Misalnya mencakup komponen server, client, OS, DBMS, tetapi tidak menutupi kemungkinan komponen lain.
