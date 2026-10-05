@@ -7,26 +7,25 @@ ARSITEKTUR PERANGKAT LUNAK (APL)
 </h1>
 <br>
 
-## *Nama Perangkat Lunak*
+## *SoClean*
 
-### Untuk: *[Nama Asisten]*
+### Untuk: *Aurelia Jennifer Gunawan*
 
 Dipersiapkan oleh:
 
 | Informasi | Keterangan |
 | --- | --- |
-| Kelas | *\[Kelas\]* |
-| Kelompok | *\[Nomor Kelompok\]*  |
-| Nama Kelompok | *\[Nama Kelompok\]*  |
+| Kelas | *K-03* |
+| Kelompok | *G-02*  |
+| Nama Kelompok | *DapinKoding*  |
 
-| NIM       | Nama               |
-| --------- | ------------------ |
-| *[NIM 1]* | *[Nama Anggota 1]* |
-| *[NIM 2]* | *[Nama Anggota 2]* |
-| *[NIM 3]* | *[Nama Anggota 3]* |
-| *[NIM 4]* | *[Nama Anggota 4]* |
-| *[NIM 5]* | *[Nama Anggota 5]* |
-
+| NIM | Nama |
+|---|---|
+| 13525027 | Faishal Ahmad Nurdin      |
+| 13525042 | Justin William            |
+| 13525060 | M. Aqsha Bagus R.I.B.     |
+| 13525087 | Jovan Nathanael           |
+| 13525147 | Muhammad Dhafin Al Khairy |
 ---
 
 <br>
@@ -54,12 +53,14 @@ Tabel 1.1. Lingkungan Operasi Perangkat Lunak
 
 | Komponen | Spesifikasi |
 | :--- | :--- |
-| *Server* | *[contoh: Node.js v20 dengan Next.js, dijalankan secara lokal (localhost)]* |
-| *Client* | *[contoh: Web Browser modern (Chrome, Firefox terbaru)]* |
-| *DBMS* | *[contoh: PostgreSQL 15 pada Supabase sebagai basis data terpusat]* |
-| *OS* | *[contoh: Cross-platform (Windows/Linux/MacOS) melalui browser]* |
-| *...* | *...* |
+| *Server* | *Next.js 16, dijalankan di docker (bisa local maupun cloud)* |
+| *Client* | *Web Browser modern (Chrome, Firefox) pada desktop maupun mobile* |
+| *DBMS* | *PostgreSQL 18* |
+| *Object Storage* | *S3 based seperti Cloudflare R2* |
+| *OS* | *Cross-platform dapat dijalankan di Windows, Linux, dan Android (melalui browser)* |
+| *Hardware* | *Perangkat pengguna yang dilengkapi dengan kamera dan GPS untuk melakukan pelaporan* |
 
+---
 <sub><b><i>Catatan</i></b>: <i>Style/pattern yang dipilih di bab ini menjadi acuan untuk BAB 2 (pengelompokan komponen) dan BAB 3 (model arsitektur). Contoh pada dokumen ini memakai MVC secara konsisten dari BAB 1 sampai BAB 3. Kelompok boleh memakai pattern lain selama alasannya dijelaskan dan BAB 2 serta BAB 3 disesuaikan. Tabel 1.1 harus sama persis dengan subbab 2.5 dokumen SKPL; jangan menambah atau mengubah isinya karena SKPL sudah final.</i></sub>
 
 ---
