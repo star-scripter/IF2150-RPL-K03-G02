@@ -117,3 +117,11 @@
 | 30-09-2026 | Faishal Ahmad Nurdin | 30 menit | Definisi, Istilah, dan Singkatan serta Aturan Penomoran | Finished, open to changes | - |
 | 30-09-2026 | Muhammad Dhafin Al Khairy | Lingkungan Operasi Perangkat Lunak | 30 menit | Done, open to changes | - |
 | 30-09-2026 | Justin William | Penyesuaian deskripsi umum perangkat lunak | 30 menit | Done, open to changes | - |
+
+### Milestone 6
+
+**Periode:** 09/30/2026 - 09/7/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 05-10-2026 | M. Aqsha | Style/pattern yang dipilih serta alasan pemilihan | 1.5 jam | Done, open to changes | -
