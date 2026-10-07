@@ -114,7 +114,7 @@
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 30-09-2026 | M. Aqsha | Batasan P/L, penyesuaian deskripsi umum sistem, ikhtisar, revisi minor desain UC09 | 1 jam | Done | - |
-| 30-09-2026 | Faishal Ahmad Nurdin | 30 menit | Definisi, Istilah, dan Singkatan serta Aturan Penomoran | Finished, open to changes | - |
+| 30-09-2026 | Faishal Ahmad Nurdin | Definisi, Istilah, dan Singkatan serta Aturan Penomoran | 30 menit | Finished, open to changes | - |
 | 30-09-2026 | Muhammad Dhafin Al Khairy | Lingkungan Operasi Perangkat Lunak | 30 menit | Done, open to changes | - |
 | 30-09-2026 | Justin William | Penyesuaian deskripsi umum perangkat lunak | 30 menit | Done, open to changes | - |
 
@@ -124,4 +124,5 @@
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
-| 05-10-2026 | M. Aqsha | Style/pattern yang dipilih serta alasan pemilihan | 1.5 jam | Done, open to changes | -
+| 05-10-2026 | M. Aqsha | Style/pattern yang dipilih serta alasan pemilihan | 1.5 jam | Done, open to changes | - |
+| 07-10-2026 | Faishal Ahmad Nurdin | Bab 1.2 komponen view dan controller | 45 menit | Finished, open to changes | - |
