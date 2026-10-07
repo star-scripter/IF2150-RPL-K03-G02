@@ -36,10 +36,40 @@ Dipersiapkan oleh:
 <!--Pada bagian ini, tentukan *architectural style* atau *pattern* yang menjadi acuan untuk aplikasi yang Anda kembangkan. Misalnya *layered architecture*, *client-server*, *repository*, *pipe and filter architecture*, atau MVC (*Model-View-Controller*).-->
 
 <p align="center">
-<img alt="Contoh Arsitektur MVC" src="./assets/diagram/contoh-arsitektur-mvc.webp" width="70%">
+
+```mermaid
+flowchart TD
+    %% Definisi komponen Controller
+    C["<div style='text-align: left;'><b>CONTROLLER</b><hr/>Laporan<br/>ValidatorLaporan<br/>ManagerPoin<br/>Penukaran</div>"]
+    
+    %% Definisi komponen View
+    V["<div style='text-align: left;'><b>VIEW</b><hr/>FormLaporan<br/>Laporan<br/>DaftarLaporan<br/>DaftarLokasi<br/>HalamanPenukaran<br/>DaftarReward</div>"]
+    
+    %% Definisi komponen Model
+    M["<div style='text-align: left;'><b>MODEL</b><hr/>Laporan<br/>Lokasi<br/>Media<br/>Pengguna<br/>Reward<br/>Penukaran</div>"]
+    
+    %% Definisi Penyimpanan dan Integrasi Eksternal
+    DB[("<b>Database</b><br/>(PostgreSQL)")]
+    SA(["<b>StorageAdapter</b><br/>(Cloudflare R2)"])
+
+    %% Relasi antar komponen berdasarkan referensi arsitektur MVC
+    C -->|"Update"| V
+    V -->|"User events"| C
+    
+    C -->|"Update request"| M
+    M -->|"State query"| V
+    
+    M -->|"Data access"| DB
+    M -->|"Upload/Fetch files"| SA
+
+    %% Styling untuk menyamakan dengan visual kotak hitam-putih
+    classDef mvcBox fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000;
+    class C,V,M mvcBox;
+```
+
 </p>
 <p align="center">
-<i>Gambar 1. Contoh Arsitektur MVC</i>
+<i>Gambar 1. Arsitektur MVC</i>
 </p>
 
 <!--1. **Style/pattern yang dipilih** beserta penjelasan singkat peran setiap bagiannya. Untuk MVC, jelaskan peran *Model*, *View*, dan *Controller*.-->
