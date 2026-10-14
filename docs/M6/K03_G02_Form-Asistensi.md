@@ -4,43 +4,34 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | *\[Hari\]* |
-| **Tanggal** | *\[DD/MM/YYYY\]* |
-| **Kelas** | *\[Kelas\]* |
-| **Nomor Kelompok** | *\[Nomor Kelompok\]*  |
-| **Nama Kelompok** | *\[Nama Kelompok\]*  |
-| **Nama Perangkat Lunak** | *\[Nama P/L\]*  |
-| **Dokumen** | *\[Nama Dokumen yang diasistensikan\]*  |
+| **Hari** | Jumat |
+| **Tanggal** | 09/10/2026 |
+| **Kelas** | K-03 |
+| **Nomor Kelompok** | G-02 |
+| **Nama Kelompok** | DapinKoding  |
+| **Nama Perangkat Lunak** | SoClean |
+| **Dokumen** | K-03_G02_DPPL  |
 
 ### Anggota Kelompok
 
-| NIM | Nama |
-| --- | --- |
-| *\[NIM 1\]* | *\[Nama Anggota 1\]* |
-| *\[NIM 2\]* | *\[Nama Anggota 2\]* |
-| *\[NIM 3\]* | *\[Nama Anggota 3\]* |
-| *\[NIM 4\]* | *\[Nama Anggota 4\]* |
-| *\[NIM 5\]* | *\[Nama Anggota 5\]* |
+| NIM      | Nama                      |
+| -------- | ------------------------- |
+| 13525027 | Faishal Ahmad Nurdin      |
+| 13525042 | Justin William            |
+| 13525060 | M. Aqsha Bagus R.I.B.     |
+| 13525087 | Jovan Nathanael           |
+| 13525147 | Muhammad Dhafin Al Khairy |
 
 ### Catatan
-
-| Catatan |
-| --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
-| 4. ... |
-
-**Notes for this section:**  
-*Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
+Asistensi akbar membahas beberapa hal seputar perancangan arsitektur, realisasi use case menggunakan sequence diagram (dijelaskan juga seputar notasinya), dan diagram kelas keseluruhan serta matriks kerunutan.
 
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi.jpeg" width="100%">
 </p>
 
 <p align="center">
-  <i>Gambar 1. Dokumentasi kegiatan asistensi.</i>
+  <i>Gambar 1. Dokumentasi kegiatan asistensi (note: Asistensi Akbar)</i>
 </p>

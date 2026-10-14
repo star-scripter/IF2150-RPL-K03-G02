@@ -37,4 +37,4 @@
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
-<p>Asistensi dilakukan melalui chat</p>
+<p>Asistensi dilakukan melalui chat.</p>
