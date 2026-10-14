@@ -76,6 +76,12 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Claude | Mengetahui cara menganalisis pada kasus spesifik CleanIt kelayakan suatu pola arsitektur | Jelaskan cara menentukan alasan pemilihan berdasarkan karakteristik P/L yang dibuat | Menyesuaikan dan menambahkan jawaban yang diberikan dengan kondisi sebenarnya pada dokumen, dengan bahasa sendiri, serta dengan sumber lain.
 | Claude | Merapikan dan memverifikasi diagram | "Tolong rapikan diagram ini \<kode uml>; sesuaikan dengan konteks proyek ini" | Menyesuaikan diagram yang dikoreksi oleh Claude
 
+
+### Milestone 7
+
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
+| :------ | :---------------- | :------------------ | :---------------------------- |
+
 ### Pernyataan Integritas dan Persetujuan
 
 Kami yang bertanda tangan di bawah ini menyatakan bahwa seluruh log penggunaan AI di atas adalah benar. Kami telah memvalidasi seluruh hasil AI dan bertanggung jawab penuh atas orisinalitas, keamanan, dan kebenaran hasil akhir dari tugas ini.

@@ -132,6 +132,7 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 05-10-2026 | M. Aqsha | Style/pattern yang dipilih serta alasan pemilihan | 1.5 jam | Done, open to changes | - |
 | 07-10-2026 | Faishal Ahmad Nurdin | Bab 1.2 komponen view dan controller | 45 menit | Finished, open to changes | - |
+| 07-10-2026 | Jovan Nathanael | Bab 3.1 - Logical view | 1 jam | Finished | -
 
 ### Milestone 7
 
