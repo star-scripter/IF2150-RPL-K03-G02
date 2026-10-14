@@ -23,10 +23,16 @@
 
 ### Daftar Isi
 
-- [Milestone 1](#milestone-1)
-- [Milestone 2](#milestone-2)
-- [Milestone 3](#milestone-3)
-- Notes: Copy bagian Daftar Isi seperti Milestone 1 untuk Milestone berikutnya, contoh `* [Milestone 2](#milestone-2)`. Ketika Daftar isi diklik maka akan langsung diarahkan ke bagian bawah sesuai dengan Milestone tujuan.
+- [Logbook Pekerjaan](#logbook-pekerjaan)
+  - [Tugas Besar IF2150 - Rekayasa Perangkat Lunak](#tugas-besar-if2150---rekayasa-perangkat-lunak)
+    - [Daftar Isi](#daftar-isi)
+    - [Milestone 1](#milestone-1)
+    - [Milestone 2](#milestone-2)
+    - [Milestone 3](#milestone-3)
+    - [Milestone 4](#milestone-4)
+    - [Milestone 5](#milestone-5)
+    - [Milestone 6](#milestone-6)
+    - [Milestone 7](#milestone-7)
 
 ---
 
@@ -120,9 +126,17 @@
 
 ### Milestone 6
 
-**Periode:** 09/30/2026 - 09/7/2026
+**Periode:** 09/30/2026 - 10/07/2026
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 05-10-2026 | M. Aqsha | Style/pattern yang dipilih serta alasan pemilihan | 1.5 jam | Done, open to changes | - |
 | 07-10-2026 | Faishal Ahmad Nurdin | Bab 1.2 komponen view dan controller | 45 menit | Finished, open to changes | - |
+
+### Milestone 7
+
+**Periode:** 10/07/2026 - 10/14/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 14-10-2026 | Jovan Nathanael | Mengerjakan template bab 1 dan 2 untuk DPPL | 45 menit | Done, open to changes | - |
