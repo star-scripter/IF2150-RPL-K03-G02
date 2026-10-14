@@ -79,6 +79,7 @@ Tabel 1.3. Definisi Istilah dan Singkatan
 | *KNF* | *Singkatan dari Kebutuhan Non-Fungsional.* |
 | *UC* | *Singkatan dari Use Case.* |
 | *SoClean* | *Nama perangkat lunak berbasis web yang dirancang untuk mengurangi kebocoran sampah domestik ke ekosistem perairan.* |
+| 
 
 ## 1.4 Aturan Penomoran
 <!-- Tuliskan aturan penomoran (ID) yang digunakan dalam dokumen ini. Gunakan pola ID yang **sama** dengan yang sudah dipakai pada dokumen-dokumen sebelumnya, jangan membuat pola baru di dokumen ini. -->
@@ -122,45 +123,154 @@ Tentukan *architectural style* atau *pattern* yang menjadi acuan aplikasi, misal
 Gunakan hasil **BAB 1 Style/Pattern Arsitektur Acuan pada dokumen APL**, termasuk alasan pemilihan dan gambar penerapannya pada P/L kelompok. Gunakan komponen aplikasi sendiri pada gambar, bukan hanya contoh pola umum.
 
 <p align="center">
-<img alt="Contoh Arsitektur MVC" src="./assets/diagram/contoh-arsitektur-mvc.webp" width="40%">
+
+```mermaid
+flowchart TD
+    %% Definisi komponen Controller
+    C["<div style='text-align: left;'><b>CONTROLLER</b><hr/>Laporan<br/>ValidatorLaporan<br/>ManagerPoin<br/>Penukaran</div>"]
+    
+    %% Definisi komponen View
+    V["<div style='text-align: left;'><b>VIEW</b><hr/>FormLaporan<br/>Laporan<br/>DaftarLaporan<br/>DaftarLokasi<br/>HalamanPenukaran<br/>DaftarReward</div>"]
+    
+    %% Definisi komponen Model
+    M["<div style='text-align: left;'><b>MODEL</b><hr/>Laporan<br/>Lokasi<br/>Media<br/>Pengguna<br/>Reward<br/>Penukaran</div>"]
+    
+    %% Definisi Penyimpanan dan Integrasi Eksternal
+    DB[("<b>Database</b><br/>(PostgreSQL)")]
+    SA(["<b>StorageAdapter</b><br/>(Cloudflare R2)"])
+
+    %% Relasi antar komponen berdasarkan referensi arsitektur MVC
+    C -->|"Update"| V
+    V -->|"User events"| C
+    
+    C -->|"Update request"| M
+    M -->|"State query"| V
+    
+    M -->|"Data access"| DB
+    M -->|"Upload/Fetch files"| SA
+
+    %% Styling untuk menyamakan dengan visual kotak hitam-putih
+    classDef mvcBox fill:#ffffff,stroke:#000000,stroke-width:1px,color:#000000;
+    class C,V,M mvcBox;
+```
+
 </p>
 <p align="center">
-<i>Gambar 1. Contoh Arsitektur MVC</i>
+<i>Gambar 1. Arsitektur MVC</i>
 </p>
+
+Style/pattern arsitektur yang digunakan dalam pengembangan P/L SoClean adalah MVC (Model-View-Controller). Model berperan sebagai pendefinisi struktur data dan logika bisnis. View berperan sebagai media penyajian informasi kepada pengguna. Controller berperan sebagai handler logic utama yang mengkoordinasi interaksi antar model dan view.
+
+SoClean menggunakan style/pattern MVC dengan tujuan utama agar arsitektur mengutamakan simplisitas dan modularitas fitur-fitur yang dimiliki oleh P/L ini. Proses bisnis relatif sederhana sehingga pola yang dapat diabstraksikan menggunakan pemodelan MVC. Sebagai contoh, ketika pengguna membuat laporan (model) melalui request interface (view), operator dapat memverifikasi laporan dengan luaran sistem menolak atau menerima dan menyimpan status laporan ke dalam daftar lokasi (controller). KF dalam P/L ini juga dapat dipetakan dan digeneralisasi menjadi sebuah operasi yang melibatkan komponen-komponen MVC, sebagai contoh KF02, KF11, KF04, dll. (model); KF01, KF05, KF08, dll. (view); KF03, KF10, KF13, dll. (controller). Pemisahan berdasarkan MVC juga mendukung KNF yang ada, misalnya dari segi performa dan kemudahan maintenance. Modularitas struktural yang direncanakan juga membuat proses pengembangan lebih efisien karena pembagian kerja yang relatif lebih independen. Sebagai contoh dari efisiensi alur kerja proses dengan MVC, salah satu pengembang dapat mengerjakan bagian A (misal komponen view) sedangkan pengembang lain dapat mengerjakan fitur B (misal controller) secara bersamaan.
 
 ## 2.3 Identifikasi Komponen / Modul / Subsistem
 
-Identifikasi komponen, modul, atau subsistem penyusun aplikasi berdasarkan *pattern* yang telah ditetapkan. Jelaskan tanggung jawab masing-masing komponen. Pengelompokan dapat mengikuti lapisan arsitektur atau fungsi/peran komponen dalam sistem.
+<!-- Identifikasi komponen, modul, atau subsistem penyusun aplikasi berdasarkan *pattern* yang telah ditetapkan. Jelaskan tanggung jawab masing-masing komponen. Pengelompokan dapat mengikuti lapisan arsitektur atau fungsi/peran komponen dalam sistem.
 
-Ambil dari **Tabel 2.1 dokumen APL**, lalu kelompokkan berdasarkan lapisan (Model/View/Controller). Kolom **Jenis** diisi sesuai pattern, misalnya View, Controller, Model, Service, Repository. Satu komponen merepresentasikan saatu tanggung jawab utama yang jelas,
+Ambil dari **Tabel 2.1 dokumen APL**, lalu kelompokkan berdasarkan lapisan (Model/View/Controller). Kolom **Jenis** diisi sesuai pattern, misalnya View, Controller, Model, Service, Repository. Satu komponen merepresentasikan saatu tanggung jawab utama yang jelas, -->
 
 Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 
+| Nama Komponen/Modul/Subsistem | Jenis                 | Penjelasan                                                                                                           |
+| :---------------------------- | :-------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| *FormLaporan* | *View* | *Menampilkan form pembuatan laporan dan meneruskannya dalam bentuk Laporan ke ValidatorLaporan* |
+| *Laporan* | *View* | *Menampilakan informasi dalam suatu laporan yang sudah dibuat pada FormLaporan* |
+| *DaftarLaporan* | *View*| *Menampilakan daftar laporan yang sudah dibuat pada FormLaporan* |
+| *DaftarLokasi* | *View* | *Menampilkan daftar lokasi yang diambil dari laporan yang sudah dibuat* |
+| *HalamanPenukaran* | *View* | *Menampilakn halaman penukaran yang berisi DaftarReward dan jumlah poin serta meneruskan aksi pengguna (seperti menukar poin dengan reward) ke ManagerPoin dan Penukaran* |
+| *DaftarReward* | *View* | *Menampilkan daftar reward yang tersedia untuk ditukarkan dengan poin* |
+| *Laporan* | *Controller* | *Memproses status validasi suatu laporan pada DaftarLaporan* |
+| *ValidatorLaporan* | *Controller* | *Memproses permintaan validasi laporan yang berada pada DaftarLaporan* |
+| *ManagerPoin* | *Controller* | *Memproses perubahan jumlah poin yang dimiliki pengguna* |
+| *Penukaran* | *Controller* | *Memproses permintaan penukaran poin dengan reward* |
 | Nama Komponen/Modul/Subsistem | Jenis | Penjelasan |
-| :--- | :--- | :--- |
-| *[Nama komponen/modul/subsistem]* | *[Jenis]* | *[Tanggung jawab komponen]* |
-| *[Nama komponen/modul/subsistem]* | *[Jenis]* | *[Tanggung jawab komponen]* |
-| *...* | *...* | *...* |
+| *Laporan* | *Model* | *Mendefinisikan struktur data dan informasi utama suatu laporan, termasuk data laporan dan status validasinya.* |
+| *Lokasi* | *Model* | *Mendefinisikan struktur data lokasi yang berkaitan dengan suatu laporan dan digunakan untuk membentuk daftar lokasi.* |
+| *Media* | *Model* | *Mendefinisikan struktur data media yang digunakan sebagai bukti pendukung laporan, seperti foto atau video.* |
+| *Pengguna* | *Model* | *Mendefinisikan struktur data pengguna dan informasi yang berkaitan dengan pengguna dalam sistem.* |
+| *Reward* | *Model* | *Mendefinisikan struktur data reward yang tersedia untuk ditukarkan menggunakan poin.* |
+| *Penukaran* | *Model* | *Mendefinisikan struktur data transaksi penukaran poin pengguna dengan reward.* |
+| *Database* | *Pendukung* | *Menyediakan penyimpanan data persisten bagi komponen model dan menggunakan PostgreSQL sebagai DBMS.* |
+| *Storage* | *Pendukung* | *Menyediakan abstraksi akses object storage untuk melakukan proses upload file.* |
 
 ## 2.4 Model Arsitektur Perangkat Lunak
 
-Buat model arsitektur dalam bentuk satu atau lebih *view* yang memperlihatkan interaksi dan kolaborasi komponen, modul, serta subsistem dalam menjalankan fungsi sistem. Pilih notasi yang sesuai. Contoh *view*: *Logical View*, *Process View*, *Development View*, dan *Physical View*.
+Architectural View adalah cara melihat atau mendeskripsikan arsitektur sebuah sistem dari sudut pandang tertentu. Untuk perangkat lunak SoClean, kami menggunakan satu view, yaitu Logical View, untuk menggambarkan bagaimana seluruh komponen pada Tabel 2.3 saling berinteraksi dalam menjalankan fungsi utama sistem.
 
-Gunakan hasil **BAB 3 Model Arsitektur Perangkat Lunak pada dokumen APL**. 
+<!-- Buat model arsitektur dalam bentuk satu atau lebih *view* yang memperlihatkan interaksi dan kolaborasi komponen, modul, serta subsistem dalam menjalankan fungsi sistem. Pilih notasi yang sesuai. Contoh *view*: *Logical View*, *Process View*, *Development View*, dan *Physical View*.
 
-### 2.4.1 View [Nama View]
+Gunakan hasil **BAB 3 Model Arsitektur Perangkat Lunak pada dokumen APL**. -->
 
-Tuliskan secara singkat model arsitektur yang dipilih dan alasan model tersebut cocok untuk aplikasi.
+## 2.4.1 Logical View
+Logical View SoClean digambarkan dalam bentuk block diagram yang dikelompokkan sesuai pola MVC pada BAB 1, yaitu View, Controller, dan Model, ditambah komponen Pendukung. View ini dipilih karena paling sesuai untuk memperlihatkan pembagian tanggungjawab antarkomponen, sehingga menjadi alasan utama pemilihan MVC. Selain itu, view ini dapat menggambarkan kedua alur utama SoClean dalam satu diagram. Alur pertama adalah pelaporan dan verifikasi (ReportIt dan CleanIt), dan alur kedua adalah pengelolaan serta penukaran poin.
 
-<p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-logical-view.webp" width="50%">
-</p>
-<p align="center">
-<i>Gambar 2. Contoh Logical View pada P/L E-Commerce</i>
-</p>
+```mermaid
+flowchart TB
+    subgraph VIEW["VIEW"]
+        direction LR
+        V_FormLaporan["FormLaporan"]
+        V_Laporan["Laporan"]
+        V_DaftarLaporan["DaftarLaporan"]
+        V_DaftarLokasi["DaftarLokasi"]
+        V_HalamanPenukaran["HalamanPenukaran"]
+        V_DaftarReward["DaftarReward"]
+    end
 
-### 2.4.X View [Nama View]
-*[Lakukan hal yang sama dengan bagian sebelumnya]*
+    subgraph CONTROLLER["CONTROLLER"]
+        direction LR
+        C_Laporan["Laporan"]
+        C_ValidatorLaporan["ValidatorLaporan"]
+        C_ManagerPoin["ManagerPoin"]
+        C_Penukaran["Penukaran"]
+    end
+
+    subgraph MODEL["MODEL"]
+        direction LR
+        M_Laporan["Laporan"]
+        M_Lokasi["Lokasi"]
+        M_Media["Media"]
+        M_Pengguna["Pengguna"]
+        M_Reward["Reward"]
+        M_Penukaran["Penukaran"]
+    end
+
+    subgraph PENDUKUNG["PENDUKUNG"]
+        direction LR
+        P_Database[("Database")]
+        P_Storage[["Storage"]]
+    end
+
+    V_FormLaporan -->|"mengirim laporan"| C_Laporan
+    V_Laporan -->|"meminta detail"| C_Laporan
+    V_DaftarLokasi -->|"meminta lokasi"| C_Laporan
+    V_DaftarLaporan -->|"memverifikasi"| C_ValidatorLaporan
+    V_HalamanPenukaran -->|"menukar poin"| C_Penukaran
+    V_DaftarReward -->|"meminta reward"| C_ManagerPoin
+
+    C_ValidatorLaporan -->|"menambah poin"| C_ManagerPoin
+
+    C_Laporan -->|"akses"| M_Laporan
+    C_ValidatorLaporan -->|"ubah status"| M_Laporan
+    C_ManagerPoin -->|"akses"| M_Pengguna
+    C_Penukaran -->|"akses"| M_Penukaran
+
+    M_Laporan -->|"memiliki"| M_Media
+    M_Laporan -->|"merujuk"| M_Lokasi
+    M_Penukaran -->|"menukarkan"| M_Reward
+
+    MODEL -->|"menyimpan data"| P_Database
+    M_Media -->|"upload file"| P_Storage
+```
+
+<p align="center"> <i>Gambar 2. Logical View P/L SoClean</i> </p>
+
+Pada Gambar 2, komponen View meneruskan aksi pengguna ke komponen Controller yang sesuai, lalu Controller mengakses Model untuk membaca atau mengubah data.
+
+Pada alur pelaporan, FormLaporan mengirim laporan ke Controller Laporan. Operator kemudian memverifikasi laporan melalui DaftarLaporan, yang diproses oleh ValidatorLaporan. Jika laporan pembersihan dinyatakan valid, ValidatorLaporan meminta ManagerPoin untuk menambahkan poin ke Pengguna.
+
+Pada alur penukaran, HalamanPenukaran meneruskan permintaan ke Controller Penukaran, yang mencatat transaksi pada Model Penukaran beserta Reward yang ditukarkan.
+
+Hubungan antar-model mengikuti diagram kelas yang ada sebelumnya. Laporan memiliki Media sebagai bukti dan merujuk Lokasi pencemaran. Seluruh Model menyimpan datanya pada Database (PostgreSQL), sedangkan file foto/video pada Media diupload melalui Storage ke object storage (Cloudflare R2).
 
 <br>
 
