@@ -183,7 +183,6 @@ Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 | *ValidatorLaporan* | *Controller* | *Memproses permintaan validasi laporan yang berada pada DaftarLaporan* |
 | *ManagerPoin* | *Controller* | *Memproses perubahan jumlah poin yang dimiliki pengguna* |
 | *Penukaran* | *Controller* | *Memproses permintaan penukaran poin dengan reward* |
-| Nama Komponen/Modul/Subsistem | Jenis | Penjelasan |
 | *Laporan* | *Model* | *Mendefinisikan struktur data dan informasi utama suatu laporan, termasuk data laporan dan status validasinya.* |
 | *Lokasi* | *Model* | *Mendefinisikan struktur data lokasi yang berkaitan dengan suatu laporan dan digunakan untuk membentuk daftar lokasi.* |
 | *Media* | *Model* | *Mendefinisikan struktur data media yang digunakan sebagai bukti pendukung laporan, seperti foto atau video.* |
