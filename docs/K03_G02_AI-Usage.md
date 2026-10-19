@@ -81,6 +81,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
 | :------ | :---------------- | :------------------ | :---------------------------- |
+| Copilot | Duplikat 3.1 sampai 3.9 sebagai template agar tidak konflik (grunt work) | Copy 3.1 dan subsubbabnya 9 kali hingga 3.9 | Verifikasi ulang
 
 ### Pernyataan Integritas dan Persetujuan
 
