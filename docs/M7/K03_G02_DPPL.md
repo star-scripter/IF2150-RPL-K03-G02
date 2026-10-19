@@ -291,9 +291,9 @@ Tabel 3.1. Identifikasi Kelas Use Case [UC01]
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| 2 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| ... | *...* | *...* |
+| 1 | *[Nama kelas perancangan]* | *FormLaporan* |
+| 2 | *[Nama kelas perancangan]* | *Laporan* |
+| 3 | *...* | *DaftarLaporan* |
 
 ### 3.1.2 Sequence Diagram
 
@@ -301,18 +301,91 @@ Buat *sequence diagram* untuk **setiap skenario use case**, mencakup skenario no
 
 - **Skenario Normal**
 
-<p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat;
+    participant FL@{"type":"boundary"} as FormLaporan;
+
+    M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
+    activate FL;
+    FL->>FL: is_terisi()
+    FL-->>M: notifikasi berhasil
+    
+    create participant L@{"type":"entity"} as Laporan;
+    FL-->>L: <<create>>
+    activate L;
+    FL->>L: simpan_laporan()
+    deactivate FL;
+    
+    participant DL@{"type":"boundary"} as DaftarLaporan;
+    L->>DL: daftar_laporan()
+    activate DL;
+    deactivate L;
+    deactivate DL;
+```
 <p align="center">
 <i>Gambar X. Sequence Diagram [UC01]</i>
 </p>
 
-- **Skenario Alternatif [Nomor]: [Nama Skenario]**
+- **Skenario Alternatif 1: Informasi Tidak Sesuai Format**
+<!--Jujur kita gak ada is_format_valid(); tanya kakaknya lagi ini boleh atau enggak-->
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat;
+    participant FL@{"type":"boundary"} as FormLaporan;
 
+    loop is_terisi = false
+        M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
+        activate FL;
+        FL->>FL: is_format_valid()
+        FL-->>M: notifikasi gagal
+    end
+    
+    create participant L@{"type":"entity"} as Laporan;
+    FL-->>L: <<create>>
+    activate L;
+    FL->>L: simpan_laporan()
+    deactivate FL;
+    
+    participant DL@{"type":"boundary"} as DaftarLaporan;
+    L->>DL: daftar_laporan()
+    activate DL;
+    deactivate L;
+    deactivate DL;
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
+<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
 </p>
+
+- **Skenario Alternatif 2: Informasi Pada Laporan Tidak Lengkap**
+
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat;
+    participant FL@{"type":"boundary"} as FormLaporan;
+
+    loop is_terisi = false
+        M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
+        activate FL;
+        FL->>FL: is_terisi()
+        FL-->>M: notifikasi gagal
+    end
+    
+    create participant L@{"type":"entity"} as Laporan;
+    FL-->>L: <<create>>
+    activate L;
+    FL->>L: simpan_laporan()
+    deactivate FL;
+    
+    participant DL@{"type":"boundary"} as DaftarLaporan;
+    L->>DL: daftar_laporan()
+    activate DL;
+    deactivate L;
+    deactivate DL;
+```
 <p align="center">
 <i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
 </p>
@@ -337,24 +410,24 @@ Pada diagram, pastikan:
 
 ## 3.2 Use Case *Membuat Laporan Pencemaran*
 
-**ID Use Case:** *UC01*  
-**Nama Use Case:** *Membuat Laporan Pencemaran*
+**ID Use Case:** *UC02*  
+**Nama Use Case:** *Mengambil Bukti Foto/Video*
 
 ### 3.2.1 Identifikasi Kelas
 
 Identifikasi kelas yang terkait dengan use case tersebut. Kelas di tahap perancangan dapat berbeda dengan dengan kelas di tahap analisis. Dapat menggunakan tabel di bawah:
 
-Tabel 3.2. Identifikasi Kelas Use Case [UC01]
+Tabel 3.2. Identifikasi Kelas Use Case [UC02]
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| 2 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
+| 1 | *[Nama kelas perancangan]* | *Form Laporan* |
+| 2 | *[Nama kelas perancangan]* | *Media* |
 | ... | *...* | *...* |
 
 ### 3.2.2 Sequence Diagram
 
-Buat *sequence diagram* untuk **setiap skenario use case**, mencakup skenario normal dan alternatif pada subbab 4.4 SKPL. Diagram melibatkan kelas-kelas yang telah diidentifikasi pada SKPL. 
+<!--Buat *sequence diagram* untuk **setiap skenario use case**, mencakup skenario normal dan alternatif pada subbab 4.4 SKPL. Diagram melibatkan kelas-kelas yang telah diidentifikasi pada SKPL.-->
 
 - **Skenario Normal**
 

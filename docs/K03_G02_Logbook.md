@@ -141,3 +141,4 @@
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 14-10-2026 | Jovan Nathanael | Mengerjakan template bab 1 dan 2 untuk DPPL | 45 menit | Done, open to changes | - |
+| 19-10-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan sequence diagram UC01 | 1 jam | Sebagian selesai | - |
