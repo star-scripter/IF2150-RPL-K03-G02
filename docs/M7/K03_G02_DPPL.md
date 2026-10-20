@@ -439,22 +439,19 @@ classDiagram
 <i>Gambar 5. Diagram Kelas UC01</i>
 </p>
 
-## 3.2 Use Case *Membuat Laporan Pencemaran*
+## 3.2 Use Case *Mengambil Bukti Foto/Video*
 
 **ID Use Case:** *UC02*  
 **Nama Use Case:** *Mengambil Bukti Foto/Video*
 
 ### 3.2.1 Identifikasi Kelas
 
-Identifikasi kelas yang terkait dengan use case tersebut. Kelas di tahap perancangan dapat berbeda dengan dengan kelas di tahap analisis. Dapat menggunakan tabel di bawah:
-
 Tabel 3.2. Identifikasi Kelas Use Case [UC02]
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *Form Laporan* |
-| 2 | *[Nama kelas perancangan]* | *Media* |
-| ... | *...* | *...* |
+| 1 | *FormLaporan* | *Form Laporan* |
+| 2 | *FormLaporan* | *Media* |
 
 ### 3.2.2 Sequence Diagram
 
@@ -462,31 +459,79 @@ Tabel 3.2. Identifikasi Kelas Use Case [UC02]
 
 - **Skenario Normal**
 
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat
+    participant FL@{"type":"boundary"} as FormLaporan
+    participant ME@{"type":"entity"} as Media
+
+    M->>FL: ambil_gambar()
+    activate M
+    deactivate M
+    activate FL
+    FL->>ME: input_media()
+    activate ME
+    ME->>ME: is_penyimpanan_penuh()
+    ME-->>FL: false
+    ME-->>FL: idMedia
+    deactivate FL
+    deactivate ME
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01]</i>
+<i>Gambar 6. Sequence Diagram UC02</i>
 </p>
 
-- **Skenario Alternatif [Nomor]: [Nama Skenario]**
+- **Skenario Alternatif 1: Penyimpanan Perangkat Penuh**
 
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat
+    participant FL@{"type":"boundary"} as FormLaporan
+    participant ME@{"type":"entity"} as Media
+
+    M->>FL: ambil_gambar()
+    activate M
+    activate FL
+    FL->>ME: input_media()
+    activate ME
+    ME->>ME: is_penyimpanan_penuh()
+    ME-->>FL: true
+    FL-->>M: notify(msg)
+    deactivate M
+    deactivate FL
+    deactivate ME
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
+<i>Gambar 7. Sequence Diagram UC02 - Penyimpanan Perangkat Penuh</i>
 </p>
 
 ### 3.2.3 Diagram Kelas
 
-Buatlah diagram kelas untuk use case ini yang terdiri atas kelas-kelas dari 3.2.1. **Setiap kelas pada diagram wajib menampilkan atribut dan metode/operasi langsung di dalam kotak kelasnya**, sehingga tidak perlu membuat tabel daftar atribut dan metode per kelas pada subbab ini. Daftar lengkap atribut dan metode seluruh kelas disajikan pada Tabel 4.1 (Bab 4).
-
+```mermaid
+classDiagram
+    namespace View {
+        class FormLaporan {
+            <<UserInterfacer>>
+            -msg
+            -idMedia
+            -ambil_gambar()
+            -notify(msg)
+        }
+    }
+    namespace Model {
+        class Media {
+            <<InformationHolder>>
+            -idMedia
+            +input_media()
+            +is_penyimpanan_penuh()
+        }
+    }
+    FormLaporan -- Media: menginput
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh_class-diagram2.jpg" width="35%">
-</p>
-<p align="center">
-<i>Gambar X. Diagram Kelas [Nama Uce Case]</i>
+<i>Gambar 8. Diagram Kelas Mengambil Bukti Foto/Video</i>
 </p>
 
 Pada diagram, pastikan:
