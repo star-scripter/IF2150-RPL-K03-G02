@@ -291,9 +291,9 @@ Tabel 3.1. Identifikasi Kelas Use Case [UC01]
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *FormLaporan* |
-| 2 | *[Nama kelas perancangan]* | *Laporan* |
-| 3 | *...* | *DaftarLaporan* |
+| 1 | *FormLaporan* | *FormLaporan* |
+| 2 | *Laporan, LaporanController* | *Laporan* |
+| 3 | *DaftarLaporan* | *DaftarLaporan* |
 
 ### 3.1.2 Sequence Diagram
 
@@ -308,24 +308,30 @@ sequenceDiagram
     participant FL@{"type":"boundary"} as FormLaporan;
 
     M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
+    activate M;
     activate FL;
-    FL->>FL: is_terisi()
-    FL-->>M: notifikasi berhasil
+
+    participant LC@{"type":"control"} as LaporanController
+    FL->>LC: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
+    activate LC;
+    LC->>LC: is_terisi()
+    LC-->>FL: true
+    FL-->>M: notify(msg)
+    deactivate FL;
+    deactivate M;
     
     create participant L@{"type":"entity"} as Laporan;
-    FL-->>L: <<create>>
-    activate L;
-    FL->>L: simpan_laporan()
-    deactivate FL;
+    LC-->>L: <<create>>;
+    LC->>L: simpan_laporan(lokasi, <br/>waktu, idMedia, sumber);
     
-    participant DL@{"type":"boundary"} as DaftarLaporan;
-    L->>DL: daftar_laporan()
+    participant DL@{"type":"entity"} as DaftarLaporan;
+    LC->>DL: daftar_laporan(laporan)
     activate DL;
-    deactivate L;
     deactivate DL;
+    deactivate LC;
 ```
 <p align="center">
-<i>Gambar X. Sequence Diagram [UC01]</i>
+<i>Gambar 3. Sequence Diagram UC01</i>
 </p>
 
 - **Skenario Alternatif 1: Informasi Tidak Sesuai Format**
@@ -335,28 +341,30 @@ sequenceDiagram
 sequenceDiagram
     actor M as Masyarakat;
     participant FL@{"type":"boundary"} as FormLaporan;
+    participant LC@{"type":"control"} as LaporanController
 
     loop is_terisi = false
         M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
         activate FL;
-        FL->>FL: is_format_valid()
-        FL-->>M: notifikasi gagal
+        FL->>LC: is_format_valid()
+        activate LC;
+        LC-->>FL: false
+        FL-->>M: notify(msg)
+        deactivate FL;
     end
     
     create participant L@{"type":"entity"} as Laporan;
-    FL-->>L: <<create>>
-    activate L;
-    FL->>L: simpan_laporan()
-    deactivate FL;
+    LC-->>L: <<create>>
+    LC->>L: simpan_laporan(lokasi, <br/>waktu, idMedia, sumber)
     
     participant DL@{"type":"boundary"} as DaftarLaporan;
-    L->>DL: daftar_laporan()
+    LC->>DL: daftar_laporan(laporan)
     activate DL;
-    deactivate L;
     deactivate DL;
+    deactivate LC;
 ```
 <p align="center">
-<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
+<i>Gambar 4. Sequence Diagram UC01 - Informasi Tidak Sesuai Format</i>
 </p>
 
 - **Skenario Alternatif 2: Informasi Pada Laporan Tidak Lengkap**
@@ -366,47 +374,70 @@ sequenceDiagram
 sequenceDiagram
     actor M as Masyarakat;
     participant FL@{"type":"boundary"} as FormLaporan;
+    participant LC@{"type":"control"} as LaporanController
 
     loop is_terisi = false
         M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
         activate FL;
-        FL->>FL: is_terisi()
-        FL-->>M: notifikasi gagal
+        FL->>LC: is_terisi()
+        activate LC;
+        LC-->>FL: false
+        FL-->>M: notify(msg)
+        deactivate FL;
     end
     
     create participant L@{"type":"entity"} as Laporan;
-    FL-->>L: <<create>>
-    activate L;
-    FL->>L: simpan_laporan()
-    deactivate FL;
+    LC-->>L: <<create>>
+    LC->>L: simpan_laporan(lokasi, <br/>waktu, idMedia, sumber)
     
     participant DL@{"type":"boundary"} as DaftarLaporan;
-    L->>DL: daftar_laporan()
+    LC->>DL: daftar_laporan(laporan)
     activate DL;
-    deactivate L;
     deactivate DL;
+    deactivate LC;
 ```
 <p align="center">
-<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
+<i>Gambar 4. Sequence Diagram UC01 - Informasi Pada Laporan Tidak Lengkap</i>
 </p>
 
 ### 3.1.3 Diagram Kelas
 
-Buatlah diagram kelas untuk use case ini yang terdiri atas kelas-kelas dari 3.1.1. **Setiap kelas pada diagram wajib menampilkan atribut dan metode/operasi langsung di dalam kotak kelasnya**, sehingga tidak perlu membuat tabel daftar atribut dan metode per kelas pada subbab ini. Daftar lengkap atribut dan metode seluruh kelas disajikan pada Tabel 4.1 (Bab 4).
+```mermaid
+classDiagram
+    class FormLaporan {
+        <<UserInterfacer>>
+        -lokasi
+        -waktu
+        -idMedia
+        -sumber 
+        +buat_laporan(lokasi, waktu, idMedia, sumber)
+    }
+    class LaporanController {
+        +cek_laporan()
+        +is_terisi()
+        +is_format_valid()
+    }
+    class Laporan {
+        <<InformationHolder>>
+        -String lokasi
+        -String waktu
+        -int idMedia
+        -String sumber
+        +simpan_laporan(lokasi, waktu, idMedia, sumber)
+    }
+    class DaftarLaporan {
+        <<Structurer>>
+        -idLaporan
+        +daftar_laporan(laporan)
+    }
 
+    FormLaporan -- LaporanController
+    LaporanController --> Laporan : membuat
+    Laporan "0..*" --o "1" DaftarLaporan : menyimpan
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh_class-diagram2.jpg" width="35%">
+<i>Gambar 5. Diagram Kelas UC01</i>
 </p>
-<p align="center">
-<i>Gambar X. Diagram Kelas [Nama Uce Case]</i>
-</p>
-
-Pada diagram, pastikan:
-- Atribut dituliskan beserta visibilitas dan tipe datanya, misalnya `- email: String`.
-- Operasi dituliskan beserta visibilitas, parameter, dan tipe kembaliannya, misalnya `+ login(email: String, password: String): Boolean`.
-- Relasi antarkelas (asosiasi, agregasi, komposisi, generalisasi, dan dependensi) digambarkan lengkap dengan multiplisitas.
-- Semua operasi yang dipanggil pada sequence diagram 3.1.2 (skenario normal dan alternatif) ada pada kelas yang bersangkutan.
-- Kelas yang sama dengan kelas di use case lain memakai nama, atribut, dan metode yang konsisten.
 
 ## 3.2 Use Case *Membuat Laporan Pencemaran*
 
