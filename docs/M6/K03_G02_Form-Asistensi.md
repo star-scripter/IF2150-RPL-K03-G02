@@ -5,7 +5,7 @@
 | Informasi | Keterangan |
 | --- | --- |
 | **Hari** | Jumat |
-| **Tanggal** | 09/10/2026 |
+| **Tanggal** | 02/10/2026 |
 | **Kelas** | K-03 |
 | **Nomor Kelompok** | G-02 |
 | **Nama Kelompok** | DapinKoding  |

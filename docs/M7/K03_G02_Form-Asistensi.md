@@ -4,8 +4,8 @@
 
 | Informasi | Keterangan |
 | --- | --- |
-| **Hari** | [Hari] |
-| **Tanggal** | [DD/MM/YYYY] |
+| **Hari** | Jumat (Akbar) dan Senin-Selasa (Asinkron) |
+| **Tanggal** | 09/10/2026 (Akbar) dan 19/10/2026-20/10/2026 |
 | **Kelas** | K-03 |
 | **Nomor Kelompok** | G-02 |
 | **Nama Kelompok** | DapinKoding  |
@@ -24,21 +24,22 @@
 
 ### Catatan
 
+Asistensi Akbar:
+Asistensi Akbar memuat bagian-bagian pada DPPL (Pendahuluan, Perancangan Arsitektur, dan Realisasi Use Case, Diagram Kelas Keseluruhan, dan Matriks Kerunutan). Diberikan komponen-komponen pada Sequence Diagram-nya, termasuk notasi dasar, jenis message, dan fragment operators. Kemudian terdapat pula arahan untuk menyesuaikan diagram kelas yang telah disesuaikan access modifier dan tipe datanya.
+
 | Catatan |
 | --- |
-| 1. *\[Berikan catatan hasil asistensi\]*  |
-| 2. ... |
-| 3. ... |
-| 4. ... |
-
-**Notes for this section:**  
-*Catatan dapat dituliskan dalam bentuk paragraf atau poin-poin, disesuaikan saja.* 
+| 1. Kelas perancangan disesuaikan bahasa/platform. Ditentukan visibilitynya  |
+| 2. Sequence diagram pakai kelas perancangan |
+| 3. Laporan sama Penukaran yang overlap bisa dipecah lagi jadi tiap komponen MVC-nya |
+| 4. Sesuaikan deskripsi Controller laporan karena rancu dengan ValidatorLaporan |
+| 5. Boleh mecah kelas atau nambah atribut/method |
 
 ## Dokumentasi
 
 <!-- ![](./assets/foto-asistensi.jpg) -->
 <p align="center">
-  <img src="./assets/foto-asistensi.jpg" width="100%">
+  <img src="./assets/foto-asistensi.jpeg" width="100%">
 </p>
 
 <p align="center">
