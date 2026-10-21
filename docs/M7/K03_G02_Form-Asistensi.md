@@ -43,5 +43,13 @@ Asistensi Akbar memuat bagian-bagian pada DPPL (Pendahuluan, Perancangan Arsitek
 </p>
 
 <p align="center">
-  <i>Gambar 1. Dokumentasi kegiatan asistensi.</i>
+  <i>Gambar 1. Dokumentasi kegiatan asistensi asinkron.</i>
+</p>
+
+<p align="center">
+  <img src="./assets/asistensi-akbar.jpeg" width="100%">
+</p>
+
+<p align="center">
+  <i>Gambar 2. Dokumentasi kegiatan asistensi akbar.</i>
 </p>
