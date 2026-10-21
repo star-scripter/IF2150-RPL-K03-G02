@@ -1769,23 +1769,84 @@ classDiagram
 
 ## 4.1 Diagram Kelas
 
-**Bagian ini diisi dengan diagram kelas keseluruhan.**
+```mermaid
+%%{init: {"theme": "neutral", "class": {"hideEmptyMembersBox": true}}}%%
+classDiagram
+    direction TB
 
+    class FormLaporan
+    class Laporan
+    class Media
+    class DaftarLaporan
+    class ValidatorLaporan
+    class Lokasi
+    class DaftarLokasi
+    class Pengguna
+    class Reward
+    class DaftarReward
+    class ManagerPoin
+    class HalamanPenukaran
+    class PenukaranModel["Penukaran (Model)"]
+    class LaporanView
+    class ManagerLaporan
+    class PenukaranCtrl["Penukaran (Controller)"]
+
+    FormLaporan --> ManagerLaporan : membuat / validasi
+    ManagerLaporan --> Laporan : membuat / membaca dan mengubah status
+    Laporan "0..*" --o "1" DaftarLaporan : menyimpan / memuat
+    FormLaporan -- Media : menginput
+    DaftarLaporan --> ValidatorLaporan : meminta data
+    LaporanView --> ValidatorLaporan : mengirim aksi
+    ValidatorLaporan --> Laporan : validasi & update
+    ValidatorLaporan --> Lokasi : map lokasi valid
+    DaftarLokasi --> ManagerLaporan : request list lokasi
+    LaporanView --> ManagerLaporan : request detail
+    ManagerLaporan --> Lokasi : read data
+    FormLaporan --> DaftarLaporan : menyimpan laporan
+    DaftarLaporan --> ManagerLaporan : meminta data
+    ManagerLaporan --> LaporanView : menampilkan detail
+    ValidatorLaporan --> ManagerLaporan : memvalidasi laporan
+    ValidatorLaporan --> ManagerPoin : menambah poin
+    ManagerPoin --> Pengguna : memperbarui poin
+    ValidatorLaporan ..> Pengguna : notifikasi
+    HalamanPenukaran "1" --> "1" ManagerPoin : meminta saldo
+    ManagerPoin ..> Pengguna : membaca saldo / membaca dan mengubah saldo
+    HalamanPenukaran "1" *-- "1" DaftarReward : memuat tampilan
+    DaftarReward --> ManagerPoin : meminta reward
+    ManagerPoin ..> Reward : mengambil data
+    DaftarReward ..> Reward : menampilkan data
+    DaftarReward --> HalamanPenukaran : pilihan reward
+    HalamanPenukaran --> PenukaranCtrl : meminta penukaran
+    PenukaranCtrl --> ManagerPoin : mengelola poin
+    PenukaranCtrl ..> Reward : memeriksa dan mengubah stok
+    PenukaranCtrl ..> PenukaranModel : mencatat transaksi
+    Pengguna "1" -- "0..*" PenukaranModel : memiliki riwayat
+    PenukaranModel "0..*" --> "1" Reward : menukarkan
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-class_diargam.png" width="35%">
-</p>
-<p align="center">
-<i>Gambar 4.1. Diagram Kelas Perancangan Keseluruhan [Nama P/L]</i>
+<i>Gambar 4.1. Diagram Kelas Perancangan Keseluruhan SoClean</i>
 </p>
 
 Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| *[C01]* | *[Nama kelas]* | *[Daftar atribut]* | *[Daftar metode/operasi]* |
-| *[C02]* | *[Nama kelas]* | *[Daftar atribut]* | *[Daftar metode/operasi]* |
-| *[C03]* | *[Nama kelas]* | *[Daftar atribut]* | *[Daftar metode/operasi]* |
-| *...* | *...* | *...* | *...* |
+| C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg, data | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit(); tampilkan_form_pembersihan(); buatLaporan(data, idMedia) |
+| C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); simpanLaporan(data, idMedia); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
+| C03 | *Media* | idMedia | input_media(); is_penyimpanan_penuh() |
+| C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); simpanLaporan(data, idMedia); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
+| C05 | *ValidatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
+| C06 | *Lokasi* | idLokasi, koordinat, status | simpan_lokasi(koordinat); get_all_lokasi_valid(); get_lokasi(idLokasi) |
+| C07 | *DaftarLokasi* | — | buka_fitur_cleanit(); pilih_lokasi(idLokasi); tampilkan_daftar(list); notify(msg) |
+| C08 | *Pengguna* | idPengguna, nama, saldoPoin | tambah_poin(idPengguna, jumlahPoin); notify(msg); getSaldoPoin(); cukupPoin(harga); kurangiPoin(jumlah) |
+| C09 | *Reward* | idReward, nama, jenis, hargaPoin, stok | getRewardTersedia(); cariReward(idReward); getHargaPoin(); tersedia(); kurangiStok() |
+| C10 | *DaftarReward* | — | muatRewardTersedia(); tampilkanDaftarReward(daftar); pilihReward(idReward) |
+| C11 | *ManagerPoin* | — | tambah_poin(idPengguna, jumlahPoin); lihatSaldo(pengguna); lihatRewardTersedia(); cekPoin(pengguna, harga); kurangiPoin(pengguna, jumlah); tambahPoin(idPengguna, jumlah) |
+| C12 | *HalamanPenukaran* | — | tampilkanSaldo(saldo); pilihReward(idReward); tampilkanNotifikasi(pesan) |
+| C13 | *Penukaran (Model)* | idPenukaran, waktuPenukaran, poinDipakai | buatPenukaran(pengguna, reward) |
+| C14 | *LaporanView* | data, idMedia | tampilkan_laporan(detail); tampilkan_laporan(data); setujui(idLaporan); tolak(idLaporan); notify(msg); tampilkan_lokasi(detail); konfirmasi_bersihkan(); tampilkan_konfirmasi(msg) |
+| C15 | *ManagerLaporan* | data, idMedia | cek_laporan(); is_terisi(); is_format_valid(); get_daftar_lokasi(); get_detail_lokasi(idLokasi); is_valid(data, idMedia); simpanLaporan(data, idMedia); get_all_laporan_unverified(); get_data(idLaporan); ubah_status(idLaporan, status); simpan_alasan_penolakan(idLaporan, alasan) |
+| C16 | *Penukaran (Controller)* | — | tukarPoin(pengguna, idReward) |
 
 <br>
 
@@ -1795,10 +1856,23 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 Petakan kelas perancangan dengan use case yang terkait. Gunakan **BAB 6 Traceability pada dokumen SKPL** sebagai acuan keterkaitan kelas analisis dan use case, lalu sesuaikan dengan realisasi use case dan kelas perancangan pada BAB 3–BAB 5 DPPL.
 
-Tabel 7.1. Matriks Kerunutan Kelas terhadap Use Case
+Tabel 5.1. Matriks Kerunutan Kelas terhadap Use Case
 
 | Kelas | Use Case Terkait |
 | :--- | :--- |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case]* |
-| *[ID kelas - Nama kelas]* | *[ID UC - Nama use case]* |
-| *...* | *...* |
+| C01 - *FormLaporan* | UC01 - Membuat Laporan Pencemaran; UC02 - Mengambil Bukti Foto/Video; UC05 - Mengirimkan Bukti Pembersihan (CleanIt) |
+| C02 - *Laporan* | UC01 - Membuat Laporan Pencemaran; UC03 - Memverifikasi Laporan ReportIt; UC05 - Mengirimkan Bukti Pembersihan (CleanIt); UC06 - Memverifikasi Laporan Pembersihan (CleanIt) |
+| C03 - *Media* | UC02 - Mengambil Bukti Foto/Video |
+| C04 - *DaftarLaporan* | UC01 - Membuat Laporan Pencemaran; UC03 - Memverifikasi Laporan ReportIt; UC05 - Mengirimkan Bukti Pembersihan (CleanIt); UC06 - Memverifikasi Laporan Pembersihan (CleanIt) |
+| C05 - *ValidatorLaporan* | UC03 - Memverifikasi Laporan ReportIt; UC06 - Memverifikasi Laporan Pembersihan (CleanIt) |
+| C06 - *Lokasi* | UC03 - Memverifikasi Laporan ReportIt; UC04 - Melihat Daftar Lokasi Pencemaran (CleanIt) |
+| C07 - *DaftarLokasi* | UC04 - Melihat Daftar Lokasi Pencemaran (CleanIt) |
+| C08 - *Pengguna* | UC06 - Memverifikasi Laporan Pembersihan (CleanIt); UC07 - Melihat Saldo Poin; UC09 - Menukarkan Poin dengan Reward |
+| C09 - *Reward* | UC08 - Melihat Reward yang Tersedia; UC09 - Menukarkan Poin dengan Reward |
+| C10 - *DaftarReward* | UC08 - Melihat Reward yang Tersedia; UC09 - Menukarkan Poin dengan Reward |
+| C11 - *ManagerPoin* | UC06 - Memverifikasi Laporan Pembersihan (CleanIt); UC07 - Melihat Saldo Poin; UC08 - Melihat Reward yang Tersedia; UC09 - Menukarkan Poin dengan Reward |
+| C12 - *HalamanPenukaran* | UC07 - Melihat Saldo Poin; UC08 - Melihat Reward yang Tersedia; UC09 - Menukarkan Poin dengan Reward |
+| C13 - *Penukaran (Model)* | UC09 - Menukarkan Poin dengan Reward |
+| C14 - *LaporanView* | UC03 - Memverifikasi Laporan ReportIt; UC04 - Melihat Daftar Lokasi Pencemaran (CleanIt); UC06 - Memverifikasi Laporan Pembersihan (CleanIt) |
+| C15 - *ManagerLaporan* | UC01 - Membuat Laporan Pencemaran; UC04 - Melihat Daftar Lokasi Pencemaran (CleanIt); UC05 - Mengirimkan Bukti Pembersihan (CleanIt); UC06 - Memverifikasi Laporan Pembersihan (CleanIt) |
+| C16 - *Penukaran (Controller)* | UC09 - Menukarkan Poin dengan Reward |
