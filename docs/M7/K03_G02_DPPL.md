@@ -324,7 +324,7 @@ sequenceDiagram
     LC-->>L: <<create>>;
     LC->>L: simpan_laporan(lokasi, <br/>waktu, idMedia, sumber);
     
-    participant DL@{"type":"entity"} as DaftarLaporan;
+    participant DL@{"type":"boundary"} as DaftarLaporan;
     LC->>DL: daftar_laporan(laporan)
     activate DL;
     deactivate DL;
@@ -404,31 +404,38 @@ sequenceDiagram
 
 ```mermaid
 classDiagram
-    class FormLaporan {
-        <<UserInterfacer>>
-        -lokasi
-        -waktu
-        -idMedia
-        -sumber 
-        +buat_laporan(lokasi, waktu, idMedia, sumber)
+    namespace View {
+        class FormLaporan {
+            <<UserInterfacer>>
+            - String lokasi
+            - Date waktu
+            - int idMedia
+            - String sumber 
+            + buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+        }
+        class DaftarLaporan {
+            <<Structurer>>
+            - int idLaporan
+            + daftar_laporan(laporan: Laporan)
+        }
     }
-    class LaporanController {
-        +cek_laporan()
-        +is_terisi()
-        +is_format_valid()
+    namespace Control {
+        class LaporanController {
+            <<Controller>>
+            + cek_laporan()
+            + is_terisi() Boolean
+            + is_format_valid() Boolean
+        }
     }
-    class Laporan {
-        <<InformationHolder>>
-        -String lokasi
-        -String waktu
-        -int idMedia
-        -String sumber
-        +simpan_laporan(lokasi, waktu, idMedia, sumber)
-    }
-    class DaftarLaporan {
-        <<Structurer>>
-        -idLaporan
-        +daftar_laporan(laporan)
+    namespace Model {
+        class Laporan {
+            <<InformationHolder>>
+            - String lokasi
+            - String waktu
+            - int idMedia
+            - String sumber
+            + simpan_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+        }
     }
 
     FormLaporan -- LaporanController
