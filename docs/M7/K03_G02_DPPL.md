@@ -469,7 +469,7 @@ Tabel 3.2. Identifikasi Kelas Use Case [UC02]
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
 | 1 | *FormLaporan* | *Form Laporan* |
-| 2 | *FormLaporan* | *Media* |
+| 2 | *Media* | *Media* |
 
 ### 3.2.2 Sequence Diagram
 
@@ -532,18 +532,18 @@ classDiagram
     namespace View {
         class FormLaporan {
             <<UserInterfacer>>
-            -msg
-            -idMedia
-            -ambil_gambar()
-            -notify(msg)
+            - String msg
+            - int idMedia
+            - ambil_gambar()
+            - notify(msg)
         }
     }
     namespace Model {
         class Media {
             <<InformationHolder>>
-            -idMedia
-            +input_media()
-            +is_penyimpanan_penuh()
+            - int idMedia
+            + input_media()
+            + is_penyimpanan_penuh() Boolean
         }
     }
     FormLaporan -- Media: menginput
@@ -551,13 +551,6 @@ classDiagram
 <p align="center">
 <i>Gambar 8. Diagram Kelas Mengambil Bukti Foto/Video</i>
 </p>
-
-Pada diagram, pastikan:
-- Atribut dituliskan beserta visibilitas dan tipe datanya, misalnya `- email: String`.
-- Operasi dituliskan beserta visibilitas, parameter, dan tipe kembaliannya, misalnya `+ login(email: String, password: String): Boolean`.
-- Relasi antarkelas (asosiasi, agregasi, komposisi, generalisasi, dan dependensi) digambarkan lengkap dengan multiplisitas.
-- Semua operasi yang dipanggil pada sequence diagram 3.2.2 (skenario normal dan alternatif) ada pada kelas yang bersangkutan.
-- Kelas yang sama dengan kelas di use case lain memakai nama, atribut, dan metode yang konsisten.
 
 ## 3.3 Use Case *Memverifikasi Laporan ReportIt*
 
