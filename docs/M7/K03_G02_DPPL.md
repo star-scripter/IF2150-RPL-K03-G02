@@ -303,7 +303,7 @@ Tabel 3.1. Identifikasi Kelas Use Case [UC01]
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
 | 1 | *FormLaporan* | *FormLaporan* |
-| 2 | *Laporan, LaporanController* | *Laporan* |
+| 2 | *Laporan, ManagerLaporan* | *Laporan* |
 | 3 | *DaftarLaporan* | *DaftarLaporan* |
 
 ### 3.1.2 Sequence Diagram
@@ -323,7 +323,7 @@ sequenceDiagram
     activate M;
     activate FL;
 
-    participant LC@{"type":"control"} as LaporanController
+    participant LC@{"type":"control"} as ManagerLaporan
     FL->>LC: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
     activate LC;
     LC->>LC: is_terisi()
@@ -353,7 +353,7 @@ sequenceDiagram
 sequenceDiagram
     actor M as Masyarakat;
     participant FL@{"type":"boundary"} as FormLaporan;
-    participant LC@{"type":"control"} as LaporanController
+    participant LC@{"type":"control"} as ManagerLaporan
 
     M->>FL: buka_reportit()
     loop is_terisi = false
@@ -387,7 +387,7 @@ sequenceDiagram
 sequenceDiagram
     actor M as Masyarakat;
     participant FL@{"type":"boundary"} as FormLaporan;
-    participant LC@{"type":"control"} as LaporanController
+    participant LC@{"type":"control"} as ManagerLaporan
 
     M->>FL: buka_reportit()
     loop is_terisi = false
@@ -435,7 +435,7 @@ classDiagram
         }
     }
     namespace Control {
-        class LaporanController {
+        class ManagerLaporan {
             <<Controller>>
             + cek_laporan()
             + is_terisi() Boolean
