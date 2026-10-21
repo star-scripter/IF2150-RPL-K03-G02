@@ -596,7 +596,8 @@ sequenceDiagram
     activate L
     L-->>VL: list_laporan
     deactivate L
-    VL-->>DL: tampilkan_daftar(list_laporan)
+    VL->>DL: tampilkan_daftar(list_laporan)
+    DL-->>O: list_laporan
     
     O->>DL: pilih_laporan(idLaporan)
     DL->>VL: get_detail(idLaporan)
@@ -604,10 +605,12 @@ sequenceDiagram
     activate L
     L-->>VL: detail_laporan
     deactivate L
-    VL-->>LV: tampilkan_laporan(detail_laporan)
+    VL->>LV: tampilkan_laporan(detail_laporan)
     activate LV
+    LV-->>O: detail_laporan
     
     O->>LV: periksa_validitas()
+    LV-->>O: opsi_validasi
     O->>LV: setujui(idLaporan)
     LV->>VL: setujui(idLaporan)
     VL->>L: ubah_status(idLaporan, "Valid")
@@ -615,7 +618,8 @@ sequenceDiagram
     activate LO
     LO-->>VL: success
     deactivate LO
-    VL-->>LV: notify("Laporan Valid")
+    VL->>LV: notify("Laporan Valid")
+    LV-->>O: "Laporan Valid"
     
     deactivate LV
     deactivate VL
@@ -646,7 +650,8 @@ sequenceDiagram
     activate L
     L-->>VL: list_laporan
     deactivate L
-    VL-->>DL: tampilkan_daftar(list_laporan)
+    VL->>DL: tampilkan_daftar(list_laporan)
+    DL-->>O: list_laporan
     
     O->>DL: pilih_laporan(idLaporan)
     DL->>VL: get_detail(idLaporan)
@@ -654,14 +659,17 @@ sequenceDiagram
     activate L
     L-->>VL: detail_laporan
     deactivate L
-    VL-->>LV: tampilkan_laporan(detail_laporan)
+    VL->>LV: tampilkan_laporan(detail_laporan)
     activate LV
+    LV-->>O: detail_laporan
     
     O->>LV: periksa_validitas()
+    LV-->>O: opsi_validasi
     O->>LV: tolak(idLaporan)
     LV->>VL: tolak(idLaporan)
     VL->>L: ubah_status(idLaporan, "Tidak Valid")
-    VL-->>LV: notify("Laporan Ditolak")
+    VL->>LV: notify("Laporan Ditolak")
+    LV-->>O: "Laporan Ditolak"
     
     deactivate LV
     deactivate VL
@@ -780,7 +788,7 @@ sequenceDiagram
     activate LO
     LO-->>ML: list_lokasi
     deactivate LO
-    ML-->>DL: tampilkan_daftar(list_lokasi)
+    ML->>DL: tampilkan_daftar(list_lokasi)
     
     M->>DL: pilih_lokasi(idLokasi)
     DL->>ML: get_detail_lokasi(idLokasi)
@@ -788,7 +796,7 @@ sequenceDiagram
     activate LO
     LO-->>ML: detail_lokasi
     deactivate LO
-    ML-->>LV: tampilkan_lokasi(detail_lokasi)
+    ML->>LV: tampilkan_lokasi(detail_lokasi)
     activate LV
     
     M->>LV: konfirmasi_bersihkan()
