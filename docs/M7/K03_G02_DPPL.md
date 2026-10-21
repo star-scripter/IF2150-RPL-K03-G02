@@ -318,6 +318,7 @@ sequenceDiagram
     actor M as Masyarakat;
     participant FL@{"type":"boundary"} as FormLaporan;
 
+    M->>FL: buka_reportit()
     M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
     activate M;
     activate FL;
@@ -327,7 +328,7 @@ sequenceDiagram
     activate LC;
     LC->>LC: is_terisi()
     LC-->>FL: true
-    FL-->>M: notify(msg)
+    LC-->>FL: notify("Berhasil")
     deactivate FL;
     deactivate M;
     
@@ -354,13 +355,14 @@ sequenceDiagram
     participant FL@{"type":"boundary"} as FormLaporan;
     participant LC@{"type":"control"} as LaporanController
 
+    M->>FL: buka_reportit()
     loop is_terisi = false
         M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
         activate FL;
         FL->>LC: is_format_valid()
         activate LC;
         LC-->>FL: false
-        FL-->>M: notify(msg)
+        LC-->>FL: notify("Gagal")
         deactivate FL;
     end
     
@@ -387,13 +389,14 @@ sequenceDiagram
     participant FL@{"type":"boundary"} as FormLaporan;
     participant LC@{"type":"control"} as LaporanController
 
+    M->>FL: buka_reportit()
     loop is_terisi = false
         M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
         activate FL;
         FL->>LC: is_terisi()
         activate LC;
         LC-->>FL: false
-        FL-->>M: notify(msg)
+        LC-->>FL: notify("Gagal")
         deactivate FL;
     end
     
@@ -423,6 +426,7 @@ classDiagram
             - int idMedia
             - String sumber 
             + buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+            + notify(msg: String)
         }
         class DaftarLaporan {
             <<Structurer>>
@@ -516,7 +520,7 @@ sequenceDiagram
     activate ME
     ME->>ME: is_penyimpanan_penuh()
     ME-->>FL: true
-    FL-->>M: notify(msg)
+    ME-->>FL: notify("Gagal")
     deactivate M
     deactivate FL
     deactivate ME
@@ -535,7 +539,7 @@ classDiagram
             - String msg
             - int idMedia
             - ambil_gambar()
-            - notify(msg)
+            - notify(msg: String)
         }
     }
     namespace Model {
