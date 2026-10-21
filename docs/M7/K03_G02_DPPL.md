@@ -609,8 +609,6 @@ sequenceDiagram
     activate LV
     LV-->>O: detail_laporan
     
-    O->>LV: periksa_validitas()
-    LV-->>O: opsi_validasi
     O->>LV: setujui(idLaporan)
     LV->>VL: setujui(idLaporan)
     VL->>L: ubah_status(idLaporan, "Valid")
@@ -663,8 +661,6 @@ sequenceDiagram
     activate LV
     LV-->>O: detail_laporan
     
-    O->>LV: periksa_validitas()
-    LV-->>O: opsi_validasi
     O->>LV: tolak(idLaporan)
     LV->>VL: tolak(idLaporan)
     VL->>L: ubah_status(idLaporan, "Tidak Valid")
@@ -696,7 +692,6 @@ classDiagram
         class LaporanView {
             <<UserInterfacer>>
             +tampilkan_laporan(detail)
-            +periksa_validitas()
             +setujui(idLaporan)
             +tolak(idLaporan)
             +notify(msg)
