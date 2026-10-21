@@ -1172,6 +1172,507 @@ Pada diagram, pastikan:
 
 <br>
 
+## 3.10 Use Case *Melihat Saldo Poin*
+
+**ID Use Case:** *UC07*  
+**Nama Use Case:** *Melihat Saldo Poin*
+
+### 3.10.1 Identifikasi Kelas
+
+Use case Melihat Saldo Poin direalisasikan menggunakan tiga kelas berdasarkan arsitektur MVC. HalamanPenukaran bertindak sebagai View, ManagerPoin sebagai Controller, dan Pengguna sebagai Model yang menyimpan saldo poin.
+
+Tabel 3.10. Identifikasi Kelas Use Case [UC07]
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | *HalamanPenukaran (View)* | *HalamanPenukaran* |
+| 2 | *ManagerPoin (Controller)* | *ManagerPoin* |
+| 3 | *Pengguna (Model)* | *Pengguna* |
+
+### 3.10.2 Sequence Diagram
+
+Sequence diagram berikut menggambarkan proses pengambilan saldo poin pengguna melalui ManagerPoin.
+
+- **Skenario Normal**
+
+```mermaid
+sequenceDiagram
+    actor M as Masyarakat
+    participant HP as HalamanPenukaran
+    participant MP as ManagerPoin
+    participant P as Pengguna
+
+    M->>HP: Membuka menu poin dan reward
+    activate HP
+
+    HP->>MP: lihatSaldo(pengguna)
+    activate MP
+
+    MP->>P: getSaldoPoin()
+    activate P
+    P-->>MP: saldoPoin
+    deactivate P
+
+    MP-->>HP: saldoPoin
+    deactivate MP
+
+    HP->>HP: tampilkanSaldo(saldoPoin)
+    HP-->>M: Saldo poin ditampilkan
+
+    deactivate HP
+```
+
+<p align="center">
+<i>Gambar X. Sequence Diagram UC07 - Skenario Normal</i>
+</p>
+
+Use case UC07 hanya memiliki skenario normal, sehingga tidak diperlukan diagram alternatif.
+
+### 3.10.3 Diagram Kelas
+
+Diagram kelas menggambarkan hubungan antara View HalamanPenukaran, Controller ManagerPoin, dan Model Pengguna. Permintaan saldo diteruskan melalui ManagerPoin sehingga View tidak mengakses Model secara langsung.
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace View {
+        class HalamanPenukaran {
+            <<UserInterfacer>>
+            +tampilkanSaldo(saldo: int) void
+            +pilihReward(idReward: String) void
+            +tampilkanNotifikasi(pesan: String) void
+        }
+    }
+
+    namespace Controller {
+        class ManagerPoin {
+            <<Controller>>
+            +lihatSaldo(pengguna: Pengguna) int
+            +lihatRewardTersedia() List~Reward~
+            +cekPoin(pengguna: Pengguna, harga: int) Boolean
+            +kurangiPoin(pengguna: Pengguna, jumlah: int) Boolean
+            +tambahPoin(idPengguna: String, jumlah: int) void
+        }
+    }
+
+    namespace Model {
+        class Pengguna {
+            <<InformationHolder>>
+            -idPengguna: String
+            -nama: String
+            -saldoPoin: int
+            +getSaldoPoin() int
+            +cukupPoin(harga: int) Boolean
+            +kurangiPoin(jumlah: int) Boolean
+        }
+    }
+
+    HalamanPenukaran "1" --> "1" ManagerPoin : meminta saldo
+    ManagerPoin ..> Pengguna : membaca saldo
+```
+
+<p align="center">
+<i>Gambar X. Diagram Kelas UC07 - Melihat Saldo Poin</i>
+</p>
+
+
+## 3.11 Use Case *Melihat Reward yang Tersedia*
+
+**ID Use Case:** *UC08*  
+**Nama Use Case:** *Melihat Reward yang Tersedia*
+
+### 3.11.1 Identifikasi Kelas
+
+Use case Melihat Reward yang Tersedia melibatkan HalamanPenukaran dan DaftarReward sebagai View, ManagerPoin sebagai Controller, serta Reward sebagai Model. DaftarReward bertanggung jawab menampilkan daftar hadiah, sedangkan ManagerPoin mengambil informasi reward dari Model.
+
+Tabel 3.11. Identifikasi Kelas Use Case [UC08]
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | *HalamanPenukaran (View)* | *HalamanPenukaran* |
+| 2 | *DaftarReward (View)* | *DaftarReward* |
+| 3 | *ManagerPoin (Controller)* | *ManagerPoin* |
+| 4 | *Reward (Model)* | *Reward* |
+
+### 3.11.2 Sequence Diagram
+
+Sequence diagram berikut menunjukkan interaksi ketika masyarakat membuka menu reward. HalamanPenukaran menampilkan komponen DaftarReward, yang kemudian meminta data melalui ManagerPoin. ManagerPoin mengambil reward yang tersedia dari Model Reward.
+
+- **Skenario Normal**
+
+```mermaid
+sequenceDiagram
+    actor M as Masyarakat
+    participant HP as HalamanPenukaran
+    participant DR as DaftarReward
+    participant MP as ManagerPoin
+    participant R as Reward
+
+    M->>HP: Membuka menu reward
+    activate HP
+
+    HP->>DR: muatRewardTersedia()
+    activate DR
+
+    DR->>MP: lihatRewardTersedia()
+    activate MP
+
+    MP->>R: getRewardTersedia()
+    activate R
+    R-->>MP: daftarRewardTersedia
+    deactivate R
+
+    MP-->>DR: daftarRewardTersedia
+    deactivate MP
+
+    DR->>DR: tampilkanDaftarReward(daftarRewardTersedia)
+    DR-->>M: Daftar reward ditampilkan
+
+    deactivate DR
+    deactivate HP
+```
+
+<p align="center">
+<i>Gambar X. Sequence Diagram UC08 - Skenario Normal</i>
+</p>
+
+Use case UC08 hanya memiliki skenario normal, sehingga tidak diperlukan diagram alternatif.
+
+### 3.11.3 Diagram Kelas
+
+Diagram kelas memperlihatkan bahwa DaftarReward merupakan komponen View yang berada di dalam HalamanPenukaran. DaftarReward berinteraksi dengan ManagerPoin untuk memperoleh data reward, sedangkan ManagerPoin mengakses Model Reward.
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace View {
+        class HalamanPenukaran {
+            <<UserInterfacer>>
+            +tampilkanSaldo(saldo: int) void
+            +pilihReward(idReward: String) void
+            +tampilkanNotifikasi(pesan: String) void
+        }
+
+        class DaftarReward {
+            <<UserInterfacer>>
+            +muatRewardTersedia() void
+            +tampilkanDaftarReward(daftar: List~Reward~) void
+            +pilihReward(idReward: String) void
+        }
+    }
+
+    namespace Controller {
+        class ManagerPoin {
+            <<Controller>>
+            +lihatSaldo(pengguna: Pengguna) int
+            +lihatRewardTersedia() List~Reward~
+            +cekPoin(pengguna: Pengguna, harga: int) Boolean
+            +kurangiPoin(pengguna: Pengguna, jumlah: int) Boolean
+            +tambahPoin(idPengguna: String, jumlah: int) void
+        }
+    }
+
+    namespace Model {
+        class Reward {
+            <<InformationHolder>>
+            -idReward: String
+            -nama: String
+            -jenis: String
+            -hargaPoin: int
+            -stok: int
+            +getRewardTersedia() List~Reward~
+            +cariReward(idReward: String) Reward
+            +getHargaPoin() int
+            +tersedia() Boolean
+            +kurangiStok() Boolean
+        }
+    }
+
+    HalamanPenukaran "1" *-- "1" DaftarReward : memuat tampilan
+    DaftarReward --> ManagerPoin : meminta reward
+    ManagerPoin ..> Reward : mengambil data
+    DaftarReward ..> Reward : menampilkan data
+```
+
+<p align="center">
+<i>Gambar X. Diagram Kelas UC08 - Melihat Reward yang Tersedia</i>
+</p>
+
+
+## 3.12 Use Case *Menukarkan Poin dengan Reward*
+
+**ID Use Case:** *UC09*  
+**Nama Use Case:** *Menukarkan Poin dengan Reward*
+
+### 3.12.1 Identifikasi Kelas
+
+Use case Menukarkan Poin dengan Reward melibatkan komponen View, Controller, dan Model. HalamanPenukaran dan DaftarReward bertanggung jawab menerima pilihan masyarakat. Controller Penukaran mengoordinasikan transaksi penukaran dengan bantuan ManagerPoin untuk memeriksa dan mengubah saldo. Model Pengguna menyimpan saldo poin, Reward menyimpan informasi hadiah, dan Penukaran mencatat transaksi yang berhasil dilakukan.
+
+Tabel 3.12. Identifikasi Kelas Use Case [UC09]
+
+| No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
+| :--- | :--- | :--- |
+| 1 | *HalamanPenukaran (View)* | *HalamanPenukaran* |
+| 2 | *DaftarReward (View)* | *DaftarReward* |
+| 3 | *Penukaran (Controller)* | *Penukaran* |
+| 4 | *ManagerPoin (Controller)* | *ManagerPoin* |
+| 5 | *Pengguna (Model)* | *Pengguna* |
+| 6 | *Reward (Model)* | *Reward* |
+| 7 | *Penukaran (Model)* | *Penukaran* |
+
+### 3.12.2 Sequence Diagram
+
+Sequence diagram UC09 menggambarkan proses penukaran poin dengan reward melalui Controller Penukaran. Controller ini mengoordinasikan pengecekan reward, kecukupan saldo, dan pencatatan transaksi. ManagerPoin menangani pemeriksaan serta perubahan saldo pengguna.
+
+- **Skenario Normal**
+
+Pada skenario normal, masyarakat memilih reward dan memiliki poin yang mencukupi. Sistem kemudian memeriksa ketersediaan reward, mengurangi saldo dan stok, serta mencatat transaksi penukaran.
+
+```mermaid
+sequenceDiagram
+    actor M as Masyarakat
+    participant DR as DaftarReward
+    participant HP as HalamanPenukaran
+    participant PC as Penukaran (Controller)
+    participant MP as ManagerPoin
+    participant R as Reward
+    participant P as Pengguna
+    participant PN as Penukaran (Model)
+
+    M->>DR: pilihReward(idReward)
+    activate DR
+
+    DR->>HP: pilihReward(idReward)
+    activate HP
+    deactivate DR
+
+    HP->>PC: tukarPoin(pengguna, idReward)
+    activate PC
+
+    PC->>R: cariReward(idReward)
+    activate R
+    R-->>PC: reward
+    deactivate R
+
+    PC->>R: getHargaPoin()
+    activate R
+    R-->>PC: hargaPoin
+    deactivate R
+
+    PC->>R: tersedia()
+    activate R
+    R-->>PC: true
+    deactivate R
+
+    PC->>MP: cekPoin(pengguna, hargaPoin)
+    activate MP
+
+    MP->>P: cukupPoin(hargaPoin)
+    activate P
+    P-->>MP: true
+    deactivate P
+
+    MP-->>PC: true
+    deactivate MP
+
+    Note over PC,PN: Semua perubahan dilakukan dalam satu transaksi database atomik
+
+    PC->>MP: kurangiPoin(pengguna, hargaPoin)
+    activate MP
+
+    MP->>P: kurangiPoin(hargaPoin)
+    activate P
+    P-->>MP: success
+    deactivate P
+
+    MP-->>PC: success
+    deactivate MP
+
+    PC->>R: kurangiStok()
+    activate R
+    R-->>PC: success
+    deactivate R
+
+    PC->>PN: buatPenukaran(pengguna, reward)
+    activate PN
+    PN-->>PC: success
+    deactivate PN
+
+    Note over PC,PN: Commit jika berhasil, rollback seluruh perubahan jika gagal
+
+    PC-->>HP: penukaranBerhasil
+    deactivate PC
+
+    HP->>HP: tampilkanNotifikasi("Penukaran berhasil")
+    HP-->>M: Konfirmasi penukaran berhasil
+
+    deactivate HP
+```
+
+<p align="center">
+<i>Gambar X. Sequence Diagram UC09 - Skenario Normal</i>
+</p>
+
+- **Skenario Alternatif 1: Poin Tidak Cukup**
+
+Pada skenario alternatif, sistem menemukan bahwa saldo poin masyarakat tidak mencukupi harga reward. Controller Penukaran menghentikan proses transaksi dan menampilkan notifikasi kegagalan melalui HalamanPenukaran. Tidak ada perubahan saldo maupun stok reward.
+
+```mermaid
+sequenceDiagram
+    actor M as Masyarakat
+    participant DR as DaftarReward
+    participant HP as HalamanPenukaran
+    participant PC as Penukaran (Controller)
+    participant MP as ManagerPoin
+    participant R as Reward
+    participant P as Pengguna
+
+    M->>DR: pilihReward(idReward)
+    activate DR
+
+    DR->>HP: pilihReward(idReward)
+    activate HP
+    deactivate DR
+
+    HP->>PC: tukarPoin(pengguna, idReward)
+    activate PC
+
+    PC->>R: cariReward(idReward)
+    activate R
+    R-->>PC: reward
+    deactivate R
+
+    PC->>R: getHargaPoin()
+    activate R
+    R-->>PC: hargaPoin
+    deactivate R
+
+    PC->>R: tersedia()
+    activate R
+    R-->>PC: true
+    deactivate R
+
+    PC->>MP: cekPoin(pengguna, hargaPoin)
+    activate MP
+
+    MP->>P: cukupPoin(hargaPoin)
+    activate P
+    P-->>MP: false
+    deactivate P
+
+    MP-->>PC: false
+    deactivate MP
+
+    Note over PC,P: Penukaran dihentikan tanpa perubahan data
+
+    PC-->>HP: penukaranGagal
+    deactivate PC
+
+    HP->>HP: tampilkanNotifikasi("Poin tidak cukup")
+    HP-->>M: Notifikasi penukaran gagal
+
+    deactivate HP
+```
+
+<p align="center">
+<i>Gambar X. Sequence Diagram UC09 - Poin Tidak Cukup</i>
+</p>
+
+### 3.12.3 Diagram Kelas
+
+Diagram kelas berikut menunjukkan hubungan antarkomponen perancangan dalam proses penukaran. HalamanPenukaran mengirim permintaan penukaran ke Controller Penukaran. Controller Penukaran menggunakan ManagerPoin untuk mengelola saldo, mengakses Reward untuk memeriksa dan mengubah stok, serta membuat catatan transaksi melalui Model Penukaran.
+
+Kedua komponen bernama Penukaran dibedakan berdasarkan peran Controller dan Model agar tidak terjadi ambiguitas pada diagram.
+
+```mermaid
+classDiagram
+    direction TB
+
+    namespace View {
+        class HalamanPenukaran {
+            <<UserInterfacer>>
+            +tampilkanSaldo(saldo: int) void
+            +pilihReward(idReward: String) void
+            +tampilkanNotifikasi(pesan: String) void
+        }
+
+        class DaftarReward {
+            <<UserInterfacer>>
+            +muatRewardTersedia() void
+            +tampilkanDaftarReward(daftar: List~Reward~) void
+            +pilihReward(idReward: String) void
+        }
+    }
+
+    namespace Controller {
+        class PenukaranCtrl["Penukaran (Controller)"] {
+            <<Controller>>
+            +tukarPoin(pengguna: Pengguna, idReward: String) Boolean
+        }
+
+        class ManagerPoin {
+            <<Controller>>
+            +lihatSaldo(pengguna: Pengguna) int
+            +lihatRewardTersedia() List~Reward~
+            +cekPoin(pengguna: Pengguna, harga: int) Boolean
+            +kurangiPoin(pengguna: Pengguna, jumlah: int) Boolean
+            +tambahPoin(idPengguna: String, jumlah: int) void
+        }
+    }
+
+    namespace Model {
+        class Pengguna {
+            <<InformationHolder>>
+            -idPengguna: String
+            -nama: String
+            -saldoPoin: int
+            +getSaldoPoin() int
+            +cukupPoin(harga: int) Boolean
+            +kurangiPoin(jumlah: int) Boolean
+        }
+
+        class Reward {
+            <<InformationHolder>>
+            -idReward: String
+            -nama: String
+            -jenis: String
+            -hargaPoin: int
+            -stok: int
+            +getRewardTersedia() List~Reward~
+            +cariReward(idReward: String) Reward
+            +getHargaPoin() int
+            +tersedia() Boolean
+            +kurangiStok() Boolean
+        }
+
+        class PenukaranModel["Penukaran (Model)"] {
+            <<InformationHolder>>
+            -idPenukaran: String
+            -waktuPenukaran: Date
+            -poinDipakai: int
+            +buatPenukaran(pengguna: Pengguna, reward: Reward) Boolean
+        }
+    }
+
+    HalamanPenukaran "1" *-- "1" DaftarReward : memuat tampilan
+    DaftarReward --> HalamanPenukaran : pilihan reward
+    HalamanPenukaran --> PenukaranCtrl : meminta penukaran
+
+    PenukaranCtrl --> ManagerPoin : mengelola poin
+    ManagerPoin ..> Pengguna : membaca dan mengubah saldo
+    PenukaranCtrl ..> Reward : memeriksa dan mengubah stok
+    PenukaranCtrl ..> PenukaranModel : mencatat transaksi
+
+    Pengguna "1" -- "0..*" PenukaranModel : memiliki riwayat
+    PenukaranModel "0..*" --> "1" Reward : menukarkan
+```
+
+<p align="center">
+<i>Gambar X. Diagram Kelas UC09 - Menukarkan Poin dengan Reward</i>
+</p>
+
 ---
 
 # BAB 4: Diagram Kelas Keseluruhan
