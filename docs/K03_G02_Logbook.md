@@ -146,3 +146,4 @@
 | 21-10-2026 | M. Aqsha Bagus R.I.B. | Fix sequence diagram UC02 dan UC01 | 1 jam | Selesai | - |
 | 21-10-2026 | Justin William | Mengerjakan sequence diagram UC07, UC08, dan UC09 | 2 jam | Done, open to changes | - |
 | 21-10-2026 | Faishal Ahmad Nurdin | Mengerjakan sequence diagram UC05 dan UC06 | 2 jam 30 menit | Done, open to changes | - |
+| 21-10-2026 | Muhammad Dhafin Al Khairy | Mengerjakan bab 4 dan 5 | 2 jam 30 menit | Done, open to changes | - |
