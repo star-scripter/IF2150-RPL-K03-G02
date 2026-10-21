@@ -939,9 +939,10 @@ sequenceDiagram
     DL-->>L: berhasil
     deactivate DL
     L-->>FL: berhasil
-    deactivate L
-    FL-->>M: notify("Bukti pembersihan berhasil dikirim")
+    L-->>FL: notify("Bukti pembersihan berhasil dikirim")
     deactivate FL
+    deactivate L
+
 ```
 <p align="center">
 <i>Gambar 15. Sequence Diagram UC05 - Skenario Normal</i>
@@ -964,9 +965,8 @@ sequenceDiagram
     FL->>ML: is_valid(data, idMedia)
     activate ML
     ML-->>FL: false
+    ML-->>FL: notify("Bukti pembersihan gagal dikirim")
     deactivate ML
-
-    FL-->>M: notify("Bukti pembersihan gagal dikirim")
     deactivate FL
 ```
 <p align="center">
@@ -1115,8 +1115,7 @@ sequenceDiagram
     deactivate P
     MP-->>VL: berhasil
     deactivate MP
-    VL->>P: notify("Laporan disetujui dan poin ditambahkan")
-    VL-->>O: tampilkan_konfirmasi()
+    VL-->>DL: tampilkan_konfirmasi()
     deactivate VL
 ```
 <p align="center">
@@ -1174,8 +1173,7 @@ sequenceDiagram
     deactivate ML
 
 
-    VL->>P: notify("Laporan ditolak karena bukti tidak sah)
-    VL-->>O: tampilkan_konfirmasi()
+    VL-->>DL: tampilkan_konfirmasi()
     deactivate VL
 ```
 <p align="center">
@@ -1196,6 +1194,7 @@ classDiagram
             +buka_laporan_masuk()
             +pilih_laporan(idLaporan)
             +daftarLaporan(list_laporan_pembersihan)
+
         }
         class LaporanView {
             -String data
@@ -1239,7 +1238,6 @@ classDiagram
             -int idPengguna
             -int saldoPoin
             +tambah_poin(idPengguna, jumlahPoin)
-            +notify(msg)
         }
     }
 
