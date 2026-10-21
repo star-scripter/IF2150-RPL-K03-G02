@@ -885,119 +885,380 @@ classDiagram
 <i>Gambar 14. Diagram Kelas UC04</i>
 </p>
 
-## 3.5 Use Case *Membuat Laporan Pencemaran*
+## 3.5 Use Case *Mengirimkan Bukti Pembersihan (CleanIt)*
 
-**ID Use Case:** *UC01*  
-**Nama Use Case:** *Membuat Laporan Pencemaran*
+**ID Use Case:** *UC05*  
+**Nama Use Case:** *Mengirimkan Bukti Pembersihan (CleanIt)*
 
 ### 3.5.1 Identifikasi Kelas
 
-Identifikasi kelas yang terkait dengan use case tersebut. Kelas di tahap perancangan dapat berbeda dengan dengan kelas di tahap analisis. Dapat menggunakan tabel di bawah:
+Identifikasi kelas yang terkait dengan fitur mengirimkan bukti pembersihan.
 
-Tabel 3.5. Identifikasi Kelas Use Case [UC01]
+Tabel 3.5. Identifikasi Kelas Use Case [UC05]
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| 2 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| ... | *...* | *...* |
+| 1 | *FormLaporan (View)* | *FormLaporan* |
+| 2 | *ManagerLaporan (Controller)* | *Laporan* |
+| 3 | *DaftarLaporan (View)* | *DaftarLaporan* |
+| 4 | *Laporan (Model)* | *Laporan* |
 
 ### 3.5.2 Sequence Diagram
 
-Buat *sequence diagram* untuk **setiap skenario use case**, mencakup skenario normal dan alternatif pada subbab 4.4 SKPL. Diagram melibatkan kelas-kelas yang telah diidentifikasi pada SKPL. 
+Berikut adalah *sequence diagram* untuk mengirimkan bukti pembersihan berdasarkan skenario normal dan alternatifnya. 
 
 - **Skenario Normal**
 
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat
+    participant FL@{"type":"boundary"} as FormLaporan
+    participant ML@{"type":"control"} as ManagerLaporan
+    participant L@{"type":"entity"} as Laporan
+    participant DL@{"type":"boundary"} as DaftarLaporan
+
+    M->>FL: buka_menu_cleanit()
+    activate FL
+    FL-->>M: tampilkan_form_pembersihan()
+
+    M->>FL: buatLaporan(data, idMedia)
+    FL->>ML: is_valid(data, idMedia)
+    activate ML
+    ML-->>FL: true
+    deactivate ML
+
+    FL->>L: simpanLaporan(data, idMedia)
+    activate L
+    L->>DL: simpanLaporan(data, idMedia)
+    activate DL
+    DL-->>L: berhasil
+    deactivate DL
+    L-->>FL: berhasil
+    deactivate L
+    FL-->>M: notify("Bukti pembersihan berhasil dikirim")
+    deactivate FL
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01]</i>
+<i>Gambar 15. Sequence Diagram UC05 - Skenario Normal</i>
 </p>
 
-- **Skenario Alternatif [Nomor]: [Nama Skenario]**
+- **Skenario Alternatif 1: Pengiriman Bukti Pembersihan Gagal**
 
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor M as Masyarakat
+    participant FL@{"type":"boundary"} as FormLaporan
+    participant ML@{"type":"control"} as ManagerLaporan
+
+    M->>FL: buka_menu_cleanit()
+    activate FL
+    FL-->>M: tampilkan_form_pembersihan()
+
+    M->>FL: buatLaporan(data, idMedia)
+    FL->>ML: is_valid(data, idMedia)
+    activate ML
+    ML-->>FL: false
+    deactivate ML
+
+    FL-->>M: notify("Bukti pembersihan gagal dikirim")
+    deactivate FL
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
+<i>Gambar 16. Sequence Diagram UC05 - Pengiriman Bukti Pembersihan Gagal</i>
 </p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
-</p>
+
 
 ### 3.5.3 Diagram Kelas
 
-Buatlah diagram kelas untuk use case ini yang terdiri atas kelas-kelas dari 3.5.1. **Setiap kelas pada diagram wajib menampilkan atribut dan metode/operasi langsung di dalam kotak kelasnya**, sehingga tidak perlu membuat tabel daftar atribut dan metode per kelas pada subbab ini. Daftar lengkap atribut dan metode seluruh kelas disajikan pada Tabel 4.1 (Bab 4).
+Diagram kelas di bawah memvisualisasikan atribut, metode, dan relasi antarkelas perancangan pada proses mengirimkan bukti pembersihan.
 
+```mermaid
+classDiagram
+    direction TB
+
+    namespace View {
+        class FormLaporan {
+            +String data
+            -int idMedia
+            +buka_menu_cleanit()
+            +tampilkan_form_pembersihan()
+            +buatLaporan(data, idMedia)
+            +notify(msg)
+        }
+        class DaftarLaporan {
+            -String idLaporan
+            +daftarLaporan()
+            +simpanLaporan(data, idMedia)
+        }
+    }
+    namespace Controller {
+        class ManagerLaporan {
+            -String data
+            -int idMedia
+            +is_valid(data, idMedia)
+            +simpanLaporan(data, idMedia)
+        }
+    }
+    namespace Model {
+        class Laporan {
+            -String idLaporan
+            -String lokasi
+            -String waktu
+            -int idMedia
+            -String sumber
+            -String status
+            +simpanLaporan(data, idMedia)
+        }
+    }
+
+    <<UserInterfacer>> FormLaporan
+    <<Structurer>> DaftarLaporan
+    <<Controller>> ManagerLaporan
+    <<InformationHolder>> Laporan
+
+    FormLaporan --> ManagerLaporan : validasi
+    FormLaporan --> DaftarLaporan : menyimpan laporan
+    DaftarLaporan "1" o-- "0..*" Laporan : memuat
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh_class-diagram2.jpg" width="35%">
-</p>
-<p align="center">
-<i>Gambar X. Diagram Kelas [Nama Uce Case]</i>
+<i>Gambar 17. Diagram Kelas UC05</i>
 </p>
 
-Pada diagram, pastikan:
-- Atribut dituliskan beserta visibilitas dan tipe datanya, misalnya `- email: String`.
-- Operasi dituliskan beserta visibilitas, parameter, dan tipe kembaliannya, misalnya `+ login(email: String, password: String): Boolean`.
-- Relasi antarkelas (asosiasi, agregasi, komposisi, generalisasi, dan dependensi) digambarkan lengkap dengan multiplisitas.
-- Semua operasi yang dipanggil pada sequence diagram 3.5.2 (skenario normal dan alternatif) ada pada kelas yang bersangkutan.
-- Kelas yang sama dengan kelas di use case lain memakai nama, atribut, dan metode yang konsisten.
 
-## 3.6 Use Case *Membuat Laporan Pencemaran*
+## 3.6 Use Case *Memverifikasi Laporan Pembersihan (CleanIt)*
 
-**ID Use Case:** *UC01*  
-**Nama Use Case:** *Membuat Laporan Pencemaran*
+**ID Use Case:** *UC06*  
+**Nama Use Case:** *Memverifikasi Laporan Pembersihan (CleanIt)*
 
 ### 3.6.1 Identifikasi Kelas
 
-Identifikasi kelas yang terkait dengan use case tersebut. Kelas di tahap perancangan dapat berbeda dengan dengan kelas di tahap analisis. Dapat menggunakan tabel di bawah:
+Identifikasi kelas yang terkait dengan fitur memverifikasi laporan pembersihan.
 
-Tabel 3.6. Identifikasi Kelas Use Case [UC01]
+Tabel 3.6. Identifikasi Kelas Use Case [UC06]
 
 | No | Nama Kelas Perancangan | Nama Kelas Analisis Terkait |
 |:--- | :--- | :--- |
-| 1 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| 2 | *[Nama kelas perancangan]* | *[Nama kelas analisis pada SKPL]* |
-| ... | *...* | *...* |
+| 1 | *LaporanView (View)* | *Laporan* |
+| 2 | *ManagerLaporan (Controller)* | *Laporan* |
+| 3 | *DaftarLaporan (View)* | *DaftarLaporan* |
+| 4 | *ValidatorLaporan (Controller)* | *ValidatorLaporan* |
+| 5 | *ManagerPoin (Controller)* | *Pengguna* |
+| 6 | *Pengguna (Model)* | *Pengguna* |
+| 7 | *Laporan (Model)* | *Laporan* |
 
 ### 3.6.2 Sequence Diagram
 
-Buat *sequence diagram* untuk **setiap skenario use case**, mencakup skenario normal dan alternatif pada subbab 4.4 SKPL. Diagram melibatkan kelas-kelas yang telah diidentifikasi pada SKPL. 
+Berikut adalah *sequence diagram* untuk memverifikasi laporan pembersihan berdasarkan skenario normal dan alternatifnya. 
 
 - **Skenario Normal**
 
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor O as Operator
+    participant DL@{"type":"boundary"} as DaftarLaporan
+    participant VL@{"type":"control"} as ValidatorLaporan
+    participant ML@{"type":"control"} as ManagerLaporan
+    participant L@{"type":"entity"} as Laporan
+    participant LV@{"type":"boundary"} as LaporanView
+    participant MP@{"type":"control"} as ManagerPoin
+    participant P@{"type":"entity"} as Pengguna
+
+    O->>DL: buka_laporan_masuk()
+    activate DL
+    DL->>ML: get_all_laporan_unverified()
+    activate ML
+    ML->>L: get_unverified()
+    activate L
+    L-->>ML: list_laporan_pembersihan
+    deactivate L
+    ML-->>DL: list_laporan_pembersihan
+    deactivate ML
+    DL-->>O: daftarLaporan(list_laporan_pembersihan)
+
+    O->>DL: pilih_laporan(idLaporan)
+    DL->>ML: get_data(idLaporan)
+    deactivate DL
+    activate ML
+    ML->>L: get_data(idLaporan)
+    activate L
+    L-->>ML: data
+    deactivate L
+    ML->>LV: tampilkan_laporan(data)
+    activate LV
+    LV-->>O: tampilkan_laporan(data)
+    deactivate LV
+    deactivate ML
+
+    O->>VL: setujui(idLaporan)
+    activate VL
+    VL->>ML: ubah_status(idLaporan, "Valid")
+    activate ML
+    ML->>L: ubah_status(idLaporan, "Valid")
+    activate L
+    L-->>ML: berhasil
+    deactivate L
+    ML-->>DL: berhasil
+    deactivate ML
+
+    VL->>MP: tambah_poin(idPengguna, jumlahPoin)
+    activate MP
+    MP->>P: tambah_poin(idPengguna, jumlahPoin)
+    activate P
+    P-->>MP: saldo_poin_baru
+    deactivate P
+    MP-->>VL: berhasil
+    deactivate MP
+    VL->>P: notify("Laporan disetujui dan poin ditambahkan")
+    VL-->>O: tampilkan_konfirmasi()
+    deactivate VL
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01]</i>
+<i>Gambar 18. Sequence Diagram UC06 - Skenario Normal</i>
 </p>
 
-- **Skenario Alternatif [Nomor]: [Nama Skenario]**
+- **Skenario Alternatif 1: Operator Menolak Laporan karena Bukti Tidak Sah**
 
+```mermaid
+%%{init: {'themeCSS': '.actor-line { stroke-dasharray: 4, 4; }'}}%%
+sequenceDiagram
+    actor O as Operator
+    participant DL@{"type":"boundary"} as DaftarLaporan
+    participant VL@{"type":"control"} as ValidatorLaporan
+    participant ML@{"type":"control"} as ManagerLaporan
+    participant L@{"type":"entity"} as Laporan
+    participant LV@{"type":"boundary"} as LaporanView
+    participant P@{"type":"entity"} as Pengguna
+
+    O->>DL: buka_laporan_masuk()
+    activate DL
+    DL->>ML: get_all_laporan_unverified()
+    activate ML
+    ML->>L: get_unverified()
+    activate L
+    L-->>ML: list_laporan_pembersihan
+    deactivate L
+    ML-->>DL: list_laporan_pembersihan
+    deactivate ML
+    DL-->>O: daftarLaporan(list_laporan_pembersihan)
+
+    O->>DL: pilih_laporan(idLaporan)
+    DL->>ML: get_data(idLaporan)
+    deactivate DL
+    activate ML
+    ML->>L: get_data(idLaporan)
+    activate L
+    L-->>ML: data
+    deactivate L
+    ML->>LV: tampilkan_laporan(data)
+    activate LV
+    LV-->>O: tampilkan_laporan(data)
+    deactivate LV
+    deactivate ML
+
+    O->>VL: tolak(idLaporan, alasan)
+    activate VL
+    VL->>ML: ubah_status(idLaporan, "Tidak Valid")
+    activate ML
+    ML->>L: ubah_status(idLaporan, "Tidak Valid")
+    activate L
+    L-->>ML: berhasil
+    deactivate L
+    ML-->>DL: berhasil
+    deactivate ML
+
+
+    VL->>P: notify("Laporan ditolak karena bukti tidak sah)
+    VL-->>O: tampilkan_konfirmasi()
+    deactivate VL
+```
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-sequence_diagram.png" width="50%">
-</p>
-<p align="center">
-<i>Gambar X. Sequence Diagram [UC01] - [Nama skenario alternatif]</i>
+<i>Gambar 19. Sequence Diagram UC06 - Operator Menolak Laporan karena Bukti Tidak Sah</i>
 </p>
 
 ### 3.6.3 Diagram Kelas
 
-Buatlah diagram kelas untuk use case ini yang terdiri atas kelas-kelas dari 3.6.1. **Setiap kelas pada diagram wajib menampilkan atribut dan metode/operasi langsung di dalam kotak kelasnya**, sehingga tidak perlu membuat tabel daftar atribut dan metode per kelas pada subbab ini. Daftar lengkap atribut dan metode seluruh kelas disajikan pada Tabel 4.1 (Bab 4).
+Diagram kelas di bawah memvisualisasikan atribut, metode, dan relasi antarkelas perancangan pada proses validasi laporan pembersihan.
 
-<p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh_class-diagram2.jpg" width="35%">
-</p>
-<p align="center">
-<i>Gambar X. Diagram Kelas [Nama Uce Case]</i>
-</p>
+```mermaid
+classDiagram
+    direction TB
 
-Pada diagram, pastikan:
-- Atribut dituliskan beserta visibilitas dan tipe datanya, misalnya `- email: String`.
-- Operasi dituliskan beserta visibilitas, parameter, dan tipe kembaliannya, misalnya `+ login(email: String, password: String): Boolean`.
-- Relasi antarkelas (asosiasi, agregasi, komposisi, generalisasi, dan dependensi) digambarkan lengkap dengan multiplisitas.
-- Semua operasi yang dipanggil pada sequence diagram 3.6.2 (skenario normal dan alternatif) ada pada kelas yang bersangkutan.
-- Kelas yang sama dengan kelas di use case lain memakai nama, atribut, dan metode yang konsisten.
+    namespace View {
+        class DaftarLaporan {
+            -String idLaporan
+            +buka_laporan_masuk()
+            +pilih_laporan(idLaporan)
+            +daftarLaporan(list_laporan_pembersihan)
+        }
+        class LaporanView {
+            -String data
+            -int idMedia
+            +tampilkan_laporan(data)
+        }
+    }
+    namespace Controller {
+        class ManagerPoin {
+            +tambah_poin(idPengguna, jumlahPoin)
+        }
+        class ValidatorLaporan {
+            +setujui(idLaporan)
+            +tolak(idLaporan, alasan)
+            +tampilkan_konfirmasi()
+        }
+        class ManagerLaporan {
+            -String data
+            -int idMedia
+            +get_all_laporan_unverified()
+            +get_data(idLaporan)
+            +ubah_status(idLaporan, status)
+            +simpan_alasan_penolakan(idLaporan, alasan)
+        }
+    }
+    namespace Model {
+        class Laporan {
+            -String idLaporan
+            -String lokasi
+            -String waktu
+            -int idMedia
+            -String sumber
+            -String status
+            +get_unverified()
+            +get_data(idLaporan)
+            +get_detail(idLaporan)
+            +ubah_status(idLaporan, status)
+            +simpan_alasan_penolakan(idLaporan, alasan)
+        }
+        class Pengguna {
+            -int idPengguna
+            -int saldoPoin
+            +tambah_poin(idPengguna, jumlahPoin)
+            +notify(msg)
+        }
+    }
+
+    <<Controller>> ValidatorLaporan
+    <<UserInterfacer>> LaporanView
+    <<Controller>> ManagerLaporan
+    <<Controller>> ManagerPoin
+    <<Structurer>> DaftarLaporan
+    <<InformationHolder>> Laporan
+    <<InformationHolder>> Pengguna
+
+    DaftarLaporan --> ManagerLaporan : meminta data
+    ManagerLaporan --> Laporan : membaca dan mengubah status
+    ManagerLaporan --> LaporanView : menampilkan detail
+    ValidatorLaporan --> ManagerLaporan : memvalidasi laporan
+    ValidatorLaporan --> ManagerPoin : menambah poin
+    ManagerPoin --> Pengguna : memperbarui poin
+    ValidatorLaporan ..> Pengguna : notifikasi
+    DaftarLaporan "1" o-- "0..*" Laporan : memuat
+```
+<p align="center">
+<i>Gambar 20. Diagram Kelas UC06</i>
+</p>
 
 ## 3.7 Use Case *Membuat Laporan Pencemaran*
 
