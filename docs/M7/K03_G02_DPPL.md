@@ -138,10 +138,10 @@ Gunakan hasil **BAB 1 Style/Pattern Arsitektur Acuan pada dokumen APL**, termasu
 ```mermaid
 flowchart TD
     %% Definisi komponen Controller
-    C["<div style='text-align: left;'><b>CONTROLLER</b><hr/>Laporan<br/>ValidatorLaporan<br/>ManagerPoin<br/>Penukaran</div>"]
+    C["<div style='text-align: left;'><b>CONTROLLER</b><hr/>ManagerLaporan<br/>ValidatorLaporan<br/>ManagerPoin<br/>Penukaran</div>"]
     
     %% Definisi komponen View
-    V["<div style='text-align: left;'><b>VIEW</b><hr/>FormLaporan<br/>Laporan<br/>DaftarLaporan<br/>DaftarLokasi<br/>HalamanPenukaran<br/>DaftarReward</div>"]
+    V["<div style='text-align: left;'><b>VIEW</b><hr/>FormLaporan<br/>LaporanView<br/>DaftarLaporan<br/>DaftarLokasi<br/>HalamanPenukaran<br/>DaftarReward</div>"]
     
     %% Definisi komponen Model
     M["<div style='text-align: left;'><b>MODEL</b><hr/>Laporan<br/>Lokasi<br/>Media<br/>Pengguna<br/>Reward<br/>Penukaran</div>"]
@@ -185,12 +185,12 @@ Tabel 2.3. Identifikasi Komponen/Modul/Subsistem
 | Nama Komponen/Modul/Subsistem | Jenis                 | Penjelasan                                                                                                           |
 | :---------------------------- | :-------------------- | :------------------------------------------------------------------------------------------------------------------- |
 | *FormLaporan* | *View* | *Menampilkan form pembuatan laporan dan meneruskannya dalam bentuk Laporan ke ValidatorLaporan* |
-| *Laporan* | *View* | *Menampilakan informasi dalam suatu laporan yang sudah dibuat pada FormLaporan* |
+| *LaporanView* | *View* | *Menampilakan informasi dalam suatu laporan yang sudah dibuat pada FormLaporan* |
 | *DaftarLaporan* | *View*| *Menampilakan daftar laporan yang sudah dibuat pada FormLaporan* |
 | *DaftarLokasi* | *View* | *Menampilkan daftar lokasi yang diambil dari laporan yang sudah dibuat* |
 | *HalamanPenukaran* | *View* | *Menampilakn halaman penukaran yang berisi DaftarReward dan jumlah poin serta meneruskan aksi pengguna (seperti menukar poin dengan reward) ke ManagerPoin dan Penukaran* |
 | *DaftarReward* | *View* | *Menampilkan daftar reward yang tersedia untuk ditukarkan dengan poin* |
-| *Laporan* | *Controller* | *Memproses status validasi suatu laporan pada DaftarLaporan* |
+| *ManagerLaporan* | *Controller* | *Memproses perlakuan pada Laporan melalui interface-interface seperti FormLaporan* |
 | *ValidatorLaporan* | *Controller* | *Memproses permintaan validasi laporan yang berada pada DaftarLaporan* |
 | *ManagerPoin* | *Controller* | *Memproses perubahan jumlah poin yang dimiliki pengguna* |
 | *Penukaran* | *Controller* | *Memproses permintaan penukaran poin dengan reward* |
