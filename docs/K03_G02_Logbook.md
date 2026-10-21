@@ -144,3 +144,4 @@
 | 19-10-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan sequence diagram UC01 | 1 jam | Sebagian selesai | - |
 | 20-10-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan sequence diagram UC02 dan fix UC01 | 2 jam | Sebagian selesai | - |
 | 21-10-2026 | M. Aqsha Bagus R.I.B. | Fix sequence diagram UC02 dan UC01 | 1 jam | Selesai | - |
+| 21-10-2026 | Justin William | Mengerjakan sequence diagram UC07, UC08, dan UC09 | 2 jam | Done, open to changes | - |
