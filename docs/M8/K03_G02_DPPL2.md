@@ -422,7 +422,8 @@ classDiagram
             - String lokasi
             - Date waktu
             - int idMedia
-            - String sumber 
+            - String sumber
+            - String msg
             + buka_reportit()
             + buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
             + notify(msg: String)
@@ -1825,10 +1826,10 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg, data | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit(); tampilkan_form_pembersihan(); buatLaporan(data, idMedia) |
-| C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); simpanLaporan(data, idMedia); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
+| C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit(); tampilkan_form_pembersihan(); buatLaporan(data, idMedia) |
+| C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); simpanLaporan(lokasi, waktu, idMedia, sumber); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
 | C03 | *Media* | idMedia | input_media(); is_penyimpanan_penuh() |
-| C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); simpanLaporan(data, idMedia); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
+| C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
 | C05 | *ValidatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
 | C06 | *Lokasi* | idLokasi, koordinat, status | simpan_lokasi(koordinat); get_all_lokasi_valid(); get_lokasi(idLokasi) |
 | C07 | *DaftarLokasi* | — | buka_fitur_cleanit(); pilih_lokasi(idLokasi); tampilkan_daftar(list); notify(msg) |
@@ -1839,7 +1840,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | C12 | *HalamanPenukaran* | — | tampilkanSaldo(saldo); pilihReward(idReward); tampilkanNotifikasi(pesan) |
 | C13 | *Penukaran (Model)* | idPenukaran, waktuPenukaran, poinDipakai | buatPenukaran(pengguna, reward) |
 | C14 | *LaporanView* | data, idMedia | tampilkan_laporan(detail); tampilkan_laporan(data); setujui(idLaporan); tolak(idLaporan); notify(msg); tampilkan_lokasi(detail); konfirmasi_bersihkan(); tampilkan_konfirmasi(msg) |
-| C15 | *ManagerLaporan* | data, idMedia | cek_laporan(); is_terisi(); is_format_valid(); get_daftar_lokasi(); get_detail_lokasi(idLokasi); is_valid(data, idMedia); simpanLaporan(data, idMedia); get_all_laporan_unverified(); get_data(idLaporan); ubah_status(idLaporan, status); simpan_alasan_penolakan(idLaporan, alasan) |
+| C15 | *ManagerLaporan* | - | cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String); is_terisi(lokasi, <br/>waktu, idMedia, sumber); is_format_valid(lokasi, <br/>waktu, idMedia, sumber); get_daftar_lokasi(); get_detail_lokasi(idLokasi); is_valid(idLaporan, lokasi, waktu, idMedia); get_all_laporan_unverified(); get_data(idLaporan); ubah_status(idLaporan, status); simpan_alasan_penolakan(idLaporan, alasan) |
 | C16 | *Penukaran (Controller)* | — | tukarPoin(pengguna, idReward) |
 
 <br>
