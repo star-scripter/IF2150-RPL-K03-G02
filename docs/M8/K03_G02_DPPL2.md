@@ -926,7 +926,7 @@ sequenceDiagram
     activate FL
     FL-->>M: form cleanit ditampilkan
 
-    M->>FL: buatLaporan(lokasi, <br/>waktu, idMedia, sumber)
+    M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber)
     FL->>ML: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
     activate ML
     ML->>ML: is_terisi(lokasi, <br/>waktu, idMedia, sumber) and is_format_valid(lokasi, <br/>waktu, idMedia, sumber)
@@ -957,6 +957,7 @@ sequenceDiagram
     M->>FL: buka_menu_cleanit()
     activate FL
     FL-->>M: tampilkan form pembersihan
+    M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber)
 
     FL->>ML: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
     activate ML
@@ -1826,11 +1827,12 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
-| C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit(); tampilkan_form_pembersihan(); buatLaporan(data, idMedia) |
+| C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit() |
 | C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); simpanLaporan(lokasi, waktu, idMedia, sumber); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
 | C03 | *Media* | idMedia | input_media(); is_penyimpanan_penuh() |
 | C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
-| C05 | *ValidatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
+| C05 | *Val
+idatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
 | C06 | *Lokasi* | idLokasi, koordinat, status | simpan_lokasi(koordinat); get_all_lokasi_valid(); get_lokasi(idLokasi) |
 | C07 | *DaftarLokasi* | — | buka_fitur_cleanit(); pilih_lokasi(idLokasi); tampilkan_daftar(list); notify(msg) |
 | C08 | *Pengguna* | idPengguna, nama, saldoPoin | tambah_poin(idPengguna, jumlahPoin); notify(msg); getSaldoPoin(); cukupPoin(harga); kurangiPoin(jumlah) |
@@ -1870,11 +1872,11 @@ Tabel 5.1.1. Operasi Kelas FormLaporan
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *buka_reportit()* | *public* | *Membuka tampilan Form Laporan untuk fitur ReportIt() sehingga dapat dilihat oleh pengguna Masyarakat* |
-| *notify(msg: String)* | *public* | *...* |
-| *ambil_gambar()* | *private* | *...* |
-| *buka_menu_cleanit()* | *public* | *...* |
-| *tampilkan_form_pembersihan()* | *public* | *...* |
+| *buka_reportit()* | *public* | *Membuka tampilan Form Laporan untuk fitur ReportIt() sehingga dapat dilihat oleh Pengguna* |
+| *notify(msg: String)* | *public* | *Memberikan notifikasi pesan yang dapat dilihat oleh Pengguna. Digunakan dalam konteks user berhasil atau gagal* |
+| *ambil_gambar()* | *private* | *Method passing yang meneruskan request dari Pengguna untuk menggunakan method input_media() pada Media* |
+| *buka_menu_cleanit()* | *public* | *Membuka tampilan Form Laporan untuk fitur CleanIt() sehingga dapat dilihat oleh Pengguna* |
+| *buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)* | *public* | *Menginput isi laporan yang akan diteruskan ke ManagerLaporan untuk dicek* |
 
 Tabel 5.1.2. Atribut Kelas FormLaporan
 
@@ -1885,15 +1887,14 @@ Tabel 5.1.2. Atribut Kelas FormLaporan
 | *idMedia* | *private* | *Number* |
 | *sumber* | *private* | *String* |
 | *msg* | *private* | *String* |
-| *data* | *public* | *Data (custom object yang berisi lokasi, waktu, idMedia, sumber)* |
 
 ### 5.1.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *FormLaporan*  
+**Nama Operasi:** *buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)*  
+**ID Algoritma:** *Algo-001*
 
 ```text
 [Tuliskan pseudocode algoritma operasi di sini.]
