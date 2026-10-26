@@ -32,7 +32,7 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
+| *A* | *Perubahan pada UC 3.1 dan 3.5 agar lebih selaras* |
 | *B* |  |
 | *C* |  |
 | ... |  |
@@ -317,15 +317,15 @@ sequenceDiagram
     participant FL@{"type":"boundary"} as FormLaporan;
 
     M->>FL: buka_reportit()
-    M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
     activate M;
     activate FL;
+    FL-->>M: form cleanit ditampilkan
+    M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
 
     participant LC@{"type":"control"} as ManagerLaporan
     FL->>LC: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
     activate LC;
-    LC->>LC: is_terisi()
-    LC-->>FL: true
+    LC->>LC: is_terisi(lokasi, <br/>waktu, idMedia, sumber) and is_format_valid(lokasi, <br/>waktu, idMedia, sumber)
     LC-->>FL: notify("Berhasil")
     deactivate FL;
     deactivate M;
@@ -354,12 +354,12 @@ sequenceDiagram
     participant LC@{"type":"control"} as ManagerLaporan
 
     M->>FL: buka_reportit()
-    loop is_terisi = false
+    loop is_format_valid = false
         M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
         activate FL;
-        FL->>LC: is_format_valid()
+        FL->>LC: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
+        LC->>LC: is_terisi(lokasi, <br/>waktu, idMedia, sumber) and is_format_valid(lokasi, <br/>waktu, idMedia, sumber) 
         activate LC;
-        LC-->>FL: false
         LC-->>FL: notify("Gagal")
         deactivate FL;
     end
@@ -391,9 +391,9 @@ sequenceDiagram
     loop is_terisi = false
         M->>FL: buat_laporan(lokasi, <br/>waktu, idMedia, sumber);
         activate FL;
-        FL->>LC: is_terisi()
+        FL->>LC: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
+        LC->>LC: is_terisi(lokasi, <br/>waktu, idMedia, sumber) and is_format_valid(lokasi, <br/>waktu, idMedia, sumber) 
         activate LC;
-        LC-->>FL: false
         LC-->>FL: notify("Gagal")
         deactivate FL;
     end
@@ -423,6 +423,7 @@ classDiagram
             - Date waktu
             - int idMedia
             - String sumber 
+            + buka_reportit()
             + buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
             + notify(msg: String)
         }
@@ -435,9 +436,9 @@ classDiagram
     namespace Control {
         class ManagerLaporan {
             <<Controller>>
-            + cek_laporan()
-            + is_terisi() Boolean
-            + is_format_valid() Boolean
+            + cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+            + is_terisi(lokasi, <br/>waktu, idMedia, sumber) Boolean
+            + is_format_valid(lokasi, <br/>waktu, idMedia, sumber) Boolean
         }
     }
     namespace Model {
@@ -537,7 +538,7 @@ classDiagram
             - String msg
             - int idMedia
             - ambil_gambar()
-            - notify(msg: String)
+            + notify(msg: String)
         }
     }
     namespace Model {
@@ -922,22 +923,19 @@ sequenceDiagram
 
     M->>FL: buka_menu_cleanit()
     activate FL
-    FL-->>M: tampilkan_form_pembersihan()
+    FL-->>M: form cleanit ditampilkan
 
-    M->>FL: buatLaporan(data, idMedia)
-    FL->>ML: is_valid(data, idMedia)
+    M->>FL: buatLaporan(lokasi, <br/>waktu, idMedia, sumber)
+    FL->>ML: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
     activate ML
-    ML-->>FL: true
-    deactivate ML
+    ML->>ML: is_terisi(lokasi, <br/>waktu, idMedia, sumber) and is_format_valid(lokasi, <br/>waktu, idMedia, sumber)
 
-    FL->>L: simpanLaporan(data, idMedia)
+    ML->>L: simpanLaporan(lokasi, <br/>waktu, idMedia, sumber)
+    deactivate ML
     activate L
-    L->>DL: simpanLaporan(data, idMedia)
+    L->>DL: daftarLaporan(laporan)
     activate DL
-    DL-->>L: berhasil
     deactivate DL
-    L-->>FL: berhasil
-    L-->>FL: notify("Bukti pembersihan berhasil dikirim")
     deactivate FL
     deactivate L
 
@@ -957,12 +955,11 @@ sequenceDiagram
 
     M->>FL: buka_menu_cleanit()
     activate FL
-    FL-->>M: tampilkan_form_pembersihan()
+    FL-->>M: tampilkan form pembersihan
 
-    M->>FL: buatLaporan(data, idMedia)
-    FL->>ML: is_valid(data, idMedia)
+    FL->>ML: cek_laporan(lokasi, <br/>waktu, idMedia, sumber)
     activate ML
-    ML-->>FL: false
+    ML->>ML: is_terisi(lokasi, <br/>waktu, idMedia, sumber) and is_format_valid(lokasi, <br/>waktu, idMedia, sumber)
     ML-->>FL: notify("Bukti pembersihan gagal dikirim")
     deactivate ML
     deactivate FL
@@ -982,36 +979,33 @@ classDiagram
 
     namespace View {
         class FormLaporan {
-            +String data
-            -int idMedia
+            - String lokasi
+            - Date waktu
+            - int idMedia
+            - String sumber
             +buka_menu_cleanit()
-            +tampilkan_form_pembersihan()
-            +buatLaporan(data, idMedia)
-            +notify(msg)
+            + buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+            +notify(msg: String)
         }
         class DaftarLaporan {
-            -String idLaporan
-            +daftarLaporan()
-            +simpanLaporan(data, idMedia)
+            - int idLaporan
+            + daftar_laporan(laporan: Laporan)
         }
     }
     namespace Controller {
         class ManagerLaporan {
-            -String data
-            -int idMedia
-            +is_valid(data, idMedia)
-            +simpanLaporan(data, idMedia)
+            + cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+            + is_terisi(lokasi, <br/>waktu, idMedia, sumber) Boolean
+            + is_format_valid(lokasi, <br/>waktu, idMedia, sumber) Boolean
         }
     }
     namespace Model {
         class Laporan {
-            -String idLaporan
             -String lokasi
             -String waktu
             -int idMedia
             -String sumber
-            -String status
-            +simpanLaporan(data, idMedia)
+            +simpanLaporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
         }
     }
 
@@ -1866,24 +1860,31 @@ Tabel 5.1. Daftar Kelas Perancangan dan Kelas Analisis Terkait
 
 Untuk **setiap kelas**, identifikasi operasi berdasarkan tanggung jawab kelas beserta *visibility*-nya, serta atribut beserta *visibility* dan tipenya. Buat subbab tersendiri untuk setiap kelas.
 
-## 5.1 Kelas [Nama Kelas 1]
+## 5.1 Kelas FormLaporan
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *FormLaporan*  
+**ID Kelas:** *C-01*
 
-Tabel 5.1.1. Operasi Kelas [Nama Kelas 1]
+Tabel 5.1.1. Operasi Kelas FormLaporan
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *buka_reportit()* | *public* | *Membuka tampilan Form Laporan untuk fitur ReportIt() sehingga dapat dilihat oleh pengguna Masyarakat* |
+| *notify(msg: String)* | *public* | *...* |
+| *ambil_gambar()* | *private* | *...* |
+| *buka_menu_cleanit()* | *public* | *...* |
+| *tampilkan_form_pembersihan()* | *public* | *...* |
 
-Tabel 5.1.2. Atribut Kelas [Nama Kelas 1]
+Tabel 5.1.2. Atribut Kelas FormLaporan
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *lokasi* | *private* | *String* |
+| *waktu* | *private* | *Date* |
+| *idMedia* | *private* | *Number* |
+| *sumber* | *private* | *String* |
+| *msg* | *private* | *String* |
+| *data* | *public* | *Data (custom object yang berisi lokasi, waktu, idMedia, sumber)* |
 
 ### 5.1.1 Algoritma/Query
 
