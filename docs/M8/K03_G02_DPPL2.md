@@ -1831,8 +1831,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); simpanLaporan(lokasi, waktu, idMedia, sumber); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
 | C03 | *Media* | idMedia | input_media(); is_penyimpanan_penuh() |
 | C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
-| C05 | *Val
-idatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
+| C05 | *ValidatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
 | C06 | *Lokasi* | idLokasi, koordinat, status | simpan_lokasi(koordinat); get_all_lokasi_valid(); get_lokasi(idLokasi) |
 | C07 | *DaftarLokasi* | — | buka_fitur_cleanit(); pilih_lokasi(idLokasi); tampilkan_daftar(list); notify(msg) |
 | C08 | *Pengguna* | idPengguna, nama, saldoPoin | tambah_poin(idPengguna, jumlahPoin); notify(msg); getSaldoPoin(); cukupPoin(harga); kurangiPoin(jumlah) |
@@ -1890,29 +1889,90 @@ Tabel 5.1.2. Atribut Kelas FormLaporan
 
 ### 5.1.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
 **Nama Kelas:** *FormLaporan*  
-**Nama Operasi:** *buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)*  
+**Nama Operasi:** *buka_reportit()*  
 **ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function buka_reportit()
+    Algoritma
+        Tampilkan antarmuka ReportIt
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+<!--Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
 
 Tabel 5.1.3. Query Operasi [Nama Operasi]
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *...* | *...* | *...* |-->
 
 
 ### 5.1.2 Algoritma/Query
 
-*[Ulangi pola 5.1.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *FormLaporan*  
+**Nama Operasi:** *notify(msg: String)*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function notify(msg: String)
+    Algoritma
+        Tampilkan msg pada antarmuka
+```
+
+<!--Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+
+Tabel 5.1.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
+
+### 5.1.3 Algoritma/Query
+
+**Nama Kelas:** *FormLaporan*  
+**Nama Operasi:** *buka_menu_cleanit()*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function buka_menu_cleanit()
+    Algoritma
+        Tampilkan antarmuka CleanIt
+```
+
+<!--Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+
+Tabel 5.1.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
+
+### 5.1.4 Algoritma/Query
+
+**Nama Kelas:** *FormLaporan*  
+**Nama Operasi:** *buat_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: String)*  
+**ID Algoritma:** *Algo-004*
+
+```text
+function buat_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)
+    Prasyarat
+        Terdapat sebuah obyek singular global yang merupakan instance dari ManagerLaporan
+    Algoritma
+        ManagerLaporan.cek_laporan(lokasi, waktu, idMedia, sumber)
+```
+
+<!--Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+
+Tabel 5.1.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
 
 
 ## 5.2 Kelas [Nama Kelas 2]
