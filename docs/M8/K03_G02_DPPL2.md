@@ -1828,7 +1828,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | ID Kelas | Nama Kelas | Atribut | Metode/Operasi |
 | :--- | :--- | :--- | :--- |
 | C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit() |
-| C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); simpanLaporan(lokasi, waktu, idMedia, sumber); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
+| C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
 | C03 | *Media* | idMedia | input_media(); is_penyimpanan_penuh() |
 | C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
 | C05 | *ValidatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
@@ -1975,50 +1975,134 @@ Tabel 5.1.3. Query Operasi [Nama Operasi]
 | *...* | *...* | *...* |-->
 
 
-## 5.2 Kelas [Nama Kelas 2]
+## 5.2 Kelas Laporan
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Laporan*  
+**ID Kelas:** *C-02*
 
-Tabel 5.2.1. Operasi Kelas [Nama Kelas 2]
+Tabel 5.2.1. Operasi Kelas Laporan
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: String)* | *public* | *Menyimpan data keterangan laporan sesuai parameter ke dalam obyek laporan yang telah dibuat* |
+| *get_unverified()* | *public* | *Mengembalikan laporan yang statusnya belum diverifikasi* |
+| *get_detail(idLaporan: Number)* | *public* | *Mengembalikan keterangan laporan idLaporan (lokasi, waktu, idMedia, sumber)* |
+| *ubah_status(idLaporan: Number, status: String)* | *public* | *Mengubah status laporan idLaporan ke status tertentu* |
+| *get_data(idLaporan: Number)* | *public* | *Mengembalikan keterangan laporan idLaporan (lokasi, waktu, idMedia, sumber)* |
 
-Tabel 5.2.2. Atribut Kelas [Nama Kelas 2]
+
+Tabel 5.2.2. Atribut Kelas Laporan
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *idLaporan* | *private* | *Number* |
+| *lokasi* | *private* | *String* |
+| *waktu* | *private* | *Date* |
+| *idMedia* | *private* | *Number* |
+| *sumber* | *private* | *String* |
+| *status* | *private* | *String* |
 
 ### 5.2.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Laporan*  
+**Nama Operasi:** *simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: String)*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: String)
+    Algoritma
+        self.lokasi = lokasi
+        self.waktu = waktu
+        self.idMedia = idMedia
+        self.sumber = sumber
+        self.status = "Belum Diperiksa"
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.2.3. Query Operasi [Nama Operasi]
+<!--Tabel 5.2.3. Query Operasi [Nama Operasi]
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
 | *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *...* | *...* | *...* |-->
 
 
 ### 5.2.2 Algoritma/Query
 
-*[Ulangi pola 5.2.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *Laporan*  
+**Nama Operasi:** *get_unverified()*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function get_unverified()
+    Algoritma
+        if self.status is "Belum Diperiksa" then
+            return self
+        return NIL
+```
+
+<!--Tabel 5.2.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
+
+### 5.2.3 Algoritma/Query
+
+**Nama Kelas:** *Laporan*  
+**Nama Operasi:** *get_detail(idLaporan: Number)*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function get_detail(idLaporan: Number)
+    Algoritma
+        return (self.lokasi, self.waktu, self.idMedia, self.sumber, self.status)
+```
+
+<!--Tabel 5.2.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
+
+### 5.2.4 Algoritma/Query
+
+**Nama Kelas:** *Laporan*  
+**Nama Operasi:** *ubah_status(idLaporan: Number, status: String)*  
+**ID Algoritma:** *Algo-004*
+
+```text
+function ubah_status(idLaporan: Number, status: String)
+    Algoritma
+        self.status = status
+```
+
+<!--Tabel 5.2.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
+
+### 5.2.5 Algoritma/Query
+
+**Nama Kelas:** *Laporan*  
+**Nama Operasi:** *get_detail(idLaporan: Number)*  
+**ID Algoritma:** *Algo-005*
+
+```text
+function get_data(idLaporan: Number)
+    Algoritma
+        return (self.lokasi, self.waktu, self.idMedia, self.sumber, self.status)
+```
+
+<!--Tabel 5.2.3. Query Operasi [Nama Operasi]
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
+| *...* | *...* | *...* |-->
 
 
 ## 5.3 Kelas [Nama Kelas 3]
