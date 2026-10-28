@@ -601,7 +601,7 @@ sequenceDiagram
     L-->>VL: list_laporan
     deactivate L
     VL->>DL: tampilkan_daftar(list_laporan)
-    DL-->>O: list_laporan
+    DL-->>O: tampilkan list_laporan
     
     O->>DL: pilih_laporan(idLaporan)
     DL->>VL: get_detail(idLaporan)
@@ -611,7 +611,7 @@ sequenceDiagram
     deactivate L
     VL->>LV: tampilkan_laporan(detail_laporan)
     activate LV
-    LV-->>O: detail_laporan
+    LV-->>O: tampilkan detail_laporan
     
     O->>LV: setujui(idLaporan)
     LV->>VL: setujui(idLaporan)
@@ -653,7 +653,7 @@ sequenceDiagram
     L-->>VL: list_laporan
     deactivate L
     VL->>DL: tampilkan_daftar(list_laporan)
-    DL-->>O: list_laporan
+    DL-->>O: tampilkan list_laporan
     
     O->>DL: pilih_laporan(idLaporan)
     DL->>VL: get_detail(idLaporan)
@@ -663,7 +663,7 @@ sequenceDiagram
     deactivate L
     VL->>LV: tampilkan_laporan(detail_laporan)
     activate LV
-    LV-->>O: detail_laporan
+    LV-->>O: tampilkan detail_laporan
     
     O->>LV: tolak(idLaporan)
     LV->>VL: tolak(idLaporan)
@@ -934,7 +934,7 @@ sequenceDiagram
     ML->>L: simpanLaporan(lokasi, <br/>waktu, idMedia, sumber)
     deactivate ML
     activate L
-    L->>DL: daftarLaporan(laporan)
+    L->>DL: daftar_laporan(laporan)
     activate DL
     deactivate DL
     deactivate FL
@@ -1072,9 +1072,9 @@ sequenceDiagram
     activate L
     L-->>ML: list_laporan_pembersihan
     deactivate L
-    ML-->>DL: list_laporan_pembersihan
+    ML-->>DL: tampilkan_daftar(list_laporan_pembersihan)
     deactivate ML
-    DL-->>O: daftarLaporan(list_laporan_pembersihan)
+n
 
     O->>DL: pilih_laporan(idLaporan)
     DL->>ML: get_data(idLaporan)
@@ -1137,9 +1137,8 @@ sequenceDiagram
     activate L
     L-->>ML: list_laporan_pembersihan
     deactivate L
-    ML-->>DL: list_laporan_pembersihan
+    ML-->>DL: tampilkan_daftar(list_laporan_pembersihan)
     deactivate ML
-    DL-->>O: daftarLaporan(list_laporan_pembersihan)
 
     O->>DL: pilih_laporan(idLaporan)
     DL->>ML: get_data(idLaporan)
@@ -1187,8 +1186,7 @@ classDiagram
             -String idLaporan
             +buka_laporan_masuk()
             +pilih_laporan(idLaporan)
-            +daftarLaporan(list_laporan_pembersihan)
-
+            +tampilkan_daftar(list: List of Laporan)
         }
         class LaporanView {
             -String data
@@ -1830,7 +1828,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | C01 | *FormLaporan* | lokasi, waktu, idMedia, sumber, msg | buka_reportit(); buat_laporan(lokasi, waktu, idMedia, sumber); ambil_gambar(); notify(msg); buka_menu_cleanit() |
 | C02 | *Laporan* | idLaporan, lokasi, waktu, idMedia, sumber, status | simpan_laporan(lokasi, waktu, idMedia, sumber); get_unverified(); get_detail(idLaporan); ubah_status(idLaporan, status); get_data(idLaporan); simpan_alasan_penolakan(idLaporan, alasan) |
 | C03 | *Media* | idMedia | input_media(); is_penyimpanan_penuh() |
-| C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); daftarLaporan(); buka_laporan_masuk(); daftarLaporan(list_laporan_pembersihan) |
+| C04 | *DaftarLaporan* | idLaporan | daftar_laporan(laporan); pilih_menu_verifikasi(); pilih_laporan(idLaporan); tampilkan_daftar(list); buka_laporan_masuk(); |
 | C05 | *ValidatorLaporan* | — | get_laporan_unverified(); get_detail(idLaporan); setujui(idLaporan); tolak(idLaporan); tolak(idLaporan, alasan); tampilkan_konfirmasi() |
 | C06 | *Lokasi* | idLokasi, koordinat, status | simpan_lokasi(koordinat); get_all_lokasi_valid(); get_lokasi(idLokasi) |
 | C07 | *DaftarLokasi* | — | buka_fitur_cleanit(); pilih_lokasi(idLokasi); tampilkan_daftar(list); notify(msg) |
@@ -2151,50 +2149,87 @@ Tabel 5.3.3. Query Operasi [Nama Operasi]
 *[Ulangi pola 5.3.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
 
 
-## 5.4 Kelas [Nama Kelas 4]
+## 5.4 Kelas DaftarLaporan
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *DaftarLaporan*  
+**ID Kelas:** *C-04*
 
-Tabel 5.4.1. Operasi Kelas [Nama Kelas 4]
+Tabel 5.4.1. Operasi Kelas DaftarLaporan
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *daftar_laporan(laporan: Laporan)* | *public* | *Memasukkan laporan ke daftar laporan* |
+| *pilih_menu_verifikasi()* | *public* | *Membuka menu verifikasi untuk operator* |
+| *pilih_laporan(idLaporan: Number)* | *public* | *Memilih laporan yang akan ditampilkan dengan idLaporan tertentu* |
+| *tampilkan_daftar(list: List of Laporan)* | *public* | *Menampilkan daftar list laporan* |
+| *buka_laporan_masuk()* | *public* | *Fungsi passer untuk meminta membuka daftar laporan yang masuk* |
 
-Tabel 5.4.2. Atribut Kelas [Nama Kelas 4]
+Tabel 5.4.2. Atribut Kelas DaftarLaporan
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *idLaporan* | *private* | *Number* |
 
 ### 5.4.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *DaftarLaporan*  
+**Nama Operasi:** *daftar_laporan(laporan: Laporan)*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function daftar_laporan(laporan: Laporan)
+    Algoritma
+        Query untuk create pada database
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
 
-Tabel 5.4.3. Query Operasi [Nama Operasi]
+Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-001* | *Insert entry laporan into laporan table* | *Memasukkan suatu laporan ke dalam database list Laporan* |
 
 
 ### 5.4.2 Algoritma/Query
 
-*[Ulangi pola 5.4.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *DaftarLaporan*  
+**Nama Operasi:** *pilih_menu_verifikasi()*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function pilih_menu_verifikasi()
+    Algoritma
+        Tampilkan antarmuka verifikasi
+```
+
+<!--Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+
+Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-001* | *Insert entry laporan into laporan table* | *Memasukkan suatu laporan ke dalam database list Laporan* |-->
+
+### 5.4.3 Algoritma/Query
+
+**Nama Kelas:** *DaftarLaporan*  
+**Nama Operasi:** *tampilkan_daftar(list: List of Laporan)*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function tampilkan_daftar(list: List of Laporan)
+    Algoritma
+        Tampilkan list pada antarmuka
+```
+
+<!--Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+
+Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-001* | *Insert entry laporan into laporan table* | *Memasukkan suatu laporan ke dalam database list Laporan* |-->
 
 
 ## 5.5 Kelas [Nama Kelas 5]
