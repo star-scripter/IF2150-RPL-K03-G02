@@ -775,7 +775,7 @@ classDiagram
         }
         class Lokasi {
             <<InformationHolder>>
-            -String idLokasi
+            -Number idLokasi
             -String koordinat
             -String status
             +simpan_lokasi(koordinat)
@@ -923,7 +923,7 @@ classDiagram
     namespace Model {
         class Lokasi {
             <<InformationHolder>>
-            -String idLokasi
+            -Number idLokasi
             -String koordinat
             -String status
             +get_all_lokasi_valid()
@@ -2362,50 +2362,91 @@ Tabel 5.5.3. Query Operasi [Nama Operasi]
 *[Ulangi pola 5.5.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
 
 
-## 5.6 Kelas [Nama Kelas 6]
+## 5.6 Kelas Lokasi
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Lokasi*  
+**ID Kelas:** *C-06*
 
-Tabel 5.6.1. Operasi Kelas [Nama Kelas 6]
+Tabel 5.6.1. Operasi Kelas Lokasi
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *simpan_lokasi(koordinat: String): Boolean* | *public* | *Menyimpan lokasi pencemaran dari laporan yang telah divalidasi dengan status "Tercemar". Jika lokasi dengan koordinat yang sama masih berstatus "Tercemar", data tidak diduplikasi* |
+| *get_all_lokasi_valid(): List of Lokasi* | *public* | *Mengembalikan seluruh lokasi berstatus "Tercemar" untuk ditampilkan pada daftar CleanIt. Mengembalikan null jika tidak ada lokasi* |
+| *get_lokasi(idLokasi: Number): Lokasi* | *public* | *Mengembalikan data lokasi (idLokasi, koordinat, status) dengan idLokasi tertentu* |
 
-Tabel 5.6.2. Atribut Kelas [Nama Kelas 6]
+Tabel 5.6.2. Atribut Kelas Lokasi
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *idLokasi* | *private* | *Number* |
+| *koordinat* | *private* | *String* |
+| *status* | *private* | *String* |
 
 ### 5.6.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Lokasi*  
+**Nama Operasi:** *simpan_lokasi(koordinat: String): Boolean*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function simpan_lokasi(koordinat: String): Boolean
+    Algoritma
+        lokasi = hasil Q-001(koordinat)
+        if lokasi is not null then
+            return true
+        self.koordinat = koordinat
+        self.status = "Tercemar"
+        self.idLokasi = hasil Q-002(self.koordinat, self.status)
+        return true
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.6.3. Query Operasi [Nama Operasi]
+Tabel 5.6.3. Query Operasi simpan_lokasi(koordinat: String)
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
+| *Q-001* | `SELECT id FROM lokasi WHERE koordinat = :koordinat AND status = 'Tercemar' LIMIT 1;` | *Memeriksa apakah lokasi di koordinat yang sama sudah tercatat dan belum dibersihkan* |
+| *Q-002* | `INSERT INTO lokasi (koordinat, status) VALUES (:koordinat, :status) RETURNING id;` | *Menyimpan lokasi pencemaran baru dan mengembalikan idLokasi* |
 
 ### 5.6.2 Algoritma/Query
 
-*[Ulangi pola 5.6.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *Lokasi*  
+**Nama Operasi:** *get_all_lokasi_valid(): List of Lokasi*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function get_all_lokasi_valid(): List of Lokasi
+    Algoritma
+        list = hasil Q-003
+        if list kosong then
+            return null
+        return list
+```
+
+Tabel 5.6.4. Query Operasi get_all_lokasi_valid()
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-003* | `SELECT id, koordinat, status FROM lokasi WHERE status = 'Tercemar' ORDER BY id;` | *Mengambil seluruh lokasi pencemaran yang belum dibersihkan* |
+
+### 5.6.3 Algoritma/Query
+
+**Nama Kelas:** *Lokasi*  
+**Nama Operasi:** *get_lokasi(idLokasi: Number): Lokasi*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function get_lokasi(idLokasi: Number): Lokasi
+    Algoritma
+        lokasi = hasil Q-004(idLokasi)
+        return lokasi { null jika idLokasi tidak ditemukan }
+```
+
+Tabel 5.6.5. Query Operasi get_lokasi(idLokasi: Number)
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-004* | `SELECT id, koordinat, status FROM lokasi WHERE id = :idLokasi;` | *Mengambil satu data lokasi berdasarkan idLokasi* |
 
 
 ## 5.7 Kelas [Nama Kelas 7]
