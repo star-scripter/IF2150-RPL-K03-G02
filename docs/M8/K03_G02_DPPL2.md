@@ -2561,96 +2561,250 @@ function notify(msg: String)
 ```
 **Keterangan Query:** Seluruh operasi kelas DaftarLokasi tidak menjalankan query database secara langsung.
 
-## 5.8 Kelas [Nama Kelas 8]
+## 5.8 Kelas Pengguna
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Pengguna*  
+**ID Kelas:** *C08*
 
-Tabel 5.8.1. Operasi Kelas [Nama Kelas 8]
+Tabel 5.8.1. Operasi Kelas Pengguna
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *getSaldoPoin(): int* | *public* | *Mengembalikan saldo poin pengguna saat ini* |
+| *cukupPoin(harga: int): Boolean* | *public* | *Memeriksa apakah saldo poin pengguna mencukupi harga poin reward* |
+| *kurangiPoin(jumlah: int): Boolean* | *public* | *Mengurangi saldo poin pengguna sebesar jumlah. Mengembalikan false jika saldo tidak mencukupi sehingga saldo tidak pernah bernilai negatif* |
+| *tambah_poin(jumlahPoin: int): int* | *public* | *Menambahkan poin ke saldo pengguna setelah laporan pembersihannya divalidasi, lalu mengembalikan saldo poin yang baru* |
+| *notify(msg: String)* | *public* | *Menyimpan notifikasi untuk pengguna, misalnya informasi bahwa laporannya diterima atau ditolak* |
 
-Tabel 5.8.2. Atribut Kelas [Nama Kelas 8]
+Tabel 5.8.2. Atribut Kelas Pengguna
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *idPengguna* | *private* | *String* |
+| *nama* | *private* | *String* |
+| *saldoPoin* | *private* | *int* |
 
 ### 5.8.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Pengguna*  
+**Nama Operasi:** *getSaldoPoin(): int*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function getSaldoPoin(): int
+    Algoritma
+        self.saldoPoin = hasil Q-001(self.idPengguna)
+        return self.saldoPoin
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.8.3. Query Operasi [Nama Operasi]
+Tabel 5.8.3. Query Operasi getSaldoPoin()
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
+| *Q-001* | `SELECT saldo_poin FROM pengguna WHERE id = $1;` | *Mengambil saldo poin terbaru milik pengguna. $1 = idPengguna* |
 
 ### 5.8.2 Algoritma/Query
 
-*[Ulangi pola 5.8.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
-
-
-## 5.9 Kelas [Nama Kelas 9]
-
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
-
-Tabel 5.9.1. Operasi Kelas [Nama Kelas 9]
-
-| Nama Operasi | Visibility (private, public) | Keterangan |
-| :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
-
-Tabel 5.9.2. Atribut Kelas [Nama Kelas 9]
-
-| Nama Atribut | Visibility (private, public) | Tipe |
-| :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
-
-### 5.9.1 Algoritma/Query
-
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Pengguna*  
+**Nama Operasi:** *cukupPoin(harga: int): Boolean*  
+**ID Algoritma:** *Algo-002*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function cukupPoin(harga: int): Boolean
+    Algoritma
+        if getSaldoPoin() >= harga then
+            return true
+        endif
+        return false
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
+### 5.8.3 Algoritma/Query
 
-Tabel 5.9.3. Query Operasi [Nama Operasi]
+**Nama Kelas:** *Pengguna*  
+**Nama Operasi:** *kurangiPoin(jumlah: int): Boolean*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function kurangiPoin(jumlah: int): Boolean
+    Prasyarat
+        Dipanggil di dalam transaksi database yang dibuka oleh Penukaran (Controller)
+    Algoritma
+        saldoBaru = hasil Q-002(self.idPengguna, jumlah)
+
+        if saldoBaru is null then
+            return false    { saldo tidak cukup, tidak ada baris yang diubah }
+        endif
+
+        self.saldoPoin = saldoBaru
+        return true
+```
+
+Tabel 5.8.4. Query Operasi kurangiPoin(jumlah: int)
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-002* | `UPDATE pengguna SET saldo_poin = saldo_poin - $2 WHERE id = $1 AND saldo_poin >= $2 RETURNING saldo_poin;` | *Mengurangi saldo hanya jika masih mencukupi. Syarat pada WHERE mencegah saldo negatif ketika terjadi dua penukaran bersamaan. $1 = idPengguna, $2 = jumlah* |
 
+### 5.8.4 Algoritma/Query
+
+**Nama Kelas:** *Pengguna*  
+**Nama Operasi:** *tambah_poin(jumlahPoin: int): int*  
+**ID Algoritma:** *Algo-004*
+
+```text
+function tambah_poin(jumlahPoin: int): int
+    Prasyarat
+        Laporan pembersihan milik pengguna telah dinyatakan "Valid" oleh ValidatorLaporan
+    Algoritma
+        if jumlahPoin <= 0 then
+            return self.saldoPoin
+        endif
+
+        self.saldoPoin = hasil Q-003(self.idPengguna, jumlahPoin)
+        return self.saldoPoin
+```
+
+Tabel 5.8.5. Query Operasi tambah_poin(jumlahPoin: int)
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-003* | `UPDATE pengguna SET saldo_poin = saldo_poin + $2 WHERE id = $1 RETURNING saldo_poin;` | *Menambahkan poin ke saldo pengguna dan mengembalikan saldo yang baru. $1 = idPengguna, $2 = jumlahPoin* |
+
+### 5.8.5 Algoritma/Query
+
+**Nama Kelas:** *Pengguna*  
+**Nama Operasi:** *notify(msg: String)*  
+**ID Algoritma:** *Algo-005*
+
+```text
+function notify(msg: String)
+    Algoritma
+        hasil Q-004(self.idPengguna, msg)
+```
+
+Tabel 5.8.6. Query Operasi notify(msg: String)
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-004* | `INSERT INTO notifikasi (id_pengguna, pesan, waktu) VALUES ($1, $2, NOW());` | *Menyimpan notifikasi beserta waktu pembuatannya agar dapat dilihat pengguna saat membuka aplikasi. $1 = idPengguna, $2 = msg* |
+
+
+## 5.9 Kelas Reward
+
+**Nama Kelas:** *Reward*  
+**ID Kelas:** *C09*
+
+Tabel 5.9.1. Operasi Kelas Reward
+
+| Nama Operasi | Visibility (private, public) | Keterangan |
+| :--- | :--- | :--- |
+| *getRewardTersedia(): List of Reward* | *public* | *(static) Mengembalikan seluruh reward yang stoknya masih tersedia untuk ditampilkan pada DaftarReward* |
+| *cariReward(idReward: String): Reward* | *public* | *(static) Mengembalikan data reward dengan idReward tertentu, atau null jika tidak ditemukan* |
+| *getHargaPoin(): int* | *public* | *Mengembalikan jumlah poin yang dibutuhkan untuk menukarkan reward* |
+| *tersedia(): Boolean* | *public* | *Memeriksa apakah stok reward masih lebih dari nol* |
+| *kurangiStok(): Boolean* | *public* | *Mengurangi stok reward sebanyak satu. Mengembalikan false jika stok sudah habis* |
+
+Tabel 5.9.2. Atribut Kelas Reward
+
+| Nama Atribut | Visibility (private, public) | Tipe |
+| :--- | :--- | :--- |
+| *idReward* | *private* | *String* |
+| *nama* | *private* | *String* |
+| *jenis* | *private* | *String* |
+| *hargaPoin* | *private* | *int* |
+| *stok* | *private* | *int* |
+
+### 5.9.1 Algoritma/Query
+
+**Nama Kelas:** *Reward*  
+**Nama Operasi:** *getRewardTersedia(): List of Reward*  
+**ID Algoritma:** *Algo-001*
+
+```text
+function getRewardTersedia(): List of Reward
+    Algoritma
+        list = hasil Q-001
+        return list    { list kosong jika tidak ada reward yang tersedia }
+```
+
+Tabel 5.9.3. Query Operasi getRewardTersedia()
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-001* | `SELECT id, nama, jenis, harga_poin, stok FROM reward WHERE stok > 0 ORDER BY harga_poin ASC;` | *Mengambil seluruh reward yang masih memiliki stok, diurutkan dari harga poin termurah* |
 
 ### 5.9.2 Algoritma/Query
 
-*[Ulangi pola 5.9.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *Reward*  
+**Nama Operasi:** *cariReward(idReward: String): Reward*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function cariReward(idReward: String): Reward
+    Algoritma
+        reward = hasil Q-002(idReward)
+        return reward    { null jika idReward tidak ditemukan }
+```
+
+Tabel 5.9.4. Query Operasi cariReward(idReward: String)
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-002* | `SELECT id, nama, jenis, harga_poin, stok FROM reward WHERE id = $1;` | *Mengambil satu data reward berdasarkan idReward. $1 = idReward* |
+
+### 5.9.3 Algoritma/Query
+
+**Nama Kelas:** *Reward*  
+**Nama Operasi:** *getHargaPoin(): int*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function getHargaPoin(): int
+    Algoritma
+        return self.hargaPoin
+```
+
+### 5.9.4 Algoritma/Query
+
+**Nama Kelas:** *Reward*  
+**Nama Operasi:** *tersedia(): Boolean*  
+**ID Algoritma:** *Algo-004*
+
+```text
+function tersedia(): Boolean
+    Algoritma
+        if self.stok > 0 then
+            return true
+        endif
+        return false
+```
+
+### 5.9.5 Algoritma/Query
+
+**Nama Kelas:** *Reward*  
+**Nama Operasi:** *kurangiStok(): Boolean*  
+**ID Algoritma:** *Algo-005*
+
+```text
+function kurangiStok(): Boolean
+    Prasyarat
+        Dipanggil di dalam transaksi database yang dibuka oleh Penukaran (Controller)
+    Algoritma
+        stokBaru = hasil Q-003(self.idReward)
+
+        if stokBaru is null then
+            return false    { stok sudah habis }
+        endif
+
+        self.stok = stokBaru
+        return true
+```
+
+Tabel 5.9.5. Query Operasi kurangiStok()
+
+| No Query | Query | Keterangan |
+| :--- | :--- | :--- |
+| *Q-003* | `UPDATE reward SET stok = stok - 1 WHERE id = $1 AND stok > 0 RETURNING stok;` | *Mengurangi stok hanya jika masih tersedia, sehingga stok tidak pernah negatif ketika terjadi penukaran bersamaan. $1 = idReward* |
 
 
 ## 5.10 Kelas DaftarReward
@@ -3333,50 +3487,81 @@ function petakan_lokasi(idLaporan)
         Lokasi.simpan_lokasi(lokasi)
 ```
 
-## 5.16 Kelas [Nama Kelas 16]
+## 5.16 Kelas Penukaran (Controller)
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Penukaran (Controller)*  
+**ID Kelas:** *C16*
 
-Tabel 5.16.1. Operasi Kelas [Nama Kelas 16]
+Tabel 5.16.1. Operasi Kelas Penukaran (Controller)
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *tukarPoin(pengguna: Pengguna, idReward: String): Boolean* | *public* | *Mengoordinasikan penukaran poin dengan reward: memeriksa reward dan ketersediaannya, memeriksa kecukupan saldo melalui ManagerPoin, lalu mengurangi saldo, mengurangi stok, dan mencatat transaksi dalam satu transaksi database atomik. Mengembalikan true jika berhasil dan false jika gagal* |
 
-Tabel 5.16.2. Atribut Kelas [Nama Kelas 16]
+Tabel 5.16.2. Atribut Kelas Penukaran (Controller)
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *-* | *-* | *-* |
 
 ### 5.16.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Penukaran (Controller)*  
+**Nama Operasi:** `tukarPoin(pengguna: Pengguna, idReward: String): Boolean`  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function tukarPoin(pengguna: Pengguna, idReward: String): Boolean
+    Prasyarat
+        Terdapat sebuah obyek singular global yang merupakan instance dari ManagerPoin
+        pengguna merupakan Pengguna yang sedang login
+    Algoritma
+        reward = Reward.cariReward(idReward)
+
+        if reward is null then
+            return false
+        endif
+
+        hargaPoin = reward.getHargaPoin()
+
+        if not reward.tersedia() then
+            return false
+        endif
+
+        if not ManagerPoin.cekPoin(pengguna, hargaPoin) then
+            return false    { poin tidak cukup, tidak ada data yang diubah }
+        endif
+
+        hasil Q-001    { mulai transaksi }
+
+        if not ManagerPoin.kurangiPoin(pengguna, hargaPoin) then
+            hasil Q-003
+            return false
+        endif
+
+        if not reward.kurangiStok() then
+            hasil Q-003
+            return false
+        endif
+
+        if not PenukaranModel.buatPenukaran(pengguna, reward) then
+            hasil Q-003
+            return false
+        endif
+
+        hasil Q-002    { semua langkah berhasil }
+        return true
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.16.3. Query Operasi [Nama Operasi]
+Tabel 5.16.3. Query Operasi tukarPoin(pengguna: Pengguna, idReward: String)
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
+| *Q-001* | `BEGIN;` | *Membuka transaksi database agar pengurangan saldo, pengurangan stok, dan pencatatan penukaran berjalan sebagai satu kesatuan* |
+| *Q-002* | `COMMIT;` | *Menyimpan seluruh perubahan jika semua langkah berhasil* |
+| *Q-003* | `ROLLBACK;` | *Membatalkan seluruh perubahan jika salah satu langkah gagal* |
 
-
-### 5.16.2 Algoritma/Query
-
-*[Ulangi pola 5.16.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+Query perubahan data dijalankan oleh kelas Model masing-masing (Q-002 pada Pengguna, Q-003 pada Reward, dan query pada Penukaran (Model)). Penukaran (Controller) hanya mengatur batas transaksinya. Pemeriksaan saldo dan stok sebelum transaksi tetap aman dari penukaran bersamaan karena kedua query UPDATE tersebut memeriksa ulang syaratnya pada klausa WHERE.
 
 
 <br>
