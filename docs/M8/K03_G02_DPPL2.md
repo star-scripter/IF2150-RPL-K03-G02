@@ -2318,51 +2318,81 @@ Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
 | *Q-001* | *Insert entry laporan into laporan table* | *Memasukkan suatu laporan ke dalam database list Laporan* |-->
 
 
-## 5.5 Kelas [Nama Kelas 5]
+## 5.5 Kelas ValidatorLaporan
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *ValidatorLaporan*  
+**ID Kelas:** *C-05*
 
 Tabel 5.5.1. Operasi Kelas [Nama Kelas 5]
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
-
-Tabel 5.5.2. Atribut Kelas [Nama Kelas 5]
-
-| Nama Atribut | Visibility (private, public) | Tipe |
-| :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
+| *get_laporan_unverified(): List<Laporan>* | *public* | *Mengambil daftar laporan ReportIt yang belum diverifikasi melalui Model Laporan.* |
+| *get_detail(idLaporan: String): Laporan* | *public* | *Mengambil informasi detail laporan berdasarkan ID laporan yang dipilih oleh Operator.* |
+| *setujui(idLaporan: String): void* | *public* | *Menyetujui laporan, mengubah status menjadi Valid, serta menjalankan tindak lanjut sesuai jenis laporan.* |
+| *tolak(idLaporan: String): void* | *public* | *Menolak laporan ReportIt dengan mengubah status laporan menjadi Tidak Valid.* |
+| *tolak(idLaporan: String, alasan: String): void* | *public* | *Menolak laporan CleanIt dengan mengubah status laporan menjadi Tidak Valid dan menyimpan alasan penolakan.* |
+| *tampilkan_konfirmasi(): void* | *public* | *Mengirimkan konfirmasi hasil verifikasi agar dapat ditampilkan kepada Operator.* |
 | *...* | *...* | *...* |
 
 ### 5.5.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *ValidatorLaporan*  
+**Nama Operasi:** *setujui(idLaporan: String): void*  
+**ID Algoritma:** *Algo-00*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function setujui(idLaporan: String)
+    Prasyarat
+        Laporan dengan idLaporan telah dipilih oleh Operator
+        Laporan belum diverifikasi
+
+    Algoritma
+        Ambil detail laporan berdasarkan idLaporan
+
+        if laporan tidak ditemukan then
+            Tampilkan konfirmasi gagal
+            return
+
+        if laporan merupakan ReportIt then
+            Laporan.ubah_status(idLaporan, "Valid")
+            Lokasi.simpan_lokasi(koordinat)
+        else if laporan merupakan CleanIt then
+            ManagerLaporan.ubah_status(idLaporan, "Valid")
+            ManagerPoin.tambah_poin(idPengguna, jumlahPoin)
+
+        tampilkan_konfirmasi()
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.5.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.5.2 Algoritma/Query
 
-*[Ulangi pola 5.5.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *ValidatorLaporan*  
+**Nama Operasi:** *tolak(idLaporan: String, alasan: String): void*  
+**ID Algoritma:** *Algo-00*
 
+```text
+function tolak(idLaporan: String, alasan: String)
+    Prasyarat
+        Laporan dengan idLaporan telah dipilih oleh Operator
+        Laporan belum diverifikasi
+
+    Algoritma
+        Ambil detail laporan berdasarkan idLaporan
+
+        if laporan tidak ditemukan then
+            Tampilkan konfirmasi gagal
+            return
+
+        if laporan merupakan ReportIt then
+            Laporan.ubah_status(idLaporan, "Tidak Valid")
+
+        else if laporan merupakan CleanIt then
+            ManagerLaporan.ubah_status(idLaporan, "Tidak Valid")
+            ManagerLaporan.simpan_alasan_penolakan(idLaporan, alasan)
+
+        tampilkan_konfirmasi()
+```
 
 ## 5.6 Kelas Lokasi
 
@@ -2691,51 +2721,118 @@ function pilihReward(idReward: String)
 **Keterangan Query:** Kelas DaftarReward tidak berinteraksi langsung dengan query atau database.
 
 
-## 5.11 Kelas [Nama Kelas 11]
+## 5.11 Kelas ManagerPoin
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *ManagerPoin*  
+**ID Kelas:** *C-11*
 
-Tabel 5.11.1. Operasi Kelas [Nama Kelas 11]
+Tabel 5.11.1. Operasi Kelas ManagerPoin
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
-
-Tabel 5.11.2. Atribut Kelas [Nama Kelas 11]
-
-| Nama Atribut | Visibility (private, public) | Tipe |
-| :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *tambah_poin(idPengguna: String, jumlahPoin: int): void* | *public* | *Menambahkan poin kepada pengguna setelah laporan pembersihan dinyatakan valid oleh Operator.* |
+| *lihatSaldo(pengguna: Pengguna): int* | *public* | *Mengambil jumlah saldo poin pengguna melalui Model Pengguna.* |
+| *lihatRewardTersedia(): List<Reward>* | *public* | *Mengambil daftar reward yang tersedia melalui Model Reward.* |
+| *cekPoin(pengguna: Pengguna, harga: int): Boolean* | *public* | *Memeriksa apakah saldo poin pengguna mencukupi harga reward yang dipilih.* |
+| *kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean* | *public* | *Mengurangi saldo poin pengguna ketika transaksi penukaran berhasil diproses.* |
+| *tambahPoin(idPengguna: String, jumlah: int): void* | *public* | *Operasi penambahan poin yang meneruskan pemanggilan ke tambah_poin().* |
 
 ### 5.11.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *ManagerPoin*  
+**Nama Operasi:** *tambah_poin(idPengguna: String, jumlahPoin: int): void*  
+**ID Algoritma:** *Algo-007*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function tambah_poin(idPengguna: String, jumlahPoin: int)
+    Prasyarat
+        Laporan pembersihan telah dinyatakan Valid
+        idPengguna merupakan pengguna yang menerima poin
+
+    Algoritma
+        if jumlahPoin <= 0 then
+            return
+
+        Pengguna.tambah_poin(idPengguna, jumlahPoin)
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.11.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.11.2 Algoritma/Query
 
-*[Ulangi pola 5.11.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *ManagerPoin*  
+**Nama Operasi:** *lihatSaldo(pengguna: Pengguna): int*  
+**ID Algoritma:** *Algo-008*
 
+```text
+function lihatSaldo(pengguna: Pengguna): int
+    Prasyarat
+        Pengguna telah teridentifikasi dalam sistem
+
+    Algoritma
+        saldoPoin <- pengguna.getSaldoPoin()
+
+        return saldoPoin
+```
+
+### 5.11.3 Algoritma/Query
+
+**Nama Kelas:** *ManagerPoin*  
+**Nama Operasi:** *lihatRewardTersedia(): List<Reward>*  
+**ID Algoritma:** *Algo-009*
+
+```text
+function lihatRewardTersedia(): List<Reward>
+    Algoritma
+        daftarReward <- Reward.getRewardTersedia()
+
+        return daftarReward
+```
+
+### 5.11.4 Algoritma/Query
+
+**Nama Kelas:** *ManagerPoin*  
+**Nama Operasi:** *kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean*  
+**ID Algoritma:** *Algo-011*
+
+```text
+function kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean
+    Prasyarat
+        Reward tersedia untuk ditukarkan
+        Saldo pengguna mencukupi jumlah poin
+        Transaksi penukaran sedang berlangsung
+
+    Algoritma
+        if jumlah <= 0 then
+            return false
+
+        if cekPoin(pengguna, jumlah) = false then
+            return false
+
+        berhasil <- pengguna.kurangiPoin(jumlah)
+
+        return berhasil
+```
+
+### 5.11.5 Algoritma/Query
+
+**Nama Kelas:** *ManagerPoin*  
+**Nama Operasi:** *cekPoin(pengguna: Pengguna, harga: int): Boolean*  
+**ID Algoritma:** *Algo-010*
+
+```text
+function cekPoin(pengguna: Pengguna, harga: int): Boolean
+    Prasyarat
+        Pengguna telah memilih reward
+        Harga reward telah diperoleh
+
+    Algoritma
+        if harga < 0 then
+            return false
+
+        hasil <- pengguna.cukupPoin(harga)
+
+        return hasil
+```
 
 ## 5.12 Kelas HalamanPenukaran
 
@@ -2805,51 +2902,58 @@ function tampilkanNotifikasi(pesan: String)
 
 **Keterangan Query:** HalamanPenukaran tidak melakukan query database directly.
 
-## 5.13 Kelas [Nama Kelas 13]
+## 5.13 Kelas Penukaran (Model)
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Penukaran (Model)*  
+**ID Kelas:** *C-13*
 
-Tabel 5.13.1. Operasi Kelas [Nama Kelas 13]
+Tabel 5.13.1. Operasi Kelas Penukaran (Model)
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
+| *buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean* | *public* | *Membuat dan menyimpan catatan transaksi penukaran poin dengan reward, mencakup identitas transaksi, waktu penukaran, serta jumlah poin yang digunakan.* |
 | *...* | *...* | *...* |
 
-Tabel 5.13.2. Atribut Kelas [Nama Kelas 13]
+Tabel 5.13.2. Atribut Kelas Penukaran (Model)
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *idPenukaran* | *private* | *String* |
+| *waktuPenukaran* | *private* | *Date* |
+| *poinDipakai* | *private* | *Number* |
 
 ### 5.13.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Penukaran (Model)*  
+**Nama Operasi:** *buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean*  
+**ID Algoritma:** *Algo-012*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean
+    Prasyarat
+        Pengguna memiliki poin yang mencukupi
+        Reward tersedia untuk ditukarkan
+        Controller Penukaran telah memulai transaksi database
+
+    Algoritma
+        idPenukaran <- generateUniqueId()
+        waktuPenukaran <- currentTimestamp()
+        poinDipakai <- reward.getHargaPoin()
+
+        hasil <- simpan data penukaran:
+            idPenukaran
+            pengguna.idPengguna
+            reward.idReward
+            waktuPenukaran
+            poinDipakai
+
+        if hasil = berhasil then
+            return true
+        else
+            return false
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.13.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
-
-### 5.13.2 Algoritma/Query
-
-*[Ulangi pola 5.13.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
-
 
 ## 5.14 Kelas LaporanView
 
