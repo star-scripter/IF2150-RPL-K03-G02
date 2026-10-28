@@ -3591,7 +3591,7 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-01
 | *...* | *...* | *...* | *...* |
 
 
-## 6.1 Rancangan Antarmuka I-02
+## 6.2 Rancangan Antarmuka I-02
 
 **Antarmuka:** *I-02*  
 **Nama Layar:** *Register Page*
@@ -3611,7 +3611,7 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-02
 | *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
 | *...* | *...* | *...* | *...* |
 
-## 6.1 Rancangan Antarmuka I-03
+## 6.3 Rancangan Antarmuka I-03
 
 **Antarmuka:** *I-03*  
 **Nama Layar:** *Main Page*
@@ -3630,6 +3630,12 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-03
 | *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
 | *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
 | *...* | *...* | *...* | *...* |
+
+## 6.4 Rancangan Antarmuka I-04
+
+## 6.5 Rancangan Antarmuka I-05
+
+## 6.6 Rancangan Antarmuka I-06
 
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
