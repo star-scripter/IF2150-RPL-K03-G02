@@ -158,3 +158,5 @@
 | 27-10-2026 | M. Aqsha Bagus R.I.B. | FormLaporan, Laporan, DaftarLaporan | 2 jam | In Progress | - |
 | 28-10-2026 | M. Aqsha Bagus R.I.B. | Finalisasi tiga di atas dan desain Figma | 10 jam | Done | - |
 | 28-10-2026 | Jovan Nathanael | Fiksasi UC03/UC06, desain Figma + algoritma/pseudocode | 5 jam | Done | - | 
+| 28-10-2026 | Muhammad Dhafin Al Khairy | Class Media, Lokasi, dan LaporanView | 3 jam | Done, open to changes | - |
+| 28-10-2026 | Muhammad Dhafin Al Khairy | Desain UI DaftarLokasi | 1 jam | Done, open to changes | - |

@@ -2094,15 +2094,16 @@ function simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: St
 ### 5.2.2 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *get_unverified()*  
+**Nama Operasi:** *is_unverified() Boolean*  
 **ID Algoritma:** *Algo-002*
 
 ```text
 function get_unverified()
     Algoritma
         if self.status is "Belum Diperiksa" then
-            return self
-        return NIL
+            return true
+        else
+            return false
 ```
 
 <!--Tabel 5.2.3. Query Operasi [Nama Operasi]
@@ -2115,11 +2116,11 @@ function get_unverified()
 ### 5.2.3 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *get_detail(idLaporan: Number)*  
+**Nama Operasi:** *get_detail()*  
 **ID Algoritma:** *Algo-003*
 
 ```text
-function get_detail(idLaporan: Number)
+function get_detail()
     Algoritma
         return (self.lokasi, self.waktu, self.idMedia, self.sumber, self.status)
 ```
@@ -2134,11 +2135,11 @@ function get_detail(idLaporan: Number)
 ### 5.2.4 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *ubah_status(idLaporan: Number, status: String)*  
+**Nama Operasi:** *ubah_status(status: String)*  
 **ID Algoritma:** *Algo-004*
 
 ```text
-function ubah_status(idLaporan: Number, status: String)
+function ubah_status(status: String)
     Algoritma
         self.status = status
 ```
@@ -2153,13 +2154,13 @@ function ubah_status(idLaporan: Number, status: String)
 ### 5.2.5 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *get_detail(idLaporan: Number)*  
+**Nama Operasi:** *simpan_alasan_penolakan(alasan: String)*  
 **ID Algoritma:** *Algo-005*
 
 ```text
-function get_data(idLaporan: Number)
+function simpan_alasan_penolakan(alasan: String)
     Algoritma
-        return (self.lokasi, self.waktu, self.idMedia, self.sumber, self.status)
+        self.alasanPenolakan = alasan
 ```
 
 <!--Tabel 5.2.3. Query Operasi [Nama Operasi]
@@ -2244,7 +2245,7 @@ Tabel 5.4.1. Operasi Kelas DaftarLaporan
 | :--- | :--- | :--- |
 | *daftar_laporan(laporan: Laporan)* | *public* | *Memasukkan laporan ke daftar laporan* |
 | *pilih_menu_verifikasi()* | *public* | *Membuka menu verifikasi untuk operator* |
-| *pilih_laporan(idLaporan: Number)* | *public* | *Memilih laporan yang akan ditampilkan dengan idLaporan tertentu* |
+| *pilih_laporan(idLaporan: Number)* | *public* | *Fungsi passer untuk melakukan get_detail(idLaporan) melalui ManagerLaporan* |
 | *tampilkan_daftar(list: List of Laporan)* | *public* | *Menampilkan daftar list laporan* |
 | *buka_laporan_masuk()* | *public* | *Fungsi passer untuk meminta membuka daftar laporan yang masuk* |
 
@@ -2263,7 +2264,7 @@ Tabel 5.4.2. Atribut Kelas DaftarLaporan
 ```text
 function daftar_laporan(laporan: Laporan)
     Algoritma
-        Query untuk create pada database
+        Query untuk create pada database (Q-001)
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -2272,7 +2273,7 @@ Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *Q-001* | *Insert entry laporan into laporan table* | *Memasukkan suatu laporan ke dalam database list Laporan* |
+| *Q-001* | *INSERT* | *Memasukkan suatu laporan ke dalam database list Laporan* |
 
 
 ### 5.4.2 Algoritma/Query
@@ -3721,7 +3722,93 @@ Tabel 6.6. Spesifikasi Objek Antarmuka I-06
 | *I06-09* | *Button* | *"Kembali ke Hadiah"* | *Membuka I-04 dengan saldo dan stok terbaru* |
 | *I06-10* | *Button* | *"Lihat Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
 
->>>>>>> 3a6362854c49243c57252782ef554a3199e0e400
+## 6.7 Rancangan Antarmuka I-07
+
+**Antarmuka:** *I-07*  
+**Nama Layar:** *Validator Page*
+
+<p align="center">
+<img alt="Validator Page" src="./assets/Validator laporan.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.7. Rancangan Antarmuka I-07 - Validator Page</i>
+</p>
+
+Tabel 6.7. Spesifikasi Objek Antarmuka I-07
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+
+## 6.8 Rancangan Antarmuka I-08
+
+**Antarmuka:** *I-08*  
+**Nama Layar:** *Detail Laporan*
+
+<p align="center">
+<img alt="Detail Laporan" src="./assets/Detail Laporan.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.8. Rancangan Antarmuka I-08 - Detail Laporan</i>
+</p>
+
+Tabel 6.8. Spesifikasi Objek Antarmuka I-08
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+
+## 6.9 Rancangan Antarmuka I-09
+
+**Antarmuka:** *I-09*  
+**Nama Layar:** *Lokasi Page*
+
+<p align="center">
+<img alt="Lokasi Page" src="./assets/Lokasi Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.9. Rancangan Antarmuka I-09 - Lokasi Page</i>
+</p>
+
+Tabel 6.9. Spesifikasi Objek Antarmuka I-09
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I09-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I09-02* | *Label* | *"Lokasi Tercemar", "Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt."* | *Judul dan petunjuk layar* |
+| *I09-03* | *Label (Badge)* | *"[jumlah] lokasi menunggu"* | *Jumlah lokasi pada daftar yang ditampilkan DaftarLokasi.tampilkan_daftar(list) (Algo-003 kelas DaftarLokasi)* |
+| *I09-04* | *Dropdown* | *"Terdekat"* | *Mengurutkan kartu lokasi pada daftar yang sudah dimuat. Tidak mengambil data baru* |
+| *I09-05* | *List of Card* | *Nama lokasi, poin yang didapat, jarak dan koordinat, jenis sampah, waktu dilaporkan* | *Daftar lokasi berstatus "Tercemar" dari ManagerLaporan.get_daftar_lokasi() (Algo-004 kelas ManagerLaporan), ditampilkan melalui DaftarLokasi.tampilkan_daftar(list) (Algo-003 kelas DaftarLokasi) (UC04 skenario normal)* |
+| *I09-06* | *Button* | *"Lihat Detail"* | *Menjalankan DaftarLokasi.pilih_lokasi(idLokasi) (Algo-002 kelas DaftarLokasi) untuk lokasi pada kartu tersebut, lalu ManagerLaporan.get_detail_lokasi(idLokasi) (Algo-005 kelas ManagerLaporan). Detail lokasi ditampilkan melalui LaporanView.tampilkan_lokasi(detail) (Algo-005 kelas LaporanView)* |
+| *I09-07* | *Navigation Button* | *"Home"* | *Membuka I-03* |
+| *I09-08* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-09). Layar dibuka melalui DaftarLokasi.buka_fitur_cleanit() (Algo-001 kelas DaftarLokasi)* |
+| *I09-09* | *Navigation Button* | *"Hadiah"* | *Membuka I-04* |
+| *I09-10* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
+
+## 6.10 Rancangan Antarmuka I-10
+
+**Antarmuka:** *I-10*  
+**Nama Layar:** *Lokasi Kosong Page*
+
+<p align="center">
+<img alt="Lokasi Kosong Page" src="./assets/Lokasi Kosong Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.10. Rancangan Antarmuka I-10 - Lokasi Kosong Page</i>
+</p>
+
+Tabel 6.10. Spesifikasi Objek Antarmuka I-10
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I10-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I10-02* | *Label* | *"Lokasi Tercemar", "Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt."* | *Judul dan petunjuk layar* |
+| *I10-03* | *Icon* | *Ikon lokasi dengan tanda centang* | *Ilustrasi keadaan kosong* |
+| *I10-04* | *Label* | *"Belum terdapat lokasi pencemaran", "Belum ada laporan yang terverifikasi di sekitarmu. Nemu sampah di perairan? Laporkan lewat ReportIt."* | *Ditampilkan melalui DaftarLokasi.notify(msg) (Algo-004 kelas DaftarLokasi) jika ManagerLaporan.get_daftar_lokasi() (Algo-004 kelas ManagerLaporan) tidak mengembalikan lokasi (UC04 skenario alternatif 1)* |
+| *I10-05* | *Button* | *"Buat Laporan ReportIt"* | *Membuka form laporan ReportIt melalui FormLaporan.buka_reportit() (Algo-001 kelas FormLaporan)* |
+| *I10-06* | *Navigation Button* | *"Home"* | *Membuka I-03* |
+| *I10-07* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-10)* |
+| *I10-08* | *Navigation Button* | *"Hadiah"* | *Membuka I-04* |
+| *I10-09* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
+
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
 Tuliskan daftar gambar seluruh antarmuka. Berikan ID unik untuk setiap tampilan dan gunakan ID yang sama pada subbab perancangan antarmuka masing-masing.
@@ -3736,6 +3823,10 @@ Tabel 6.Y. Rancangan Antarmuka Keseluruhan
 | *[I-04]* | <img src="./assets/Rewards Page.png" alt="Rewards Page" width="400"> |
 | *[I-05]* | <img src="./assets/Konfirmasi Penukaran Page.png" alt="Konfirmasi Penukaran Page" width="400"> |
 | *[I-06]* | <img src="./assets/Penukaran Berhasil Page.png" alt="Penukaran Berhasil Page" width="400"> |
+| *[I-07]* | <img src="./assets/Validator laporan.png" alt="Validator Page" width="400"> |
+| *[I-08]* | <img src="./assets/Detail Laporan.png" alt="Detail Laporan" width="400"> |
+| *[I-09]* | <img src="./assets/Lokasi Page.png" alt="Lokasi Page" width="400"> |
+| *[I-10]* | <img src="./assets/Lokasi Kosong Page.png" alt="Lokasi Kosong Page" width="400"> |
 
 <br>
 
