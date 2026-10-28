@@ -3738,6 +3738,22 @@ Tabel 6.7. Spesifikasi Objek Antarmuka I-07
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
+| *I07-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I07-02* | *Navigation Button* | *"Laporan"* | *Membuka halaman daftar laporan* |
+| *I07-03* | *Label* | *"Operator"* | *Menunjukkan peran pengguna yang sedang masuk* |
+| *I07-04* | *Icon Button* | *Ikon profil pengguna* | *Membuka menu profil pengguna* |
+| *I07-05* | *Tab Button (aktif)* | *"ReportIt!"* | *Menampilkan daftar laporan pencemaran yang menunggu validasi (UC03)* |
+| *I07-06* | *Tab Button* | *"CleanIt!"* | *Menampilkan daftar laporan pembersihan yang menunggu validasi (UC06)* |
+| *I07-07* | *Label* | *"Validasi laporan"* | *Judul halaman validasi laporan* |
+| *I07-08* | *Label* | *"Periksa laporan warga dan pilih laporan untuk ditinjau."* | *Memberikan instruksi kepada Operator* |
+| *I07-09* | *Badge* | *"12 menunggu validasi"* | *Menampilkan jumlah laporan yang belum diverifikasi* |
+| *I07-10* | *Dropdown / Sort Button* | *"Terbaru lebih dulu"* | *Mengurutkan daftar laporan berdasarkan waktu pengiriman* |
+| *I07-11* | *List of Card* | *ID laporan, judul laporan, lokasi, waktu pengiriman* | *Menampilkan daftar laporan dari ManagerLaporan.get_all_laporan_unverified() (Algo-007 kelas ManagerLaporan)* |
+| *I07-12* | *Checkbox* | *Pilihan laporan* | *Memilih laporan yang akan ditinjau melalui DaftarLaporan.pilih_laporan(idLaporan) (UC03/UC06)* |
+| *I07-13* | *Hyperlink* | *"Batalkan"* | *Membatalkan pemilihan laporan* |
+| *I07-14* | *Button* | *"Tinjau laporan"* | *Membuka I-08 untuk menampilkan detail laporan yang dipilih melalui LaporanView.tampilkan_laporan(data) (Algo-001 kelas LaporanView)* |
+| *I07-15* | *Label* | *"Menampilkan 1–6 dari 12 laporan"* | *Menampilkan informasi jumlah laporan pada halaman aktif* |
+| *I07-16* | *Pagination Button* | *"1", "2", ikon sebelumnya dan berikutnya* | *Berpindah halaman untuk melihat laporan lainnya* |
 
 ## 6.8 Rancangan Antarmuka I-08
 
@@ -3755,6 +3771,19 @@ Tabel 6.8. Spesifikasi Objek Antarmuka I-08
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
+| *I08-01* | *Modal* | *Detail laporan* | *Menampilkan jendela detail laporan yang dipilih dari halaman validasi laporan (I-07)* |
+| *I08-02* | *Label* | *"RPT-0248"* | *Menampilkan ID laporan yang dipilih* |
+| *I08-03* | *Icon Button* | *Ikon X* | *Menutup jendela detail laporan dan kembali ke halaman validasi* |
+| *I08-04* | *Label* | *"Sampah plastik di Sungai Cikapundung"* | *Menampilkan judul laporan yang dipilih* |
+| *I08-05* | *Label* | *"Detail Laporan"* | *Judul bagian informasi detail laporan* |
+| *I08-06* | *Information Card* | *"Lokasi", "Jl. Raya Kebon Jeruk, Jakarta Barat"* | *Menampilkan informasi lokasi pencemaran yang tercatat pada laporan* |
+| *I08-07* | *Information Card* | *"Waktu", "14 October 2023, 10:45 WIB"* | *Menampilkan tanggal dan waktu kejadian yang tercatat pada laporan* |
+| *I08-08* | *Information Card* | *"Sumber Pencemaran", "Limbah Cair Industri"* | *Menampilkan sumber pencemaran yang dilaporkan* |
+| *I08-09* | *Media Card* | *"Foto Bukti"* | *Menampilkan bagian media bukti yang dilampirkan pada laporan* |
+| *I08-10* | *Image* | *Foto bukti laporan* | *Menampilkan foto bukti pencemaran berdasarkan idMedia dari laporan* |
+| *I08-11* | *Label* | *"10:45 WIB • Jl. Raya Kebon Jeruk"* | *Menampilkan informasi waktu dan lokasi pengambilan foto bukti* |
+| *I08-12* | *Button* | *"Setujui"* | *Menyetujui laporan melalui ValidatorLaporan.setujui(idLaporan) dan mengubah status laporan menjadi "Valid"* |
+| *I08-13* | *Button* | *"Tolak"* | *Menolak laporan melalui ValidatorLaporan.tolak(idLaporan) dan mengubah status laporan menjadi "Tidak Valid"* |
 
 ## 6.9 Rancangan Antarmuka I-09
 
