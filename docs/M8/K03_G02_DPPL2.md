@@ -8,7 +8,7 @@ DESKRIPSI PERANCANGAN PERANGKAT LUNAK (DPPL)
 <br>
 
 ## *SoClean*
-### *[Logo Perangkat Lunak]*
+<img src="./assets/Logo.png" width="100%">
 
 ### Untuk: *Aurelia Jennifer Gunawan*
 

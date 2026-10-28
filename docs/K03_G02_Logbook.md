@@ -136,7 +136,7 @@
 
 ### Milestone 7
 
-**Periode:** 10/07/2026 - 10/14/2026
+**Periode:** 10/07/2026 - 10/20/2026
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
@@ -147,3 +147,12 @@
 | 21-10-2026 | Justin William | Mengerjakan sequence diagram UC07, UC08, dan UC09 | 2 jam | Done, open to changes | - |
 | 21-10-2026 | Faishal Ahmad Nurdin | Mengerjakan sequence diagram UC05 dan UC06 | 2 jam 30 menit | Done, open to changes | - |
 | 21-10-2026 | Muhammad Dhafin Al Khairy | Mengerjakan bab 4 dan 5 | 2 jam 30 menit | Done, open to changes | - |
+
+### Milestone 8
+
+**Periode:** 10/21/2026 - 10/28/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 27-10-2026 | M. Aqsha Bagus R.I.B. | FormLaporan, Laporan, DaftarLaporan | 2 jam | In Progress | - |
+| 28-10-2026 | M. Aqsha Bagus R.I.B. | Finalisasi tiga di atas dan desain Figma | 10 jam | Done | - |
