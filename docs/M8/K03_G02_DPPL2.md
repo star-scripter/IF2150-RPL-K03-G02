@@ -33,7 +33,7 @@ Dipersiapkan oleh:
 | Revisi | Deskripsi |
 | :--- | :--- |
 | *A* | *Perubahan pada UC 3.1 dan 3.5 agar lebih selaras* |
-| *B* |  |
+| *B* | *Memisahkan tanggungjawab dari Laporan dan ManagerLaporan pada UC03 dan UC06* |
 | *C* |  |
 | ... |  |
 
@@ -572,8 +572,9 @@ Tabel 3.3. Identifikasi Kelas Use Case [UC03]
 | 1 | *DaftarLaporan (View)* | *DaftarLaporan* |
 | 2 | *LaporanView (View)* | *Laporan* |
 | 3 | *ValidatorLaporan (Controller)* | *ValidatorLaporan* |
-| 4 | *Laporan (Model)* | *Laporan* |
-| 5 | *Lokasi (Model)* | *Lokasi* |
+| 4 | *ManagerLaporan (Controller)* | *Laporan* |
+| 5 | *Laporan (Model)* | *Laporan* |
+| 6 | *Lokasi (Model)* | *Lokasi* |
 
 ### 3.3.2 Sequence Diagram
 
@@ -587,6 +588,7 @@ sequenceDiagram
     actor O as Operator
     participant DL@{"type":"boundary"} as DaftarLaporan
     participant VL@{"type":"control"} as ValidatorLaporan
+    participant ML@{"type":"control"} as ManagerLaporan
     participant LV@{"type":"boundary"} as LaporanView
     participant L@{"type":"entity"} as Laporan
     participant LO@{"type":"entity"} as Lokasi
@@ -594,37 +596,52 @@ sequenceDiagram
     O->>DL: pilih_menu_verifikasi()
     activate O
     activate DL
-    DL->>VL: get_laporan_unverified()
-    activate VL
-    VL->>L: get_unverified()
-    activate L
-    L-->>VL: list_laporan
-    deactivate L
-    VL->>DL: tampilkan_daftar(list_laporan)
+    DL->>ML: get_all_laporan_unverified()
+    activate ML
+    loop setiap laporan
+        ML->>L: is_unverified()
+        activate L
+        L-->>ML: Boolean
+        deactivate L
+    end
+    ML-->>DL: tampilkan_daftar(list_laporan)
+    deactivate ML
     DL-->>O: tampilkan list_laporan
     
     O->>DL: pilih_laporan(idLaporan)
-    DL->>VL: get_detail(idLaporan)
-    VL->>L: get_detail(idLaporan)
+    DL->>ML: get_detail(idLaporan)
+    activate ML
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: get_detail()
     activate L
-    L-->>VL: detail_laporan
+    L-->>ML: detail_laporan
     deactivate L
-    VL->>LV: tampilkan_laporan(detail_laporan)
+    ML->>LV: tampilkan_laporan(detail_laporan)
+    deactivate ML
     activate LV
     LV-->>O: tampilkan detail_laporan
     
     O->>LV: setujui(idLaporan)
     LV->>VL: setujui(idLaporan)
-    VL->>L: ubah_status(idLaporan, "Valid")
+    activate VL
+    VL->>ML: ubah_status(idLaporan, "Valid")
+    activate ML
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: ubah_status("Valid")
+    activate L
+    L-->>ML: berhasil
+    deactivate L
+    ML-->>VL: berhasil
+    deactivate ML
     VL->>LO: simpan_lokasi(koordinat)
     activate LO
     LO-->>VL: success
     deactivate LO
     VL->>LV: notify("Laporan Valid")
+    deactivate VL
     LV-->>O: "Laporan Valid"
     
     deactivate LV
-    deactivate VL
     deactivate DL
     deactivate O
 ```
@@ -640,39 +657,55 @@ sequenceDiagram
     actor O as Operator
     participant DL@{"type":"boundary"} as DaftarLaporan
     participant VL@{"type":"control"} as ValidatorLaporan
+    participant ML@{"type":"control"} as ManagerLaporan
     participant LV@{"type":"boundary"} as LaporanView
     participant L@{"type":"entity"} as Laporan
 
     O->>DL: pilih_menu_verifikasi()
     activate O
     activate DL
-    DL->>VL: get_laporan_unverified()
-    activate VL
-    VL->>L: get_unverified()
-    activate L
-    L-->>VL: list_laporan
-    deactivate L
-    VL->>DL: tampilkan_daftar(list_laporan)
+    DL->>ML: get_all_laporan_unverified()
+    activate ML
+    loop setiap laporan
+        ML->>L: is_unverified()
+        activate L
+        L-->>ML: Boolean
+        deactivate L
+    end
+    ML-->>DL: tampilkan_daftar(list_laporan)
+    deactivate ML
     DL-->>O: tampilkan list_laporan
     
     O->>DL: pilih_laporan(idLaporan)
-    DL->>VL: get_detail(idLaporan)
-    VL->>L: get_detail(idLaporan)
+    DL->>ML: get_detail(idLaporan)
+    activate ML
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: get_detail()
     activate L
-    L-->>VL: detail_laporan
+    L-->>ML: detail_laporan
     deactivate L
-    VL->>LV: tampilkan_laporan(detail_laporan)
+    ML->>LV: tampilkan_laporan(detail_laporan)
+    deactivate ML
     activate LV
     LV-->>O: tampilkan detail_laporan
     
     O->>LV: tolak(idLaporan)
     LV->>VL: tolak(idLaporan)
-    VL->>L: ubah_status(idLaporan, "Tidak Valid")
+    activate VL
+    VL->>ML: ubah_status(idLaporan, "Tidak Valid")
+    activate ML
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: ubah_status("Tidak Valid")
+    activate L
+    L-->>ML: berhasil
+    deactivate L
+    ML-->>VL: berhasil
+    deactivate ML
     VL->>LV: notify("Laporan Ditolak")
+    deactivate VL
     LV-->>O: "Laporan Ditolak"
     
     deactivate LV
-    deactivate VL
     deactivate DL
     deactivate O
 ```
@@ -705,10 +738,15 @@ classDiagram
     namespace Controller {
         class ValidatorLaporan {
             <<Controller>>
-            +get_laporan_unverified()
-            +get_detail(idLaporan)
             +setujui(idLaporan)
             +tolak(idLaporan)
+        }
+        class ManagerLaporan {
+            <<Controller>>
+            +get_all_laporan_unverified() List~Laporan~
+            +cari_laporan(idLaporan) Laporan
+            +get_detail(idLaporan)
+            +ubah_status(idLaporan, status)
         }
     }
     
@@ -721,9 +759,9 @@ classDiagram
             -int idMedia
             -String sumber
             -String status
-            +get_unverified()
-            +get_detail(idLaporan)
-            +ubah_status(idLaporan, status)
+            +is_unverified() Boolean
+            +get_detail()
+            +ubah_status(status)
         }
         class Lokasi {
             <<InformationHolder>>
@@ -734,10 +772,12 @@ classDiagram
         }
     }
 
-    DaftarLaporan --> ValidatorLaporan : meminta data
+    DaftarLaporan --> ManagerLaporan : meminta data
     LaporanView --> ValidatorLaporan : mengirim aksi
-    ValidatorLaporan --> Laporan : validasi & update
+    ValidatorLaporan --> ManagerLaporan : memvalidasi laporan
     ValidatorLaporan --> Lokasi : map lokasi valid
+    ManagerLaporan --> Laporan : membaca dan mengubah status
+    ManagerLaporan --> LaporanView : menampilkan detail
 ```
 <p align="center">
 <i>Gambar 11. Diagram Kelas UC03</i>
@@ -1068,19 +1108,21 @@ sequenceDiagram
     activate DL
     DL->>ML: get_all_laporan_unverified()
     activate ML
-    ML->>L: get_unverified()
-    activate L
-    L-->>ML: list_laporan_pembersihan
-    deactivate L
+    loop setiap laporan
+        ML->>L: is_unverified()
+        activate L
+        L-->>ML: Boolean
+        deactivate L
+    end
     ML-->>DL: tampilkan_daftar(list_laporan_pembersihan)
     deactivate ML
-n
 
     O->>DL: pilih_laporan(idLaporan)
-    DL->>ML: get_data(idLaporan)
+    DL->>ML: get_detail(idLaporan)
     deactivate DL
     activate ML
-    ML->>L: get_data(idLaporan)
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: get_detail()
     activate L
     L-->>ML: data
     deactivate L
@@ -1094,11 +1136,12 @@ n
     activate VL
     VL->>ML: ubah_status(idLaporan, "Valid")
     activate ML
-    ML->>L: ubah_status(idLaporan, "Valid")
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: ubah_status("Valid")
     activate L
     L-->>ML: berhasil
     deactivate L
-    ML-->>DL: berhasil
+    ML-->>VL: berhasil
     deactivate ML
 
     VL->>MP: tambah_poin(idPengguna, jumlahPoin)
@@ -1133,18 +1176,21 @@ sequenceDiagram
     activate DL
     DL->>ML: get_all_laporan_unverified()
     activate ML
-    ML->>L: get_unverified()
-    activate L
-    L-->>ML: list_laporan_pembersihan
-    deactivate L
+    loop setiap laporan
+        ML->>L: is_unverified()
+        activate L
+        L-->>ML: Boolean
+        deactivate L
+    end
     ML-->>DL: tampilkan_daftar(list_laporan_pembersihan)
     deactivate ML
 
     O->>DL: pilih_laporan(idLaporan)
-    DL->>ML: get_data(idLaporan)
+    DL->>ML: get_detail(idLaporan)
     deactivate DL
     activate ML
-    ML->>L: get_data(idLaporan)
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: get_detail()
     activate L
     L-->>ML: data
     deactivate L
@@ -1158,11 +1204,22 @@ sequenceDiagram
     activate VL
     VL->>ML: ubah_status(idLaporan, "Tidak Valid")
     activate ML
-    ML->>L: ubah_status(idLaporan, "Tidak Valid")
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: ubah_status("Tidak Valid")
     activate L
     L-->>ML: berhasil
     deactivate L
-    ML-->>DL: berhasil
+    ML-->>VL: berhasil
+    deactivate ML
+
+    VL->>ML: simpan_alasan_penolakan(idLaporan, alasan)
+    activate ML
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: simpan_alasan_penolakan(alasan)
+    activate L
+    L-->>ML: berhasil
+    deactivate L
+    ML-->>VL: berhasil
     deactivate ML
 
 
@@ -1206,8 +1263,9 @@ classDiagram
         class ManagerLaporan {
             -String data
             -int idMedia
-            +get_all_laporan_unverified()
-            +get_data(idLaporan)
+            +get_all_laporan_unverified() List~Laporan~
+            +cari_laporan(idLaporan) Laporan
+            +get_detail(idLaporan)
             +ubah_status(idLaporan, status)
             +simpan_alasan_penolakan(idLaporan, alasan)
         }
@@ -1220,11 +1278,11 @@ classDiagram
             -int idMedia
             -String sumber
             -String status
-            +get_unverified()
-            +get_data(idLaporan)
-            +get_detail(idLaporan)
-            +ubah_status(idLaporan, status)
-            +simpan_alasan_penolakan(idLaporan, alasan)
+            -String alasanPenolakan
+            +is_unverified() Boolean
+            +get_detail()
+            +ubah_status(status)
+            +simpan_alasan_penolakan(alasan)
         }
         class Pengguna {
             -int idPengguna
