@@ -33,6 +33,7 @@
     - [Milestone 5](#milestone-5)
     - [Milestone 6](#milestone-6)
     - [Milestone 7](#milestone-7)
+    - [Milestone 8](#milestone-8)
 
 ---
 
@@ -156,3 +157,4 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 27-10-2026 | M. Aqsha Bagus R.I.B. | FormLaporan, Laporan, DaftarLaporan | 2 jam | In Progress | - |
 | 28-10-2026 | M. Aqsha Bagus R.I.B. | Finalisasi tiga di atas dan desain Figma | 10 jam | Done | - |
+| 28-10-2026 | Jovan Nathanael | Fiksasi UC03/UC06, desain Figma + algoritma/pseudocode | 5 jam | Done | - | 
