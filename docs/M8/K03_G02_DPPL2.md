@@ -3570,21 +3570,19 @@ Query perubahan data dijalankan oleh kelas Model masing-masing (Q-002 pada Pengg
 
 # BAB 6: Perancangan Antarmuka
 
-## 6.1 Rancangan Antarmuka [ID Layar 1]
+## 6.1 Rancangan Antarmuka I-01
 
-Masukkan versi awal prototipe antarmuka, dimana untuk setiap antarmuka/layar, tuliskan spesifikasi rinci objek yang ditampilkan dan reaksi sistem terhadap interaksi pengguna.
-
-**Antarmuka:** *[ID layar]*  
-**Nama Layar:** *[Nama layar]*
+**Antarmuka:** *I-01*  
+**Nama Layar:** *Login Page*
 
 <p align="center">
-<img alt="Contoh Logical View pada P/L E-Commerce" src="./assets/diagram/contoh-design.png" width="50%">
+<img alt="Login Page" src="./assets/Login Page.png" width="50%">
 </p>
 <p align="center">
-<i>Gambar 6.1. Rancangan Antarmuka [ID Layar] - [Nama Layar]</i>
+<i>Gambar 6.1. Rancangan Antarmuka I-01 - Login Page</i>
 </p>
 
-Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
+Tabel 6.1. Spesifikasi Objek Antarmuka I-01
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
@@ -3593,9 +3591,45 @@ Tabel 6.1. Spesifikasi Objek Antarmuka [ID Layar]
 | *...* | *...* | *...* | *...* |
 
 
-## 6.X Rancangan Antarmuka [ID Layar X]
+## 6.1 Rancangan Antarmuka I-02
 
-*[Ulangi pola 6.1 untuk layar berikutnya sampai semua layar teridentifikasi]*
+**Antarmuka:** *I-02*  
+**Nama Layar:** *Register Page*
+
+<p align="center">
+<img alt="Register Page" src="./assets/Register Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.1. Rancangan Antarmuka I-02 - Register Page</i>
+</p>
+
+Tabel 6.1. Spesifikasi Objek Antarmuka I-02
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
+| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
+| *...* | *...* | *...* | *...* |
+
+## 6.1 Rancangan Antarmuka I-03
+
+**Antarmuka:** *I-03*  
+**Nama Layar:** *Main Page*
+
+<p align="center">
+<img alt="Main Page" src="./assets/Main Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.1. Rancangan Antarmuka I-03 - Main Page</i>
+</p>
+
+Tabel 6.1. Spesifikasi Objek Antarmuka I-03
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
+| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
+| *...* | *...* | *...* | *...* |
 
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
@@ -3605,9 +3639,9 @@ Tabel 6.Y. Rancangan Antarmuka Keseluruhan
 
 | No | Tampilan Antarmuka |
 | :--- | :--- |
-| *[I-01]* | <img src="./assets/diagram/contoh-design.png" alt="Contoh Desain" width="400"> |
-| *[I-02]* | *[Sisipkan gambar antarmuka I-02]* |
-| *[I-XX]* | *[Sisipkan gambar antarmuka berikutnya]* |
+| *[I-01]* | <img src="./assets/Login Page.png" alt="Login Page" width="400"> |
+| *[I-02]* | <img src="./assets/Register Page.png" alt="Register Page" width="400"> |
+| *[I-03]* | <img src="./assets/Main Page.png" alt="Main Page" width="400"> |
 
 <br>
 
