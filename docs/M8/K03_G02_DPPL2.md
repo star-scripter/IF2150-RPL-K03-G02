@@ -2096,15 +2096,16 @@ function simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: St
 ### 5.2.2 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *get_unverified()*  
+**Nama Operasi:** *is_unverified() Boolean*  
 **ID Algoritma:** *Algo-002*
 
 ```text
 function get_unverified()
     Algoritma
         if self.status is "Belum Diperiksa" then
-            return self
-        return NIL
+            return true
+        else
+            return false
 ```
 
 <!--Tabel 5.2.3. Query Operasi [Nama Operasi]
@@ -2117,11 +2118,11 @@ function get_unverified()
 ### 5.2.3 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *get_detail(idLaporan: Number)*  
+**Nama Operasi:** *get_detail()*  
 **ID Algoritma:** *Algo-003*
 
 ```text
-function get_detail(idLaporan: Number)
+function get_detail()
     Algoritma
         return (self.lokasi, self.waktu, self.idMedia, self.sumber, self.status)
 ```
@@ -2136,11 +2137,11 @@ function get_detail(idLaporan: Number)
 ### 5.2.4 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *ubah_status(idLaporan: Number, status: String)*  
+**Nama Operasi:** *ubah_status(status: String)*  
 **ID Algoritma:** *Algo-004*
 
 ```text
-function ubah_status(idLaporan: Number, status: String)
+function ubah_status(status: String)
     Algoritma
         self.status = status
 ```
@@ -2155,13 +2156,13 @@ function ubah_status(idLaporan: Number, status: String)
 ### 5.2.5 Algoritma/Query
 
 **Nama Kelas:** *Laporan*  
-**Nama Operasi:** *get_detail(idLaporan: Number)*  
+**Nama Operasi:** *simpan_alasan_penolakan(alasan: String)*  
 **ID Algoritma:** *Algo-005*
 
 ```text
-function get_data(idLaporan: Number)
+function simpan_alasan_penolakan(alasan: String)
     Algoritma
-        return (self.lokasi, self.waktu, self.idMedia, self.sumber, self.status)
+        self.alasanPenolakan = alasan
 ```
 
 <!--Tabel 5.2.3. Query Operasi [Nama Operasi]
