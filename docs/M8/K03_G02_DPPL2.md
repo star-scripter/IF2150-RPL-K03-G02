@@ -3722,7 +3722,93 @@ Tabel 6.6. Spesifikasi Objek Antarmuka I-06
 | *I06-09* | *Button* | *"Kembali ke Hadiah"* | *Membuka I-04 dengan saldo dan stok terbaru* |
 | *I06-10* | *Button* | *"Lihat Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
 
->>>>>>> 3a6362854c49243c57252782ef554a3199e0e400
+## 6.7 Rancangan Antarmuka I-07
+
+**Antarmuka:** *I-07*  
+**Nama Layar:** *Validator Page*
+
+<p align="center">
+<img alt="Validator Page" src="./assets/Validator laporan.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.7. Rancangan Antarmuka I-07 - Validator Page</i>
+</p>
+
+Tabel 6.7. Spesifikasi Objek Antarmuka I-07
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+
+## 6.8 Rancangan Antarmuka I-08
+
+**Antarmuka:** *I-08*  
+**Nama Layar:** *Detail Laporan*
+
+<p align="center">
+<img alt="Detail Laporan" src="./assets/Detail Laporan.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.8. Rancangan Antarmuka I-08 - Detail Laporan</i>
+</p>
+
+Tabel 6.8. Spesifikasi Objek Antarmuka I-08
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+
+## 6.9 Rancangan Antarmuka I-09
+
+**Antarmuka:** *I-09*  
+**Nama Layar:** *Lokasi Page*
+
+<p align="center">
+<img alt="Lokasi Page" src="./assets/Lokasi Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.9. Rancangan Antarmuka I-09 - Lokasi Page</i>
+</p>
+
+Tabel 6.9. Spesifikasi Objek Antarmuka I-09
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I09-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I09-02* | *Label* | *"Lokasi Tercemar", "Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt."* | *Judul dan petunjuk layar* |
+| *I09-03* | *Label (Badge)* | *"[jumlah] lokasi menunggu"* | *Jumlah lokasi pada daftar yang ditampilkan DaftarLokasi.tampilkan_daftar(list) (Algo-003 kelas DaftarLokasi)* |
+| *I09-04* | *Dropdown* | *"Terdekat"* | *Mengurutkan kartu lokasi pada daftar yang sudah dimuat. Tidak mengambil data baru* |
+| *I09-05* | *List of Card* | *Nama lokasi, poin yang didapat, jarak dan koordinat, jenis sampah, waktu dilaporkan* | *Daftar lokasi berstatus "Tercemar" dari ManagerLaporan.get_daftar_lokasi() (Algo-004 kelas ManagerLaporan), ditampilkan melalui DaftarLokasi.tampilkan_daftar(list) (Algo-003 kelas DaftarLokasi) (UC04 skenario normal)* |
+| *I09-06* | *Button* | *"Lihat Detail"* | *Menjalankan DaftarLokasi.pilih_lokasi(idLokasi) (Algo-002 kelas DaftarLokasi) untuk lokasi pada kartu tersebut, lalu ManagerLaporan.get_detail_lokasi(idLokasi) (Algo-005 kelas ManagerLaporan). Detail lokasi ditampilkan melalui LaporanView.tampilkan_lokasi(detail) (Algo-005 kelas LaporanView)* |
+| *I09-07* | *Navigation Button* | *"Home"* | *Membuka I-03* |
+| *I09-08* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-09). Layar dibuka melalui DaftarLokasi.buka_fitur_cleanit() (Algo-001 kelas DaftarLokasi)* |
+| *I09-09* | *Navigation Button* | *"Hadiah"* | *Membuka I-04* |
+| *I09-10* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
+
+## 6.10 Rancangan Antarmuka I-10
+
+**Antarmuka:** *I-10*  
+**Nama Layar:** *Lokasi Kosong Page*
+
+<p align="center">
+<img alt="Lokasi Kosong Page" src="./assets/Lokasi Kosong Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.10. Rancangan Antarmuka I-10 - Lokasi Kosong Page</i>
+</p>
+
+Tabel 6.10. Spesifikasi Objek Antarmuka I-10
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I10-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I10-02* | *Label* | *"Lokasi Tercemar", "Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt."* | *Judul dan petunjuk layar* |
+| *I10-03* | *Icon* | *Ikon lokasi dengan tanda centang* | *Ilustrasi keadaan kosong* |
+| *I10-04* | *Label* | *"Belum terdapat lokasi pencemaran", "Belum ada laporan yang terverifikasi di sekitarmu. Nemu sampah di perairan? Laporkan lewat ReportIt."* | *Ditampilkan melalui DaftarLokasi.notify(msg) (Algo-004 kelas DaftarLokasi) jika ManagerLaporan.get_daftar_lokasi() (Algo-004 kelas ManagerLaporan) tidak mengembalikan lokasi (UC04 skenario alternatif 1)* |
+| *I10-05* | *Button* | *"Buat Laporan ReportIt"* | *Membuka form laporan ReportIt melalui FormLaporan.buka_reportit() (Algo-001 kelas FormLaporan)* |
+| *I10-06* | *Navigation Button* | *"Home"* | *Membuka I-03* |
+| *I10-07* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-10)* |
+| *I10-08* | *Navigation Button* | *"Hadiah"* | *Membuka I-04* |
+| *I10-09* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
+
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
 Tuliskan daftar gambar seluruh antarmuka. Berikan ID unik untuk setiap tampilan dan gunakan ID yang sama pada subbab perancangan antarmuka masing-masing.
@@ -3737,6 +3823,10 @@ Tabel 6.Y. Rancangan Antarmuka Keseluruhan
 | *[I-04]* | <img src="./assets/Rewards Page.png" alt="Rewards Page" width="400"> |
 | *[I-05]* | <img src="./assets/Konfirmasi Penukaran Page.png" alt="Konfirmasi Penukaran Page" width="400"> |
 | *[I-06]* | <img src="./assets/Penukaran Berhasil Page.png" alt="Penukaran Berhasil Page" width="400"> |
+| *[I-07]* | <img src="./assets/Validator laporan.png" alt="Validator Page" width="400"> |
+| *[I-08]* | <img src="./assets/Detail Laporan.png" alt="Detail Laporan" width="400"> |
+| *[I-09]* | <img src="./assets/Lokasi Page.png" alt="Lokasi Page" width="400"> |
+| *[I-10]* | <img src="./assets/Lokasi Kosong Page.png" alt="Lokasi Kosong Page" width="400"> |
 
 <br>
 
