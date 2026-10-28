@@ -3616,7 +3616,7 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-02
 | O-005 | Button | Daftar | Sistem memvalidasi apakah email belum terdaftar. Jika benar, akun terdaftar dan membuka layar Beranda. Jika tidak, menampilkan pesan kesalahan |
 | O-006 | Hyperlink | Masuk | Sistem membuka layanan Masuk Akun |
 
-## 6.1 Rancangan Antarmuka I-03
+## 6.3 Rancangan Antarmuka I-03
 
 **Antarmuka:** *I-03*  
 **Nama Layar:** *Main Page*
