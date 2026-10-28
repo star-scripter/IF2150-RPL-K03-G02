@@ -162,3 +162,5 @@
 | 28-10-2026 | Muhammad Dhafin Al Khairy | Desain UI DaftarLokasi | 1 jam | Done, open to changes | - |
 | 28-10-2026 | Faishal Ahmad Nurdin | ValidatorLaporan, ManagerPoin, Pertukaran (Model) | 2 jam | Done, open to changes | - |
 | 28-10-2026 | Faishal Ahmad Nurdin | UI Validator Page dan Detail Laporan | 2 jam | Done, open to changes | - |
+| 28-10-2026 | Justin William | DaftarLokasi, ManagerLaporan, DaftarReward, dan HalamanPenukaran | 2 jam | Done, open to changes | - |
+| 28-10-2026 | Justin William | Form Laporan | 2 jam | Done, open to changes | - |
