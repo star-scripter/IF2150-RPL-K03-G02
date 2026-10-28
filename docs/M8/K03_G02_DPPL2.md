@@ -2245,7 +2245,7 @@ Tabel 5.4.1. Operasi Kelas DaftarLaporan
 | :--- | :--- | :--- |
 | *daftar_laporan(laporan: Laporan)* | *public* | *Memasukkan laporan ke daftar laporan* |
 | *pilih_menu_verifikasi()* | *public* | *Membuka menu verifikasi untuk operator* |
-| *pilih_laporan(idLaporan: Number)* | *public* | *Memilih laporan yang akan ditampilkan dengan idLaporan tertentu* |
+| *pilih_laporan(idLaporan: Number)* | *public* | *Fungsi passer untuk melakukan get_detail(idLaporan) melalui ManagerLaporan* |
 | *tampilkan_daftar(list: List of Laporan)* | *public* | *Menampilkan daftar list laporan* |
 | *buka_laporan_masuk()* | *public* | *Fungsi passer untuk meminta membuka daftar laporan yang masuk* |
 
@@ -2264,7 +2264,7 @@ Tabel 5.4.2. Atribut Kelas DaftarLaporan
 ```text
 function daftar_laporan(laporan: Laporan)
     Algoritma
-        Query untuk create pada database
+        Query untuk create pada database (Q-001)
 ```
 
 Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
@@ -2273,7 +2273,7 @@ Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *Q-001* | *Insert entry laporan into laporan table* | *Memasukkan suatu laporan ke dalam database list Laporan* |
+| *Q-001* | *INSERT* | *Memasukkan suatu laporan ke dalam database list Laporan* |
 
 
 ### 5.4.2 Algoritma/Query
