@@ -3347,3 +3347,6 @@ Tabel 5.1. Matriks Kerunutan Kelas terhadap Use Case
 | C15 - *ManagerLaporan* | UC01 - Membuat Laporan Pencemaran; UC04 - Melihat Daftar Lokasi Pencemaran (CleanIt); UC05 - Mengirimkan Bukti Pembersihan (CleanIt); UC06 - Memverifikasi Laporan Pembersihan (CleanIt) |
 | C16 - *Penukaran (Controller)* | UC09 - Menukarkan Poin dengan Reward |
 
+# BAB 8: Lampiran
+Link Figma:
+https://www.figma.com/design/ruLkhRWcOxlw8FFg2INRiW/UI-Prototype-CleanIt?node-id=41-58&t=Yw6u6RGPkeAS6fBT-1
