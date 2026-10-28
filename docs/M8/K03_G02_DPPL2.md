@@ -3838,6 +3838,99 @@ Tabel 6.10. Spesifikasi Objek Antarmuka I-10
 | *I10-08* | *Navigation Button* | *"Hadiah"* | *Membuka I-04* |
 | *I10-09* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
 
+
+## 6.11 Rancangan Antarmuka I-11
+
+**Antarmuka:** *I-11*  
+**Nama Layar:** *FormLaporan - Informasi Dasar*
+
+<p align="center">
+<img alt="Lokasi Kosong Page" src="./assets/FormLaporan1.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.10. Rancangan Antarmuka I-11 - Form Laporan</i>
+</p>
+
+Tabel 6.11. Spesifikasi Objek Antarmuka I-11
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I11-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi yang menampilkan identitas SoClean* |
+| *I11-02* | *Icon Button* | *Ikon kembali* | *Kembali ke halaman sebelumnya tanpa mengirim laporan* |
+| *I11-03* | *Label* | *"Form Laporan"* | *Menampilkan nama halaman yang sedang dibuka* |
+| *I11-04* | *Progress Indicator* | *"Informasi Dasar", "Bukti Media", "Tinjau & Kirim"* | *Menunjukkan tahapan pengisian laporan. Tahap Informasi Dasar ditandai sebagai tahap aktif* |
+| *I11-05* | *Label* | *"Buat Laporan Pencemaran", "Laporkan lokasi perairan tercemar agar dapat diverifikasi dan ditindaklanjuti."* | *Menampilkan judul dan petunjuk pengisian laporan pencemaran melalui fitur ReportIt (UC01)* |
+| *I11-06* | *Map Preview* | *Peta lokasi pencemaran dan penanda lokasi* | *Menampilkan pratinjau lokasi yang dipilih pengguna sebagai bantuan pengisian atribut lokasi* |
+| *I11-07* | *Button* | *"Pilih di peta"* | *Memungkinkan pengguna memilih lokasi melalui peta. Hasil pemilihan digunakan sebagai masukan lokasi pada formulir* |
+| *I11-08* | *Textbox* | *"Alamat / Deskripsi Lokasi", placeholder "Contoh: Pantai Ancol, Jakarta Utara"* | *Pengguna mengisi lokasi pencemaran sebagai parameter lokasi: String pada FormLaporan.buat_laporan() (Algo-004 kelas FormLaporan)* |
+| *I11-09* | *Date-Time Picker* | *"Waktu Kejadian", "Pilih tanggal dan waktu"* | *Pengguna menentukan waktu kejadian sebagai parameter waktu: Date pada FormLaporan.buat_laporan() (UC01)* |
+| *I11-10* | *Dropdown* | *"Sumber Laporan", "Pengamatan pribadi"* | *Pengguna memilih sumber laporan sebagai parameter sumber: String pada FormLaporan.buat_laporan() (UC01)* |
+| *I11-11* | *Button* | *"Lanjut"* | *Melanjutkan ke I-12 setelah informasi dasar diisi. Data dipertahankan sementara untuk proses pengiriman laporan pada tahap terakhir* |
+| *I11-12* | *Notification* | *Pesan kesalahan pengisian* | *Menampilkan informasi apabila terdapat data yang belum lengkap atau tidak sesuai format. Pemeriksaan akhir dilakukan melalui ManagerLaporan.is_terisi() dan ManagerLaporan.is_format_valid() (UC01 skenario alternatif)* |
+
+## 6.12 Rancangan Antarmuka I-12
+
+**Antarmuka:** *I-12*  
+**Nama Layar:** *FormLaporan - Bukti Media*
+
+<p align="center">
+<img alt="Lokasi Kosong Page" src="./assets/FormLaporan2.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.10. Rancangan Antarmuka I-12 - FormLaporan</i>
+</p>
+
+Tabel 6.12. Spesifikasi Objek Antarmuka I-12
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I12-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi yang menampilkan identitas SoClean* |
+| *I12-02* | *Icon Button* | *Ikon kembali* | *Kembali ke tahap Informasi Dasar (I-11) tanpa menghapus data yang telah diisi* |
+| *I12-03* | *Label* | *"Form Laporan"* | *Menampilkan nama halaman yang sedang dibuka* |
+| *I12-04* | *Progress Indicator* | *"Informasi Dasar", "Bukti Media", "Tinjau & Kirim"* | *Menunjukkan bahwa Informasi Dasar telah dilalui dan Bukti Media merupakan tahap aktif* |
+| *I12-05* | *Label* | *"Unggah Bukti Pencemaran", "Tambahkan foto atau video yang menunjukkan kondisi pencemaran di lokasi tersebut."* | *Menampilkan judul dan petunjuk pengumpulan bukti media untuk laporan (UC02)* |
+| *I12-06* | *Information Card* | *"Pastikan media yang diunggah jelas, relevan, dan sesuai dengan kondisi di lokasi."* | *Memberikan panduan agar bukti yang disertakan dapat diperiksa oleh Operator* |
+| *I12-07* | *File Upload Area* | *"Unggah Foto atau Video", "Klik untuk memilih file atau seret ke sini", "JPG, PNG, MP4 - Maks. 20 MB"* | *Area pemilihan bukti foto/video. Proses pengambilan media pada rancangan kelas dilakukan melalui FormLaporan.ambil_gambar() dan Media.input_media() (Algo-001 kelas Media). Dukungan pemilihan berkas dan drag-and-drop merupakan detail UI yang perlu diselaraskan dengan implementasi Media* |
+| *I12-08* | *Image Preview* | *Pratinjau foto/video yang dipilih* | *Menampilkan bukti media yang telah dipilih sebelum laporan dikirim. Media.input_media() menghasilkan idMedia yang digunakan dalam laporan (UC02)* |
+| *I12-09* | *Icon Button* | *Ikon silang (X)* | *Menghapus media dari pilihan sementara pengguna sebelum pengiriman laporan* |
+| *I12-10* | *Button* | *"Tambah media (lainnya)"* | *Membuka kembali pemilihan media tambahan. Dukungan banyak berkas memerlukan penyesuaian apabila Model Laporan hanya menyimpan satu idMedia* |
+| *I12-11* | *Information Card* | *"Media yang dikirim akan ditinjau oleh operator SoClean."* | *Memberikan informasi bahwa bukti pencemaran akan melalui proses verifikasi Operator sebelum dinyatakan valid (UC03)* |
+| *I12-12* | *Button* | *"Lanjut"* | *Melanjutkan ke I-13 setelah bukti media tersedia. ID media diteruskan sebagai parameter idMedia pada pengiriman laporan* |
+| *I12-13* | *Notification* | *Pesan kegagalan pengambilan atau penyimpanan media* | *Menampilkan pemberitahuan melalui FormLaporan.notify(msg) apabila Media.input_media() gagal, termasuk kondisi penyimpanan perangkat penuh (UC02 skenario alternatif)* |
+
+## 6.13 Rancangan Antarmuka I-13
+
+**Antarmuka:** *I-13*  
+**Nama Layar:** *FormLaporan - Tinjau & Kirim*
+
+<p align="center">
+<img alt="Lokasi Kosong Page" src="./assets/FormLaporan3.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.10. Rancangan Antarmuka I-13 - FormLaporan</i>
+</p>
+
+Tabel 6.13. Spesifikasi Objek Antarmuka I-13
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I13-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi yang menampilkan identitas SoClean* |
+| *I13-02* | *Icon Button* | *Ikon kembali* | *Kembali ke I-12 untuk memperbaiki data sebelum pengiriman laporan* |
+| *I13-03* | *Label* | *"Form Laporan"* | *Menampilkan nama halaman yang sedang dibuka* |
+| *I13-04* | *Progress Indicator* | *"Informasi Dasar", "Bukti Media", "Tinjau & Kirim"* | *Menandakan kedua tahap sebelumnya telah dilalui dan Tinjau & Kirim merupakan tahap aktif* |
+| *I13-05* | *Label* | *"Tinjau Laporan Anda", "Pastikan semua informasi sudah benar sebelum mengirim laporan."* | *Memberikan instruksi pemeriksaan ulang kepada pengguna sebelum laporan dikirim* |
+| *I13-06* | *Card* | *"Informasi Lokasi", nama lokasi dan koordinat lokasi* | *Menampilkan ringkasan lokasi pencemaran yang telah dipilih pada I-11. Nilai lokasi digunakan sebagai parameter lokasi dalam FormLaporan.buat_laporan() (UC01)* |
+| *I13-07* | *Map Preview* | *Peta kecil dan penanda lokasi* | *Menampilkan pratinjau lokasi yang akan dilaporkan untuk membantu pengguna memeriksa ketepatan lokasi* |
+| *I13-08* | *Button* | *"Ubah" pada Informasi Lokasi* | *Mengembalikan pengguna ke I-11 untuk memperbaiki lokasi tanpa menghapus data lainnya* |
+| *I13-09* | *Card* | *"Waktu Kejadian", tanggal dan waktu kejadian* | *Menampilkan nilai waktu: Date yang telah dimasukkan pengguna pada I-11* |
+| *I13-10* | *Button* | *"Ubah" pada Waktu Kejadian* | *Mengembalikan pengguna ke I-11 untuk memperbaiki waktu kejadian* |
+| *I13-11* | *Card* | *"Sumber Laporan", sumber laporan yang dipilih* | *Menampilkan nilai sumber: String yang telah dimasukkan pengguna pada I-11* |
+| *I13-12* | *Button* | *"Ubah" pada Sumber Laporan* | *Mengembalikan pengguna ke I-11 untuk memperbaiki sumber laporan* |
+| *I13-13* | *Card* | *"Bukti Media", pratinjau foto/video* | *Menampilkan ringkasan bukti media yang telah disiapkan pada I-12. Media direferensikan menggunakan idMedia (UC02)* |
+| *I13-14* | *Button* | *"Ubah" pada Bukti Media* | *Mengembalikan pengguna ke I-12 untuk mengganti atau memperbaiki bukti media* |
+| *I13-15* | *Button* | *"Kirim Laporan"* | *Menjalankan FormLaporan.buat_laporan(lokasi, waktu, idMedia, sumber) (Algo-004 kelas FormLaporan), yang meneruskan data ke ManagerLaporan.cek_laporan() untuk pemeriksaan kelengkapan dan format. Jika valid, laporan disimpan melalui Model Laporan sesuai UC01* |
+| *I13-16* | *Notification* | *"Laporan berhasil dikirim" atau pesan kegagalan* | *Menampilkan hasil pengiriman melalui FormLaporan.notify(msg) (Algo-002 kelas FormLaporan). Jika pengiriman gagal, pengguna dapat memperbaiki data tanpa mengirim ulang seluruh formulir dari awal* |
+
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
 Tuliskan daftar gambar seluruh antarmuka. Berikan ID unik untuk setiap tampilan dan gunakan ID yang sama pada subbab perancangan antarmuka masing-masing.
@@ -3856,6 +3949,10 @@ Tabel 6.Y. Rancangan Antarmuka Keseluruhan
 | *[I-08]* | <img src="./assets/Detail Laporan.png" alt="Detail Laporan" width="400"> |
 | *[I-09]* | <img src="./assets/Lokasi Page.png" alt="Lokasi Page" width="400"> |
 | *[I-10]* | <img src="./assets/Lokasi Kosong Page.png" alt="Lokasi Kosong Page" width="400"> |
+| *[I-11]* | <img src="./assets/FormLaporan1.png" alt="FormLaporan - Informasi Dasar" width="400"> |
+| *[I-12]* | <img src="./assets/FormLaporan2.png" alt="FormLaporan - Bukti Media" width="400"> |
+| *[I-13]* | <img src="./assets/FormLaporan3.png" alt="FormLaporan - Tinjau dan Kirim" width="400"> |
+
 
 <br>
 
