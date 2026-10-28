@@ -3586,12 +3586,14 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-01
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
-| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
-| *...* | *...* | *...* | *...* |
+| O-001 | Textbox | DapinGacor@gmail.com (placeholder) | Pengguna menginput email |
+| O-002 | Hyperlink | Lupa password | Sistem membuka layanan perubahan password |
+| O-003 | Textbox (Password) | DapinSukses123456 (placeholder) | Pengguna mengisi password |
+| O-004 | Button | Masuk | Sistem memvalidasi email dan password. Jika benar, membuka layar Beranda. Jika salah, menampilkan pesan kesalahan |
+| O-005 | Hyperlink | Daftar | Sistem membuka layanan Daftar Akun |
 
 
-## 6.1 Rancangan Antarmuka I-02
+## 6.2 Rancangan Antarmuka I-02
 
 **Antarmuka:** *I-02*  
 **Nama Layar:** *Register Page*
@@ -3607,9 +3609,12 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-02
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
-| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
-| *...* | *...* | *...* | *...* |
+| O-001 | Textbox | DapinTampan | Pengguna menginput nama |
+| O-002 | Textbox | DapinGacor@gmail.com (placeholder) | Pengguna menginput email dan memvalidasi format email |
+| O-003 | Hyperlink | Lupa password | Sistem membuka layanan perubahan password |
+| O-004 | Textbox (Password) | DapinSukses123456 (placeholder) | Pengguna mengisi password |
+| O-005 | Button | Daftar | Sistem memvalidasi apakah email belum terdaftar. Jika benar, akun terdaftar dan membuka layar Beranda. Jika tidak, menampilkan pesan kesalahan |
+| O-006 | Hyperlink | Masuk | Sistem membuka layanan Masuk Akun |
 
 ## 6.1 Rancangan Antarmuka I-03
 
@@ -3627,10 +3632,15 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-03
 
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
-| *[ID objek]* | *[Jenis objek, misalnya Button, RTF Box, dll]* | *[String yang tampil pada layar]* | *[Reaksi sistem, layar tujuan, tautan, atau ID algoritma yang dijalankan]* |
-| *[ID objek]* | *[Jenis objek]* | *[Konten yang ditampilkan]* | *[Reaksi sistem atau nama file terkait beserta deskripsi ringkasnya]* |
-| *...* | *...* | *...* | *...* |
-
+| O-001 | Teks | Username | Berisi data username pengguna |
+| O-002 | Teks | Jumlah skor | Menampilkan skor sesuai C-12 Algo-001 dengan tampilkanSaldo(poin: Number) |
+| O-003 | Button | Tukar Hadiah | Pengguna masuk ke halaman penukaran |
+| O-004 | Button | Fitur ReportIt | Pengguna masuk ke ReportIt (buka_reportit()) |
+| O-005 | Button | Fitur CleanIt | Pengguna masuk ke CleanIt (buka_cleanit()) |
+| O-006 | Button | Home | Pengguna masuk ke menu beranda |
+| O-007 | Button | Lokasi | Pengguna masuk ke halaman yang menunjukkan DaftarLokasi |
+| O-008 | Button | Hadiah | Pengguna masuk ke halaman yang menunjukkan HalamanPenukaran |
+| O-009 | Button | Profil | Pengguna masuk ke halaman yang menunjukkan jumlah skornya |
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
 Tuliskan daftar gambar seluruh antarmuka. Berikan ID unik untuk setiap tampilan dan gunakan ID yang sama pada subbab perancangan antarmuka masing-masing.
