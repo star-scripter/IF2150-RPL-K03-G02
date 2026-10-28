@@ -34,7 +34,9 @@ Dipersiapkan oleh:
 | :--- | :--- |
 | *A* | *Perubahan pada UC 3.1 dan 3.5 agar lebih selaras* |
 | *B* | *Memisahkan tanggungjawab dari Laporan dan ManagerLaporan pada UC03 dan UC06* |
-| *C* |  |
+| *C* | *Perubahan pada kelas Media, Lokasi, dan LaporanView: visibility is_penyimpanan_penuh() menjadi private (diagram kelas UC02), tipe idLokasi menjadi Number (diagram kelas UC03 dan UC04), dan penggabungan method yang double tampilkan_laporan pada LaporanView (Tabel 4.1)* |
+
+| *D* |  |
 | ... |  |
 
 ---
