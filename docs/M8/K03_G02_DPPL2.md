@@ -547,7 +547,7 @@ classDiagram
             <<InformationHolder>>
             - int idMedia
             + input_media()
-            + is_penyimpanan_penuh() Boolean
+            - is_penyimpanan_penuh() Boolean
         }
     }
     FormLaporan -- Media: menginput
@@ -2170,50 +2170,67 @@ function get_data(idLaporan: Number)
 | *...* | *...* | *...* |-->
 
 
-## 5.3 Kelas [Nama Kelas 3]
+## 5.3 Kelas Media
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *Media*  
+**ID Kelas:** *C-03*
 
-Tabel 5.3.1. Operasi Kelas [Nama Kelas 3]
+Tabel 5.3.1. Operasi Kelas Media
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *input_media(): Number* | *public* | *Mengambil foto/video dari kamera perangkat, menambahkan watermark dan timestamp, mengunggah berkas ke object storage, lalu mengembalikan idMedia. Jika penyimpanan perangkat penuh, mengirim notifikasi kegagalan ke FormLaporan dan mengembalikan null* |
+| *is_penyimpanan_penuh(): Boolean* | *private* | *Memeriksa apakah sisa penyimpanan perangkat tidak cukup untuk menyimpan satu foto/video baru* |
 
-Tabel 5.3.2. Atribut Kelas [Nama Kelas 3]
+Tabel 5.3.2. Atribut Kelas Media
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *idMedia* | *private* | *Number* |
 
 ### 5.3.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *Media*  
+**Nama Operasi:** *input_media(): Number*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function input_media(): Number
+    Prasyarat
+        Perangkat pengguna memiliki kamera dan izin akses telah diberikan
+    Algoritma
+        if is_penyimpanan_penuh() then
+            FormLaporan.notify("Gagal")
+            return null
+        file = ambil foto/video menggunakan kamera perangkat
+        timestamp = waktu saat ini
+        file = tambahkan watermark dan timestamp pada file
+        Simpan file pada penyimpanan perangkat
+        url = Storage.upload(file)
+        self.idMedia = hasil Q-001(url)
+        return self.idMedia
 ```
 
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.3.3. Query Operasi [Nama Operasi]
+Tabel 5.3.3. Query Operasi input_media()
 
 | No Query | Query | Keterangan |
 | :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
+| *Q-001* | `INSERT INTO media (url) VALUES (:url) RETURNING id;` | *Menyimpan metadata media yang sudah diunggah ke Cloudflare R2 dan mengembalikan idMedia yang baru dibuat* |
 
 ### 5.3.2 Algoritma/Query
 
-*[Ulangi pola 5.3.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *Media*  
+**Nama Operasi:** *is_penyimpanan_penuh(): Boolean*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function is_penyimpanan_penuh(): Boolean
+    Kamus
+        MAX_MEDIA_SIZE: Number { batas ukuran satu berkas foto/video, dalam byte }
+    Algoritma
+        sisa = sisa penyimpanan perangkat saat ini, dalam byte
+        return sisa < MAX_MEDIA_SIZE
+```
 
 
 ## 5.4 Kelas DaftarLaporan
