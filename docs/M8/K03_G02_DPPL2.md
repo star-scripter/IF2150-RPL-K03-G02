@@ -2451,51 +2451,85 @@ Tabel 5.6.5. Query Operasi get_lokasi(idLokasi: Number)
 | *Q-004* | `SELECT id, koordinat, status FROM lokasi WHERE id = :idLokasi;` | *Mengambil satu data lokasi berdasarkan idLokasi* |
 
 
-## 5.7 Kelas [Nama Kelas 7]
+## 5.7 Kelas DaftarLokasi
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *DaftarLokasi*  
+**ID Kelas:** *C07*
 
-Tabel 5.7.1. Operasi Kelas [Nama Kelas 7]
+Tabel 5.7.1. Operasi Kelas DaftarLokasi
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *buka_fitur_cleanit()* | *public* | *Membuka antarmuka fitur CleanIt dan meminta daftar lokasi pencemaran yang telah diverifikasi melalui ManagerLaporan* |
+| *pilih_lokasi(idLokasi: String)* | *public* | *Meneruskan ID lokasi yang dipilih pengguna kepada ManagerLaporan untuk memperoleh informasi detail lokasi.* |
+| *tampilkan_daftar(list: List)* | *public* | *Menampilkan daftar lokasi pencemaran yang diterima dari ManagerLaporan pada antarmuka CleanIt.* |
+| *notify(msg: String)* | *public* | *Memberikan notifikasi pesan yang dapat dilihat oleh Pengguna. Digunakan dalam konteks user berhasil atau gagal.* | 
 
-Tabel 5.7.2. Atribut Kelas [Nama Kelas 7]
+Tabel 5.7.2. Atribut Kelas DaftarLokasi
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *-* | *-* | *-* |
 
 ### 5.7.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *DaftarLokasi*  
+**Nama Operasi:** *buka_fitur_cleanit()*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function buka_fitur_cleanit()
+    Algoritma
+        Tampilkan antarmuka CleanIt
+        ManagerLaporan.get_daftar_lokasi()
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.7.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.7.2 Algoritma/Query
 
-*[Ulangi pola 5.7.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *DaftarLokasi*  
+**Nama Operasi:** *pilih_lokasi(idLokasi: String)*  
+**ID Algoritma:** *Algo-002*
 
+```text
+function pilih_lokasi(idLokasi: String)
+    Prasyarat 
+        idLokasi merupakan ID lokasi yang dipilih oleh pengguna
+    Algoritma
+        ManagerLaporan.get_detail_lokasi(idLokasi)
+```
+
+### 5.7.3 Algoritma/Query
+
+**Nama Kelas:** *DaftarLokasi*  
+**Nama Operasi:** *tampilkan_daftar(list: List)*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function tampilkan_daftar(list: List)
+    Algoritma
+        if list kosong then
+            notify("Belum terdapat lokasi pencemaran")
+        else
+            for each lokasi in list do
+                Tampilkan informasi lokasi pada antarmuka CleanIt
+            endfor
+        endif
+```
+
+### 5.7.4 Algoritma/Query
+
+**Nama Kelas:** *DaftarLokasi*  
+**Nama Operasi:** *notify(msg: String)*  
+**ID Algoritma:** *Algo-004*
+
+```text
+function notify(msg: String)
+    Algoritma
+        Tampilkan msg pada antarmuka CleanIt
+```
+**Keterangan Query:** Seluruh operasi kelas DaftarLokasi tidak menjalankan query database secara langsung.
 
 ## 5.8 Kelas [Nama Kelas 8]
 
@@ -2589,50 +2623,72 @@ Tabel 5.9.3. Query Operasi [Nama Operasi]
 *[Ulangi pola 5.9.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
 
 
-## 5.10 Kelas [Nama Kelas 10]
+## 5.10 Kelas DaftarReward
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *DaftarReward*  
+**ID Kelas:** *C10*
 
-Tabel 5.10.1. Operasi Kelas [Nama Kelas 10]
+Tabel 5.10.1. Operasi Kelas DaftarReward
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *muatRewardTersedia()* | *public* | *Meminta data reward yang tersedia melalui ManagerPoin dan meneruskan hasilnya untuk ditampilkan.* |
+| *tampilkanDaftarReward(daftar: List)* | *public* | *Menampilkan informasi reward yang tersedia pada antarmuka, termasuk nama, jenis, harga poin, dan ketersediaannya.* |
+| *pilihReward(idReward: String)* | *public* | *Meneruskan ID reward yang dipilih pengguna kepada Halaman Penukaran sebagai bagian dari proses penukaran poin.* |
 
-Tabel 5.10.2. Atribut Kelas [Nama Kelas 10]
+Tabel 5.10.2. Atribut Kelas DaftarReward
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *-* | *-* | *-* |
 
 ### 5.10.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *DaftarReward*  
+**Nama Operasi:** *muatRewardTersedia*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function muatRewardTersedia()
+    Algoritma
+        daftarReward = ManagerPoin.lihatRewardTersedia()
+        tampilkanDaftarReward(daftarReward)
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.10.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.10.2 Algoritma/Query
 
-*[Ulangi pola 5.10.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *DaftarReward*  
+**Nama Operasi:** *tampilkanDaftarReward(daftar: List)*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function tampilkanDaftarReward(daftar: List)
+    Algoritma
+        for each reward in daftar do
+            Tampilkan nama reward
+            Tampilkan jenis reward
+            Tampilkan harga poin reward
+            Tampilkan informasi ketersediaan reward
+        endfor
+```
+
+### 5.10.3 Algoritma/Query
+
+**Nama Kelas:** *DaftarReward*  
+**Nama Operasi:** *pilihReward(idReward: String)*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function pilihReward(idReward: String)
+    Prasyarat
+        idReward merupakan ID reward yang dipilih oleh pengguna
+    Algoritma
+        HalamanPenukaran.pilihReward(idReward)
+```
+
+**Keterangan Query:** Kelas DaftarReward tidak berinteraksi langsung dengan query atau database.
 
 
 ## 5.11 Kelas [Nama Kelas 11]
@@ -2681,51 +2737,73 @@ Tabel 5.11.3. Query Operasi [Nama Operasi]
 *[Ulangi pola 5.11.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
 
 
-## 5.12 Kelas [Nama Kelas 12]
+## 5.12 Kelas HalamanPenukaran
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *HalamanPenukaran*  
+**ID Kelas:** *C12*
 
-Tabel 5.12.1. Operasi Kelas [Nama Kelas 12]
+Tabel 5.12.1. Operasi Kelas HalamanPenukaran
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *tampilkanSaldo(saldo: int)* | *public* | *Menampilkan saldo poin pengguna yang diperoleh melalui ManagerPoin pada antarmuka penukaran.* |
+| *pilihReward(idReward: String)* | *public* | *Menerima pilih reward dari DaftarReward dan meneruskan permintaan penukaran.* |
+| *tampilkanNotifikasi(pesan: String)* | *public* | *Menampilkan notifikasi hasil proses penukaran kepada pengguna baik ketika transaksi berhasil maupun gagal.* |
 
-Tabel 5.12.2. Atribut Kelas [Nama Kelas 12]
+Tabel 5.12.2. Atribut Kelas HalamanPenukaran
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *-* | *-* | *-* |
 
 ### 5.12.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *HalamanPenukaran*  
+**Nama Operasi:** *tampilkanSaldo(saldo: int)*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function tampilkanSaldo(saldo: int)
+    Algoritma
+        Tampilkan saldo pada antarmuka HalamanPenukaran
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.12.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.12.2 Algoritma/Query
 
-*[Ulangi pola 5.12.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *HalamanPenukaran*  
+**Nama Operasi:** *pilihReward(idReward: string)*  
+**ID Algoritma:** *Algo-002*
 
+```text
+function pilihReward(idReward: String)
+    Prasyarat
+        idReward merupakan ID reward yang dipilih pengguna
+    Algoritma
+        pengguna <- Pengguna yang melakukan permintaan
+        hasil <- PenukaranController.tukarPoin(pengguna, idReward)
+
+        if hasil = true then 
+            tampilkanNotifikasi("Penukaran berhasil")
+        else
+            tampilkanNotifikasi("Penukaran gagal")
+        endif
+```
+
+### 5.12.3 Algoritma/Query
+
+**Nama Kelas:** *HalamanPenukaran*  
+**Nama Operasi:** *tampilkanNotifikasi(pesan: String)*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function tampilkanNotifikasi(pesan: String)
+    Algoritma
+        Tampilkan pesan pada antarmuka HalamanPenukaran
+```
+
+**Keterangan Query:** HalamanPenukaran tidak melakukan query database directly.
 
 ## 5.13 Kelas [Nama Kelas 13]
 
@@ -2897,51 +2975,259 @@ function tampilkan_konfirmasi(msg: String)
 ```
 
 
-## 5.15 Kelas [Nama Kelas 15]
+## 5.15 Kelas ManagerLaporan
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *ManagerLaporan*  
+**ID Kelas:** *C15*
 
-Tabel 5.15.1. Operasi Kelas [Nama Kelas 15]
+Tabel 5.15.1. Operasi Kelas ManagerLaporan
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)* | *public* | *Memeriksa kelengkapan dan kesesuaian format data laporan sebelum diteruskan untuk disimpan.* |
+| *is_terisi(lokasi: String, waktu: Date, idMedia: int, sumber: String): Boolean* | *public* | *Memeriksa apakah seluruh informasi wajib laporan telah diisi.* |
+| *is_format_valid(lokasi: String, waktu: Date, idMedia: int, sumber: String): Boolean* | *public* | *Memeriksa kesesuaian tipe dan format data laporan terhadap ketentuan input.* |
+| *get_daftar_lokasi(): List* | *public* | *Meminta daftar lokasi pencemaran yang telah diverifikasi.* |
+| *get_detail_lokasi(idLokasi: String)* | *public* | *Mengambil informasi lokasi berdasarkan ID lokasi dan meneruskannya untuk ditampilkan* |
+| *is_valid(idLaporan: Number, lokasi: String, waktu: Date, idMedia: int): Boolean* | *private* | *Memeriksa kesesuaian informasi yang diberikan terhadap data laporan berdasarkan ID laporan.* |
+| *get_all_laporan_unverified(): List* | *public* | *Mengambil seluruh laporan yang masih berstatus belum diperiksa untuk ditampilkkan dalam DaftarLaporan* |
+| *get_data(idLaporan: Number)* | *public* | *Memperoleh informasi laporan berdasarkan ID laporan dari Model Laporan.* |
+| *ubah_status(idLaporan: Number, status: String)* | *public* | *Meneruskan perubahan status laporan ke Model Laporan berdasarkan hasil keputusan ValidatorLaporan.* |
+| *simpan_alasan_penolakan(idLaporan: Number, alasan: String)* | *public* | *Menyimpan alasan penolakan untuk laporan yang telah dinyatakan tidak valid.* |
+| *petakan_lokasi(idLaporan: Number)* | *public* | *Memperoleh informasi lokasi dari laporan ReportIt yang telah diverifikasi dan meneruskannya kepada Model Lokasi.* |
 
-Tabel 5.15.2. Atribut Kelas [Nama Kelas 15]
+Tabel 5.15.2. Atribut Kelas ManagerLaporan
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *-* | *-* | *-* |
 
 ### 5.15.1 Algoritma/Query
 
 Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
 
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** *cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function cek_laporan(lokasi, waktu, idMedia, sumber)
+    Algoritma
+        if not is_terisi(lokasi, waktu, idMedia, sumber) then
+            FormLaporan.notify("Data laporan tidak lengkap")
+            return
+        end if
+
+        if not is_format_valid(lokasi, waktu, idMedia, sumber) then
+            FormLaporan.notify("Format laporan tidak valid")
+            return
+        end if
+
+        Buat objek laporan baru
+        Laporan.simpan_laporan(lokasi, waktu, idMedia, sumber)
+        DaftarLaporan.daftar_laporan(laporan)
+        FormLaporan.notify("Laporan berhasil dikirim")
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.15.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.15.2 Algoritma/Query
 
-*[Ulangi pola 5.15.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** is_terisi(lokasi: String, waktu: Date, idMedia: int, sumber: String): Boolean 
+**ID Algoritma:** *Algo-002*
 
+```text
+function is_terisi(lokasi, waktu, idMedia, sumber)
+    Algoritma
+        if lokasi kosong or
+           waktu kosong or
+           idMedia kosong or
+           sumber kosong then
+            return false
+        endif
+        return true
+```
+### 5.15.3 Algoritma/Query
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** is_format_valid(lokasi: String, waktu: Date, idMedia: int, sumber: String): Boolean
+**ID Algoritma:** *Algo-003*
+
+```text
+function is_format_valid(lokasi, waktu, idMedia, sumber)
+    Algoritma
+        if lokasi not String then
+            return false
+        endif
+
+        if waktu not Date yang valid then
+            return false
+        endif
+
+        if idMedia not integer then
+            return false
+        endif
+
+        if sumber not String then
+            return false
+        endif
+        return true
+```
+
+
+### 5.15.4 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `get_daftar_lokasi(): List<Lokasi>`  
+**ID Algoritma:** *Algo-004*
+
+```text
+function get_daftar_lokasi()
+    Algoritma
+        list_lokasi = Lokasi.get_all_lokasi_valid()
+        DaftarLokasi.tampilkan_daftar(list_lokasi)
+        return list_lokasi
+```
+
+### 5.15.5 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `get_detail_lokasi(idLokasi: String)`  
+**ID Algoritma:** *Algo-005*
+
+```text
+function get_detail_lokasi(idLokasi)
+    Algoritma
+        detail_lokasi = Lokasi.get_lokasi(idLokasi)
+
+        if detail_lokasi = NIL then
+            DaftarLokasi.notify("Lokasi tidak ditemukan")
+            return
+        endif
+
+        LaporanView.tampilkan_lokasi(detail_lokasi)
+```
+
+### 5.15.6 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `is_valid(idLaporan: Number, lokasi: String, waktu: Date, idMedia: int): Boolean`  
+**ID Algoritma:** *Algo-006*
+
+```text
+function is_valid(idLaporan, lokasi, waktu, idMedia)
+    Algoritma
+        data = get_data(idLaporan)
+
+        if data = NIL then
+            return false
+        endif
+
+        (lokasiData, waktuData, idMediaData, sumberData, statusData) = data
+
+        if lokasiData != lokasi or
+        waktuData != waktu or
+        idMediaData != idMedia then
+            return false
+        endif
+
+        return true
+```
+
+Operasi ini didefinisikan sebagai pemeriksaan konsistensi data. Keputusan apakah bukti laporan layak diterima atau ditolak tetap berada pada ValidatorLaporan sesuai UC03 dan UC06.
+
+### 5.15.7 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `get_all_laporan_unverified(): List<Laporan>`  
+**ID Algoritma:** *Algo-007*
+
+```text
+function get_all_laporan_unverified()
+    Algoritma
+        daftar = List kosong
+        koleksi_laporan = Laporan.get_all_laporan()
+
+        for each laporan in koleksi_laporan do
+            if laporan.is_unverified() = true then
+                Tambahkan laporan ke daftar
+            endif
+        endfor
+
+        return daftar
+```
+
+Pengambilan koleksi laporan merupakan tanggung jawab akses data Model. Mekanisme teknis untuk membaca seluruh koleksi belum dijabarkan dalam operasi Model Laporan pada Bab 4 sehingga bagian tersebut merupakan abstraksi yang perlu diperinci pada implementasi.
+
+### 5.15.8 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `get_data(idLaporan: Number)`  
+**ID Algoritma:** *Algo-008*
+
+```text
+function get_data(idLaporan)
+    Algoritma
+        data = Laporan.get_data(idLaporan)
+        return data
+```
+
+### 5.15.9 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `ubah_status(idLaporan: Number, status: String)`  
+**ID Algoritma:** *Algo-009*
+
+```text
+function ubah_status(idLaporan, status)
+    Prasyarat
+        Terdapat keputusan verifikasi dari ValidatorLaporan
+        status adalah "Valid" atau "Tidak Valid"
+
+    Algoritma
+        Laporan.ubah_status(idLaporan, status)
+```
+
+### 5.15.10 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `simpan_alasan_penolakan(idLaporan: Number, alasan: String)`  
+**ID Algoritma:** *Algo-010*
+
+```text
+function simpan_alasan_penolakan(idLaporan, alasan)
+    Prasyarat
+        Laporan telah dinyatakan "Tidak Valid"
+
+    Algoritma
+        Laporan.simpan_alasan_penolakan(idLaporan, alasan)
+```
+
+### 5.15.11 Algoritma/Query
+
+**Nama Kelas:** *ManagerLaporan*  
+**Nama Operasi:** `petakan_lokasi(idLaporan: Number)`  
+**ID Algoritma:** *Algo-011*
+
+```text
+function petakan_lokasi(idLaporan)
+    Prasyarat
+        Laporan merupakan laporan ReportIt
+        Laporan telah diverifikasi dengan status "Valid"
+
+    Algoritma
+        data_laporan = Laporan.get_data(idLaporan)
+
+        if data_laporan = NIL then
+            return
+        endif
+
+        (lokasi, waktu, idMedia, sumber, status) = data_laporan
+
+        if status != "Valid" then
+            return
+        endif
+
+        Lokasi.simpan_lokasi(lokasi)
+```
 
 ## 5.16 Kelas [Nama Kelas 16]
 
