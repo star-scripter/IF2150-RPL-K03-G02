@@ -1905,7 +1905,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | C11 | *ManagerPoin* | — | tambah_poin(idPengguna, jumlahPoin); lihatSaldo(pengguna); lihatRewardTersedia(); cekPoin(pengguna, harga); kurangiPoin(pengguna, jumlah); tambahPoin(idPengguna, jumlah) |
 | C12 | *HalamanPenukaran* | — | tampilkanSaldo(saldo); pilihReward(idReward); tampilkanNotifikasi(pesan) |
 | C13 | *Penukaran (Model)* | idPenukaran, waktuPenukaran, poinDipakai | buatPenukaran(pengguna, reward) |
-| C14 | *LaporanView* | data, idMedia | tampilkan_laporan(detail); tampilkan_laporan(data); setujui(idLaporan); tolak(idLaporan); notify(msg); tampilkan_lokasi(detail); konfirmasi_bersihkan(); tampilkan_konfirmasi(msg) |
+| C14 | *LaporanView* | data, idMedia | tampilkan_laporan(data); setujui(idLaporan); tolak(idLaporan); notify(msg); tampilkan_lokasi(detail); konfirmasi_bersihkan(); tampilkan_konfirmasi(msg) |
 | C15 | *ManagerLaporan* | - | cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String); is_terisi(lokasi, <br/>waktu, idMedia, sumber); is_format_valid(lokasi, <br/>waktu, idMedia, sumber); get_daftar_lokasi(); get_detail_lokasi(idLokasi); is_valid(idLaporan, lokasi, waktu, idMedia); get_all_laporan_unverified(); get_data(idLaporan); ubah_status(idLaporan, status); simpan_alasan_penolakan(idLaporan, alasan); petakan_lokasi(idLaporan) |
 | C16 | *Penukaran (Controller)* | — | tukarPoin(pengguna, idReward) |
 
@@ -2771,50 +2771,128 @@ Tabel 5.13.3. Query Operasi [Nama Operasi]
 *[Ulangi pola 5.13.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
 
 
-## 5.14 Kelas [Nama Kelas 14]
+## 5.14 Kelas LaporanView
 
-**Nama Kelas:** *[Nama kelas]*  
-**ID Kelas:** *[ID kelas]*
+**Nama Kelas:** *LaporanView*  
+**ID Kelas:** *C-14*
 
-Tabel 5.14.1. Operasi Kelas [Nama Kelas 14]
+Tabel 5.14.1. Operasi Kelas LaporanView
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *[Signature operasi, termasuk parameter dan tipe kembalian]* | *[Visibility]* | *[Tanggung jawab operasi]* |
-| *...* | *...* | *...* |
+| *tampilkan_laporan(data: String)* | *public* | *Menampilkan detail laporan (lokasi, waktu, media bukti, sumber, status) beserta tombol aksi verifikasi kepada Operator. Digunakan pada UC03 dan UC06* |
+| *setujui(idLaporan: Number)* | *public* | *Meneruskan aksi persetujuan laporan dari Operator ke ValidatorLaporan* |
+| *tolak(idLaporan: Number)* | *public* | *Meneruskan aksi penolakan laporan dari Operator ke ValidatorLaporan* |
+| *notify(msg: String)* | *public* | *Menampilkan pesan hasil verifikasi kepada Operator* |
+| *tampilkan_lokasi(detail: String)* | *public* | *Menampilkan detail lokasi pencemaran* |
+| *konfirmasi_bersihkan()* | *public* | *Menerima pilihan Masyarakat untuk membersihkan lokasi yang sedang ditampilkan* |
+| *tampilkan_konfirmasi(msg: String)* | *public* | *Menampilkan pesan konfirmasi kepada Masyarakat* |
 
-Tabel 5.14.2. Atribut Kelas [Nama Kelas 14]
+Tabel 5.14.2. Atribut Kelas LaporanView
 
 | Nama Atribut | Visibility (private, public) | Tipe |
 | :--- | :--- | :--- |
-| *[Nama atribut]* | *[Visibility]* | *[Tipe sesuai bahasa pemrograman yang digunakan]* |
-| *...* | *...* | *...* |
+| *data* | *private* | *String* |
+| *idMedia* | *private* | *Number* |
+
+Atribut *data* menyimpan detail laporan atau lokasi yang sedang ditampilkan dalam bentuk *string* JSON dari ManagerLaporan.
 
 ### 5.14.1 Algoritma/Query
 
-Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Algoritma dapat dituliskan sebagai *pseudocode*. Implementasi *skeleton code* juga dapat digunakan untuk kelas yang sudah terdefinisi pada bahasa pemrograman tertentu.
-
-**Nama Kelas:** *[Nama kelas]*  
-**Nama Operasi:** *[Signature operasi]*  
-**ID Algoritma:** *[Algo-001]*
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *tampilkan_laporan(data: String)*  
+**ID Algoritma:** *Algo-001*
 
 ```text
-[Tuliskan pseudocode algoritma operasi di sini.]
+function tampilkan_laporan(data: String)
+    Algoritma
+        self.data = data
+        Uraikan self.data menjadi idLaporan, lokasi, waktu, idMedia, sumber, dan status
+        self.idMedia = idMedia
+        Tampilkan lokasi, waktu, sumber, dan status pada antarmuka
+        Tampilkan foto/video bukti dengan idMedia self.idMedia
+        Tampilkan tombol "Setujui" dan "Tolak"
 ```
-
-Jika operasi mengacu pada query tertentu, lengkapi tabel berikut. 
-
-Tabel 5.14.3. Query Operasi [Nama Operasi]
-
-| No Query | Query | Keterangan |
-| :--- | :--- | :--- |
-| *[Q-001]* | *[Tuliskan query]* | *[Fungsi query]* |
-| *...* | *...* | *...* |
-
 
 ### 5.14.2 Algoritma/Query
 
-*[Ulangi pola 5.14.1 untuk operasi penting berikutnya pada kelas yang sama, jika ada.]*
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *setujui(idLaporan: Number)*  
+**ID Algoritma:** *Algo-002*
+
+```text
+function setujui(idLaporan: Number)
+    Prasyarat
+        Terdapat sebuah obyek singular global yang merupakan instance dari ValidatorLaporan
+    Algoritma
+        ValidatorLaporan.setujui(idLaporan)
+```
+
+### 5.14.3 Algoritma/Query
+
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *tolak(idLaporan: Number)*  
+**ID Algoritma:** *Algo-003*
+
+```text
+function tolak(idLaporan: Number)
+    Prasyarat
+        Terdapat sebuah obyek singular global yang merupakan instance dari ValidatorLaporan
+    Algoritma
+        ValidatorLaporan.tolak(idLaporan)
+```
+
+### 5.14.4 Algoritma/Query
+
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *notify(msg: String)*  
+**ID Algoritma:** *Algo-004*
+
+```text
+function notify(msg: String)
+    Algoritma
+        Tampilkan msg pada antarmuka
+        Nonaktifkan tombol "Setujui" dan "Tolak"
+```
+
+### 5.14.5 Algoritma/Query
+
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *tampilkan_lokasi(detail: String)*  
+**ID Algoritma:** *Algo-005*
+
+```text
+function tampilkan_lokasi(detail: String)
+    Algoritma
+        self.data = detail
+        Uraikan self.data menjadi idLokasi, koordinat, dan status
+        Tampilkan koordinat pada peta dan status lokasi pada antarmuka
+        Tampilkan tombol "Bersihkan"
+```
+
+### 5.14.6 Algoritma/Query
+
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *konfirmasi_bersihkan()*  
+**ID Algoritma:** *Algo-006*
+
+```text
+function konfirmasi_bersihkan()
+    Algoritma
+        tampilkan_konfirmasi("Lokasi dipilih untuk dibersihkan")
+```
+
+### 5.14.7 Algoritma/Query
+
+**Nama Kelas:** *LaporanView*  
+**Nama Operasi:** *tampilkan_konfirmasi(msg: String)*  
+**ID Algoritma:** *Algo-007*
+
+```text
+function tampilkan_konfirmasi(msg: String)
+    Algoritma
+        Tampilkan msg pada antarmuka
+```
 
 
 ## 5.15 Kelas [Nama Kelas 15]
