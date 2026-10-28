@@ -3722,6 +3722,41 @@ Tabel 6.6. Spesifikasi Objek Antarmuka I-06
 | *I06-09* | *Button* | *"Kembali ke Hadiah"* | *Membuka I-04 dengan saldo dan stok terbaru* |
 | *I06-10* | *Button* | *"Lihat Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
 
+## 6.7 Rancangan Antarmuka I-07
+
+**Antarmuka:** *I-07*  
+**Nama Layar:** *Validator Page*
+
+<p align="center">
+<img alt="Validator Page" src="./assets/Validator laporan.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.7. Rancangan Antarmuka I-07 - Validator Page</i>
+</p>
+
+Tabel 6.7. Spesifikasi Objek Antarmuka I-07
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+
+## 6.8 Rancangan Antarmuka I-08
+
+**Antarmuka:** *I-08*  
+**Nama Layar:** *Detail Laporan*
+
+<p align="center">
+<img alt="Detail Laporan" src="./assets/Detail Laporan.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.8. Rancangan Antarmuka I-08 - Detail Laporan</i>
+</p>
+
+Tabel 6.8. Spesifikasi Objek Antarmuka I-08
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+
+
 >>>>>>> 3a6362854c49243c57252782ef554a3199e0e400
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
