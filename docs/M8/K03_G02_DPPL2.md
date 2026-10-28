@@ -2327,7 +2327,7 @@ Tabel 5.5.1. Operasi Kelas [Nama Kelas 5]
 
 | Nama Operasi | Visibility (private, public) | Keterangan |
 | :--- | :--- | :--- |
-| *get_laporan_unverified(): List<Laporan>* | *public* | *Mengambil daftar laporan ReportIt yang belum diverifikasi melalui Model Laporan.* |
+| *get_laporan_unverified(): List of Laporan* | *public* | *Mengambil daftar laporan ReportIt yang belum diverifikasi melalui Model Laporan.* |
 | *get_detail(idLaporan: String): Laporan* | *public* | *Mengambil informasi detail laporan berdasarkan ID laporan yang dipilih oleh Operator.* |
 | *setujui(idLaporan: String): void* | *public* | *Menyetujui laporan, mengubah status menjadi Valid, serta menjalankan tindak lanjut sesuai jenis laporan.* |
 | *tolak(idLaporan: String): void* | *public* | *Menolak laporan ReportIt dengan mengubah status laporan menjadi Tidak Valid.* |
@@ -2340,7 +2340,7 @@ Tabel 5.5.1. Operasi Kelas [Nama Kelas 5]
 
 **Nama Kelas:** *ValidatorLaporan*  
 **Nama Operasi:** *setujui(idLaporan: String): void*  
-**ID Algoritma:** *Algo-00*
+**ID Algoritma:** *Algo-001*
 
 ```text
 function setujui(idLaporan: String)
@@ -2369,7 +2369,7 @@ function setujui(idLaporan: String)
 
 **Nama Kelas:** *ValidatorLaporan*  
 **Nama Operasi:** *tolak(idLaporan: String, alasan: String): void*  
-**ID Algoritma:** *Algo-00*
+**ID Algoritma:** *Algo-002*
 
 ```text
 function tolak(idLaporan: String, alasan: String)
@@ -2886,7 +2886,7 @@ Tabel 5.11.1. Operasi Kelas ManagerPoin
 | :--- | :--- | :--- |
 | *tambah_poin(idPengguna: String, jumlahPoin: int): void* | *public* | *Menambahkan poin kepada pengguna setelah laporan pembersihan dinyatakan valid oleh Operator.* |
 | *lihatSaldo(pengguna: Pengguna): int* | *public* | *Mengambil jumlah saldo poin pengguna melalui Model Pengguna.* |
-| *lihatRewardTersedia(): List<Reward>* | *public* | *Mengambil daftar reward yang tersedia melalui Model Reward.* |
+| *lihatRewardTersedia(): List of Reward* | *public* | *Mengambil daftar reward yang tersedia melalui Model Reward.* |
 | *cekPoin(pengguna: Pengguna, harga: int): Boolean* | *public* | *Memeriksa apakah saldo poin pengguna mencukupi harga reward yang dipilih.* |
 | *kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean* | *public* | *Mengurangi saldo poin pengguna ketika transaksi penukaran berhasil diproses.* |
 | *tambahPoin(idPengguna: String, jumlah: int): void* | *public* | *Operasi penambahan poin yang meneruskan pemanggilan ke tambah_poin().* |
@@ -2896,7 +2896,7 @@ Tabel 5.11.1. Operasi Kelas ManagerPoin
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *tambah_poin(idPengguna: String, jumlahPoin: int): void*  
-**ID Algoritma:** *Algo-007*
+**ID Algoritma:** *Algo-001*
 
 ```text
 function tambah_poin(idPengguna: String, jumlahPoin: int)
@@ -2915,7 +2915,7 @@ function tambah_poin(idPengguna: String, jumlahPoin: int)
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *lihatSaldo(pengguna: Pengguna): int*  
-**ID Algoritma:** *Algo-008*
+**ID Algoritma:** *Algo-002*
 
 ```text
 function lihatSaldo(pengguna: Pengguna): int
@@ -2931,11 +2931,11 @@ function lihatSaldo(pengguna: Pengguna): int
 ### 5.11.3 Algoritma/Query
 
 **Nama Kelas:** *ManagerPoin*  
-**Nama Operasi:** *lihatRewardTersedia(): List<Reward>*  
-**ID Algoritma:** *Algo-009*
+**Nama Operasi:** *lihatRewardTersedia(): List of Reward*  
+**ID Algoritma:** *Algo-003*
 
 ```text
-function lihatRewardTersedia(): List<Reward>
+function lihatRewardTersedia(): List of Reward
     Algoritma
         daftarReward <- Reward.getRewardTersedia()
 
@@ -2946,7 +2946,7 @@ function lihatRewardTersedia(): List<Reward>
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean*  
-**ID Algoritma:** *Algo-011*
+**ID Algoritma:** *Algo-004*
 
 ```text
 function kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean
@@ -2971,7 +2971,7 @@ function kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *cekPoin(pengguna: Pengguna, harga: int): Boolean*  
-**ID Algoritma:** *Algo-010*
+**ID Algoritma:** *Algo-005*
 
 ```text
 function cekPoin(pengguna: Pengguna, harga: int): Boolean
@@ -3082,7 +3082,7 @@ Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Al
 
 **Nama Kelas:** *Penukaran (Model)*  
 **Nama Operasi:** *buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean*  
-**ID Algoritma:** *Algo-012*
+**ID Algoritma:** *Algo-001*
 
 ```text
 function buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean
