@@ -3633,9 +3633,84 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-03
 
 ## 6.4 Rancangan Antarmuka I-04
 
+**Antarmuka:** *I-04*  
+**Nama Layar:** *Rewards Page*
+
+<p align="center">
+<img alt="Rewards Page" src="./assets/Rewards Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.4. Rancangan Antarmuka I-04 - Rewards Page</i>
+</p>
+
+Tabel 6.4. Spesifikasi Objek Antarmuka I-04
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I04-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I04-02* | *Card* | *"Poin Anda", saldo poin pengguna (contoh: 67)* | *Menampilkan saldo poin melalui HalamanPenukaran.tampilkanSaldo(saldo) (Algo-001 kelas HalamanPenukaran). Saldo diperoleh dari ManagerPoin.lihatSaldo(pengguna) (UC07)* |
+| *I04-03* | *Label* | *"Redeem Poin Anda"* | *Judul bagian daftar reward* |
+| *I04-04* | *Link* | *"Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
+| *I04-05* | *List of Card* | *Jenis dan stok reward, nama reward, harga poin* | *Daftar reward dari DaftarReward.muatRewardTersedia() dan DaftarReward.tampilkanDaftarReward(daftar) (Algo-001 dan Algo-002 kelas DaftarReward) (UC08)* |
+| *I04-06* | *Button* | *"Tukar"* | *Muncul jika saldo mencukupi dan stok tersedia. Membuka I-05 untuk reward yang dipilih* |
+| *I04-07* | *Button* | *"Kurang [selisih poin]"* | *Muncul jika saldo kurang dari harga reward. Menampilkan notifikasi "Poin tidak cukup" melalui HalamanPenukaran.tampilkanNotifikasi(pesan) (Algo-003 kelas HalamanPenukaran) (UC09 skenario alternatif)* |
+| *I04-08* | *Button (disabled)* | *"Habis"* | *Muncul jika stok reward 0. Tidak memiliki aksi* |
+| *I04-09* | *Navigation Button* | *"Home"* | *Membuka I-03* |
+| *I04-10* | *Navigation Button* | *"Lokasi"* | *Membuka daftar lokasi CleanIt melalui DaftarLokasi.buka_fitur_cleanit() (Algo-001 kelas DaftarLokasi)* |
+| *I04-11* | *Navigation Button (aktif)* | *"Hadiah"* | *Menandakan layar yang sedang dibuka (I-04)* |
+| *I04-12* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
+
 ## 6.5 Rancangan Antarmuka I-05
 
+**Antarmuka:** *I-05*  
+**Nama Layar:** *Konfirmasi Penukaran Page*
+
+<p align="center">
+<img alt="Konfirmasi Penukaran Page" src="./assets/Konfirmasi Penukaran Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.5. Rancangan Antarmuka I-05 - Konfirmasi Penukaran Page</i>
+</p>
+
+Tabel 6.5. Spesifikasi Objek Antarmuka I-05
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I05-01* | *Dialog (Bottom Sheet)* | *"Konfirmasi penukaran"* | *Ditampilkan di atas I-04 setelah pengguna menekan I04-06* |
+| *I05-02* | *Card* | *Jenis dan stok reward, nama reward* | *Reward yang dipilih pada I-04* |
+| *I05-03* | *Label* | *"Poin Anda", saldo poin pengguna* | *Saldo poin saat ini* |
+| *I05-04* | *Label* | *"Harga reward", harga poin reward* | *Harga poin dari Reward.getHargaPoin() (Algo-003 kelas Reward)* |
+| *I05-05* | *Label* | *"Sisa poin", saldo dikurangi harga reward* | *Pratinjau saldo setelah penukaran. Belum mengubah data* |
+| *I05-06* | *Label* | *"Poin yang sudah ditukarkan tidak dapat dikembalikan."* | *Peringatan sebelum penukaran* |
+| *I05-07* | *Button* | *"Batal"* | *Menutup dialog dan kembali ke I-04 tanpa perubahan data* |
+| *I05-08* | *Button* | *"Tukarkan"* | *Menjalankan DaftarReward.pilihReward(idReward) (Algo-003 kelas DaftarReward), HalamanPenukaran.pilihReward(idReward) (Algo-002 kelas HalamanPenukaran), lalu Penukaran.tukarPoin(pengguna, idReward) (Algo-001 kelas Penukaran (Controller)). Jika berhasil, membuka I-06. Jika gagal, menampilkan notifikasi melalui HalamanPenukaran.tampilkanNotifikasi(pesan) (Algo-003 kelas HalamanPenukaran)* |
+
 ## 6.6 Rancangan Antarmuka I-06
+
+**Antarmuka:** *I-06*  
+**Nama Layar:** *Penukaran Berhasil Page*
+
+<p align="center">
+<img alt="Penukaran Berhasil Page" src="./assets/Penukaran Berhasil Page.png" width="50%">
+</p>
+<p align="center">
+<i>Gambar 6.6. Rancangan Antarmuka I-06 - Penukaran Berhasil Page</i>
+</p>
+
+Tabel 6.6. Spesifikasi Objek Antarmuka I-06
+
+| Id_Objek | Jenis | Konten | Keterangan |
+| :--- | :--- | :--- | :--- |
+| *I06-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
+| *I06-02* | *Card* | *Ikon centang, "Penukaran berhasil", "[nama reward] sudah menjadi milik Anda."* | *Ditampilkan setelah Penukaran.tukarPoin(pengguna, idReward) mengembalikan true (UC09 skenario normal)* |
+| *I06-03* | *Label* | *"Kode Voucher", kode voucher reward* | *Kode yang dapat dipakai pengguna untuk mengklaim reward* |
+| *I06-04* | *Icon Button* | *Ikon salin* | *Menyalin kode voucher ke clipboard perangkat* |
+| *I06-05* | *Label* | *"ID penukaran", idPenukaran* | *ID transaksi dari Penukaran (Model)* |
+| *I06-06* | *Label* | *"Waktu penukaran", waktuPenukaran* | *Waktu transaksi dari Penukaran (Model)* |
+| *I06-07* | *Label* | *"Poin dipakai", poinDipakai* | *Jumlah poin yang dipakai dari Penukaran (Model)* |
+| *I06-08* | *Label* | *"Sisa poin", saldo poin terbaru* | *Saldo setelah penukaran dari Pengguna.getSaldoPoin() (Algo-001 kelas Pengguna)* |
+| *I06-09* | *Button* | *"Kembali ke Hadiah"* | *Membuka I-04 dengan saldo dan stok terbaru* |
+| *I06-10* | *Button* | *"Lihat Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
 
 ## 6.Y Rancangan Antarmuka Keseluruhan
 
@@ -3648,6 +3723,9 @@ Tabel 6.Y. Rancangan Antarmuka Keseluruhan
 | *[I-01]* | <img src="./assets/Login Page.png" alt="Login Page" width="400"> |
 | *[I-02]* | <img src="./assets/Register Page.png" alt="Register Page" width="400"> |
 | *[I-03]* | <img src="./assets/Main Page.png" alt="Main Page" width="400"> |
+| *[I-04]* | <img src="./assets/Rewards Page.png" alt="Rewards Page" width="400"> |
+| *[I-05]* | <img src="./assets/Konfirmasi Penukaran Page.png" alt="Konfirmasi Penukaran Page" width="400"> |
+| *[I-06]* | <img src="./assets/Penukaran Berhasil Page.png" alt="Penukaran Berhasil Page" width="400"> |
 
 <br>
 
