@@ -160,3 +160,5 @@
 | 28-10-2026 | Jovan Nathanael | Fiksasi UC03/UC06, desain Figma + algoritma/pseudocode | 5 jam | Done | - | 
 | 28-10-2026 | Muhammad Dhafin Al Khairy | Class Media, Lokasi, dan LaporanView | 3 jam | Done, open to changes | - |
 | 28-10-2026 | Muhammad Dhafin Al Khairy | Desain UI DaftarLokasi | 1 jam | Done, open to changes | - |
+| 28-10-2026 | Faishal Ahmad Nurdin | ValidatorLaporan, ManagerPoin, Pertukaran (Model) | 2 jam | Done, open to changes | - |
+| 28-10-2026 | Faishal Ahmad Nurdin | UI Validator Page dan Detail Laporan | 2 jam | Done, open to changes | - |
