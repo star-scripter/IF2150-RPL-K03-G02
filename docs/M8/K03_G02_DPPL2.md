@@ -633,10 +633,19 @@ sequenceDiagram
     deactivate L
     ML-->>VL: berhasil
     deactivate ML
-    VL->>LO: simpan_lokasi(koordinat)
+    VL->>ML: petakan_lokasi(idLaporan)
+    activate ML
+    ML->>ML: cari_laporan(idLaporan)
+    ML->>L: get_detail()
+    activate L
+    L-->>ML: detail_laporan
+    deactivate L
+    ML->>LO: simpan_lokasi(detail_laporan.lokasi)
     activate LO
-    LO-->>VL: success
+    LO-->>ML: success
     deactivate LO
+    ML-->>VL: berhasil
+    deactivate ML
     VL->>LV: notify("Laporan Valid")
     deactivate VL
     LV-->>O: "Laporan Valid"
@@ -747,6 +756,7 @@ classDiagram
             +cari_laporan(idLaporan) Laporan
             +get_detail(idLaporan)
             +ubah_status(idLaporan, status)
+            +petakan_lokasi(idLaporan)
         }
     }
     
@@ -775,7 +785,7 @@ classDiagram
     DaftarLaporan --> ManagerLaporan : meminta data
     LaporanView --> ValidatorLaporan : mengirim aksi
     ValidatorLaporan --> ManagerLaporan : memvalidasi laporan
-    ValidatorLaporan --> Lokasi : map lokasi valid
+    ManagerLaporan --> Lokasi : map lokasi valid
     ManagerLaporan --> Laporan : membaca dan mengubah status
     ManagerLaporan --> LaporanView : menampilkan detail
 ```
@@ -1850,10 +1860,9 @@ classDiagram
     DaftarLaporan --> ValidatorLaporan : meminta data
     LaporanView --> ValidatorLaporan : mengirim aksi
     ValidatorLaporan --> Laporan : validasi & update
-    ValidatorLaporan --> Lokasi : map lokasi valid
     DaftarLokasi --> ManagerLaporan : request list lokasi
     LaporanView --> ManagerLaporan : request detail
-    ManagerLaporan --> Lokasi : read data
+    ManagerLaporan --> Lokasi : read data / map lokasi valid
     FormLaporan --> DaftarLaporan : menyimpan laporan
     DaftarLaporan --> ManagerLaporan : meminta data
     ManagerLaporan --> LaporanView : menampilkan detail
@@ -1897,7 +1906,7 @@ Tabel 4.1. Daftar Kelas Perancangan Keseluruhan
 | C12 | *HalamanPenukaran* | — | tampilkanSaldo(saldo); pilihReward(idReward); tampilkanNotifikasi(pesan) |
 | C13 | *Penukaran (Model)* | idPenukaran, waktuPenukaran, poinDipakai | buatPenukaran(pengguna, reward) |
 | C14 | *LaporanView* | data, idMedia | tampilkan_laporan(detail); tampilkan_laporan(data); setujui(idLaporan); tolak(idLaporan); notify(msg); tampilkan_lokasi(detail); konfirmasi_bersihkan(); tampilkan_konfirmasi(msg) |
-| C15 | *ManagerLaporan* | - | cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String); is_terisi(lokasi, <br/>waktu, idMedia, sumber); is_format_valid(lokasi, <br/>waktu, idMedia, sumber); get_daftar_lokasi(); get_detail_lokasi(idLokasi); is_valid(idLaporan, lokasi, waktu, idMedia); get_all_laporan_unverified(); get_data(idLaporan); ubah_status(idLaporan, status); simpan_alasan_penolakan(idLaporan, alasan) |
+| C15 | *ManagerLaporan* | - | cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String); is_terisi(lokasi, <br/>waktu, idMedia, sumber); is_format_valid(lokasi, <br/>waktu, idMedia, sumber); get_daftar_lokasi(); get_detail_lokasi(idLokasi); is_valid(idLaporan, lokasi, waktu, idMedia); get_all_laporan_unverified(); get_data(idLaporan); ubah_status(idLaporan, status); simpan_alasan_penolakan(idLaporan, alasan); petakan_lokasi(idLaporan) |
 | C16 | *Penukaran (Controller)* | — | tukarPoin(pengguna, idReward) |
 
 <br>
