@@ -1,0 +1,39 @@
+# syntax=docker/dockerfile:1
+
+# ---------------------------------------------------------------------------
+# Development image for so-clean (next dev with hot reload)
+#
+#   docker build -f Dockerfile.dev -t so-clean-dev .
+#   docker run -p 3000:3000 \
+#     -v "$(pwd)":/app \
+#     -v /app/node_modules \
+#     -v /app/.next \
+#     so-clean-dev
+#
+# The anonymous volumes for node_modules and .next keep the container's
+# copies from being overwritten by the host bind mount.
+# ---------------------------------------------------------------------------
+
+ARG NODE_VERSION=22-alpine
+FROM node:${NODE_VERSION}
+
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+ENV NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    # Polling makes file watching reliable through Docker bind mounts
+    # (Docker Desktop on macOS/Windows, WSL2)
+    WATCHPACK_POLLING=true \
+    CHOKIDAR_USEPOLLING=true
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 3000
+
+# Bind to 0.0.0.0 so the dev server is reachable from outside the container
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]

@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Emit a self-contained server in .next/standalone for the production Docker image
+  output: "standalone",
   experimental: {
     agentFeedback: true,
   },
