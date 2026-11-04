@@ -3,13 +3,16 @@ services:
     build: ./so-clean
     restart: unless-stopped
     ports:
-      - "${APP_PORT}:3000"
+      - "${APP_PORT:-3000}:3000"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_DB=${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:18
@@ -18,8 +21,15 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # Postgres 18+ stores data in /var/lib/postgresql/<major>/docker,
+      # so the volume must be mounted on the parent directory
+      - postgres_data:/var/lib/postgresql
       # Optional: Uncomment to run initialization scripts on first boot
       # - ./init-db:/docker-entrypoint-initdb.d
 volumes:
