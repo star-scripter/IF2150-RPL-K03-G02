@@ -1,6 +1,18 @@
+# Base (production) definition.
+#
+# Docker Compose automatically merges compose.override.yaml on top of this
+# file, which switches the web service to the dev server. So:
+#
+#   Development (default):  docker compose up --build
+#   Production:             set COMPOSE_FILE=compose.yaml in .env
+#                           (or run: docker compose -f compose.yaml up --build)
+
 services:
   web:
-    build: ./so-clean
+    build:
+      context: ./so-clean
+      dockerfile: Dockerfile
+    image: so-clean:prod
     restart: unless-stopped
     ports:
       - "${APP_PORT:-3000}:3000"

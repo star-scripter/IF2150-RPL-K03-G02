@@ -1,0 +1,23 @@
+# Development overrides, merged automatically on top of compose.yaml
+# by `docker compose` unless COMPOSE_FILE (or -f) is set.
+#
+# After changing package.json, rebuild and refresh the node_modules volume:
+#   docker compose up --build --renew-anon-volumes
+
+services:
+  web:
+    build:
+      context: ./so-clean
+      dockerfile: Dockerfile.dev
+    image: so-clean:dev
+    volumes:
+      # Live-reload source code from the host
+      - ./so-clean:/app
+      # Keep the container's own node_modules and .next instead of the host's
+      - /app/node_modules
+      - /app/.next
+
+  db:
+    ports:
+      # Expose Postgres to the host (localhost only) for psql / DB GUIs
+      - "127.0.0.1:${DB_HOST_PORT:-5432}:5432"
