@@ -151,7 +151,7 @@ Gunakan **GitHub Issues** (dan opsional GitHub Projects) untuk membagi tugas dan
 | Web (backend) | Profiler bawaan bahasa, `EXPLAIN` pada query basis data, logging waktu respons |
 | Python | `cProfile`, `PyInstrument` |
 | Java | VisualVM, JProfiler |
-| Mobile | Android Studio Profiler, Flutter DevTools, Xcode Instruments |
+| Mobile | Android Studio Profiler, Flutter DevTools, Xcode Instruments | 
 
 ### 6. Penggunaan AI
 Penggunaan AI **tetap harus dicatat** pada `docs/KXX_GYY_AI-Usage.md` sesuai ketentuan yang sudah berlaku.
