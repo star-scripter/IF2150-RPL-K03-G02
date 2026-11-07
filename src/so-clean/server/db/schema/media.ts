@@ -22,7 +22,7 @@ export const media = pgTable(
       .notNull()
       .references(() => pengguna.id),
     laporanId: integer("laporan_id").references((): AnyPgColumn => laporan.id),
-    // Key objek di MinIO/R2, bukan URL. URL dibuat saat dibaca (presigned).
+    // Key objek di RustFS/R2, bukan URL. URL dibuat saat dibaca (presigned).
     storageKey: varchar("storage_key", { length: 255 }).notNull().unique(),
     tipe: tipeMediaEnum("tipe").notNull(),
     ukuranByte: integer("ukuran_byte").notNull(),

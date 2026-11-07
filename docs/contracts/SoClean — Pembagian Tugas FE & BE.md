@@ -6,7 +6,7 @@ Nov 4, 2026 · @Man
 
 Pekerjaan SoClean dibagi menjadi 26 tugas Frontend (FE) dan 25 tugas Backend (BE), diturunkan dari DPPL (UC01–UC09, kelas C01–C16, antarmuka I-01–I-13). Pembagiannya mengikuti MVC: **View → FE**, sedangkan **Controller + Model + Database/Storage → BE**.
 
-- **Stack:** Next.js 16.4 (TypeScript, React 19.3, Tailwind CSS 4) full-stack di Node.js 22, PostgreSQL 18, Cloudflare R2 (di lokal diganti MinIO, lihat BE-07), Docker.
+- **Stack:** Next.js 16.4 (TypeScript, React 19.3, Tailwind CSS 4) full-stack di Node.js 22, PostgreSQL 18, Cloudflare R2 (di lokal diganti RustFS, lihat BE-01 dan BE-07), Docker.
 - **Batas FE/BE:** FE hanya memanggil API pada bagian Kontrak Awal. FE tidak mengakses database atau R2 secara langsung.
 - **Struktur folder:** proyek sudah di-init di `src/so-clean/` (Next.js 16.4.5, alias `@/*` ke root proyek). FE di `app/(pages)/` dan `components/`; BE di `app/api/**/route.ts`, `server/controllers/`, `server/models/`, dan `server/db/`; test di `tests/`. Nama file controller dan model mengikuti kelas DPPL (misalnya `server/models/laporan.ts` untuk C02) supaya tabel traceability B.5 mudah diisi.
 - **ID tugas:** `FE-xx` atau `BE-xx`. Estimasi memakai ukuran S (≤ 0,5 hari), M (1–2 hari), dan L (3+ hari).
@@ -36,7 +36,7 @@ Selain itu, halaman Profil, Riwayat Penukaran, input alasan penolakan, serta inp
 
 ## Kontrak awal
 
-Kontrak ini adalah versi 0.4 yang disepakati FE dan BE sebelum coding (perubahan dari versi sebelumnya: lihat "Riwayat perubahan kontrak" di bawah). Perubahan kontrak wajib lewat PR yang di-review minimal satu orang dari tiap tim. Tipe TypeScript-nya disimpan bersama di `types/api.ts`.
+Kontrak ini adalah versi 0.5 yang disepakati FE dan BE sebelum coding (perubahan dari versi sebelumnya: lihat "Riwayat perubahan kontrak" di bawah). Perubahan kontrak wajib lewat PR yang di-review minimal satu orang dari tiap tim. Tipe TypeScript-nya disimpan bersama di `types/api.ts`.
 
 ### Konvensi
 
@@ -102,7 +102,7 @@ Catatan skema:
 - Tidak ada tabel notifikasi. Penerima notifikasi (pelapor) berbeda dengan pengirim request (Operator), jadi tidak bisa lewat response atau cookie; isinya diturunkan dari laporan milik pengguna yang sudah diverifikasi (`status`, `alasan_penolakan`, `diverifikasi_at`, dan `lokasi.poin` untuk CleanIt yang valid). Notifikasi belum dibaca jika `diverifikasi_at > pengguna.notifikasi_dilihat_at` (atau kolom itu NULL). Notifikasi penukaran cukup lewat respons `POST /api/penukaran`.
 - Tidak ada tabel wilayah; lihat K10.
 - Tidak ada tabel sesi; lihat Konvensi bagian Auth.
-- `media.storage_key` menyimpan *key* objek di MinIO/R2, bukan URL. URL dibuat saat dibaca lewat `getUrl(key)` (BE-07) karena *presigned URL* punya masa berlaku; pindah dari MinIO ke R2 juga tidak mengubah isi database.
+- `media.storage_key` menyimpan *key* objek di RustFS/R2, bukan URL. URL dibuat saat dibaca lewat `getUrl(key)` (BE-07) karena *presigned URL* punya masa berlaku; pindah dari RustFS ke R2 juga tidak mengubah isi database.
 - CleanIt mengisi `judul`, `waktu_kejadian` (waktu pembersihan), media, dan `lokasi_id`. `sumber` dan `jenis_sampah` kosong karena hanya relevan untuk laporan pencemaran; jenis sampah CleanIt diambil dari lokasi terkait.
 - Saat ReportIt disetujui, `laporan.lokasi_id` diisi dengan lokasi baru atau lokasi lama dalam radius 50 m (K13). FK dua arah `laporan.lokasi_id` ↔ `lokasi.laporan_asal_id` aman karena laporan selalu dibuat lebih dulu.
 - CleanIt yang otomatis ditolak karena K12 diisi `diverifikasi_oleh` = Operator yang menyetujui CleanIt lain untuk lokasi itu.
@@ -117,6 +117,7 @@ Catatan skema:
 | 0.2 | K4: tabel `laporan_media` diganti kolom `media.laporan_id`. `pengguna.created_at` dihapus karena tidak dipakai use case mana pun. `laporan.lokasi_teks`/`latitude`/`longitude` menjadi nullable (wajib hanya untuk ReportIt) dengan CHECK per jenis |
 | 0.3 | Tabel `notifikasi` dihapus: notifikasi diturunkan dari laporan, ditambah kolom `pengguna.notifikasi_dilihat_at`; bentuk `Notifikasi` berubah dan ada endpoint `POST /api/notifikasi/dibaca`. Tabel `wilayah` dihapus: K10 memakai konstanta di `lib/wilayah.ts` |
 | 0.4 | Session ditetapkan *stateless* (cookie JWT bertanda tangan, tanpa tabel sesi). `media.url` diganti `media.storage_key`. `laporan.sumber` dan `jenis_sampah` khusus ReportIt (CleanIt tetap mengisi judul dan waktu). Tipe kolom ditetapkan (`timestamptz`, `double precision` untuk koordinat), ditambah CHECK status–verifikasi, alasan penolakan CleanIt, nilai poin/harga positif, rentang koordinat, serta index untuk I-07, I-09, notifikasi, dan riwayat penukaran |
+| 0.5 | Penyimpanan objek lokal diganti dari MinIO ke RustFS karena image MinIO sudah dihapus dari Docker Hub (September 2026). Variabel env `S3_*` (termasuk `S3_PUBLIC_ENDPOINT` untuk *presigned URL*) dan `SESSION_SECRET` ditetapkan di `.env.example`. Tidak ada perubahan skema atau API |
 
 ### Daftar endpoint
 
@@ -277,7 +278,7 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 
 | ID | Tugas | Kriteria selesai | Referensi | Ukuran | Butuh |
 | --- | --- | --- | --- | --- | --- |
-| BE-01 | Docker Compose | Service app + PostgreSQL 18 + MinIO, `.env.example` berisi nama variabel tanpa nilai rahasia, satu perintah menjalankan semuanya secara lokal tanpa akun pribadi. `.gitignore` bawaan berpola `.env*` sehingga `.env.example` ikut terabaikan; tambahkan `!.env.example` | Tabel 2.1 DPPL | S | – |
+| BE-01 | Docker Compose | Service app + PostgreSQL 18 + RustFS (S3 lokal, hanya di `compose.override.yaml`; image MinIO sudah dihapus dari Docker Hub sejak September 2026) + pembuatan bucket otomatis, `SESSION_SECRET` dan variabel `S3_*` di `.env.example`, `.env.example` berisi nama variabel tanpa nilai rahasia, satu perintah menjalankan semuanya secara lokal tanpa akun pribadi. `.gitignore` bawaan berpola `.env*` sehingga `.env.example` ikut terabaikan; tambahkan `!.env.example` | Tabel 2.1 DPPL | S | – |
 | BE-02 | ORM dan migrasi | Semua tabel di Skema database dibuat lewat migrasi (Prisma/Drizzle), termasuk CHECK `saldo_poin >= 0` dan `stok >= 0` | Kontrak awal | M | BE-01, K1–K5, K7–K10 |
 | BE-03 | Seed data | Akun Operator, beberapa akun Masyarakat, reward, dan lokasi contoh (koordinatnya di dalam `lib/wilayah.ts`) untuk demo dan testing | – | S | BE-02 |
 | BE-04 | Kerangka API | Helper respons `data`/`error`, error handler global ke kode error, validasi request (misalnya zod), logging | Kontrak awal | M | BE-01 |
@@ -293,7 +294,7 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 
 | ID | Tugas | Kriteria selesai | Referensi | Ukuran | Butuh |
 | --- | --- | --- | --- | --- | --- |
-| BE-07 | Storage adapter S3 (R2/MinIO) | Fungsi `upload(file)` dan `getUrl(key)` (presigned read) lewat API S3; endpoint, bucket, dan kredensial dari env, jadi lokal memakai MinIO dan deploy memakai Cloudflare R2 | Komponen Storage | M | BE-01 |
+| BE-07 | Storage adapter S3 (R2/RustFS) | Fungsi `upload(file)` dan `getUrl(key)` (presigned read) lewat API S3; endpoint, bucket, dan kredensial dari env, jadi lokal memakai RustFS dan deploy memakai Cloudflare R2. Client server memakai `S3_ENDPOINT`, sedangkan *presigned URL* dibuat dengan `S3_PUBLIC_ENDPOINT` agar bisa dibuka browser | Komponen Storage | M | BE-01 |
 | BE-08 | `POST /api/media` | Validasi tipe dan ukuran (413/415), watermark + timestamp pada foto dengan `sharp`, upload, insert `media` dengan `storage_key` (bukan URL), kembalikan `idMedia` dan URL hasil `getUrl(key)` | C03 `input_media`, Q-001 | L | BE-07, BE-04 |
 
 ### Laporan (UC01, UC05)
@@ -380,7 +381,7 @@ Bagian B di `docs/M9/K03_G02_Implementasi.md` diisi sambil mengerjakan, bukan di
 
 | Bagian | Isi diambil dari | Penanggung jawab |
 | --- | --- | --- |
-| B.1 Perubahan dari DPPL | K1–K13 (judul, sumber dan jenis sampah, wilayah sebagai konstanta, radius 50 m, dan seterusnya), tabel `notifikasi` (Q-004 C08) diganti notifikasi turunan dari laporan, MinIO sebagai pengganti R2 di lokal, `proxy.ts` | BE-B, dikumpulkan dari semua paket |
+| B.1 Perubahan dari DPPL | K1–K13 (judul, sumber dan jenis sampah, wilayah sebagai konstanta, radius 50 m, dan seterusnya), tabel `notifikasi` (Q-004 C08) diganti notifikasi turunan dari laporan, RustFS sebagai pengganti R2 di lokal, `proxy.ts` | BE-B, dikumpulkan dari semua paket |
 | B.2 Bukti best practices | Daftar branch, riwayat commit, Issues, 2–3 PR beserta review, hasil `npm test` | FE-C |
 | B.2.1 Profiling | BE-26 | BE-B |
 | B.3 Kendala | Known issues dari checklist QA di tabel Lainnya | FE-C |
