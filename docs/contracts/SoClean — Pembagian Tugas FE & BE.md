@@ -21,7 +21,7 @@ Tiga belas hal berikut belum dijelaskan atau saling bertentangan di dokumen M1�
 | K1 | Laporan CleanIt tidak menyimpan lokasi mana yang dibersihkan | Tambah kolom `lokasi_id` (nullable) di tabel `laporan`, wajib diisi untuk jenis CLEANIT |
 | K2 | Status lokasi setelah dibersihkan tidak didefinisikan | Lokasi `TERCEMAR` → `DIBERSIHKAN` saat laporan CleanIt dinyatakan valid; tanpa reservasi atau lock, jadi siapa pun boleh membersihkan lokasi yang masih tercemar (konflik diatur K12) |
 | K3 | Jumlah poin per pembersihan belum ada | Kolom `poin` di tabel `lokasi`, ditentukan Operator saat menyetujui ReportIt (default 50) |
-| K4 | UI mendukung banyak media, model hanya satu `idMedia` | Tabel relasi `laporan_media` (maks. 3 media per laporan) |
+| K4 | UI mendukung banyak media, model hanya satu `idMedia` | Kolom `laporan_id` (nullable) di tabel `media`, maks. 3 media per laporan. Media diunggah lebih dulu (`laporan_id` masih NULL), lalu ditautkan saat laporan dibuat dalam transaksi yang sama. Tabel relasi tidak dipakai karena satu media hanya milik satu laporan |
 | K5 | Kode voucher muncul di I-06, tapi tidak ada di model | Kolom `kode_voucher` di tabel `penukaran`, di-generate server saat transaksi |
 | K6 | Watermark dibuat di client atau server | Server (pakai `sharp`) agar tidak bisa dipalsukan dari client |
 | K7 | I-07 dan I-08 menampilkan judul laporan ("Sampah plastik di Sungai Cikapundung"), tapi form I-11 dan model Laporan tidak punya field judul | Tambah isian judul (wajib, maks. 80 karakter) di I-11 dan kolom judul di tabel laporan |
@@ -36,7 +36,7 @@ Selain itu, halaman Profil, Riwayat Penukaran, input alasan penolakan, serta inp
 
 ## Kontrak awal
 
-Kontrak ini adalah versi 0.1 yang disepakati FE dan BE sebelum coding. Perubahan kontrak wajib lewat PR yang di-review minimal satu orang dari tiap tim. Tipe TypeScript-nya disimpan bersama di `types/api.ts`.
+Kontrak ini adalah versi 0.2 yang disepakati FE dan BE sebelum coding (perubahan dari 0.1: lihat "Riwayat perubahan kontrak" di bawah). Perubahan kontrak wajib lewat PR yang di-review minimal satu orang dari tiap tim. Tipe TypeScript-nya disimpan bersama di `types/api.ts`.
 
 ### Konvensi
 
@@ -52,19 +52,34 @@ Kontrak ini adalah versi 0.1 yang disepakati FE dan BE sebelum coding. Perubahan
 
 ```sql
 pengguna      (id uuid PK, nama, email UNIQUE, password_hash,
-               role MASYARAKAT|OPERATOR, saldo_poin int DEFAULT 0 CHECK (saldo_poin >= 0), created_at)
-media         (id serial PK, id_pengguna FK, url, tipe FOTO|VIDEO, ukuran_byte, created_at)
+               role MASYARAKAT|OPERATOR, saldo_poin int DEFAULT 0 CHECK (saldo_poin >= 0))
+media         (id serial PK, id_pengguna FK, laporan_id FK NULL, url, tipe FOTO|VIDEO, ukuran_byte, created_at)
 wilayah       (id serial PK, nama, lat_min, lat_max, lng_min, lng_max)
 lokasi        (id serial PK, nama, alamat, latitude, longitude, jenis_sampah,
                status TERCEMAR|DIBERSIHKAN, poin int, laporan_asal_id FK, created_at)
-laporan       (id serial PK, jenis REPORTIT|CLEANIT, id_pengguna FK, judul, lokasi_teks, latitude, longitude,
+laporan       (id serial PK, jenis REPORTIT|CLEANIT, id_pengguna FK, judul,
+               lokasi_teks NULL, latitude NULL, longitude NULL,
                waktu_kejadian, sumber, jenis_sampah, status BELUM_DIPERIKSA|VALID|TIDAK_VALID,
-               alasan_penolakan NULL, lokasi_id FK NULL, diverifikasi_oleh FK NULL, diverifikasi_at NULL, created_at)
-laporan_media (laporan_id FK, media_id FK, PK(laporan_id, media_id))
+               alasan_penolakan NULL, lokasi_id FK NULL, diverifikasi_oleh FK NULL, diverifikasi_at NULL, created_at,
+               CHECK (jenis = 'REPORTIT' AND lokasi_teks, latitude, longitude NOT NULL
+                   OR jenis = 'CLEANIT' AND lokasi_id NOT NULL))
 reward        (id serial PK, nama, jenis, deskripsi, harga_poin int, stok int CHECK (stok >= 0))
 penukaran     (id uuid PK, id_pengguna FK, id_reward FK, poin_dipakai int, kode_voucher UNIQUE, waktu)
 notifikasi    (id serial PK, id_pengguna FK, pesan, dibaca bool DEFAULT false, waktu)
 ```
+
+Catatan skema:
+
+- `laporan.created_at` (waktu laporan masuk, diisi server) berbeda dengan `waktu_kejadian` (diisi pengguna). Urutan `terbaru`/`terlama` di I-07 memakai `created_at`.
+- `lokasi_teks`, `latitude`, dan `longitude` hanya diisi untuk ReportIt, karena baris `lokasi` baru dibuat setelah ReportIt disetujui. CleanIt cukup memakai `lokasi_id`; di respons API, field `lokasi`/`latitude`/`longitude` CleanIt diisi dari lokasi terkait.
+- `media.laporan_id` masih NULL setelah `POST /api/media`, lalu ditautkan saat `POST /api/laporan` dalam transaksi yang sama: `UPDATE media SET laporan_id = … WHERE id = ANY(…) AND id_pengguna = … AND laporan_id IS NULL`. Jika jumlah baris yang berubah tidak sama dengan jumlah `idMedia`, request ditolak (`FORMAT_TIDAK_VALID`). Media yang tetap NULL lebih dari 24 jam boleh dihapus berkala berdasarkan `created_at`.
+
+### Riwayat perubahan kontrak
+
+| Versi | Perubahan |
+| --- | --- |
+| 0.1 | Versi awal |
+| 0.2 | K4: tabel `laporan_media` diganti kolom `media.laporan_id`. `pengguna.created_at` dihapus karena tidak dipakai use case mana pun. `laporan.lokasi_teks`/`latitude`/`longitude` menjadi nullable (wajib hanya untuk ReportIt) dengan CHECK per jenis |
 
 ### Daftar endpoint
 
@@ -75,7 +90,7 @@ notifikasi    (id serial PK, id_pengguna FK, pesan, dibaca bool DEFAULT false, w
 | POST | `/api/auth/logout` | Login | – | `{ ok: true }` | – |
 | GET | `/api/me` | Login | – | `{ id, nama, email, role, saldoPoin }` | I-03 |
 | POST | `/api/media` | Masyarakat | `multipart/form-data`: `file` (JPG/PNG/MP4, maks. 20 MB) | `{ idMedia, url, tipe }` | UC02, C03 |
-| POST | `/api/laporan` | Masyarakat | `{ jenis, judul, lokasi, latitude, longitude, waktu, sumber, jenisSampah, idMedia: number[], lokasiId? }` | `{ idLaporan, status: "BELUM_DIPERIKSA" }` | UC01, UC05, C15 `cek_laporan` |
+| POST | `/api/laporan` | Masyarakat | `{ jenis, judul, waktu, sumber, jenisSampah, idMedia: number[] }` + `{ lokasi, latitude, longitude }` (ReportIt) atau `{ lokasiId }` (CleanIt) | `{ idLaporan, status: "BELUM_DIPERIKSA" }` | UC01, UC05, C15 `cek_laporan` |
 | GET | `/api/laporan` | Operator | query `jenis`, `status` (default `BELUM_DIPERIKSA`), `sort=terbaru\|terlama`, `page`, `limit` (default 6) | `Laporan[]` + `meta` | UC03, UC06, I-07 |
 | GET | `/api/laporan/:id` | Operator | – | `LaporanDetail` (termasuk `media[]` dan `pelapor`) | UC03, UC06, I-08 |
 | POST | `/api/laporan/:id/setujui` | Operator | `{ poin?`, namaLokasi? } (khusus ReportIt; default poin 50, nama = lokasi laporan) | `{ idLaporan, status: "VALID", idLokasi?, poinDiberikan? }` | C05 `setujui` |
@@ -96,7 +111,7 @@ type JenisSampah = "PLASTIK" | "KEMASAN_STYROFOAM" | "RUMAH_TANGGA" | "ORGANIK" 
 type Media = { idMedia: number; url: string; tipe: "FOTO" | "VIDEO" };
 type Laporan = {
   idLaporan: number; jenis: "REPORTIT" | "CLEANIT"; judul: string;
-  lokasi: string; latitude: number; longitude: number;
+  lokasi: string; latitude: number; longitude: number; // CleanIt: diisi dari lokasi terkait
   waktu: string; sumber: Sumber; jenisSampah: JenisSampah; createdAt: string;
   status: "BELUM_DIPERIKSA" | "VALID" | "TIDAK_VALID";
 };
@@ -239,8 +254,8 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 | ID | Tugas | Kriteria selesai | Referensi | Ukuran | Butuh |
 | --- | --- | --- | --- | --- | --- |
 | BE-09 | Model Laporan | Fungsi create, get by id, list dengan filter + pagination, `ubah_status`, `simpan_alasan_penolakan` | C02 | M | BE-02 |
-| BE-10 | Validasi laporan | `is_terisi` dan `is_format_valid`: latitude/longitude dalam rentang, waktu tidak di masa depan, sumber dan jenis sampah dari enum, koordinat di dalam wilayah (K10), media milik pelapor | C15 `cek_laporan` | M | BE-09 |
-| BE-11 | `POST /api/laporan` | Menerima ReportIt dan CleanIt; CleanIt wajib `lokasiId` berstatus `TERCEMAR`; error `DATA_TIDAK_LENGKAP` / `FORMAT_TIDAK_VALID` / DI\_LUAR\_WILAYAH | UC01, UC05 | M | BE-10, BE-08 |
+| BE-10 | Validasi laporan | `is_terisi` dan `is_format_valid`: latitude/longitude dalam rentang, waktu tidak di masa depan, sumber dan jenis sampah dari enum, koordinat di dalam wilayah (K10, khusus ReportIt), 1–3 media milik pelapor yang belum tertaut ke laporan lain (K4) | C15 `cek_laporan` | M | BE-09 |
+| BE-11 | `POST /api/laporan` | Menerima ReportIt dan CleanIt; CleanIt wajib `lokasiId` berstatus `TERCEMAR`; insert laporan dan penautan `media.laporan_id` dalam satu transaksi; error `DATA_TIDAK_LENGKAP` / `FORMAT_TIDAK_VALID` / DI\_LUAR\_WILAYAH | UC01, UC05 | M | BE-10, BE-08 |
 | BE-12 | `GET /api/laporan` dan `/:id` | Filter jenis + status, sort, pagination, `meta.total`; detail berisi media (URL) dan pelapor | C15 `get_all_laporan_unverified`, `get_detail` | M | BE-09, BE-06 |
 
 ### Verifikasi (UC03, UC06)
