@@ -44,6 +44,7 @@ so-clean/
 │   └── db/
 │       ├── index.ts          # koneksi Drizzle + pg (dari POSTGRES_* di .env)
 │       └── schema.ts         # definisi tabel Drizzle
+├── lib/                      # kode bersama FE–BE tanpa akses DB (mis. lib/wilayah.ts)
 ├── types/                    # tipe bersama FE–BE (types/api.ts, sesuai kontrak)
 ├── tests/                    # test (Vitest)
 └── public/                   # aset statis
@@ -60,6 +61,7 @@ so-clean/
 | Controller | `server/controllers/` | Validasi input, cek role, memanggil model, membuka transaksi, menyusun respons `{ data }` atau `{ error }` | Menulis query database langsung |
 | Model | `server/models/` | Query lewat `db`, aturan milik satu entitas, memetakan kolom ke field kontrak | Membaca `Request` atau membuat `Response` (tidak tahu soal HTTP) |
 | DB | `server/db/` | Koneksi dan skema | Di-import dari luar `server/models/` |
+| Bersama | `lib/`, `types/` | Konstanta, tipe, dan fungsi murni yang dipakai FE dan BE | Import dari `server/` atau mengakses database |
 
 ## Konvensi penamaan
 

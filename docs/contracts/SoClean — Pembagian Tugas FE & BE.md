@@ -27,7 +27,7 @@ Tiga belas hal berikut belum dijelaskan atau saling bertentangan di dokumen M1�
 | K7 | I-07 dan I-08 menampilkan judul laporan ("Sampah plastik di Sungai Cikapundung"), tapi form I-11 dan model Laporan tidak punya field judul | Tambah isian judul (wajib, maks. 80 karakter) di I-11 dan kolom judul di tabel laporan |
 | K8 | Arti sumber bentrok: I-11 "Sumber Laporan" (Pengamatan pribadi), I-08 "Sumber Pencemaran" (Limbah Cair Industri). Kartu I-09 juga menampilkan jenis sampah yang tidak ada di model. Isi dropdown sumber belum didefinisikan | sumber = sumber laporan (PENGAMATAN\_PRIBADI \| INFO\_WARGA \| MEDIA\_SOSIAL \| LAINNYA); label I-08 jadi "Sumber Laporan". Tambah jenisSampah (PLASTIK \| KEMASAN\_STYROFOAM \| RUMAH\_TANGGA \| ORGANIK \| LAINNYA) di I-11, disalin ke lokasi saat ReportIt disetujui |
 | K9 | Lokasi punya nama dan alamat (I-09: "Sungai Mahakam"), tapi form hanya punya satu isian "Alamat / Deskripsi Lokasi" | alamat = lokasi\_teks laporan; nama diisi Operator saat menyetujui ReportIt (default = lokasi\_teks), bersama poin dari K3 |
-| K10 | SKPL 2.4 dan M1 membatasi laporan pada wilayah yang bekerja sama, tapi belum ada data maupun aturan validasinya | Tabel wilayah (nama, batas lat/lng min–maks) diisi lewat seed; koordinat di luar semua wilayah ditolak dengan 422 DI\_LUAR\_WILAYAH |
+| K10 | SKPL 2.4 dan M1 membatasi laporan pada wilayah yang bekerja sama, tapi belum ada data maupun aturan validasinya | Daftar wilayah (nama, batas lat/lng min–maks) di-*hardcode* sebagai konstanta di `lib/wilayah.ts` beserta fungsi `diDalamWilayah(lat, lng)`, dipakai bersama FE dan BE (tidak ada tabel, karena tidak bisa diubah dari UI). Validasi penentu tetap di BE: koordinat ReportIt di luar semua wilayah ditolak dengan 422 DI\_LUAR\_WILAYAH |
 | K11 | Tautan "Lupa password" ada di I-01 dan I-02, tapi tidak ada use case maupun endpoint-nya | Di luar lingkup: tautan disembunyikan atau hanya menampilkan info "Hubungi operator"; tidak ada endpoint reset password |
 | K12 | Beberapa CleanIt bisa menunggu untuk lokasi yang sama. BE-14 tidak mengecek status lokasi, jadi jika semuanya disetujui, poin keluar berkali-kali | Setujui CleanIt hanya jika lokasi masih TERCEMAR, dicek dalam transaksi yang sama (UPDATE lokasi … WHERE status = 'TERCEMAR'); jika gagal → 409 LOKASI\_SUDAH\_DIBERSIHKAN. Setelah satu disetujui, CleanIt lain yang menunggu untuk lokasi itu otomatis TIDAK\_VALID dengan alasan "Lokasi sudah dibersihkan" dan pelapornya diberi notifikasi |
 | K13 | Deteksi duplikat lokasi di DPPL (C06 Q-001) memakai kesamaan koordinat persis, yang hampir tidak pernah terjadi dengan GPS | Lokasi dianggap sama jika berjarak ≤ 50 m dari lokasi TERCEMAR (haversine). ReportIt yang disetujui dalam radius itu tidak membuat lokasi baru, tetapi ditautkan ke lokasi yang ada lewat lokasi\_id; respons setujui mengembalikan idLokasi lama |
@@ -36,7 +36,7 @@ Selain itu, halaman Profil, Riwayat Penukaran, input alasan penolakan, serta inp
 
 ## Kontrak awal
 
-Kontrak ini adalah versi 0.2 yang disepakati FE dan BE sebelum coding (perubahan dari 0.1: lihat "Riwayat perubahan kontrak" di bawah). Perubahan kontrak wajib lewat PR yang di-review minimal satu orang dari tiap tim. Tipe TypeScript-nya disimpan bersama di `types/api.ts`.
+Kontrak ini adalah versi 0.3 yang disepakati FE dan BE sebelum coding (perubahan dari versi sebelumnya: lihat "Riwayat perubahan kontrak" di bawah). Perubahan kontrak wajib lewat PR yang di-review minimal satu orang dari tiap tim. Tipe TypeScript-nya disimpan bersama di `types/api.ts`.
 
 ### Konvensi
 
@@ -52,9 +52,9 @@ Kontrak ini adalah versi 0.2 yang disepakati FE dan BE sebelum coding (perubahan
 
 ```sql
 pengguna      (id uuid PK, nama, email UNIQUE, password_hash,
-               role MASYARAKAT|OPERATOR, saldo_poin int DEFAULT 0 CHECK (saldo_poin >= 0))
+               role MASYARAKAT|OPERATOR, saldo_poin int DEFAULT 0 CHECK (saldo_poin >= 0),
+               notifikasi_dilihat_at NULL)
 media         (id serial PK, id_pengguna FK, laporan_id FK NULL, url, tipe FOTO|VIDEO, ukuran_byte, created_at)
-wilayah       (id serial PK, nama, lat_min, lat_max, lng_min, lng_max)
 lokasi        (id serial PK, nama, alamat, latitude, longitude, jenis_sampah,
                status TERCEMAR|DIBERSIHKAN, poin int, laporan_asal_id FK, created_at)
 laporan       (id serial PK, jenis REPORTIT|CLEANIT, id_pengguna FK, judul,
@@ -65,7 +65,6 @@ laporan       (id serial PK, jenis REPORTIT|CLEANIT, id_pengguna FK, judul,
                    OR jenis = 'CLEANIT' AND lokasi_id NOT NULL))
 reward        (id serial PK, nama, jenis, deskripsi, harga_poin int, stok int CHECK (stok >= 0))
 penukaran     (id uuid PK, id_pengguna FK, id_reward FK, poin_dipakai int, kode_voucher UNIQUE, waktu)
-notifikasi    (id serial PK, id_pengguna FK, pesan, dibaca bool DEFAULT false, waktu)
 ```
 
 Catatan skema:
@@ -73,6 +72,8 @@ Catatan skema:
 - `laporan.created_at` (waktu laporan masuk, diisi server) berbeda dengan `waktu_kejadian` (diisi pengguna). Urutan `terbaru`/`terlama` di I-07 memakai `created_at`.
 - `lokasi_teks`, `latitude`, dan `longitude` hanya diisi untuk ReportIt, karena baris `lokasi` baru dibuat setelah ReportIt disetujui. CleanIt cukup memakai `lokasi_id`; di respons API, field `lokasi`/`latitude`/`longitude` CleanIt diisi dari lokasi terkait.
 - `media.laporan_id` masih NULL setelah `POST /api/media`, lalu ditautkan saat `POST /api/laporan` dalam transaksi yang sama: `UPDATE media SET laporan_id = … WHERE id = ANY(…) AND id_pengguna = … AND laporan_id IS NULL`. Jika jumlah baris yang berubah tidak sama dengan jumlah `idMedia`, request ditolak (`FORMAT_TIDAK_VALID`). Media yang tetap NULL lebih dari 24 jam boleh dihapus berkala berdasarkan `created_at`.
+- Tidak ada tabel notifikasi. Penerima notifikasi (pelapor) berbeda dengan pengirim request (Operator), jadi tidak bisa lewat response atau cookie; isinya diturunkan dari laporan milik pengguna yang sudah diverifikasi (`status`, `alasan_penolakan`, `diverifikasi_at`, dan `lokasi.poin` untuk CleanIt yang valid). Notifikasi belum dibaca jika `diverifikasi_at > pengguna.notifikasi_dilihat_at` (atau kolom itu NULL). Notifikasi penukaran cukup lewat respons `POST /api/penukaran`.
+- Tidak ada tabel wilayah; lihat K10.
 
 ### Riwayat perubahan kontrak
 
@@ -80,6 +81,7 @@ Catatan skema:
 | --- | --- |
 | 0.1 | Versi awal |
 | 0.2 | K4: tabel `laporan_media` diganti kolom `media.laporan_id`. `pengguna.created_at` dihapus karena tidak dipakai use case mana pun. `laporan.lokasi_teks`/`latitude`/`longitude` menjadi nullable (wajib hanya untuk ReportIt) dengan CHECK per jenis |
+| 0.3 | Tabel `notifikasi` dihapus: notifikasi diturunkan dari laporan, ditambah kolom `pengguna.notifikasi_dilihat_at`; bentuk `Notifikasi` berubah dan ada endpoint `POST /api/notifikasi/dibaca`. Tabel `wilayah` dihapus: K10 memakai konstanta di `lib/wilayah.ts` |
 
 ### Daftar endpoint
 
@@ -101,7 +103,8 @@ Catatan skema:
 | GET | `/api/reward` | Login | – | `Reward[]` (stok > 0, urut harga naik) | UC08, C09 |
 | POST | `/api/penukaran` | Masyarakat | `{ idReward }` | `{ idPenukaran, kodeVoucher, namaReward, poinDipakai, waktuPenukaran, sisaPoin }` | UC09, C16 `tukarPoin` |
 | GET | `/api/penukaran` | Masyarakat | query `page`, `limit` | `Penukaran[]` + `meta` | Riwayat (I-04, I-06) |
-| GET | `/api/notifikasi` | Login | – | `Notifikasi[]` | C08 `notify` |
+| GET | `/api/notifikasi` | Masyarakat | – | `Notifikasi[]` (urut `waktu` terbaru) | C08 `notify` |
+| POST | `/api/notifikasi/dibaca` | Masyarakat | – | `{ ok: true }` (set `notifikasi_dilihat_at` = sekarang) | C08 `notify` |
 
 ### Bentuk objek utama
 
@@ -134,7 +137,14 @@ type Penukaran = {
   idPenukaran: string; namaReward: string; kodeVoucher: string;
   poinDipakai: number; waktuPenukaran: string;
 };
-type Notifikasi = { idNotifikasi: number; pesan: string; dibaca: boolean; waktu: string };
+// Diturunkan dari laporan yang sudah diverifikasi; FE menyusun teks pesannya.
+type Notifikasi = {
+  idLaporan: number; jenis: "REPORTIT" | "CLEANIT"; judul: string;
+  status: "VALID" | "TIDAK_VALID"; alasanPenolakan: string | null;
+  poinDiberikan: number | null; // hanya CleanIt yang VALID
+  waktu: string; // diverifikasi_at
+  dibaca: boolean;
+};
 ```
 
 ### Kode error
@@ -232,7 +242,7 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 | --- | --- | --- | --- | --- | --- |
 | BE-01 | Docker Compose | Service app + PostgreSQL 18 + MinIO, `.env.example` berisi nama variabel tanpa nilai rahasia, satu perintah menjalankan semuanya secara lokal tanpa akun pribadi. `.gitignore` bawaan berpola `.env*` sehingga `.env.example` ikut terabaikan; tambahkan `!.env.example` | Tabel 2.1 DPPL | S | – |
 | BE-02 | ORM dan migrasi | Semua tabel di Skema database dibuat lewat migrasi (Prisma/Drizzle), termasuk CHECK `saldo_poin >= 0` dan `stok >= 0` | Kontrak awal | M | BE-01, K1–K5, K7–K10 |
-| BE-03 | Seed data | Akun Operator, beberapa akun Masyarakat, reward, wilayah, dan lokasi contoh untuk demo dan testing | – | S | BE-02 |
+| BE-03 | Seed data | Akun Operator, beberapa akun Masyarakat, reward, dan lokasi contoh (koordinatnya di dalam `lib/wilayah.ts`) untuk demo dan testing | – | S | BE-02 |
 | BE-04 | Kerangka API | Helper respons `data`/`error`, error handler global ke kode error, validasi request (misalnya zod), logging | Kontrak awal | M | BE-01 |
 
 ### Auth
@@ -263,8 +273,8 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 | ID | Tugas | Kriteria selesai | Referensi | Ukuran | Butuh |
 | --- | --- | --- | --- | --- | --- |
 | BE-13 | Setujui ReportIt | Satu transaksi: status → `VALID` dan `petakan_lokasi` (tidak membuat lokasi baru jika ada lokasi dalam radius 50 m yang masih `TERCEMAR`; K13), simpan poin, nama, dan jenis sampah lokasi | C05 `setujui`, C06 Q-001/Q-002 | M | BE-12, BE-17 |
-| BE-14 | Setujui CleanIt | Satu transaksi: status → `VALID`, lokasi → `DIBERSIHKAN`, `tambah_poin` ke pelapor, notifikasi; hanya jika lokasi masih TERCEMAR, lalu CleanIt lain yang menunggu untuk lokasi itu otomatis ditolak (K12) | C05 `setujui`, C08 Q-003 | M | BE-12, BE-18 |
-| BE-15 | Tolak laporan | Status → `TIDAK_VALID`; alasan wajib untuk CleanIt dan disimpan; notifikasi ke pelapor | C05 `tolak` | S | BE-12 |
+| BE-14 | Setujui CleanIt | Satu transaksi: status → `VALID`, lokasi → `DIBERSIHKAN`, `tambah_poin` ke pelapor, isi `diverifikasi_oleh`/`diverifikasi_at` (sumber notifikasi); hanya jika lokasi masih TERCEMAR, lalu CleanIt lain yang menunggu untuk lokasi itu otomatis ditolak (K12) | C05 `setujui`, C08 Q-003 | M | BE-12, BE-18 |
+| BE-15 | Tolak laporan | Status → `TIDAK_VALID`; alasan wajib untuk CleanIt dan disimpan; isi `diverifikasi_oleh`/`diverifikasi_at` (sumber notifikasi) | C05 `tolak` | S | BE-12 |
 | BE-16 | Cegah verifikasi ganda | `UPDATE … WHERE status = 'BELUM_DIPERIKSA'`; jika 0 baris berubah → `SUDAH_DIVERIFIKASI` | – | S | BE-13–BE-15 |
 
 ### Lokasi, Poin, dan Reward (UC04, UC07–UC09)
@@ -277,7 +287,7 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 | BE-20 | Model + API Reward | `GET /api/reward` (stok > 0, urut harga naik) | C09 Q-001/Q-002 | S | BE-02 |
 | BE-21 | Transaksi penukaran | `tukarPoin` dalam BEGIN/COMMIT/ROLLBACK; UPDATE bersyarat saldo dan stok; generate `kodeVoucher` unik; insert `penukaran`; kembalikan sisa poin | C16, C13, UC09 | L | BE-18, BE-20 |
 | BE-22 | Riwayat penukaran | `GET /api/penukaran` milik pengguna yang login, dengan pagination | C13 | S | BE-21 |
-| BE-23 | Notifikasi | Insert notifikasi (dipanggil BE-14/BE-15) dan `GET /api/notifikasi` | C08 `notify` Q-004 | S | BE-02 |
+| BE-23 | Notifikasi | `GET /api/notifikasi` (query laporan milik pengguna yang sudah diverifikasi + `lokasi.poin`, `dibaca` dari `notifikasi_dilihat_at`) dan `POST /api/notifikasi/dibaca` | C08 `notify` (pengganti Q-004) | S | BE-02, BE-09 |
 
 ### Kualitas dan rilis
 
@@ -333,7 +343,7 @@ Bagian B di `docs/M9/K03_G02_Implementasi.md` diisi sambil mengerjakan, bukan di
 
 | Bagian | Isi diambil dari | Penanggung jawab |
 | --- | --- | --- |
-| B.1 Perubahan dari DPPL | K1–K13 (judul, sumber dan jenis sampah, tabel `wilayah`, radius 50 m, dan seterusnya), MinIO sebagai pengganti R2 di lokal, `proxy.ts` | BE-B, dikumpulkan dari semua paket |
+| B.1 Perubahan dari DPPL | K1–K13 (judul, sumber dan jenis sampah, wilayah sebagai konstanta, radius 50 m, dan seterusnya), tabel `notifikasi` (Q-004 C08) diganti notifikasi turunan dari laporan, MinIO sebagai pengganti R2 di lokal, `proxy.ts` | BE-B, dikumpulkan dari semua paket |
 | B.2 Bukti best practices | Daftar branch, riwayat commit, Issues, 2–3 PR beserta review, hasil `npm test` | FE-C |
 | B.2.1 Profiling | BE-26 | BE-B |
 | B.3 Kendala | Known issues dari checklist QA di tabel Lainnya | FE-C |
