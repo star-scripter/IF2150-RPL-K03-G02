@@ -6,7 +6,7 @@
  *    mis. `laporan.ts` (C02), `lokasi.ts` (C06), `pengguna.ts` (C08), `reward.ts` (C09).
  * 2. Ganti tabel, tipe, dan fungsi sesuai rincian kelas DPPL bab 5. Nama fungsi sebaiknya
  *    sama dengan nama method di DPPL supaya tabel traceability B.5 mudah diisi.
- * 3. Jika tabelnya belum ada, tambahkan dulu di `server/db/schema.ts`.
+ * 3. Jika tabelnya belum ada, buat dulu `server/db/schema/<tabel>.ts` dan export di `server/db/schema/index.ts`.
  *
  * Tanggung jawab model:
  * - Membaca/menulis data satu entitas lewat `db` (Drizzle) dan aturan yang melekat pada entitas itu.
