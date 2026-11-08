@@ -72,13 +72,15 @@ Celah yang tidak ditutup sistem (multi-akun, kolusi, membuang sampah lalu member
 
 ### Wilayah kerja sama (K10)
 
-Isi `lib/wilayah.ts`. Batasnya berupa kotak lat/lng (bounding box), cukup untuk aturan bisnis. Angka di bawah adalah perkiraan awal dan dicek ulang di peta saat BE-03.
+Isi `lib/wilayah.ts`. Batasnya berupa kotak lat/lng (bounding box), cukup untuk aturan bisnis. Angka di bawah sudah dicek di peta (bboxfinder.com) pada 8 November 2026 dan memakai tanda minus biasa (`-`), jadi aman disalin langsung ke kode.
 
 | Kode | Nama | Lat min | Lat max | Lng min | Lng max |
 | --- | --- | --- | --- | --- | --- |
-| `CIKAPUNDUNG` | Sungai Cikapundung (Zona Teras Cikapundung), Bandung | −6.893 | −6.878 | 107.605 | 107.617 |
-| `ANCOL` | Pantai Ancol, Jakarta Utara | −6.135 | −6.110 | 106.815 | 106.870 |
-| `PANGANDARAN` | Pantai Pangandaran | −7.725 | −7.670 | 108.630 | 108.680 |
+| `CIKAPUNDUNG` | Sungai Cikapundung (Zona Teras Cikapundung), Bandung | -6.893000 | -6.878028 | 107.605000 | 107.608809 |
+| `ANCOL` | Pantai Ancol, Jakarta Utara | -6.135000 | -6.110000 | 106.815000 | 106.870000 |
+| `PANGANDARAN` | Pantai Pangandaran | -7.725000 | -7.670000 | 108.630000 | 108.680000 |
+
+Format "Box" di bboxfinder adalah `lng min, lat min, lng max, lat max` (bujur dulu), terbalik dari urutan kolom tabel ini. Contoh untuk Cikapundung: `107.605000,-6.893000,107.608809,-6.878028`.
 
 Mitra kerja sama ini adalah asumsi proyek (data contoh), sama seperti reward dummy.
 
@@ -353,7 +355,7 @@ Ada 26 tugas BE dalam 7 modul. Setiap endpoint mengikuti alur MVC: route handler
 | --- | --- | --- | --- | --- | --- |
 | BE-01 | Docker Compose | Service app + PostgreSQL 18 + RustFS (S3 lokal, hanya di `compose.override.yaml`; image MinIO sudah dihapus dari Docker Hub sejak September 2026) + pembuatan bucket otomatis, `SESSION_SECRET` dan variabel `S3_*` di `.env.example`, `.env.example` berisi nama variabel tanpa nilai rahasia, satu perintah menjalankan semuanya secara lokal tanpa akun pribadi. `.gitignore` bawaan berpola `.env*` sehingga `.env.example` ikut terabaikan; tambahkan `!.env.example` | Tabel 2.1 DPPL | S | – |
 | BE-02 | ORM dan migrasi | Semua tabel di Skema database dibuat lewat migrasi Drizzle: `0000_init.sql` (v0.5) dan `0001_v0_6_hash_poin_cleanit.sql` (v0.6), termasuk CHECK `saldo_poin >= 0`, `stok >= 0`, `poin IN (50, 100, 200)`, dan unique index parsial CleanIt | Kontrak awal | M | BE-01, K1–K13 |
-| BE-03 | Seed data | Akun Operator, beberapa akun Masyarakat, reward (harga diselaraskan dengan poin 50/100/200, minimal satu reward stok 0 untuk demo "Habis"), dan lokasi contoh di ketiga wilayah `lib/wilayah.ts` (batas wilayah dicek ulang di peta); semua data fiktif | K10 | S | BE-02 |
+| BE-03 | Seed data | Akun Operator, beberapa akun Masyarakat, reward (harga diselaraskan dengan poin 50/100/200, minimal satu reward stok 0 untuk demo "Habis"), dan lokasi contoh di dalam ketiga wilayah `lib/wilayah.ts`; semua data fiktif | K10 | S | BE-02 |
 | BE-04 | Kerangka API | Helper respons `data`/`error`, error handler global ke kode error, validasi request (misalnya zod), logging | Kontrak awal | M | BE-01 |
 
 ### Auth
