@@ -1,6 +1,6 @@
 # Struktur Kode SoClean
 
-Panduan singkat letak kode dan aturan antar-layer untuk semua anggota. Pembagian tugas, kontrak API, dan skema database lengkap mengacu pada [kontrak final v0.7](<../../docs/contracts/SoClean — Pembagian Tugas FE & BE v0.7.md>); v0.5 tanpa akhiran versi dan v0.6 adalah arsip.
+Panduan singkat letak kode dan aturan antar-layer untuk semua anggota. Pembagian tugas, kontrak API, dan skema database lengkap mengacu pada [kontrak final v0.8](<../../docs/contracts/SoClean — Pembagian Tugas FE & BE v0.8.md>); v0.5 tanpa akhiran versi dan v0.6 dan v0.6 adalah arsip. Oh yayaya jangan lupa baca bagian git workflow-nya di kontrak!
 
 ## Pola MVC
 
