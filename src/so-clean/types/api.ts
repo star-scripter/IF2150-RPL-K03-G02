@@ -1,7 +1,7 @@
 /**
- * Tipe bersama FE–BE untuk kontrak API SoClean v0.6.
+ * Tipe bersama FE–BE untuk kontrak API SoClean v0.7.
  *
- * Sumber: docs/contracts/SoClean — Pembagian Tugas FE & BE v0.6.md, bagian
+ * Sumber: docs/contracts/SoClean — Pembagian Tugas FE & BE v0.7.md, bagian
  * "Kontrak awal" (Konvensi, Daftar endpoint, Bentuk objek utama, Kode error).
  *
  * File ini hanya berisi tipe (tanpa kode runtime, tanpa akses database) agar
@@ -309,7 +309,7 @@ export type ApiListResponse<T> = {
   meta: PaginationMeta;
 };
 
-/** Kode error dari tabel "Kode error" kontrak v0.6. */
+/** Kode error dari tabel "Kode error" kontrak v0.7. */
 export type KodeError =
   | "DATA_TIDAK_LENGKAP"
   | "FORMAT_TIDAK_VALID"

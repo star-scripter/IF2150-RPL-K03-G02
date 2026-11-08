@@ -1,6 +1,6 @@
 /**
  * Skema database (Drizzle), satu file per tabel. File ini menyatukan semuanya untuk
- * `server/db/index.ts` dan `drizzle.config.ts`. Sumber: bagian "Skema database" kontrak v0.6.
+ * `server/db/index.ts` dan `drizzle.config.ts`. Sumber: bagian "Skema database" kontrak v0.7.
  *
  * Nama kolom di database snake_case; nama properti TypeScript camelCase.
  *

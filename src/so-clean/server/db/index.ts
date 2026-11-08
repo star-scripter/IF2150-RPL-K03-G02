@@ -1,6 +1,9 @@
 /**
  * Koneksi database (Drizzle + node-postgres).
- * Hanya boleh di-import dari `server/models/`. Controller dan view tidak mengakses `db` langsung.
+ * Model boleh mengimpor `db` untuk query. Controller boleh mengimpornya hanya
+ * untuk membuka `db.transaction(...)`, lalu meneruskan `tx` ke fungsi model;
+ * controller tidak boleh menjalankan query langsung. View dan kode bersama
+ * (`lib/`, `types/`) tidak boleh mengimpor file ini.
  */
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";

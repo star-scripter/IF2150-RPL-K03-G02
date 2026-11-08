@@ -1,6 +1,6 @@
 # Struktur Kode SoClean
 
-Panduan singkat letak kode dan aturan antar-layer untuk semua anggota. Pembagian tugas, kontrak API, dan skema database lengkap ada di [`docs/contracts/SoClean — Pembagian Tugas FE & BE v0.6.md`](../../docs/contracts/) (v0.5 tanpa akhiran versi hanya arsip).
+Panduan singkat letak kode dan aturan antar-layer untuk semua anggota. Pembagian tugas, kontrak API, dan skema database lengkap mengacu pada [kontrak final v0.7](<../../docs/contracts/SoClean — Pembagian Tugas FE & BE v0.7.md>); v0.5 tanpa akhiran versi dan v0.6 adalah arsip.
 
 ## Pola MVC
 
@@ -24,6 +24,8 @@ Browser ──► app/(pages) + components/   (View)
                ▼
             server/db/index.ts  ──►  PostgreSQL
 ```
+
+Sebelum halaman dirender, request yang cocok dengan `proxy.ts` dapat melewati **Proxy Next.js 16** untuk pemeriksaan sesi cepat dan redirect halaman. Proxy bukan bagian dari alur MVC dan bukan pengganti autentikasi/otorisasi di endpoint.
 
 - **View → FE**, sedangkan **Controller + Model + Database → BE**.
 - FE hanya berkomunikasi dengan BE lewat endpoint `/api/...` sesuai kontrak.
@@ -52,6 +54,7 @@ Untuk tabel *traceability* B.5, tulis keduanya, misalnya C02 *Laporan* → `serv
 
 ```
 so-clean/
+├── proxy.ts                  # Proxy Next.js 16: cek sesi cepat dan redirect halaman (BE-06)
 ├── app/
 │   ├── (pages)/              # halaman FE: app/(pages)/<rute>/page.tsx
 │   ├── api/                  # route handler BE: app/api/<rute>/route.ts
@@ -79,17 +82,22 @@ so-clean/
 
 `(pages)` adalah *route group*: nama folder ini tidak muncul di URL. Jadi `app/(pages)/login/page.tsx` dapat diakses di `/login`.
 
+`proxy.ts` berada di root proyek, sejajar dengan `app/` (bukan di dalam `app/` atau `server/`). Di Next.js 16 nama konvensi ini adalah `proxy.ts`; jangan membuat `middleware.ts`. Atur matcher agar Proxy menangani halaman yang perlu diarahkan berdasarkan sesi. Pemeriksaan sesi di Proxy hanya untuk navigasi/redirect yang cepat, bukan keputusan akses akhir.
+
 ## Tanggung jawab tiap layer
 
 | Layer | Folder | Boleh | Tidak boleh |
 | --- | --- | --- | --- |
+| Proxy | `proxy.ts` | Pemeriksaan sesi cepat untuk redirect halaman sesuai BE-06 | Menjadi satu-satunya penjaga autentikasi/otorisasi; melakukan query DB |
 | View | `app/(pages)/`, `components/` | Menampilkan data, menerima input, memanggil `/api/...` | Import apa pun dari `server/` |
-| Route handler | `app/api/**/route.ts` | Mengambil `params`, memanggil satu fungsi controller | Berisi logika atau query |
-| Controller | `server/controllers/` | Validasi input, cek role, memanggil model, membuka transaksi, menyusun respons `{ data }` atau `{ error }` | Menulis query database langsung |
+| Route handler | `app/api/**/route.ts` | Mengambil `params`, menerapkan cek autentikasi/role sesuai akses endpoint, memanggil satu fungsi controller | Berisi logika bisnis atau query |
+| Controller | `server/controllers/` | Validasi input, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons `{ data }` atau `{ error }` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
 | Model (operasi) | `server/models/` | Query lewat `db`, aturan milik satu entitas, memetakan kolom ke field kontrak | Membaca `Request` atau membuat `Response` (tidak tahu soal HTTP) |
 | Model (atribut) | `server/db/schema/` | Definisi tabel: kolom, tipe, constraint, index, relasi | Berisi fungsi/query, atau import selain `drizzle-orm` dan file schema lain |
-| DB | `server/db/index.ts`, `server/db/migrations/` | Koneksi database dan file migrasi hasil `drizzle-kit` | Di-import dari luar `server/models/` |
+| DB | `server/db/index.ts`, `server/db/migrations/` | Koneksi database dan file migrasi hasil `drizzle-kit`; `db` boleh diimpor model untuk query dan controller hanya untuk membuka `db.transaction` | Diimpor oleh view atau kode bersama; controller menjalankan query langsung |
 | Bersama | `lib/`, `types/` | Konstanta, tipe, dan fungsi murni yang dipakai FE dan BE | Import dari `server/` atau mengakses database |
+
+**Pengecualian import DB:** controller boleh mengimpor `db` hanya sebagai koordinator transaksi (`db.transaction(...)`). Semua operasi baca/tulis di dalam transaksi tetap dilakukan melalui fungsi model dengan `tx` yang diteruskan. Controller tidak boleh memanggil query Drizzle atau SQL secara langsung.
 
 ## Konvensi penamaan
 
@@ -102,7 +110,7 @@ Nama file mengikuti kelas DPPL (M8) agar tabel *traceability* B.5 di laporan M9 
 | Controller | kebab-case | `server/controllers/manager-laporan.ts` (C15), `server/controllers/penukaran.ts` (C16) |
 | View / komponen | PascalCase | `components/DaftarLaporan.tsx` (C04), `components/DaftarReward.tsx` (C10) |
 | Halaman | `page.tsx` di folder rute | `app/(pages)/reward/page.tsx` |
-| Endpoint | `route.ts` di folder rute | `app/api/reward/[id]/route.ts` |
+| Endpoint | `route.ts` di folder rute | `app/api/laporan/[id]/route.ts` (`GET /api/laporan/:id`, sesuai kontrak) |
 
 Nama fungsi sebaiknya sama dengan nama method di DPPL, misalnya `getRewardTersedia()` dan `cariReward(idReward)`.
 
@@ -116,12 +124,13 @@ File `_template` adalah contoh lengkap satu alur (Reward, UC08) dan tidak dipaka
 4. Buat `app/api/<rute>/route.ts` yang memanggil controller:
 
    ```ts
-   // app/api/reward/[id]/route.ts
-   import { getDetailReward } from "@/server/controllers/reward";
+   // app/api/laporan/[id]/route.ts — GET /api/laporan/:id (kontrak v0.7)
+   import { getDetailLaporan } from "@/server/controllers/manager-laporan";
 
-   export async function GET(_req: Request, { params }: RouteContext<"/api/reward/[id]">) {
+   export async function GET(_req: Request, { params }: RouteContext<"/api/laporan/[id]">) {
      const { id } = await params; // di Next.js 16, params berupa Promise
-     return getDetailReward(id);
+     // Terapkan cek akses Operator sesuai BE-06.
+     return getDetailLaporan(id);
    }
    ```
 

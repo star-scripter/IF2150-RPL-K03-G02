@@ -17,12 +17,16 @@
  *      }
  *
  * Tanggung jawab controller:
- * - Validasi input dari request (field wajib, format) dan cek role pengguna.
- * - Memanggil satu atau beberapa model; transaksi multi-tabel dibuka di sini (`db.transaction`).
+ * - Validasi input dari request (field wajib, format). Cek sesi/role dilakukan
+ *   di route handler sesuai BE-06.
+ * - Memanggil satu atau beberapa model; transaksi multi-tabel dibuka di sini
+ *   (`db.transaction`). Controller boleh mengimpor `db` hanya untuk membuka
+ *   transaksi, lalu meneruskan `tx` ke model.
  * - Mengubah hasil model menjadi respons sesuai kontrak:
  *     sukses → `{ data }` (+ `meta` untuk list)
  *     gagal  → `{ error: { code, message, fields? } }` dengan kode dari tabel "Kode error".
- * - Tidak menulis query database langsung; itu tugas model.
+ * - Tidak menulis query database langsung (`db.select/insert/update/delete`
+ *   atau SQL); itu tugas model.
  *
  * Kelas DPPL: Cxx - <NamaKelas>
  */
@@ -39,7 +43,7 @@ function gagal(status: number, code: string, message: string, fields?: Record<st
 
 /** GET /api/reward — UC08, C09 getRewardTersedia() */
 export async function getDaftarReward(): Promise<Response> {
-  // TODO(BE-06): tolak tamu dengan 401 UNAUTHORIZED setelah session tersedia.
+  // Route handler menerapkan cek akses sesuai BE-06 sebelum memanggil controller.
   const daftar = await RewardModel.getRewardTersedia();
   return sukses(daftar);
 }
