@@ -1,0 +1,1 @@
+ALTER TABLE "lokasi" ALTER COLUMN "nama" SET DATA TYPE varchar(255);

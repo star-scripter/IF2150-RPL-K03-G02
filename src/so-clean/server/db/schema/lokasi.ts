@@ -17,7 +17,7 @@ export const lokasi = pgTable(
   "lokasi",
   {
     id: serial("id").primaryKey(),
-    nama: varchar("nama", { length: 100 }).notNull(), // K9
+    nama: varchar("nama", { length: 255 }).notNull(), // K9: sama dengan laporan.lokasi_teks
     alamat: varchar("alamat", { length: 255 }).notNull(), // K9
     latitude: doublePrecision("latitude").notNull(),
     longitude: doublePrecision("longitude").notNull(),

@@ -15,6 +15,13 @@
       "when": 1794102213167,
       "tag": "0001_v0_6_hash_poin_cleanit",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794119657781,
+      "tag": "0002_lokasi_nama_255",
+      "breakpoints": true
     }
   ]
 }
