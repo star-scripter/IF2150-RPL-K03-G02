@@ -17,7 +17,7 @@
 ARG NODE_VERSION=22-alpine
 FROM node:${NODE_VERSION}
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat fontconfig font-dejavu
 WORKDIR /app
 
 ENV NODE_ENV=development \
