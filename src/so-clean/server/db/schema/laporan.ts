@@ -9,6 +9,7 @@ import {
   pgTable,
   serial,
   text,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -50,6 +51,10 @@ export const laporan = pgTable(
     index("laporan_antrean_idx").on(t.jenis, t.status, t.createdAt), // I-07
     index("laporan_notifikasi_idx").on(t.idPengguna, t.diverifikasiAt), // notifikasi
     index("laporan_lokasi_id_idx").on(t.lokasiId), // K12
+    // v0.6: satu CleanIt yang menunggu per pengguna per lokasi (aman dari request bersamaan)
+    uniqueIndex("laporan_cleanit_menunggu_uidx")
+      .on(t.idPengguna, t.lokasiId)
+      .where(sql`${t.jenis} = 'CLEANIT' AND ${t.status} = 'BELUM_DIPERIKSA'`),
     check(
       "laporan_field_per_jenis_check",
       sql`(${t.jenis} = 'REPORTIT'

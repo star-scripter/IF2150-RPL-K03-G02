@@ -23,7 +23,7 @@ export const lokasi = pgTable(
     longitude: doublePrecision("longitude").notNull(),
     jenisSampah: jenisSampahEnum("jenis_sampah").notNull(), // K8
     status: statusLokasiEnum("status").notNull().default("TERCEMAR"), // K2
-    poin: integer("poin").notNull(), // K3
+    poin: integer("poin").notNull().default(50), // K3: pilihan Operator 50/100/200
     laporanAsalId: integer("laporan_asal_id")
       .notNull()
       .references((): AnyPgColumn => laporan.id),
@@ -31,7 +31,7 @@ export const lokasi = pgTable(
   },
   (t) => [
     index("lokasi_status_idx").on(t.status),
-    check("lokasi_poin_check", sql`${t.poin} > 0`),
+    check("lokasi_poin_check", sql`${t.poin} IN (50, 100, 200)`),
     check(
       "lokasi_koordinat_check",
       sql`${t.latitude} BETWEEN -90 AND 90 AND ${t.longitude} BETWEEN -180 AND 180`,

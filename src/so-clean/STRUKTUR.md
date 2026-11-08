@@ -1,6 +1,6 @@
 # Struktur Kode SoClean
 
-Panduan singkat letak kode dan aturan antar-layer untuk semua anggota. Pembagian tugas, kontrak API, dan skema database lengkap ada di [`docs/contracts/SoClean — Pembagian Tugas FE & BE.md`](../../docs/contracts/).
+Panduan singkat letak kode dan aturan antar-layer untuk semua anggota. Pembagian tugas, kontrak API, dan skema database lengkap ada di [`docs/contracts/SoClean — Pembagian Tugas FE & BE v0.6.md`](../../docs/contracts/) (v0.5 tanpa akhiran versi hanya arsip).
 
 ## Pola MVC
 
