@@ -17,7 +17,7 @@
 ARG NODE_VERSION=22-alpine
 FROM node:${NODE_VERSION}
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat fontconfig font-dejavu
 WORKDIR /app
 
 ENV NODE_ENV=development \
@@ -29,7 +29,10 @@ ENV NODE_ENV=development \
     CHOKIDAR_USEPOLLING=true
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --prefer-offline --no-audit --no-fund \
+      --fetch-retries=5 --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000 \
+      --fetch-timeout=600000
 
 COPY . .
 

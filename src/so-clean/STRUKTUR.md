@@ -73,7 +73,8 @@ so-clean/
 │       │   ├── index.ts      # menyatukan semua tabel (export *)
 │       │   ├── enums.ts      # enum dan helper kolom bersama
 │       │   └── <tabel>.ts    # pengguna, media, lokasi, laporan, reward, penukaran
-│       └── migrations/       # file SQL hasil drizzle-kit (jangan diedit manual)
+│       ├── migrations/       # file SQL hasil drizzle-kit (jangan diedit manual)
+│       └── seed/             # data contoh fiktif: data.ts (isi), seed.ts (logika), index.ts (npm run db:seed)
 ├── lib/                      # kode bersama FE–BE tanpa akses DB (mis. lib/wilayah.ts)
 ├── types/                    # tipe bersama FE–BE (types/api.ts, sesuai kontrak)
 ├── tests/                    # test (Vitest)
@@ -159,6 +160,7 @@ Perintah `db:*` dijalankan dari dalam container `web` (folder `src/`), karena kr
 docker compose up -d --build --renew-anon-volumes   # pertama kali / setelah package.json berubah
 docker compose exec web npm run db:migrate          # menerapkan migrasi yang belum dijalankan
 docker compose exec web npm run db:generate         # membuat file migrasi baru setelah skema diubah
+docker compose exec web npm run db:seed             # MENGHAPUS semua data lalu mengisi data contoh
 ```
 
 Aturan:
@@ -168,6 +170,24 @@ Aturan:
 - Jangan mengedit atau menghapus file migrasi yang sudah ada di `main`; buat migrasi baru.
 - Perubahan skema juga mengubah kontrak, jadi perbarui bagian "Skema database" di kontrak dalam PR yang sama.
 - Setelah menarik (`git pull`) perubahan yang berisi migrasi baru, jalankan `db:migrate` lagi.
+
+### Seed (data contoh)
+
+`npm run db:seed` mengosongkan semua tabel (TRUNCATE) lalu mengisi data contoh **fiktif** dalam satu transaksi. Seed ditolak jika `NODE_ENV=production` (kecuali `-- --paksa`). Data ada di `server/db/seed/data.ts`; saldo poin dan stok reward dihitung otomatis dari CleanIt yang VALID dan riwayat penukaran. Sebelum menulis, seed memeriksa koordinat ReportIt ada di dalam `lib/wilayah.ts`, jarak antar lokasi > 50 m (K13), dan urutan waktu CleanIt.
+
+Media berupa gambar placeholder (label "DATA CONTOH (FIKTIF)" + watermark) yang diunggah ke RustFS dengan key `seed/...`. Jika RustFS tidak bisa dihubungi, media dilewati dengan peringatan dan data lain tetap terisi.
+
+Akun uji (password semua akun: `soclean123`):
+
+| Email | Role | Kondisi untuk demo |
+| --- | --- | --- |
+| `operator@soclean.test` | OPERATOR | Memverifikasi semua laporan seed |
+| `operator2@soclean.test` | OPERATOR | Uji verifikasi bersamaan (`SUDAH_DIVERIFIKASI`) |
+| `budi@soclean.test` | MASYARAKAT | Saldo 100, riwayat penukaran, notifikasi lama sudah dibaca + 1 penolakan CleanIt belum dibaca |
+| `sari@soclean.test` | MASYARAKAT | Saldo 50, pelapor asal lokasi yang sedang dibersihkan orang lain |
+| `andi@soclean.test` | MASYARAKAT | Saldo 0 (tombol "Kurang"), membersihkan lokasi laporannya sendiri (tanda "Pelapor = Relawan") |
+
+Isi lain: 5 reward (satu stok 0 untuk "Habis"), 7 lokasi di ketiga wilayah (5 TERCEMAR, 2 DIBERSIHKAN), antrean Operator berisi 3 ReportIt (satu berjarak ±30 m dari lokasi yang ada, untuk demo penggabungan K13) dan 3 CleanIt (dua untuk lokasi yang sama, untuk demo K12), serta laporan VALID/TIDAK_VALID untuk notifikasi.
 
 ## Catatan
 
