@@ -35,7 +35,6 @@ Dipersiapkan oleh:
 ---
 
 **Deadline:** Rabu, 11 November 2026, 21.50 WIB
-**Asistensi akbar:** *[Hari, DD Bulan YYYY, HH.MM WIB, lokasi/link]*
 
 ---
 
@@ -189,10 +188,41 @@ Catat semua perbedaan antara perancangan (DPPL) dan implementasi akhir. Jika tid
 
 Tabel B.1. Perubahan dari DPPL
 
+Acuan implementasi adalah kontrak v0.6 (`docs/contracts/SoClean — Pembagian Tugas FE & BE v0.6.md`). Kode K1–K13 dan N1–N16 merujuk ke tabel keputusan di kontrak tersebut.
+
 | No | Bagian DPPL | Rancangan Awal | Implementasi Akhir | Alasan |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[mis. Kelas C05, layar I-03, tabel `orders`]* | *[Yang direncanakan]* | *[Yang dibuat]* | *[Alasan perubahan]* |
-| *...* | *...* | *...* | *...* | *...* |
+| 1 | Kelas C02 Laporan (atribut), UC05 sequence | Laporan tidak punya jenis maupun rujukan ke lokasi; `buat_laporan` CleanIt memakai parameter yang sama dengan ReportIt | Tabel `laporan` punya `jenis` (REPORTIT/CLEANIT) dan `lokasi_id`, wajib untuk CleanIt (CHECK per jenis) | Sistem harus tahu lokasi mana yang dibersihkan dan membedakan dua jenis laporan (K1) |
+| 2 | Kelas C06 Lokasi, UC04 `konfirmasi_bersihkan` | Status lokasi hanya "Tercemar", tanpa operasi ubah status; UC04 berakhir "Lokasi dipilih untuk dibersihkan" | Status `TERCEMAR` → `DIBERSIHKAN` saat CleanIt valid; `konfirmasi_bersihkan` hanya berpindah ke form, tanpa reservasi | Lokasi yang sudah bersih tidak boleh terus tampil sebagai bounty (K2) |
+| 3 | C05 Algo-001, C11 `tambah_poin` | `jumlahPoin` tidak pernah didefinisikan | Kolom `lokasi.poin`, dipilih Operator dari dropdown 50/100/200 saat menyetujui ReportIt (CHECK di database) | Asal poin harus jelas; pilihan tetap mencegah salah ketik nilai besar (K3) |
+| 4 | Kelas C01, C02, C14 (`idMedia`), C03 Q-001 | Satu laporan satu `idMedia`; INSERT media hanya `url` | 1–3 media per laporan lewat `media.laporan_id`, media diunggah dulu lalu ditautkan dalam transaksi | Mockup I-12 mendukung banyak media (K4) |
+| 5 | Kelas C13 Penukaran, layar I-06 | Kode voucher tampil di I06-03 tetapi tidak ada di model | Kolom `penukaran.kode_voucher`, format `SC-XXXX-XXXX`, dummy tanpa alur klaim | Reward bersifat dummy (SKPL 2.4) (K5, N13) |
+| 6 | C03 Algo-001 | Watermark dan timestamp ditambahkan di perangkat sebelum diunggah | Watermark "SoClean · Diunggah … WIB" dibuat di server dengan `sharp`, hanya untuk foto; video tanpa watermark | Watermark dari client bisa dipalsukan; `sharp` tidak memproses video. Watermark menjadi penanda, bukan bukti keaslian (K6, N4) |
+| 7 | KF02, UC02, C03 `input_media()` | Media diambil dari kamera perangkat | Media dari kamera atau berkas (satu input file; di HP menawarkan kamera atau galeri) | Sejalan dengan US-04/US-06, mockup I12-07 (pilih file dan drag-drop), UC05 alt 1, dukungan desktop, dan mode offline (N4) |
+| 8 | Kelas C03 Media | Tidak ada pengecekan media yang dipakai ulang | Kolom `media.sha256` (hash file asli); file identik dengan media laporan yang berlaku ditolak (`MEDIA_SUDAH_DIGUNAKAN`) | Menutup pemakaian ulang foto, terutama foto laporan asal sebagai bukti pembersihan (Aturan CleanIt) |
+| 9 | Kelas C02, layar I-11, I07-11, I08-04 | Judul tampil di I-07/I-08 tetapi tidak ada di form maupun model | Kolom `judul` (maks. 80) dan isian judul; untuk CleanIt diisi otomatis "Pembersihan {nama lokasi}" dan bisa diedit | Menyelaraskan mockup dengan model (K7) |
+| 10 | Layar I-08 (I08-08), I-11 (I11-10), I-09 (I09-05) | "Sumber Laporan" vs "Sumber Pencemaran"; jenis sampah tidak ada di model | `sumber` = sumber laporan (enum), label I-08 "Sumber Laporan"; kolom `jenis_sampah` di laporan dan lokasi | Menghilangkan arti ganda dan melengkapi model (K8) |
+| 11 | Kelas C06, C15 `petakan_lokasi` | Lokasi punya nama dan alamat, form hanya satu isian; `lokasi` kadang teks kadang koordinat | `lokasi_teks` + `latitude`/`longitude` di laporan; `nama` (diisi Operator) dan `alamat` di lokasi | Teks alamat dan koordinat adalah data berbeda (K9) |
+| 12 | DPPL 1.2, SKPL 2.4, C15 | Laporan dibatasi pada wilayah kerja sama tanpa data maupun validasi | Konstanta `lib/wilayah.ts` berisi Sungai Cikapundung (Teras Cikapundung), Pantai Ancol, dan Pantai Pangandaran; ReportIt di luar wilayah → `DI_LUAR_WILAYAH` | Daftar wilayah tidak diubah dari UI, jadi tidak perlu tabel; mitra kerja sama adalah data contoh (K10) |
+| 13 | Layar I-01 (IO1-002), I-02 (IO2-003) | Tautan "Lupa password" | Tautan dihapus; tidak ada reset password | Tidak ada use case maupun endpoint untuk fitur ini (K11) |
+| 14 | C05 Algo-001 | Persetujuan CleanIt tidak mengecek status lokasi | Disetujui hanya jika lokasi masih TERCEMAR (UPDATE bersyarat dalam transaksi); CleanIt lain yang menunggu untuk lokasi itu otomatis ditolak | Mencegah poin keluar berkali-kali untuk satu lokasi (K12) |
+| 15 | C06 Q-001 | Duplikat dicek dengan kesamaan koordinat persis | Lokasi TERCEMAR dalam radius 50 m (haversine) dianggap sama; ReportIt digabung ke lokasi lama, Operator melihat `lokasiTerdekat` sebelum menyetujui | Koordinat GPS hampir tidak pernah sama persis, sehingga satu tempat bisa jadi dua bounty (K13) |
+| 16 | DPPL 1.2 | "Setiap kontribusi yang dinyatakan valid diganjar poin" | Poin hanya untuk CleanIt yang valid; ReportIt tidak mendapat poin | Mengikuti KF10 dan sequence UC03 yang tidak memanggil `tambah_poin` (N1) |
+| 17 | Layar I-03 (IO3-005 `buka_cleanit()`), UC05 | Method `buka_cleanit()` tidak ada; UC05 langsung membuka form tanpa memilih lokasi | Tombol CleanIt membuka I-09; form CleanIt hanya dari tombol "Bersihkan" lewat route `/cleanit/[idLokasi]` | Form CleanIt membutuhkan `lokasiId` (N2) |
+| 18 | C09 Q-001, layar I-04 (I04-08) | Reward difilter `stok > 0`, padahal I-04 punya tombol "Habis" | Semua reward dikembalikan (stok > 0 dulu); stok 0 tampil "Habis" | Agar state "Habis" di mockup bisa muncul (N3) |
+| 19 | SKPL 2.4, Tabel 2.1 DPPL, C03 | Mode offline "mengupload media di lokal" | Draf offline hanya isian teks (localStorage); media diambil dengan kamera bawaan HP lalu dipilih saat online; file terpilih disimpan di memori tab dan diunggah saat online | localStorage tidak bisa menyimpan file 20 MB; unggah berkas sudah diizinkan (N5) |
+| 20 | C15 `is_format_valid`, UC05 | Hanya mengecek tipe data | Aturan CleanIt: lokasi masih TERCEMAR (dibaca dengan `SELECT … FOR SHARE` dalam transaksi), satu CleanIt menunggu per pengguna per lokasi (unique index parsial), waktu pembersihan ≥ waktu laporan asal, media tidak dipakai ulang, hanya Masyarakat yang membuat laporan. Pelapor asal boleh membersihkan lokasinya sendiri dengan tanda "Pelapor = Relawan" di I-08 | Menutup kecurangan dengan satu akun tanpa melarang alur di diagram aktivitas SKPL 2.1 (N6) |
+| 21 | Kelas C08 Pengguna, layar I-01, I-02 | Auth tidak punya UC/KF; C08 tidak punya email, password, maupun role | Tabel `pengguna` punya `email`, `password_hash`, `role`; session JWT di cookie `httpOnly`; akun Operator hanya lewat seed; aturan password 8–72 karakter, hash bcrypt/argon2id | Login dan registrasi ada di US-03 dan SKPL 2.1 (N7) |
+| 22 | C08 `notify`, Q-004 | Tabel notifikasi; `notify` tidak dipanggil di sequence mana pun | Tanpa tabel: notifikasi diturunkan dari laporan yang sudah diverifikasi + `pengguna.notifikasi_dilihat_at` | Pengirim (Operator) berbeda dengan penerima (pelapor); data notifikasi sudah ada di laporan (N8) |
+| 23 | Layar I-08, kelas C14 | Detail laporan hanya dirancang untuk ReportIt | CleanIt menampilkan galeri Sebelum (media laporan asal) dan Sesudah, tanda "Pelapor = Relawan" + jumlah 30 hari | Operator perlu membandingkan kondisi sebelum dan sesudah (N9) |
+| 24 | Layar I-07 (I07-12–I07-14) | Checkbox, "Batalkan", dan "Tinjau laporan" | Pilihan tunggal: klik kartu langsung membuka I-08 | I-08 hanya menampilkan satu laporan (N10) |
+| 25 | KNF02, layar I-10 (I10-04) | "Titik laporan di sekitar lokasi pengguna" | Tanpa filter radius; urutan Terdekat di client, jatuh ke Terbaru jika izin GPS ditolak | Query `get_all_lokasi_valid` memang mengambil semua lokasi (N11) |
+| 26 | UC09 sequence, C12 `pilihReward`, C16 `tukarPoin` | `pilihReward` langsung memanggil `tukarPoin`; hasil Boolean tanpa skenario stok habis | Konfirmasi di I-05; kegagalan dibedakan lewat `POIN_TIDAK_CUKUP`, `STOK_HABIS`, `NOT_FOUND` | KF13 menyebut "ketika pengguna mengonfirmasi" (N12) |
+| 27 | Layar baru (I04-04, I06-10, IO3-009, I07-04) | Riwayat dan Profil dirujuk tanpa UC maupun desain | Halaman Riwayat Penukaran, Profil Masyarakat (nama, email, saldo, notifikasi, logout), Profil Operator (nama, logout); desain dari komponen yang ada | Tautan di mockup harus punya tujuan (N13) |
+| 28 | UC03/UC06 sequence, C05 Algo-001 | `ubah_status`, `petakan_lokasi`, `tambah_poin` dipanggil terpisah; Algo-001 memanggil model langsung | Setujui/tolak dalam satu transaksi lewat ManagerLaporan | Mencegah data setengah jadi dan menyelaraskan algoritma dengan sequence (N14) |
+| 29 | C03 Algo-002 `is_penyimpanan_penuh()`, `MAX_MEDIA_SIZE` | Mengecek penyimpanan perangkat penuh; batas ukuran tanpa nilai | "Gagal menyimpan media secara lokal" (`QuotaExceededError` atau kuota situs kurang); `MAX_MEDIA_SIZE` = 20 MB | Browser tidak bisa membaca sisa ruang perangkat (N15) |
+| 30 | Tipe data, nama method, dan alur MVC di BAB 4–5 | ID dan waktu bertipe campur, status berupa string, nama method ganda, View melakukan INSERT | Kontrak v0.6 sebagai satu-satunya acuan; pemetaan nama di B.5 | Menyatukan acuan implementasi (N16) |
+| 31 | Tabel 2.1 DPPL (Storage), komponen middleware | Cloudflare R2; middleware Next.js | RustFS (S3) untuk lokal, R2 untuk deploy; `proxy.ts` | Image MinIO dihapus dari Docker Hub; Next.js 16 mengganti nama middleware menjadi proxy |
 
 ## B.2 Bukti Penerapan Best Practices
 
@@ -224,6 +254,15 @@ Jika tidak ada perbaikan yang perlu dilakukan, jelaskan hasil profiling dan alas
 
 Tuliskan kendala yang ditemui, fitur yang belum sempurna (*known issues*), serta hal yang perlu diketahui asisten saat menjalankan atau menilai aplikasi (misalnya akun uji khusus, urutan menjalankan, atau batasan).
 
+*Known issues* yang sudah diketahui sejak perancangan (kontrak v0.6):
+
+- **Multi-akun dan kolusi.** Registrasi cukup dengan email tanpa verifikasi identitas, jadi satu orang bisa memakai beberapa akun (akun A melapor, akun B membersihkan). Pertahanannya verifikasi Operator.
+- **Membuang sampah lalu membersihkannya sendiri.** Foto sebelum dan sesudah asli, sehingga tidak bisa dideteksi sistem. Tanda "Pelapor = Relawan" dan hitungan 30 hari di I-08 hanya membuat pola ini terlihat oleh Operator.
+- **Watermark bukan bukti keaslian.** Di aplikasi web, server tidak bisa memastikan file berasal dari kamera. Watermark hanya membuktikan file sudah ada saat diunggah. Cek SHA-256 hanya menolak file yang identik persis; foto yang dipotong atau diubah ukurannya lolos, dan dua laporan yang dikirim tepat bersamaan dengan file identik juga bisa sama-sama lolos.
+- **Wilayah kerja sama dan reward adalah data contoh.** Mitra kerja sama (Sungai Cikapundung, Pantai Ancol, Pantai Pangandaran) dan voucher bersifat dummy. Batas wilayah berupa kotak lat/lng, dan koordinat ReportIt bisa diedit pengguna.
+- **Tanpa batas percobaan login** dan tanpa reset password.
+- **Figma belum diperbarui** untuk tautan Lupa password yang dihapus, halaman Profil, Riwayat Penukaran, galeri Sebelum/Sesudah, dan dropdown poin; desainnya dibuat langsung dari komponen yang ada.
+
 ## B.4 Kontribusi Anggota
 
 Tabel B.4. Kontribusi Anggota
@@ -249,3 +288,11 @@ Tabel B.5. Traceability Kelas Perancangan ke Implementasi
 Catatan:
 - Satu kelas perancangan boleh diwujudkan oleh beberapa file/unit, dan satu file/unit boleh mewujudkan beberapa kelas perancangan. Tuliskan semuanya.
 - Kelas perancangan yang **tidak diimplementasikan** atau **digabung/dipecah** tetap dicantumkan, dan alasannya dicatat di Bagian B.1.
+
+Catatan penamaan DPPL ke kode (N16):
+
+- Nama method di kode memakai camelCase. Nama ganda di DPPL disatukan: `tambah_poin`/`tambahPoin` → `tambahPoin`, `simpan_laporan`/`simpanLaporan` → `simpanLaporan`, `is_unverified`/`get_unverified` → `getAllLaporanUnverified`, `get_data`/`get_detail` → `getDetail`.
+- ID laporan, lokasi, media, dan reward bertipe `number` (serial); ID pengguna dan penukaran bertipe `string` (uuid). Waktu selalu string ISO 8601 di API dan `timestamptz` di database.
+- Status memakai enum huruf besar (`BELUM_DIPERIKSA`, `VALID`, `TIDAK_VALID`, `TERCEMAR`, `DIBERSIHKAN`), bukan string bebas.
+- `is_valid()` tidak diimplementasikan karena tidak dipakai di sequence mana pun. `LaporanController` di DPPL diwujudkan sebagai C15 ManagerLaporan.
+- Operasi tulis hanya dilakukan Model lewat Controller; View (misalnya C04 DaftarLaporan) tidak melakukan INSERT, dan Model tidak memanggil View.
