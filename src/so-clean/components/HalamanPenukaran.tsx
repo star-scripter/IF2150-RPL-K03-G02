@@ -6,12 +6,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DaftarReward from "@/components/DaftarReward";
 import KartuSaldo from "@/components/KartuSaldo";
+import KonfirmasiPenukaran from "@/components/KonfirmasiPenukaran";
+import { Button, notify } from "@/components/ui";
 import { ApiError } from "@/lib/api/client";
-import { poinApi, rewardApi } from "@/lib/api/endpoints";
+import { penukaranApi, poinApi, rewardApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
+import { tindakanGagalTukar } from "@/lib/penukaran";
 import type { Reward } from "@/types/api";
 
 type StateHalaman =
@@ -39,7 +42,11 @@ async function ambilData(signal: AbortSignal): Promise<StateHalaman> {
 export default function HalamanPenukaran() {
   const [state, setState] = useState<StateHalaman>({ status: "memuat" });
   const [percobaan, setPercobaan] = useState(0);
-  const [pesan, setPesan] = useState<string | null>(null);
+  const [dipilih, setDipilih] = useState<Reward | null>(null);
+  const [mengirim, setMengirim] = useState(false);
+  const [pesanGagal, setPesanGagal] = useState<string | null>(null);
+  // Ref menahan klik kedua yang datang sebelum state `mengirim` sempat menonaktifkan tombol.
+  const sedangMengirim = useRef(false);
 
   useEffect(() => {
     const pengendali = new AbortController();
@@ -48,21 +55,68 @@ export default function HalamanPenukaran() {
     return () => pengendali.abort();
   }, [percobaan]);
 
-  // TODO(FE-02): ganti dengan Toast `notify` dari komponen UI dasar.
-  useEffect(() => {
-    if (!pesan) return;
-    const timer = setTimeout(() => setPesan(null), 3000);
-    return () => clearTimeout(timer);
-  }, [pesan]);
-
   function cobaLagi() {
     setState({ status: "memuat" });
     setPercobaan((n) => n + 1);
   }
 
-  // TODO(FE-19): buka bottom sheet KonfirmasiPenukaran untuk reward ini.
   function bukaKonfirmasi(reward: Reward) {
-    setPesan(`${reward.nama} dipilih`);
+    setPesanGagal(null);
+    setDipilih(reward);
+  }
+
+  function tutupKonfirmasi() {
+    setDipilih(null);
+    setPesanGagal(null);
+  }
+
+  // Muat ulang tanpa kerangka agar notifikasi kegagalan tetap terbaca di atas daftar.
+  function segarkan() {
+    ambilData(new AbortController().signal).then(
+      (hasil) => {
+        if (hasil.status === "siap") setState(hasil);
+      },
+      () => {},
+    );
+  }
+
+  async function tukarkan() {
+    if (!dipilih || sedangMengirim.current) return;
+    sedangMengirim.current = true;
+    setMengirim(true);
+    setPesanGagal(null);
+
+    try {
+      const hasil = await penukaranApi.tukar({ idReward: dipilih.idReward });
+      setState((s) =>
+        s.status === "siap"
+          ? {
+              ...s,
+              saldoPoin: hasil.sisaPoin,
+              daftar: s.daftar.map((r) =>
+                r.idReward === dipilih.idReward ? { ...r, stok: r.stok - 1 } : r,
+              ),
+            }
+          : s,
+      );
+      tutupKonfirmasi();
+      // TODO(FE-20): buka I-06 dengan `hasil` alih-alih notifikasi.
+      notify.sukses("Penukaran berhasil");
+    } catch (error) {
+      const code = error instanceof ApiError ? error.code : "INTERNAL_ERROR";
+      const teks = error instanceof ApiError ? error.message : pesanError("INTERNAL_ERROR");
+      const tindakan = tindakanGagalTukar(code);
+      if (tindakan.tutup) {
+        tutupKonfirmasi();
+        notify.gagal(teks);
+      } else {
+        setPesanGagal(teks);
+      }
+      if (tindakan.muatUlang) segarkan();
+    } finally {
+      sedangMengirim.current = false;
+      setMengirim(false);
+    }
   }
 
   return (
@@ -70,15 +124,11 @@ export default function HalamanPenukaran() {
       {state.status === "memuat" && <KerangkaMuat />}
 
       {state.status === "gagal" && (
-        <div role="alert" className="rounded-card border border-danger/30 bg-danger/5 p-4 text-sm text-danger">
+        <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
           <p>{state.pesan}</p>
-          <button
-            type="button"
-            onClick={cobaLagi}
-            className="mt-3 rounded-button bg-danger px-4 py-2 font-medium text-white"
-          >
+          <Button varian="bahaya" onClick={cobaLagi}>
             Coba lagi
-          </button>
+          </Button>
         </div>
       )}
 
@@ -96,19 +146,19 @@ export default function HalamanPenukaran() {
               daftar={state.daftar}
               saldoPoin={state.saldoPoin}
               onTukar={bukaKonfirmasi}
-              onKurang={() => setPesan("Poin tidak cukup")}
+              onKurang={() => notify.info("Poin tidak cukup")}
             />
           </section>
+          <KonfirmasiPenukaran
+            reward={dipilih}
+            saldoPoin={state.saldoPoin}
+            mengirim={mengirim}
+            pesanGagal={pesanGagal}
+            onBatal={tutupKonfirmasi}
+            onTukarkan={tukarkan}
+          />
         </>
       )}
-
-      <p
-        role="status"
-        aria-live="polite"
-        className={`fixed inset-x-4 bottom-24 mx-auto max-w-sm rounded-button bg-ink px-4 py-3 text-center text-sm text-white ${pesan ? "" : "hidden"}`}
-      >
-        {pesan}
-      </p>
     </main>
   );
 }
