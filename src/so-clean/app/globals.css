@@ -17,6 +17,7 @@
   --color-white: #ffffff;
   --color-text-secondary: #5b6b67;
   --color-yellow: #f2a93b;
+  --color-navy: #212161; /* teks avatar Operator (FE-03) */
 
   /* Warna dari desain Figma yang tidak disimpan sebagai variabel (FE-02) */
   --color-surface: #f5faf8; /* latar halaman Operator dan kotak info Detail Laporan */

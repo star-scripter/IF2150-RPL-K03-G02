@@ -7,7 +7,7 @@
 import { randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/server/db";
-import { laporan, lokasi, media, pengguna } from "@/server/db/schema";
+import { laporan, lokasi, media, pengguna, reward } from "@/server/db/schema";
 import type { JenisSampah, PilihanPoin, Role, StatusLokasi, Sumber, TipeMedia } from "@/types/api";
 import { DATABASE_TEST_AKTIF } from "./database-test";
 
@@ -126,4 +126,65 @@ export async function buatMedia(opsi: {
     })
     .returning({ id: media.id });
   return { idMedia: row.id, storageKey };
+}
+
+export async function buatReward(
+  opsi: { nama?: string; jenis?: string; hargaPoin?: number; stok?: number } = {},
+): Promise<{ idReward: number }> {
+  const [row] = await db
+    .insert(reward)
+    .values({
+      nama: opsi.nama ?? "Voucher Uji",
+      jenis: opsi.jenis ?? "VOUCHER",
+      deskripsi: "Reward dummy untuk test.",
+      hargaPoin: opsi.hargaPoin ?? 50,
+      stok: opsi.stok ?? 10,
+    })
+    .returning({ idReward: reward.id });
+  return row;
+}
+
+/**
+ * Membuat satu laporan. ReportIt diisi field lokasi teks/koordinat; CleanIt wajib `lokasiId`.
+ * Laporan selain BELUM_DIPERIKSA wajib `diverifikasiOleh` (CHECK laporan_verifikasi_check).
+ */
+export async function buatLaporan(opsi: {
+  jenis: "REPORTIT" | "CLEANIT";
+  idPengguna: string;
+  judul?: string;
+  lokasiId?: number;
+  status?: "BELUM_DIPERIKSA" | "VALID" | "TIDAK_VALID";
+  alasanPenolakan?: string;
+  diverifikasiOleh?: string;
+  diverifikasiAt?: Date;
+}): Promise<{ idLaporan: number }> {
+  const status = opsi.status ?? "BELUM_DIPERIKSA";
+  const terverifikasi = status !== "BELUM_DIPERIKSA";
+  const fieldReportIt =
+    opsi.jenis === "REPORTIT"
+      ? {
+          lokasiTeks: "Jl. Uji No. 2",
+          latitude: -6.12,
+          longitude: 106.83,
+          sumber: "INFO_WARGA" as const,
+          jenisSampah: "PLASTIK" as const,
+        }
+      : {};
+
+  const [row] = await db
+    .insert(laporan)
+    .values({
+      jenis: opsi.jenis,
+      idPengguna: opsi.idPengguna,
+      judul: opsi.judul ?? `Laporan ${opsi.jenis}`,
+      waktuKejadian: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      ...fieldReportIt,
+      lokasiId: opsi.lokasiId ?? null,
+      status,
+      alasanPenolakan: opsi.alasanPenolakan ?? null,
+      diverifikasiOleh: terverifikasi ? opsi.diverifikasiOleh : null,
+      diverifikasiAt: terverifikasi ? (opsi.diverifikasiAt ?? new Date()) : null,
+    })
+    .returning({ idLaporan: laporan.id });
+  return row;
 }
