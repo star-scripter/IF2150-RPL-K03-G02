@@ -10,7 +10,12 @@
 
 /** Route halaman yang disepakati tim (FE-03). */
 export const ROUTE = {
+  // Halaman publik (FE-06, FE-07); sama dengan HALAMAN_PUBLIK di proxy BE-06.
+  login: "/login",
+  register: "/register",
   beranda: "/beranda",
+  // Form ReportIt (FE-09), tanpa bottom nav; lihat app/(pages)/(masyarakat)/layout.tsx.
+  reportit: "/reportit",
   lokasi: "/lokasi",
   hadiah: "/hadiah",
   hadiahBerhasil: "/hadiah/berhasil",
