@@ -21,16 +21,20 @@ export function rentangItem(meta: PaginationMeta): { dari: number; sampai: numbe
 
 /**
  * Nomor halaman yang ditampilkan. Halaman pertama, terakhir, dan `tetangga` halaman di kiri
- * dan kanan halaman aktif selalu tampil; celah lainnya diganti "elipsis".
- * Contoh (10 halaman, aktif 5): [1, "elipsis", 4, 5, 6, "elipsis", 10]
+ * dan kanan halaman aktif selalu tampil; celah dua halaman atau lebih diganti "elipsis".
+ * Contoh (10 halaman): aktif 5 → [1, "elipsis", 4, 5, 6, "elipsis", 10];
+ * aktif 4 → [1, 2, 3, 4, 5, "elipsis", 10].
  */
 export function daftarHalaman(aktif: number, total: number, tetangga = 1): ItemHalaman[] {
   if (total <= 0) return [];
   // Cukup sedikit: tampilkan semua (1 + elipsis + tetangga*2+1 + elipsis + 1).
   if (total <= 5 + tetangga * 2) return Array.from({ length: total }, (_, i) => i + 1);
 
-  const kiri = Math.max(2, aktif - tetangga);
-  const kanan = Math.min(total - 1, aktif + tetangga);
+  let kiri = Math.max(2, aktif - tetangga);
+  let kanan = Math.min(total - 1, aktif + tetangga);
+  // Elipsis yang hanya menggantikan satu nomor tidak menghemat tempat; tampilkan nomornya.
+  if (kiri === 3) kiri = 2;
+  if (kanan === total - 2) kanan = total - 1;
   const hasil: ItemHalaman[] = [1];
   if (kiri > 2) hasil.push("elipsis");
   for (let i = kiri; i <= kanan; i++) hasil.push(i);

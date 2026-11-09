@@ -17,7 +17,7 @@ export type PropsField = {
   labelKanan?: ReactNode;
   /** Pesan error untuk isian ini, mis. dari `ApiError.fields[nama]`. */
   error?: string;
-  /** Teks bantuan di bawah isian; disembunyikan saat ada error. */
+  /** Teks bantuan di bawah isian; diganti pesan error selama `error` tidak kosong. */
   petunjuk?: string;
   wajib?: boolean;
   ukuranLabel?: UkuranLabel;
@@ -51,7 +51,8 @@ export function KerangkaField({
   idPesan,
   children,
 }: PropsKerangka) {
-  const pesan = error ?? petunjuk;
+  // `||`, bukan `??`: error kosong ("") berarti tidak ada error, jadi petunjuk tetap tampil.
+  const pesan = error || petunjuk;
   return (
     <div className="flex w-full flex-col gap-1.5">
       <div className="flex items-center justify-between gap-2.5">

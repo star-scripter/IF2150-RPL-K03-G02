@@ -33,12 +33,12 @@ type Props = {
 };
 
 export function BottomSheet({ terbuka, onTutup, judul, children, aksi, className }: Props) {
-  const { ref, klikLatar } = useDialog(terbuka, onTutup);
+  const { ref, propsLatar } = useDialog(terbuka, onTutup);
 
   return (
     <dialog
       ref={ref}
-      onClick={klikLatar}
+      {...propsLatar}
       aria-label={judul}
       className={cn(
         "mx-auto mt-auto mb-0 w-full max-w-[440px] max-h-[90dvh] overflow-y-auto",

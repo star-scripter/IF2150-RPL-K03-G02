@@ -1,5 +1,9 @@
-/** Logika komponen UI dasar (FE-02) yang bisa diuji tanpa DOM: Pagination dan Toast. */
+/**
+ * Logika komponen UI dasar (FE-02) yang bisa diuji tanpa DOM: Pagination, kunci scroll dialog,
+ * dan Toast.
+ */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { buatKunciScroll } from "../components/ui/dialog-store";
 import {
   daftarHalaman,
   jumlahHalaman,
@@ -40,6 +44,50 @@ describe("pagination", () => {
     expect(daftarHalaman(1, 10)).toEqual([1, 2, "elipsis", 10]);
     expect(daftarHalaman(10, 10)).toEqual([1, "elipsis", 9, 10]);
     expect(daftarHalaman(3, 10)).toEqual([1, 2, 3, 4, "elipsis", 10]);
+  });
+
+  it("tidak memakai elipsis untuk celah satu halaman", () => {
+    expect(daftarHalaman(4, 10)).toEqual([1, 2, 3, 4, 5, "elipsis", 10]);
+    expect(daftarHalaman(7, 10)).toEqual([1, "elipsis", 6, 7, 8, 9, 10]);
+    // Setiap elipsis harus menggantikan minimal dua nomor.
+    for (let total = 1; total <= 30; total++) {
+      for (let aktif = 1; aktif <= total; aktif++) {
+        const daftar = daftarHalaman(aktif, total);
+        daftar.forEach((item, i) => {
+          if (item !== "elipsis") return;
+          const sebelum = daftar[i - 1] as number;
+          const sesudah = daftar[i + 1] as number;
+          expect(sesudah - sebelum - 1).toBeGreaterThanOrEqual(2);
+        });
+        expect(daftar).toContain(aktif);
+      }
+    }
+  });
+});
+
+describe("kunci scroll dialog", () => {
+  it("baru melepas kunci setelah dialog terakhir tertutup, apa pun urutannya", () => {
+    const target = { style: { overflow: "auto" } };
+    const kunci = buatKunciScroll(target);
+    const lepasA = kunci();
+    const lepasB = kunci();
+    expect(target.style.overflow).toBe("hidden");
+    lepasA(); // dialog yang dibuka pertama ditutup lebih dulu
+    expect(target.style.overflow).toBe("hidden");
+    lepasB();
+    expect(target.style.overflow).toBe("auto");
+  });
+
+  it("pelepas yang dipanggil dua kali tidak mengacaukan hitungan", () => {
+    const target = { style: { overflow: "" } };
+    const kunci = buatKunciScroll(target);
+    const lepasA = kunci();
+    const lepasB = kunci();
+    lepasA();
+    lepasA();
+    expect(target.style.overflow).toBe("hidden");
+    lepasB();
+    expect(target.style.overflow).toBe("");
   });
 });
 

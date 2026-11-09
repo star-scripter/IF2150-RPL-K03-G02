@@ -63,6 +63,7 @@ export function ContohKomponen() {
   const [poin, setPoin] = useState(50);
   const [modalTerbuka, setModalTerbuka] = useState(false);
   const [sheetTerbuka, setSheetTerbuka] = useState(false);
+  const [menukar, setMenukar] = useState(false);
   const [halaman, setHalaman] = useState(1);
   const [langkah, setLangkah] = useState(0);
   const [upload, setUpload] = useState(45);
@@ -75,6 +76,15 @@ export function ContohKomponen() {
       setMemuat(false);
       notify.sukses("Data berhasil dikirim.");
     }, 1500);
+  }
+
+  /** Contoh kegagalan STOK_HABIS: sheet tetap terbuka dan toast tampil di dalamnya. */
+  function simulasiTukar() {
+    setMenukar(true);
+    setTimeout(() => {
+      setMenukar(false);
+      notify.gagal("Stok hadiah ini sudah habis. (contoh)");
+    }, 1200);
   }
 
   return (
@@ -112,9 +122,31 @@ export function ContohKomponen() {
             <p className="text-sm text-text-secondary">Lokasi</p>
             <p className="text-body text-dark-teal">Jl. Contoh No. 1, Bandung</p>
           </Card>
-          <Card onClick={() => notify.info("Kartu diklik: buka detail laporan.")} terpilih>
+          <Card
+            onClick={() => notify.info("Kartu diklik: buka detail laporan.")}
+            labelAksi="Buka laporan RPT-0248"
+            terpilih
+          >
             <p className="text-xs text-text-secondary">RPT-0248</p>
             <p className="text-h3 font-heading text-dark-teal">Kartu bisa diklik (terpilih)</p>
+          </Card>
+          <Card
+            onClick={() => notify.info("Kartu diklik: buka detail lokasi.")}
+            labelAksi="Buka detail Muara Sungai Cikapundung"
+            className="sm:col-span-2"
+          >
+            <p className="text-h3 font-heading text-dark-teal">Kartu bisa diklik + tombol di dalamnya</p>
+            <p className="text-sm text-text-secondary">
+              Klik di mana saja membuka detail; tombol di bawah punya aksi sendiri (kelas{" "}
+              <code>relative z-10</code>).
+            </p>
+            <Button
+              varian="sekunder"
+              className="relative z-10 self-start"
+              onClick={() => notify.sukses("Tombol di dalam kartu diklik.")}
+            >
+              Bersihkan
+            </Button>
           </Card>
         </div>
       </Bagian>
@@ -220,19 +252,17 @@ export function ContohKomponen() {
 
         <BottomSheet
           terbuka={sheetTerbuka}
-          onTutup={() => setSheetTerbuka(false)}
+          // Selama request berjalan, sheet tidak bisa ditutup (Escape/latar diabaikan).
+          onTutup={() => {
+            if (!menukar) setSheetTerbuka(false);
+          }}
           judul="Konfirmasi penukaran"
           aksi={
             <>
-              <Button varian="sekunder" onClick={() => setSheetTerbuka(false)}>
+              <Button varian="sekunder" disabled={menukar} onClick={() => setSheetTerbuka(false)}>
                 Batal
               </Button>
-              <Button
-                onClick={() => {
-                  setSheetTerbuka(false);
-                  notify.sukses("Penukaran berhasil (contoh).");
-                }}
-              >
+              <Button memuat={menukar} onClick={simulasiTukar}>
                 Tukarkan
               </Button>
             </>
@@ -268,6 +298,7 @@ export function ContohKomponen() {
         <Pagination meta={{ page: halaman, limit: 6, total: 12 }} onUbah={setHalaman} satuan="laporan" />
         <Pagination meta={{ page: 5, limit: 6, total: 60 }} onUbah={() => undefined} satuan="laporan" />
         <Pagination meta={{ page: 1, limit: 6, total: 0 }} onUbah={() => undefined} satuan="laporan" />
+        <Pagination meta={{ page: 4, limit: 6, total: 12 }} onUbah={setHalaman} satuan="laporan" />
       </Bagian>
 
       <Bagian judul="Progress Indicator" catatan="Langkah form laporan dan bilah kemajuan upload.">

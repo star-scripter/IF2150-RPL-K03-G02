@@ -30,6 +30,14 @@ export function Pagination({ meta, onUbah, satuan = "data", className }: Props) 
   const total = jumlahHalaman(meta);
   const rentang = rentangItem(meta);
   const halaman = daftarHalaman(meta.page, total);
+  // Halaman bisa melewati halaman terakhir jika data berkurang, mis. laporan habis diverifikasi
+  // Operator lain. Navigasi tetap tampil agar pengguna bisa kembali.
+  const lewatAkhir = total > 0 && meta.page > total;
+
+  let ringkasan: string;
+  if (rentang) ringkasan = `Menampilkan ${rentang.dari}–${rentang.sampai} dari ${meta.total} ${satuan}`;
+  else if (lewatAkhir) ringkasan = `Halaman ${meta.page} tidak tersedia · total ${meta.total} ${satuan}`;
+  else ringkasan = `Tidak ada ${satuan}`;
 
   return (
     <nav
@@ -40,19 +48,17 @@ export function Pagination({ meta, onUbah, satuan = "data", className }: Props) 
       )}
     >
       <p className="text-[13px] text-text-secondary" aria-live="polite">
-        {rentang
-          ? `Menampilkan ${rentang.dari}–${rentang.sampai} dari ${meta.total} ${satuan}`
-          : `Tidak ada ${satuan}`}
+        {ringkasan}
       </p>
 
-      {total > 1 && (
+      {(total > 1 || lewatAkhir) && (
         <ul className="flex items-center gap-2">
           <li>
             <button
               type="button"
               className={KELAS_PANAH}
               disabled={meta.page <= 1}
-              onClick={() => onUbah(meta.page - 1)}
+              onClick={() => onUbah(Math.min(meta.page - 1, total))}
               aria-label="Halaman sebelumnya"
             >
               {/* Aset chevron dari Figma (62:426); diputar untuk arah kiri. */}

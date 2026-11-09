@@ -30,12 +30,12 @@ type Props = {
 };
 
 export function Modal({ terbuka, onTutup, judul, label, children, aksi, className }: Props) {
-  const { ref, klikLatar } = useDialog(terbuka, onTutup);
+  const { ref, propsLatar } = useDialog(terbuka, onTutup);
 
   return (
     <dialog
       ref={ref}
-      onClick={klikLatar}
+      {...propsLatar}
       aria-label={judul}
       className={cn(
         "m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[calc(100dvh-2rem)] overflow-y-auto",
