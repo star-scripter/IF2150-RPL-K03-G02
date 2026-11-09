@@ -6,7 +6,7 @@
  */
 export { Badge, type VarianBadge } from "./Badge";
 export { BottomSheet } from "./BottomSheet";
-export { Button, type UkuranButton, type VarianButton } from "./Button";
+export { Button, kelasButton, type UkuranButton, type VarianButton } from "./Button";
 export { Card, type VarianCard } from "./Card";
 export { Dropdown, type PilihanDropdown } from "./Dropdown";
 export { Modal } from "./Modal";
