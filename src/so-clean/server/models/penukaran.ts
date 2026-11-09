@@ -1,11 +1,12 @@
 /**
- * Model Penukaran — catatan transaksi penukaran poin dengan reward (UC09).
+ * Model Penukaran — catatan transaksi penukaran poin dengan reward (UC09) dan riwayatnya.
  *
  * Kelas DPPL: C13 - Penukaran (Model)
  */
 import { randomInt } from "node:crypto";
+import { count, desc, eq } from "drizzle-orm";
 import { db, type Db } from "@/server/db";
-import { penukaran } from "@/server/db/schema";
+import { penukaran, reward as tabelReward } from "@/server/db/schema";
 import type { Penukaran, Reward } from "@/types/api";
 
 /** `db` atau `tx` dari `db.transaction(...)`. */
@@ -67,4 +68,39 @@ export async function buatPenukaran(
     }
   }
   throw new Error(`Gagal membuat kode voucher unik setelah ${MAKS_PERCOBAAN_VOUCHER} percobaan.`);
+}
+
+/**
+ * Riwayat penukaran milik satu pengguna (N13), urut waktu terbaru, dengan pagination.
+ * Memakai index `penukaran (id_pengguna, waktu)`.
+ */
+export async function getRiwayat(
+  idPengguna: string,
+  page: number,
+  limit: number,
+): Promise<{ data: Penukaran[]; total: number }> {
+  const [{ total }] = await db
+    .select({ total: count() })
+    .from(penukaran)
+    .where(eq(penukaran.idPengguna, idPengguna));
+
+  const rows = await db
+    .select({
+      idPenukaran: penukaran.id,
+      namaReward: tabelReward.nama,
+      kodeVoucher: penukaran.kodeVoucher,
+      poinDipakai: penukaran.poinDipakai,
+      waktu: penukaran.waktu,
+    })
+    .from(penukaran)
+    .innerJoin(tabelReward, eq(tabelReward.id, penukaran.idReward))
+    .where(eq(penukaran.idPengguna, idPengguna))
+    .orderBy(desc(penukaran.waktu), desc(penukaran.id))
+    .limit(limit)
+    .offset((page - 1) * limit);
+
+  return {
+    data: rows.map(({ waktu, ...row }) => ({ ...row, waktuPenukaran: waktu.toISOString() })),
+    total,
+  };
 }
