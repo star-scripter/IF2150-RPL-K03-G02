@@ -12,7 +12,7 @@
 import { z } from "zod";
 import { ApiError, apiSuccess, parseQuery, validateInput } from "@/server/api";
 import * as LokasiModel from "@/server/models/lokasi";
-import { getUrl } from "@/server/storage";
+import { getUrl } from "@/server/storage/s3";
 import type { LokasiDetail, Media } from "@/types/api";
 
 /** Batas kolom `serial` (int4), supaya ID di luar rentang tidak sampai ke database. */

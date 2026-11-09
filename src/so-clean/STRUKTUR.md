@@ -76,7 +76,8 @@ so-clean/
 │   │   ├── session-token.ts  # sign/verify JWT dan opsi cookie
 │   │   ├── session-cookie.ts # baca/tulis/hapus cookie lewat Next.js cookies()
 │   │   └── guard.ts          # shim sementara cek sesi/role di route handler (BE-06)
-│   ├── storage.ts             # shim sementara getUrl(key) presigned URL (BE-07)
+│   ├── storage/
+│   │   └── s3.ts              # adapter S3: upload(file), getUrl(key) (BE-07)
 │   ├── controllers/
 │   │   └── _template.ts      # template controller
 │   ├── models/
@@ -111,6 +112,7 @@ so-clean/
 | Route handler | `app/api/**/route.ts` | Mengambil `params`, menerapkan cek autentikasi/role sesuai akses endpoint, membungkus pemanggilan controller dengan `handleApiRequest(request, routeTemplate, operation)` | Berisi logika bisnis atau query |
 | API bersama | `server/api/` | Membuat respons kontrak, memetakan error, memvalidasi input dengan Zod, mencatat log request terstruktur | Mengakses database atau memuat logika bisnis |
 | Controller | `server/controllers/` | Validasi input dengan helper Zod, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons dengan `apiSuccess`/`apiList`/`apiFailure` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
+| Storage adapter | `server/storage/s3.ts` | Upload object ke RustFS/R2 dan membuat presigned read URL dari storage key | Menulis query database atau membuat respons HTTP |
 | Model (operasi) | `server/models/` | Query lewat `db`, aturan milik satu entitas, memetakan kolom ke field kontrak | Membaca `Request` atau membuat `Response` (tidak tahu soal HTTP) |
 | Model (atribut) | `server/db/schema/` | Definisi tabel: kolom, tipe, constraint, index, relasi | Berisi fungsi/query, atau import selain `drizzle-orm` dan file schema lain |
 | DB | `server/db/index.ts`, `server/db/migrations/` | Koneksi database dan file migrasi hasil `drizzle-kit`; `db` boleh diimpor model untuk query dan controller hanya untuk membuka `db.transaction` | Diimpor oleh view atau kode bersama; controller menjalankan query langsung |
