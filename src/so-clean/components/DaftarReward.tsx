@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { statusTombolReward } from "@/lib/reward";
+import { WARNA_JENIS, labelJenis, statusTombolReward } from "@/lib/reward";
 import type { Reward } from "@/types/api";
 
 type Props = {
@@ -15,17 +15,7 @@ type Props = {
   onKurang: (reward: Reward) => void;
 };
 
-const WARNA_JENIS: Record<string, string> = {
-  VOUCHER: "bg-sky-blue",
-  DONASI: "bg-emerald",
-  MERCHANDISE: "bg-emerald",
-};
-
 const GAYA_TOMBOL = "shrink-0 rounded-button px-4 py-2 text-sm font-medium";
-
-function labelJenis(jenis: string) {
-  return jenis.charAt(0) + jenis.slice(1).toLowerCase();
-}
 
 export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: Props) {
   if (daftar.length === 0) {

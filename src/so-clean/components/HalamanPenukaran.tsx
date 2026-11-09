@@ -6,12 +6,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DaftarReward from "@/components/DaftarReward";
 import KartuSaldo from "@/components/KartuSaldo";
+import KonfirmasiPenukaran from "@/components/KonfirmasiPenukaran";
 import { ApiError } from "@/lib/api/client";
-import { poinApi, rewardApi } from "@/lib/api/endpoints";
+import { penukaranApi, poinApi, rewardApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
+import { tindakanGagalTukar } from "@/lib/penukaran";
 import type { Reward } from "@/types/api";
 
 type StateHalaman =
@@ -40,6 +42,11 @@ export default function HalamanPenukaran() {
   const [state, setState] = useState<StateHalaman>({ status: "memuat" });
   const [percobaan, setPercobaan] = useState(0);
   const [pesan, setPesan] = useState<string | null>(null);
+  const [dipilih, setDipilih] = useState<Reward | null>(null);
+  const [mengirim, setMengirim] = useState(false);
+  const [pesanGagal, setPesanGagal] = useState<string | null>(null);
+  // Ref menahan klik kedua yang datang sebelum state `mengirim` sempat menonaktifkan tombol.
+  const sedangMengirim = useRef(false);
 
   useEffect(() => {
     const pengendali = new AbortController();
@@ -60,9 +67,63 @@ export default function HalamanPenukaran() {
     setPercobaan((n) => n + 1);
   }
 
-  // TODO(FE-19): buka bottom sheet KonfirmasiPenukaran untuk reward ini.
   function bukaKonfirmasi(reward: Reward) {
-    setPesan(`${reward.nama} dipilih`);
+    setPesanGagal(null);
+    setDipilih(reward);
+  }
+
+  function tutupKonfirmasi() {
+    setDipilih(null);
+    setPesanGagal(null);
+  }
+
+  // Muat ulang tanpa kerangka agar notifikasi kegagalan tetap terbaca di atas daftar.
+  function segarkan() {
+    ambilData(new AbortController().signal).then(
+      (hasil) => {
+        if (hasil.status === "siap") setState(hasil);
+      },
+      () => {},
+    );
+  }
+
+  async function tukarkan() {
+    if (!dipilih || sedangMengirim.current) return;
+    sedangMengirim.current = true;
+    setMengirim(true);
+    setPesanGagal(null);
+
+    try {
+      const hasil = await penukaranApi.tukar({ idReward: dipilih.idReward });
+      setState((s) =>
+        s.status === "siap"
+          ? {
+              ...s,
+              saldoPoin: hasil.sisaPoin,
+              daftar: s.daftar.map((r) =>
+                r.idReward === dipilih.idReward ? { ...r, stok: r.stok - 1 } : r,
+              ),
+            }
+          : s,
+      );
+      tutupKonfirmasi();
+      // TODO(FE-20): buka I-06 dengan `hasil` alih-alih notifikasi.
+      setPesan("Penukaran berhasil");
+    } catch (error) {
+      const code = error instanceof ApiError ? error.code : "INTERNAL_ERROR";
+      const teks = error instanceof ApiError ? error.message : pesanError("INTERNAL_ERROR");
+      const tindakan = tindakanGagalTukar(code);
+      if (tindakan.tutup) {
+        tutupKonfirmasi();
+        setPesan(teks);
+      } else {
+        setPesanGagal(teks);
+      }
+      if (tindakan.muatUlang) segarkan();
+    } finally {
+      sedangMengirim.current = false;
+      setMengirim(false);
+    }
   }
 
   return (
@@ -99,6 +160,16 @@ export default function HalamanPenukaran() {
               onKurang={() => setPesan("Poin tidak cukup")}
             />
           </section>
+          {dipilih && (
+            <KonfirmasiPenukaran
+              reward={dipilih}
+              saldoPoin={state.saldoPoin}
+              mengirim={mengirim}
+              pesanGagal={pesanGagal}
+              onBatal={tutupKonfirmasi}
+              onTukarkan={tukarkan}
+            />
+          )}
         </>
       )}
 
