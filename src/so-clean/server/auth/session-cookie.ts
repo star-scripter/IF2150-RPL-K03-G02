@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { ApiError } from "@/server/api";
 import {
   SESSION_COOKIE_NAME,
   sessionCookieOptions,
@@ -20,6 +21,15 @@ export async function getSessionCookie(): Promise<SessionPayload | null> {
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
   return verifySessionToken(token);
+}
+
+/** Route handlers memanggil ini pada setiap endpoint yang mensyaratkan login. */
+export async function requireSessionCookie(): Promise<SessionPayload> {
+  const session = await getSessionCookie();
+  if (!session) {
+    throw new ApiError("UNAUTHORIZED", "Sesi tidak valid atau telah berakhir.");
+  }
+  return session;
 }
 
 /** Hapus cookie sesi saat logout. */
