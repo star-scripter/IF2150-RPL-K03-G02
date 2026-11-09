@@ -1,23 +1,10 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ROUTE } from "@/lib/nav";
 
-// Halaman sementara. Pengarahan `/` sesuai peran (I-03 / I-07) dibuat di FE-05.
+/**
+ * Route `/`. Proxy (FE-05, `lib/akses.ts`) sudah mengarahkan `/` ke halaman awal sesuai role,
+ * atau ke Login untuk tamu. Halaman ini hanya cadangan jika proxy tidak berjalan.
+ */
 export default function Home() {
-  return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
-      <h1 className="text-h1 text-dark-teal">SoClean</h1>
-      <p className="text-body">Aplikasi sedang dibangun.</p>
-      <ul className="flex flex-col gap-2 text-body text-dark-teal underline">
-        <li>
-          <Link href={ROUTE.beranda}>Halaman Masyarakat</Link>
-        </li>
-        <li>
-          <Link href={ROUTE.operatorLaporan}>Halaman Operator</Link>
-        </li>
-        <li>
-          <Link href="/design">Design tokens dan komponen</Link>
-        </li>
-      </ul>
-    </main>
-  );
+  redirect(ROUTE.login);
 }

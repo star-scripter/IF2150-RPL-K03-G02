@@ -15,6 +15,8 @@
  * Untuk pemanggilan per endpoint yang sudah bertipe, pakai `lib/api/endpoints.ts`.
  */
 import type { KodeError, PaginationMeta } from "../../types/api";
+import { HALAMAN_PUBLIK } from "../akses";
+import { ROUTE } from "../nav";
 import { type KodeErrorKlien, isKodeError, pesanError } from "./pesan-error";
 
 /** Error dari pemanggilan API, dengan pesan yang siap ditampilkan ke pengguna. */
@@ -101,6 +103,33 @@ export function tahanRequestSampai(promise: Promise<unknown>): void {
   penundaRequest = promise.catch(() => undefined);
 }
 
+let sedangKeLogin = false;
+
+/**
+ * Penanganan bawaan saat API membalas `UNAUTHORIZED` (FE-05): hapus cookie sesi lewat logout,
+ * lalu pindah ke halaman Login. Logout lebih dulu mencegah loop jika cookie masih lolos proxy
+ * (mis. akun sudah tidak ada) sementara API menolaknya. Tidak berjalan di halaman publik dan
+ * hanya sekali walaupun beberapa request gagal bersamaan.
+ */
+function arahkanKeLogin(): void {
+  if (typeof window === "undefined" || sedangKeLogin) return;
+  if (HALAMAN_PUBLIK.includes(window.location.pathname)) return;
+  sedangKeLogin = true;
+  fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" })
+    .catch(() => undefined)
+    .finally(() => window.location.assign(ROUTE.login));
+}
+
+let penanganSesiHabis: (() => void) | null = arahkanKeLogin;
+
+/**
+ * Ganti penanganan respons `UNAUTHORIZED`; `null` untuk menonaktifkan. Dipakai di test.
+ * `LOGIN_GAGAL` (login salah) tidak memicu penanganan ini.
+ */
+export function aturPenangananSesiHabis(penangan: (() => void) | null): void {
+  penanganSesiHabis = penangan;
+}
+
 async function kirim(path: string, opsi: OpsiRequest = {}): Promise<unknown> {
   if (penundaRequest) await penundaRequest;
   const { method = "GET", body, query, signal } = opsi;
@@ -143,6 +172,7 @@ async function kirim(path: string, opsi: OpsiRequest = {}): Promise<unknown> {
   if (!res.ok) {
     const error = bacaErrorKontrak(json);
     const code: KodeError = isKodeError(error?.code) ? error.code : "INTERNAL_ERROR";
+    if (code === "UNAUTHORIZED") penanganSesiHabis?.();
     throw new ApiError(code, res.status, {
       fields: isPesanField(error?.fields) ? error.fields : undefined,
       pesanServer: typeof error?.message === "string" ? error.message : undefined,
