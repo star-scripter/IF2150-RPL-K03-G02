@@ -1,7 +1,8 @@
 /**
- * Halaman contoh design tokens (FE-01), dipakai sebagai referensi tim FE dan bukti verifikasi PR.
- * Contoh pemakaian komponen dasar (FE-02) dapat ditambahkan di halaman ini.
+ * Halaman contoh design tokens (FE-01) dan komponen UI dasar (FE-02), dipakai sebagai
+ * referensi tim FE dan bukti verifikasi PR.
  */
+import { ContohKomponen } from "./ContohKomponen";
 
 const warna = [
   { nama: "dark-teal", nilai: "#094542", kelas: "bg-dark-teal", sumber: "Figma" },
@@ -10,8 +11,15 @@ const warna = [
   { nama: "sky-blue", nilai: "#85D5F6", kelas: "bg-sky-blue", sumber: "Figma" },
   { nama: "border", nilai: "#D5E0DC", kelas: "bg-border", sumber: "Figma" },
   { nama: "white", nilai: "#FFFFFF", kelas: "bg-white", sumber: "Figma" },
+  { nama: "text-secondary", nilai: "#5B6B67", kelas: "bg-text-secondary", sumber: "Figma" },
+  { nama: "yellow", nilai: "#F2A93B", kelas: "bg-yellow", sumber: "Figma" },
+  { nama: "surface", nilai: "#F5FAF8", kelas: "bg-surface", sumber: "Figma (non-variabel)" },
+  { nama: "warning-bg", nilai: "#FFF4DF", kelas: "bg-warning-bg", sumber: "Figma (non-variabel)" },
+  { nama: "warning-text", nilai: "#82601F", kelas: "bg-warning-text", sumber: "Figma (non-variabel)" },
+  { nama: "danger", nilai: "#D64545", kelas: "bg-danger", sumber: "Figma (non-variabel)" },
   { nama: "ink", nilai: "#000000", kelas: "bg-ink", sumber: "non-Figma" },
-  { nama: "danger", nilai: "#D92D20", kelas: "bg-danger", sumber: "non-Figma" },
+  { nama: "danger-text", nilai: "#B42318", kelas: "bg-danger-text", sumber: "non-Figma" },
+  { nama: "danger-bg", nilai: "#FDECEA", kelas: "bg-danger-bg", sumber: "non-Figma" },
 ];
 
 const tipografi = [
@@ -21,7 +29,7 @@ const tipografi = [
   { kelas: "text-body", label: "Body · Inter Regular 16/24", Tag: "p" },
 ] as const;
 
-export default function DesignTokensPage() {
+export default function DesignPage() {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-10 p-4 sm:p-8">
       <header>
@@ -52,7 +60,7 @@ export default function DesignTokensPage() {
         <h2 className="text-h2 text-dark-teal">Tipografi</h2>
         {tipografi.map(({ kelas, label, Tag }) => (
           <div key={kelas} className="flex flex-col gap-1 border-b border-border pb-3">
-            <Tag className={kelas}>Horas, DapinTampan</Tag>
+            <Tag className={kelas}>Laporkan sampah, kumpulkan poin</Tag>
             <span className="text-sm">
               <code>{kelas}</code> · {label}
             </span>
@@ -64,25 +72,27 @@ export default function DesignTokensPage() {
         <h2 className="text-h2 text-dark-teal">Radius</h2>
         <div className="flex flex-wrap gap-4">
           <div className="flex h-24 w-40 items-center justify-center rounded-card bg-dark-teal text-white">
-            rounded-card · 8px
+            rounded-card · 12px
           </div>
-          <div className="flex h-12 min-w-40 items-center px-4 justify-center rounded-button bg-emerald">
-            rounded-button · 10px
+          <div className="flex h-12 min-w-40 items-center justify-center rounded-button bg-emerald px-4">
+            rounded-button · 12px
+          </div>
+          <div className="flex h-24 w-40 items-end justify-center rounded-t-sheet border border-border bg-white pb-3">
+            rounded-t-sheet · 16px
           </div>
         </div>
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-h2 text-dark-teal">Contoh gabungan</h2>
-        <div className="flex flex-col gap-4 rounded-card bg-dark-teal p-6 text-white">
-          <h3 className="text-h3">Poin Anda</h3>
-          <p className="font-heading text-h1 text-light-green">67</p>
-          <span className="rounded-button bg-emerald py-3 text-center text-body text-ink">
-            Tukar Hadiah
-          </span>
-        </div>
-        <p className="text-body text-danger">Contoh pesan error: email atau password salah.</p>
-      </section>
+      <hr className="border-border" />
+
+      <header>
+        <h1 className="text-h1 text-dark-teal">Komponen UI dasar</h1>
+        <p className="text-body">
+          FE-02. Impor dari <code>@/components/ui</code>.
+        </p>
+      </header>
+
+      <ContohKomponen />
     </main>
   );
 }
