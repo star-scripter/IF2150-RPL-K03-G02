@@ -1,17 +1,16 @@
 /**
  * Bottom sheet konfirmasi penukaran (I-05) yang tampil di atas Halaman Hadiah.
  * Kelas DPPL: C12 - HalamanPenukaran (pilihReward)
- *
- * TODO(FE-02): ganti <dialog> dengan BottomSheet dari komponen UI dasar setelah di-merge.
  */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { BottomSheet, Button } from "@/components/ui";
 import { WARNA_JENIS, labelJenis } from "@/lib/reward";
 import type { Reward } from "@/types/api";
 
 type Props = {
-  reward: Reward;
+  /** null = sheet tertutup. */
+  reward: Reward | null;
   saldoPoin: number;
   mengirim: boolean;
   pesanGagal: string | null;
@@ -29,48 +28,56 @@ export default function KonfirmasiPenukaran({
   onBatal,
   onTukarkan,
 }: Props) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  // showModal() memberi backdrop, mengunci fokus di dialog, dan memicu "cancel" saat Escape.
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    dialog?.showModal();
-    return () => dialog?.close();
-  }, []);
-
-  // Escape dan klik latar diabaikan selama request berjalan agar hasilnya tidak hilang.
+  // useDialog FE-02 memanggil onTutup saat Escape/klik latar tanpa melihat status request,
+  // jadi penutupan ditolak di sini selama request berjalan agar hasilnya tidak hilang.
   function tutupJikaBoleh() {
     if (!mengirim) onBatal();
   }
 
+  // Sheet selalu ter-mount dan dibuka lewat `terbuka`. Jika di-mount langsung dalam keadaan
+  // terbuka, StrictMode (dev) menjalankan efek buka-tutup-buka dan event `close` yang tertunda
+  // dianggap useDialog sebagai penutupan oleh pengguna, sehingga sheet langsung tertutup.
+  return (
+    <BottomSheet
+      terbuka={reward !== null}
+      onTutup={tutupJikaBoleh}
+      judul="Konfirmasi penukaran"
+      aksi={
+        <>
+          <Button varian="sekunder" disabled={mengirim} onClick={onBatal}>
+            Batal
+          </Button>
+          <Button memuat={mengirim} onClick={onTukarkan}>
+            {mengirim ? "Memproses…" : "Tukarkan"}
+          </Button>
+        </>
+      }
+    >
+      {reward && <IsiKonfirmasi reward={reward} saldoPoin={saldoPoin} />}
+
+      {pesanGagal && (
+        <p role="alert" className="rounded-card bg-danger-bg p-3 text-sm text-danger-text">
+          {pesanGagal}
+        </p>
+      )}
+    </BottomSheet>
+  );
+}
+
+function IsiKonfirmasi({ reward, saldoPoin }: { reward: Reward; saldoPoin: number }) {
   // I05-05: hanya pratinjau; sisa poin sebenarnya dihitung server (BE-21).
   const sisaPoin = saldoPoin - reward.hargaPoin;
 
   return (
-    <dialog
-      ref={dialogRef}
-      aria-labelledby="judul-konfirmasi"
-      onCancel={(e) => {
-        e.preventDefault();
-        tutupJikaBoleh();
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) tutupJikaBoleh();
-      }}
-      className="mx-auto mt-auto mb-0 w-full max-w-md rounded-t-2xl bg-white p-5 text-dark-teal backdrop:bg-ink/40"
-    >
-      <h2 id="judul-konfirmasi" className="font-heading text-h3">
-        Konfirmasi penukaran
-      </h2>
-
-      <div className={`mt-3 rounded-card p-4 ${WARNA_JENIS[reward.jenis] ?? "bg-border/40"}`}>
+    <>
+      <div className={`rounded-card p-4 ${WARNA_JENIS[reward.jenis] ?? "bg-border/40"}`}>
         <p className="text-xs">
           {labelJenis(reward.jenis)} · Stok {format(reward.stok)}
         </p>
-        <p className="break-words font-bold">{reward.nama}</p>
+        <p className="break-words font-heading font-bold">{reward.nama}</p>
       </div>
 
-      <dl className="mt-4 flex flex-col gap-2 text-sm text-ink">
+      <dl className="flex flex-col gap-2 text-sm">
         <div className="flex justify-between">
           <dt>Poin Anda</dt>
           <dd className="font-medium">{format(saldoPoin)}</dd>
@@ -85,33 +92,7 @@ export default function KonfirmasiPenukaran({
         </div>
       </dl>
 
-      <p className="mt-3 text-xs text-ink/70">Poin yang sudah ditukarkan tidak dapat dikembalikan.</p>
-
-      {pesanGagal && (
-        <p role="alert" className="mt-3 rounded-card bg-danger/5 p-3 text-sm text-danger">
-          {pesanGagal}
-        </p>
-      )}
-
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={onBatal}
-          disabled={mengirim}
-          className="rounded-button border border-dark-teal py-3 font-medium disabled:opacity-50"
-        >
-          Batal
-        </button>
-        <button
-          type="button"
-          onClick={onTukarkan}
-          disabled={mengirim}
-          aria-busy={mengirim}
-          className="rounded-button bg-emerald py-3 font-medium text-dark-teal disabled:opacity-60"
-        >
-          {mengirim ? "Memproses…" : "Tukarkan"}
-        </button>
-      </div>
-    </dialog>
+      <p className="text-xs text-text-secondary">Poin yang sudah ditukarkan tidak dapat dikembalikan.</p>
+    </>
   );
 }
