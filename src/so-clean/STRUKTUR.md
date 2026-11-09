@@ -74,7 +74,9 @@ so-clean/
 │   │   ├── account.ts         # normalisasi dan schema Zod akun
 │   │   ├── password.ts       # hash/verify bcryptjs
 │   │   ├── session-token.ts  # sign/verify JWT dan opsi cookie
-│   │   └── session-cookie.ts # baca/tulis/hapus cookie lewat Next.js cookies()
+│   │   ├── session-cookie.ts # baca/tulis/hapus cookie lewat Next.js cookies()
+│   │   └── guard.ts          # shim sementara cek sesi/role di route handler (BE-06)
+│   ├── storage.ts             # shim sementara getUrl(key) presigned URL (BE-07)
 │   ├── controllers/
 │   │   └── _template.ts      # template controller
 │   ├── models/
@@ -90,6 +92,8 @@ so-clean/
 ├── lib/                      # kode bersama FE–BE tanpa akses DB (mis. lib/wilayah.ts)
 ├── types/                    # tipe bersama FE–BE (types/api.ts, sesuai kontrak)
 ├── tests/                    # test (Vitest)
+│   └── helpers/              # database test, data uji, cookie sesi untuk test integrasi
+├── vitest.config.mjs         # alias @/ dan setup database test
 └── public/                   # aset statis
 ```
 
@@ -204,6 +208,16 @@ Akun uji (password semua akun: `soclean123`):
 | `andi@soclean.test` | MASYARAKAT | Saldo 0 (tombol "Kurang"), membersihkan lokasi laporannya sendiri (tanda "Pelapor = Relawan") |
 
 Isi lain: 5 reward (satu stok 0 untuk "Habis"), 7 lokasi di ketiga wilayah (5 TERCEMAR, 2 DIBERSIHKAN), antrean Operator berisi 3 ReportIt (satu berjarak ±30 m dari lokasi yang ada, untuk demo penggabungan K13) dan 3 CleanIt (dua untuk lokasi yang sama, untuk demo K12), serta laporan VALID/TIDAK_VALID untuk notifikasi.
+
+### Test integrasi (database test)
+
+Test model dan endpoint BE memakai database PostgreSQL sungguhan, tetapi **database terpisah** yang namanya berakhiran `_test`, karena setiap test mengosongkan semua tabel (TRUNCATE). Jalankan dari folder `src/`:
+
+```bash
+docker compose exec -e POSTGRES_DB=soclean_test web npm test
+```
+
+Database `soclean_test` dibuat dan dimigrasi otomatis oleh `tests/helpers/global-setup.ts`; `soclean_dev` tidak disentuh. Tanpa `POSTGRES_DB=*_test` (misalnya `npm test` di host), test integrasi di-skip dan test lain tetap berjalan. Data uji dibuat dengan helper di `tests/helpers/db.ts`, dan cookie sesi dengan `tests/helpers/sesi.ts`.
 
 ## Catatan
 
