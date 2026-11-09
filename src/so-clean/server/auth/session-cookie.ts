@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { ApiError } from "@/server/api";
+import type { Role } from "@/types/api";
 import {
   SESSION_COOKIE_NAME,
   sessionCookieOptions,
@@ -28,6 +29,15 @@ export async function requireSessionCookie(): Promise<SessionPayload> {
   const session = await getSessionCookie();
   if (!session) {
     throw new ApiError("UNAUTHORIZED", "Sesi tidak valid atau telah berakhir.");
+  }
+  return session;
+}
+
+/** Role guard untuk Route Handler; pastikan dipanggil per endpoint, bukan hanya di Proxy. */
+export async function requireRoleCookie(requiredRole: Role): Promise<SessionPayload> {
+  const session = await requireSessionCookie();
+  if (session.role !== requiredRole) {
+    throw new ApiError("FORBIDDEN", "Role tidak memiliki akses ke endpoint ini.");
   }
   return session;
 }

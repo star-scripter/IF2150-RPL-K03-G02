@@ -14,9 +14,15 @@ vi.mock("next/headers", () => ({ cookies }));
 import {
   deleteSessionCookie,
   getSessionCookie,
+  requireRoleCookie,
   setSessionCookie,
 } from "../server/auth/session-cookie";
-import { SESSION_COOKIE_NAME, SESSION_TTL_SECONDS, verifySessionToken } from "../server/auth/session-token";
+import {
+  SESSION_COOKIE_NAME,
+  SESSION_TTL_SECONDS,
+  signSessionToken,
+  verifySessionToken,
+} from "../server/auth/session-token";
 
 beforeEach(() => {
   vi.stubEnv("SESSION_SECRET", "test-session-secret-with-enough-entropy");
@@ -65,5 +71,30 @@ describe("session cookie adapter", () => {
   it("deletes the named session cookie on logout", async () => {
     await deleteSessionCookie();
     expect(cookieStore.delete).toHaveBeenCalledWith(SESSION_COOKIE_NAME);
+  });
+
+  it("returns UNAUTHORIZED when a protected route has no session", async () => {
+    await expect(requireRoleCookie("OPERATOR")).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+      status: 401,
+    });
+  });
+
+  it("returns FORBIDDEN when the signed session has the wrong role", async () => {
+    const token = await signSessionToken({ idPengguna: "user-id", role: "MASYARAKAT" });
+    cookieStore.get.mockReturnValue({ name: SESSION_COOKIE_NAME, value: token });
+
+    await expect(requireRoleCookie("OPERATOR")).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      status: 403,
+    });
+  });
+
+  it("returns the verified session when the role is allowed", async () => {
+    const session = { idPengguna: "operator-id", role: "OPERATOR" as const };
+    const token = await signSessionToken(session);
+    cookieStore.get.mockReturnValue({ name: SESSION_COOKIE_NAME, value: token });
+
+    await expect(requireRoleCookie("OPERATOR")).resolves.toEqual(session);
   });
 });
