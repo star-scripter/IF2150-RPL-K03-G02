@@ -13,7 +13,7 @@
  * Kelas DPPL: C15 - ManagerLaporan
  */
 import { z } from "zod";
-import { ApiError, apiSuccess, parseQuery, validateInput } from "@/server/api";
+import { ApiError, apiSuccess, parseJsonBody, parseQuery, validateInput } from "@/server/api";
 import { zodIssuesToFields } from "@/server/api/errors";
 import type { Sesi } from "@/server/auth/guard";
 import { diDalamWilayah } from "@/lib/wilayah";
@@ -23,7 +23,7 @@ import * as LaporanModel from "@/server/models/laporan";
 import * as MediaModel from "@/server/models/media";
 import * as PenggunaModel from "@/server/models/pengguna";
 import { getUrl } from "@/server/storage/s3";
-import type { JenisSampah, LokasiDetail, Media, OkResponse, Sumber } from "@/types/api";
+import type { BuatLaporanResponse, JenisSampah, LokasiDetail, Media, OkResponse, Sumber } from "@/types/api";
 
 /** Batas kolom `serial` (int4), supaya ID di luar rentang tidak sampai ke database. */
 const MAKS_ID = 2_147_483_647;
@@ -201,6 +201,52 @@ export async function cek_laporan(
     return { ...parsed.data, idPengguna, waktu: new Date(parsed.data.waktu) };
   }
   return { ...parsed.data, idPengguna, waktu: new Date(parsed.data.waktu) };
+}
+
+/** POST /api/laporan — buat ReportIt/CleanIt dan tautkan medianya secara atomik (BE-11). */
+export async function buat_laporan(request: Request, sesi: Sesi): Promise<Response> {
+  const input = await parseJsonBody(request, z.unknown());
+
+  const data = await db.transaction(async (tx): Promise<BuatLaporanResponse> => {
+    const tervalidasi = await cek_laporan(input, sesi.idPengguna, tx);
+    const inputModel: LaporanModel.LaporanBaru =
+      tervalidasi.jenis === "REPORTIT"
+        ? {
+            jenis: tervalidasi.jenis,
+            idPengguna: tervalidasi.idPengguna,
+            judul: tervalidasi.judul,
+            waktu: tervalidasi.waktu,
+            lokasi: tervalidasi.lokasi,
+            latitude: tervalidasi.latitude,
+            longitude: tervalidasi.longitude,
+            sumber: tervalidasi.sumber,
+            jenisSampah: tervalidasi.jenisSampah,
+          }
+        : {
+            jenis: tervalidasi.jenis,
+            idPengguna: tervalidasi.idPengguna,
+            judul: tervalidasi.judul,
+            waktu: tervalidasi.waktu,
+            lokasiId: tervalidasi.lokasiId,
+          };
+    const laporanBaru = await LaporanModel.buatLaporan(inputModel, tx);
+
+    const jumlahMediaTertaut = await MediaModel.tautkanKeLaporan(
+      tervalidasi.idMedia,
+      sesi.idPengguna,
+      laporanBaru.idLaporan,
+      tx,
+    );
+    if (jumlahMediaTertaut !== tervalidasi.idMedia.length) {
+      throw new ApiError("FORMAT_TIDAK_VALID", "Media berubah atau sudah tertaut saat laporan dibuat.", {
+        idMedia: "Pilih kembali media yang belum digunakan.",
+      });
+    }
+
+    return { idLaporan: laporanBaru.idLaporan, status: "BELUM_DIPERIKSA" };
+  });
+
+  return apiSuccess(data, 201);
 }
 
 /** Ubah `storage_key` media menjadi presigned URL (BE-07). */

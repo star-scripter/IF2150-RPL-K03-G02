@@ -1,5 +1,5 @@
 /** Model Media — menyimpan metadata media dan mengecek penggunaan ulang hash (C03). */
-import { and, eq, inArray, ne } from "drizzle-orm";
+import { and, eq, inArray, isNull, ne } from "drizzle-orm";
 import { db, type Db } from "@/server/db";
 import { laporan, media } from "@/server/db/schema";
 import type { TipeMedia } from "@/types/api";
@@ -51,6 +51,24 @@ export async function getUntukLaporan(
     })
     .from(media)
     .where(and(inArray(media.id, idMedia), eq(media.idPengguna, idPengguna)));
+}
+
+/** Tautkan hanya media milik pengguna yang masih belum terpakai; caller memeriksa jumlah baris. */
+export async function tautkanKeLaporan(
+  idMedia: number[],
+  idPengguna: string,
+  idLaporan: number,
+  tx: Pick<Db, "update"> = db,
+): Promise<number> {
+  if (idMedia.length === 0) return 0;
+
+  const rows = await tx
+    .update(media)
+    .set({ laporanId: idLaporan })
+    .where(and(inArray(media.id, idMedia), eq(media.idPengguna, idPengguna), isNull(media.laporanId)))
+    .returning({ idMedia: media.id });
+
+  return rows.length;
 }
 
 /** Simpan metadata setelah object berhasil diunggah; laporanId sengaja tetap NULL. */
