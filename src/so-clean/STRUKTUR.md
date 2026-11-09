@@ -79,9 +79,13 @@ so-clean/
 │   ├── storage/
 │   │   └── s3.ts              # adapter S3: upload(file), getUrl(key) (BE-07)
 │   ├── controllers/
+│   │   ├── media.ts          # unggah dan proses bukti media (BE-08)
 │   │   └── _template.ts      # template controller
 │   ├── models/
+│   │   ├── media.ts          # query media dan cek penggunaan hash (BE-08)
 │   │   └── _template.ts      # template model
+│   ├── media/
+│   │   └── processing.ts    # validasi format dan watermark foto dengan sharp (BE-08)
 │   └── db/
 │       ├── index.ts          # koneksi Drizzle + pg (dari POSTGRES_* di .env)
 │       ├── schema/           # definisi tabel Drizzle, satu file per tabel
