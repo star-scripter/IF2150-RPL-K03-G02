@@ -1,15 +1,80 @@
 /**
- * Model Pengguna — operasi saldo poin (C08 Q-001–Q-003).
+ * Model Pengguna — operasi auth (BE-05) dan saldo poin (C08 Q-001–Q-003).
  *
- * Saldo selalu dibaca/ditulis langsung di database, bukan dari cookie sesi. Operasi tulis
- * menerima `tx` agar bisa dijalankan di dalam transaksi yang dibuka controller (penukaran BE-21,
- * setujui CleanIt BE-14). Fungsi auth (register, login, `/api/me`) ditambahkan oleh BE-05.
+ * Data profil dan saldo selalu dibaca/ditulis langsung di database, bukan dari cookie sesi.
+ * Operasi saldo menerima `tx` agar bisa dijalankan di dalam transaksi yang dibuka controller
+ * (penukaran BE-21, setujui CleanIt BE-14).
  *
  * Kelas DPPL: C08 - Pengguna
  */
 import { and, eq, gte, sql } from "drizzle-orm";
+import type { Pengguna, PenggunaMe } from "@/types/api";
+import { normalisasiEmail, normalisasiNama } from "@/server/auth/account";
 import { db, type Db } from "@/server/db";
 import { pengguna } from "@/server/db/schema";
+
+export type PenggunaUntukLogin = Pengguna & {
+  passwordHash: string;
+};
+
+/** Ambil data autentikasi lewat email yang telah dinormalisasi; null jika tidak ada. */
+export async function cariUntukLogin(email: string): Promise<PenggunaUntukLogin | null> {
+  const [row] = await db
+    .select({
+      id: pengguna.id,
+      nama: pengguna.nama,
+      email: pengguna.email,
+      role: pengguna.role,
+      passwordHash: pengguna.passwordHash,
+    })
+    .from(pengguna)
+    .where(eq(pengguna.email, normalisasiEmail(email)))
+    .limit(1);
+
+  return row ?? null;
+}
+
+/** Buat akun register dengan role tetap MASYARAKAT; null menandakan email sudah dipakai. */
+export async function buatMasyarakat(input: {
+  nama: string;
+  email: string;
+  passwordHash: string;
+}): Promise<Pengguna | null> {
+  const [row] = await db
+    .insert(pengguna)
+    .values({
+      nama: normalisasiNama(input.nama),
+      email: normalisasiEmail(input.email),
+      passwordHash: input.passwordHash,
+      role: "MASYARAKAT",
+    })
+    .onConflictDoNothing({ target: pengguna.email })
+    .returning({
+      id: pengguna.id,
+      nama: pengguna.nama,
+      email: pengguna.email,
+      role: pengguna.role,
+    });
+
+  return row ?? null;
+}
+
+/** Ambil data profil terkini dari database, bukan dari claim JWT. */
+export async function getMe(idPengguna: string): Promise<PenggunaMe | null> {
+  const [row] = await db
+    .select({
+      id: pengguna.id,
+      nama: pengguna.nama,
+      email: pengguna.email,
+      role: pengguna.role,
+      saldoPoin: pengguna.saldoPoin,
+    })
+    .from(pengguna)
+    .where(eq(pengguna.id, idPengguna))
+    .limit(1);
+
+  return row ?? null;
+}
 
 /** `db` atau `tx` dari `db.transaction(...)`. */
 type Eksekutor = Pick<Db, "select" | "update">;

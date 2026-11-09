@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { MswProvider } from "@/components/MswProvider";
+import { Toaster } from "@/components/ui/Toast";
 
 // Font sesuai Figma: Inter untuk body, Plus Jakarta Sans untuk heading (FE-01).
 const inter = Inter({
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <MswProvider>{children}</MswProvider>
+        <Toaster />
       </body>
     </html>
   );
