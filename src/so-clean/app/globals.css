@@ -15,10 +15,19 @@
   --color-sky-blue: #85d5f6;
   --color-border: #d5e0dc;
   --color-white: #ffffff;
+  --color-text-secondary: #5b6b67;
+  --color-yellow: #f2a93b;
+
+  /* Warna dari desain Figma yang tidak disimpan sebagai variabel (FE-02) */
+  --color-surface: #f5faf8; /* latar halaman Operator dan kotak info Detail Laporan */
+  --color-warning-bg: #fff4df; /* badge "menunggu validasi" */
+  --color-warning-text: #82601f;
+  --color-danger: #d64545; /* tombol "Tolak" di Detail Laporan; juga pesan error */
 
   /* Warna pendukung (non-Figma) */
   --color-ink: #000000; /* teks utama; Figma memakai hitam tanpa variabel */
-  --color-danger: #d92d20; /* pesan error dan validasi */
+  --color-danger-text: #b42318; /* teks error di atas latar putih (kontras ≥ 4.5:1) */
+  --color-danger-bg: #fdecea; /* latar badge/toast bahaya */
 
   /* Tipografi (Figma): Heading 1–3 memakai Plus Jakarta Sans, Body memakai Inter */
   --text-h1: 2rem; /* 32px */
@@ -34,9 +43,36 @@
   --text-body--line-height: 1.5rem; /* 24px */
   --text-body--font-weight: 400;
 
-  /* Radius (diukur dari desain; Figma tidak menyimpannya sebagai variabel) */
-  --radius-card: 8px;
-  --radius-button: 10px;
+  /* Radius (dari komponen Figma; tidak disimpan sebagai variabel).
+   * FE-02: card dan button disamakan dengan komponen "General Card", "Lokasi Card", "Button",
+   * dan "Login Field" yang memakai 12px. */
+  --radius-card: 12px;
+  --radius-button: 12px;
+  --radius-sheet: 16px; /* sudut atas bottom sheet "Dialog" */
+
+  /* Animasi komponen (FE-02): animate-muncul (Modal, Toast) dan animate-naik (Bottom Sheet) */
+  --animate-muncul: muncul 150ms ease-out;
+  --animate-naik: naik 200ms ease-out;
+
+  @keyframes muncul {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+
+  @keyframes naik {
+    from {
+      transform: translateY(100%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::backdrop {
+    animation: none !important;
+  }
 }
 
 /* Font dimuat oleh next/font di app/layout.tsx sebagai CSS variable. */

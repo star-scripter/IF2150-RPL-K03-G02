@@ -7,6 +7,6 @@
  *
  *   docker compose exec -e POSTGRES_DB=soclean_test web npm test
  *
- * Aturan yang sama dipakai `vitest.config.mts` untuk menjalankan file test berurutan.
+ * Aturan yang sama dipakai `vitest.config.mjs` untuk menjalankan file test berurutan.
  */
 export const DATABASE_TEST_AKTIF = /^[a-z0-9_]+_test$/.test(process.env.POSTGRES_DB ?? "");
