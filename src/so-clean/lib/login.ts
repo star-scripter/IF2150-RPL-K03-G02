@@ -5,8 +5,15 @@
  * Validasi klien hanya mencegah request yang pasti gagal (isian kosong, email tanpa format).
  * Aturan akun lengkap (N7) tetap diperiksa server; login gagal selalu satu pesan generik.
  */
+import type { Role } from "../types/api";
 import { ApiError } from "./api/client";
 import { PESAN_ERROR } from "./api/pesan-error";
+import { ROUTE } from "./nav";
+
+/** Halaman tujuan setelah login: Operator → validasi laporan (I-07), Masyarakat → Beranda (I-03). */
+export function tujuanSetelahLogin(role: Role): string {
+  return role === "OPERATOR" ? ROUTE.operatorLaporan : ROUTE.beranda;
+}
 
 export type IsianLogin = {
   email: string;

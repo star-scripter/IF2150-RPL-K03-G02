@@ -11,14 +11,13 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Button, Textbox } from "@/components/ui";
 import { authApi } from "@/lib/api/endpoints";
-import { galatDariError, normalisasiEmail, validasiLogin, type GalatLogin } from "@/lib/login";
-
-/**
- * Tujuan sementara setelah login berhasil.
- * TODO(FE-03/FE-05): arahkan sesuai role memakai `ROUTE` dari `lib/nav.ts`
- * (Masyarakat → beranda I-03, Operator → laporan I-07) setelah FE-03 masuk `dev`.
- */
-const TUJUAN_SETELAH_LOGIN = "/";
+import {
+  galatDariError,
+  normalisasiEmail,
+  tujuanSetelahLogin,
+  validasiLogin,
+  type GalatLogin,
+} from "@/lib/login";
 
 export function FormLogin() {
   const router = useRouter();
@@ -37,8 +36,8 @@ export function FormLogin() {
 
     setMemuat(true);
     try {
-      await authApi.login({ email: normalisasiEmail(email), password });
-      router.replace(TUJUAN_SETELAH_LOGIN);
+      const pengguna = await authApi.login({ email: normalisasiEmail(email), password });
+      router.replace(tujuanSetelahLogin(pengguna.role));
       // Tombol tetap memuat sampai halaman berpindah, agar tidak bisa diklik dua kali.
     } catch (error) {
       setGalat(galatDariError(error));

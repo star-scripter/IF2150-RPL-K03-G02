@@ -3,7 +3,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 import { ApiError } from "../lib/api/client";
 import { authApi } from "../lib/api/endpoints";
 import { PESAN_ERROR } from "../lib/api/pesan-error";
-import { galatDariError, normalisasiEmail, validasiLogin } from "../lib/login";
+import { galatDariError, normalisasiEmail, tujuanSetelahLogin, validasiLogin } from "../lib/login";
+import { ROUTE } from "../lib/nav";
 import { PASSWORD_UJI, resetDb } from "../mocks/db";
 import { server } from "../mocks/node";
 
@@ -32,6 +33,13 @@ describe("validasiLogin", () => {
 describe("normalisasiEmail", () => {
   it("trim dan huruf kecil seperti server (N7)", () => {
     expect(normalisasiEmail("  Warga@SoClean.TEST ")).toBe("warga@soclean.test");
+  });
+});
+
+describe("tujuanSetelahLogin", () => {
+  it("Masyarakat ke Beranda (I-03), Operator ke validasi laporan (I-07)", () => {
+    expect(tujuanSetelahLogin("MASYARAKAT")).toBe(ROUTE.beranda);
+    expect(tujuanSetelahLogin("OPERATOR")).toBe(ROUTE.operatorLaporan);
   });
 });
 
