@@ -8,12 +8,13 @@
  * 2. Satu fungsi controller = satu endpoint. Panggil dari route handler `app/api/**\/route.ts`;
  *    route handler cukup meneruskan request, tanpa logika:
  *
- *      // app/api/reward/[id]/route.ts
- *      import { getDetailReward } from "@/server/controllers/reward";
+ *      // app/api/reward/route.ts — endpoint GET /api/reward sesuai kontrak
+ *      import { handleApiRequest } from "@/server/api";
+ *      import { getDaftarReward } from "@/server/controllers/reward";
  *
- *      export async function GET(_req: Request, { params }: RouteContext<"/api/reward/[id]">) {
- *        const { id } = await params; // di Next.js 16, params berupa Promise
- *        return getDetailReward(id);
+ *      export function GET(request: Request): Promise<Response> {
+ *        // Terapkan cek akses sesi/role sesuai BE-06 sebelum menjalankan controller.
+ *        return handleApiRequest(request, () => getDaftarReward());
  *      }
  *
  * Tanggung jawab controller:
@@ -31,36 +32,28 @@
  * Kelas DPPL: Cxx - <NamaKelas>
  */
 import * as RewardModel from "@/server/models/_template";
-
-// TODO(BE-04): pindahkan helper respons ini ke modul bersama agar tidak disalin di tiap controller.
-function sukses<T>(data: T, status = 200): Response {
-  return Response.json({ data }, { status });
-}
-
-function gagal(status: number, code: string, message: string, fields?: Record<string, string>) {
-  return Response.json({ error: { code, message, ...(fields && { fields }) } }, { status });
-}
+import { ApiError, apiFailure, apiSuccess } from "@/server/api";
 
 /** GET /api/reward — UC08, C09 getRewardTersedia() */
 export async function getDaftarReward(): Promise<Response> {
   // Route handler menerapkan cek akses sesuai BE-06 sebelum memanggil controller.
   const daftar = await RewardModel.getRewardTersedia();
-  return sukses(daftar);
+  return apiSuccess(daftar);
 }
 
 /** GET /api/reward/:id — C09 cariReward(idReward) */
 export async function getDetailReward(idParam: string): Promise<Response> {
   const idReward = Number(idParam);
   if (!Number.isInteger(idReward) || idReward <= 0) {
-    return gagal(400, "FORMAT_TIDAK_VALID", "ID reward tidak valid.", {
+    return apiFailure(new ApiError("FORMAT_TIDAK_VALID", "ID reward tidak valid.", {
       id: "Harus bilangan bulat positif.",
-    });
+    }));
   }
 
   const reward = await RewardModel.cariReward(idReward);
   if (!reward) {
-    return gagal(404, "NOT_FOUND", "Reward tidak ditemukan.");
+    return apiFailure(new ApiError("NOT_FOUND", "Reward tidak ditemukan."));
   }
 
-  return sukses(reward);
+  return apiSuccess(reward);
 }
