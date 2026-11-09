@@ -70,6 +70,14 @@ so-clean/
 │   │   ├── logger.ts          # logging request terstruktur tanpa body/secret
 │   │   ├── responses.ts       # apiSuccess, apiList, apiFailure
 │   │   └── validation.ts      # parseJsonBody, parseQuery, parseFormData (Zod)
+│   ├── auth/                  # validasi akun, hashing password, JWT dan cookie sesi
+│   │   ├── account.ts         # normalisasi dan schema Zod akun
+│   │   ├── password.ts       # hash/verify bcryptjs
+│   │   ├── session-token.ts  # sign/verify JWT dan opsi cookie
+│   │   ├── session-cookie.ts # baca/tulis/hapus cookie lewat Next.js cookies()
+│   │   └── guard.ts          # shim sementara cek sesi/role di route handler (BE-06)
+│   ├── storage/
+│   │   └── s3.ts              # adapter S3: upload(file), getUrl(key) (BE-07)
 │   ├── controllers/
 │   │   └── _template.ts      # template controller
 │   ├── models/
@@ -85,6 +93,8 @@ so-clean/
 ├── lib/                      # kode bersama FE–BE tanpa akses DB (mis. lib/wilayah.ts)
 ├── types/                    # tipe bersama FE–BE (types/api.ts, sesuai kontrak)
 ├── tests/                    # test (Vitest)
+│   └── helpers/              # database test, data uji, cookie sesi untuk test integrasi
+├── vitest.config.mjs         # alias @/ dan setup database test
 └── public/                   # aset statis
 ```
 
@@ -98,9 +108,11 @@ so-clean/
 | --- | --- | --- | --- |
 | Proxy | `proxy.ts` | Pemeriksaan sesi cepat untuk redirect halaman sesuai BE-06 | Menjadi satu-satunya penjaga autentikasi/otorisasi; melakukan query DB |
 | View | `app/(pages)/`, `components/` | Menampilkan data, menerima input, memanggil `/api/...` | Import apa pun dari `server/` |
-| Route handler | `app/api/**/route.ts` | Menerapkan cek autentikasi/role sesuai akses endpoint; membungkus pemanggilan controller dengan `handleApiRequest` | Berisi logika bisnis atau query |
+| Auth utility | `server/auth/` | Normalisasi/validasi akun, hash password, sign/verify session JWT, serta operasi cookie session | Query database atau menyusun respons API |
+| Route handler | `app/api/**/route.ts` | Mengambil `params`, menerapkan cek autentikasi/role sesuai akses endpoint, membungkus pemanggilan controller dengan `handleApiRequest(request, routeTemplate, operation)` | Berisi logika bisnis atau query |
 | API bersama | `server/api/` | Membuat respons kontrak, memetakan error, memvalidasi input dengan Zod, mencatat log request terstruktur | Mengakses database atau memuat logika bisnis |
-| Controller | `server/controllers/` | Validasi input dengan helper Zod, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons dengan `apiSuccess`/`apiFailure` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
+| Controller | `server/controllers/` | Validasi input dengan helper Zod, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons dengan `apiSuccess`/`apiList`/`apiFailure` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
+| Storage adapter | `server/storage/s3.ts` | Upload object ke RustFS/R2 dan membuat presigned read URL dari storage key | Menulis query database atau membuat respons HTTP |
 | Model (operasi) | `server/models/` | Query lewat `db`, aturan milik satu entitas, memetakan kolom ke field kontrak | Membaca `Request` atau membuat `Response` (tidak tahu soal HTTP) |
 | Model (atribut) | `server/db/schema/` | Definisi tabel: kolom, tipe, constraint, index, relasi | Berisi fungsi/query, atau import selain `drizzle-orm` dan file schema lain |
 | DB | `server/db/index.ts`, `server/db/migrations/` | Koneksi database dan file migrasi hasil `drizzle-kit`; `db` boleh diimpor model untuk query dan controller hanya untuk membuka `db.transaction` | Diimpor oleh view atau kode bersama; controller menjalankan query langsung |
@@ -198,6 +210,16 @@ Akun uji (password semua akun: `soclean123`):
 | `andi@soclean.test` | MASYARAKAT | Saldo 0 (tombol "Kurang"), membersihkan lokasi laporannya sendiri (tanda "Pelapor = Relawan") |
 
 Isi lain: 5 reward (satu stok 0 untuk "Habis"), 7 lokasi di ketiga wilayah (5 TERCEMAR, 2 DIBERSIHKAN), antrean Operator berisi 3 ReportIt (satu berjarak ±30 m dari lokasi yang ada, untuk demo penggabungan K13) dan 3 CleanIt (dua untuk lokasi yang sama, untuk demo K12), serta laporan VALID/TIDAK_VALID untuk notifikasi.
+
+### Test integrasi (database test)
+
+Test model dan endpoint BE memakai database PostgreSQL sungguhan, tetapi **database terpisah** yang namanya berakhiran `_test`, karena setiap test mengosongkan semua tabel (TRUNCATE). Jalankan dari folder `src/`:
+
+```bash
+docker compose exec -e POSTGRES_DB=soclean_test web npm test
+```
+
+Database `soclean_test` dibuat dan dimigrasi otomatis oleh `tests/helpers/global-setup.ts`; `soclean_dev` tidak disentuh. Tanpa `POSTGRES_DB=*_test` (misalnya `npm test` di host), test integrasi di-skip dan test lain tetap berjalan. Data uji dibuat dengan helper di `tests/helpers/db.ts`, dan cookie sesi dengan `tests/helpers/sesi.ts`.
 
 ## Catatan
 

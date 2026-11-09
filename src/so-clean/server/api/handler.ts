@@ -5,6 +5,7 @@ import {
   STATUS_BY_ERROR_CODE,
 } from "./errors";
 import type { KodeError } from "@/types/api";
+import { unstable_rethrow } from "next/navigation";
 import { ZodError } from "zod";
 import { apiFailure } from "./responses";
 
@@ -49,6 +50,8 @@ export async function handleApiRequest(
   try {
     response = await operation();
   } catch (error) {
+    // Preserve Next.js control-flow errors (e.g. request-time cookies during build).
+    unstable_rethrow(error);
     const apiError = normalizeApiError(error);
     errorCode = apiError.code;
     errorCategory =
