@@ -81,6 +81,7 @@ so-clean/
 │   ├── controllers/
 │   │   └── _template.ts      # template controller
 │   ├── models/
+│   │   ├── laporan.ts       # operasi query/persistensi laporan (BE-09)
 │   │   └── _template.ts      # template model
 │   └── db/
 │       ├── index.ts          # koneksi Drizzle + pg (dari POSTGRES_* di .env)

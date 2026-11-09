@@ -17,7 +17,7 @@ import { ApiError, apiSuccess, parseQuery, validateInput } from "@/server/api";
 import type { Sesi } from "@/server/auth/guard";
 import * as LokasiModel from "@/server/models/lokasi";
 import * as PenggunaModel from "@/server/models/pengguna";
-import { getUrl } from "@/server/storage";
+import { getUrl } from "@/server/storage/s3";
 import type { LokasiDetail, Media, OkResponse } from "@/types/api";
 
 /** Batas kolom `serial` (int4), supaya ID di luar rentang tidak sampai ke database. */
