@@ -1,5 +1,6 @@
 /**
- * Model Pengguna — operasi auth (BE-05) dan saldo poin (C08 Q-001–Q-003).
+ * Model Pengguna — operasi auth (BE-05), saldo poin (C08 Q-001–Q-003), dan notifikasi
+ * (pengganti `notify`).
  *
  * Data profil dan saldo selalu dibaca/ditulis langsung di database, bukan dari cookie sesi.
  * Operasi saldo menerima `tx` agar bisa dijalankan di dalam transaksi yang dibuka controller
@@ -7,11 +8,11 @@
  *
  * Kelas DPPL: C08 - Pengguna
  */
-import { and, eq, gte, sql } from "drizzle-orm";
-import type { Pengguna, PenggunaMe } from "@/types/api";
+import { and, desc, eq, gte, isNotNull, sql } from "drizzle-orm";
+import type { Notifikasi, Pengguna, PenggunaMe } from "@/types/api";
 import { normalisasiEmail, normalisasiNama } from "@/server/auth/account";
 import { db, type Db } from "@/server/db";
-import { pengguna } from "@/server/db/schema";
+import { laporan, lokasi, pengguna } from "@/server/db/schema";
 
 export type PenggunaUntukLogin = Pengguna & {
   passwordHash: string;
@@ -146,4 +147,57 @@ export async function tambah_poin(
     .where(eq(pengguna.id, idPengguna))
     .returning({ saldoPoin: pengguna.saldoPoin });
   return row?.saldoPoin ?? null;
+}
+
+/**
+ * Notifikasi pengguna, pengganti `notify` Q-004 (N8). Tidak ada tabel notifikasi: isinya
+ * diturunkan dari laporan milik pengguna yang sudah diverifikasi, urut `diverifikasi_at` terbaru.
+ * `poinDiberikan` = `lokasi.poin` hanya untuk CleanIt VALID (ReportIt tidak dapat poin, N1).
+ * Notifikasi belum dibaca jika `diverifikasi_at > notifikasi_dilihat_at` atau kolom itu NULL;
+ * perbandingan dilakukan di SQL agar presisi mikrodetik `timestamptz` tidak hilang.
+ */
+export async function getNotifikasi(idPengguna: string): Promise<Notifikasi[]> {
+  const rows = await db
+    .select({
+      idLaporan: laporan.id,
+      jenis: laporan.jenis,
+      judul: laporan.judul,
+      status: laporan.status,
+      alasanPenolakan: laporan.alasanPenolakan,
+      poinLokasi: lokasi.poin,
+      waktu: laporan.diverifikasiAt,
+      dibaca: sql<boolean>`coalesce(${laporan.diverifikasiAt} <= ${pengguna.notifikasiDilihatAt}, false)`,
+    })
+    .from(laporan)
+    .innerJoin(pengguna, eq(pengguna.id, laporan.idPengguna))
+    .leftJoin(lokasi, eq(lokasi.id, laporan.lokasiId))
+    .where(and(eq(laporan.idPengguna, idPengguna), isNotNull(laporan.diverifikasiAt)))
+    .orderBy(desc(laporan.diverifikasiAt), desc(laporan.id));
+
+  return rows.map((row) => {
+    // Dijaga WHERE + CHECK laporan_verifikasi_check: laporan terverifikasi selalu punya waktu.
+    if (row.waktu === null || row.status === "BELUM_DIPERIKSA") {
+      throw new Error(`Laporan ${row.idLaporan} belum diverifikasi.`);
+    }
+    return {
+      idLaporan: row.idLaporan,
+      jenis: row.jenis,
+      judul: row.judul,
+      status: row.status,
+      alasanPenolakan: row.alasanPenolakan,
+      poinDiberikan: row.jenis === "CLEANIT" && row.status === "VALID" ? row.poinLokasi : null,
+      waktu: row.waktu.toISOString(),
+      dibaca: row.dibaca,
+    };
+  });
+}
+
+/** Tandai semua notifikasi sudah dibaca: `notifikasi_dilihat_at = now()`. false jika pengguna tidak ada. */
+export async function tandaiNotifikasiDibaca(idPengguna: string): Promise<boolean> {
+  const rows = await db
+    .update(pengguna)
+    .set({ notifikasiDilihatAt: sql`now()` })
+    .where(eq(pengguna.id, idPengguna))
+    .returning({ id: pengguna.id });
+  return rows.length > 0;
 }

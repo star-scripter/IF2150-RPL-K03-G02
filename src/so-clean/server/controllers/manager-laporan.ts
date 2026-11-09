@@ -5,15 +5,20 @@
  * (`get_daftar_lokasi`, `get_detail_lokasi`) yang membaca model Lokasi. Operasi laporan lain
  * milik C15 (`cek_laporan`, `get_detail`, dst.) ditambahkan oleh tugas BE-A/BE-B terkait.
  *
+ * Notifikasi juga lewat sini karena isinya diturunkan dari laporan yang sudah diverifikasi
+ * (N8); query-nya ada di model Pengguna sebagai pengganti `notify`.
+ *
  * Cek sesi/role dilakukan di route handler sebelum memanggil fungsi di sini.
  *
  * Kelas DPPL: C15 - ManagerLaporan
  */
 import { z } from "zod";
 import { ApiError, apiSuccess, parseQuery, validateInput } from "@/server/api";
+import type { Sesi } from "@/server/auth/guard";
 import * as LokasiModel from "@/server/models/lokasi";
+import * as PenggunaModel from "@/server/models/pengguna";
 import { getUrl } from "@/server/storage";
-import type { LokasiDetail, Media } from "@/types/api";
+import type { LokasiDetail, Media, OkResponse } from "@/types/api";
 
 /** Batas kolom `serial` (int4), supaya ID di luar rentang tidak sampai ke database. */
 const MAKS_ID = 2_147_483_647;
@@ -63,4 +68,21 @@ export async function get_detail_lokasi(idParam: string): Promise<Response> {
     laporanAsal: { ...lokasi.laporanAsal, media: await keMedia(lokasi.laporanAsal.media) },
   };
   return apiSuccess(detail);
+}
+
+/** GET /api/notifikasi — notifikasi hasil verifikasi laporan milik pengguna (C08 `notify`). */
+export async function getNotifikasi(sesi: Sesi): Promise<Response> {
+  const daftar = await PenggunaModel.getNotifikasi(sesi.idPengguna);
+  return apiSuccess(daftar);
+}
+
+/** POST /api/notifikasi/dibaca — set `notifikasi_dilihat_at` = sekarang. */
+export async function tandaiNotifikasiDibaca(sesi: Sesi): Promise<Response> {
+  const berhasil = await PenggunaModel.tandaiNotifikasiDibaca(sesi.idPengguna);
+  if (!berhasil) {
+    // Cookie valid, tetapi akunnya sudah tidak ada.
+    throw new ApiError("UNAUTHORIZED", "Sesi tidak valid. Silakan login kembali.");
+  }
+  const data: OkResponse = { ok: true };
+  return apiSuccess(data);
 }
