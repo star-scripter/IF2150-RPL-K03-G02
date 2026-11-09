@@ -79,11 +79,12 @@ so-clean/
 │   ├── storage/
 │   │   └── s3.ts              # adapter S3: upload(file), getUrl(key) (BE-07)
 │   ├── controllers/
+│   │   ├── manager-laporan.ts # validasi dan pembuatan laporan ReportIt/CleanIt (BE-10/11)
 │   │   ├── media.ts          # unggah dan proses bukti media (BE-08)
 │   │   └── _template.ts      # template controller
 │   ├── models/
 │   │   ├── laporan.ts       # operasi query/persistensi laporan (BE-09)
-│   │   ├── media.ts          # query media dan cek penggunaan hash (BE-08)
+│   │   ├── media.ts          # query, cek hash, dan tautkan media (BE-08/10/11)
 │   │   └── _template.ts      # template model
 │   ├── media/
 │   │   └── processing.ts    # validasi format dan watermark foto dengan sharp (BE-08)
