@@ -6,6 +6,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import DaftarReward from "@/components/DaftarReward";
 import KartuSaldo from "@/components/KartuSaldo";
@@ -14,6 +15,8 @@ import { Button, notify } from "@/components/ui";
 import { ApiError } from "@/lib/api/client";
 import { penukaranApi, poinApi, rewardApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
+import { hapusHasilPenukaran, simpanHasilPenukaran } from "@/components/PenukaranBerhasil";
+import { ROUTE } from "@/lib/nav";
 import { tindakanGagalTukar } from "@/lib/penukaran";
 import type { Reward } from "@/types/api";
 
@@ -40,6 +43,7 @@ async function ambilData(signal: AbortSignal): Promise<StateHalaman> {
 }
 
 export default function HalamanPenukaran() {
+  const router = useRouter();
   const [state, setState] = useState<StateHalaman>({ status: "memuat" });
   const [percobaan, setPercobaan] = useState(0);
   const [dipilih, setDipilih] = useState<Reward | null>(null);
@@ -47,6 +51,19 @@ export default function HalamanPenukaran() {
   const [pesanGagal, setPesanGagal] = useState<string | null>(null);
   // Ref menahan klik kedua yang datang sebelum state `mengirim` sempat menonaktifkan tombol.
   const sedangMengirim = useRef(false);
+
+  // Hasil penukaran lama dibuang saat I-04 dibuka agar Back tidak menampilkan I-06 yang basi.
+  // cacheComponents menyimpan state halaman yang ditinggalkan; cleanup berjalan saat I-04
+  // disembunyikan, jadi sheet dan kunci kirim di-reset sebelum halaman dipakai lagi.
+  useEffect(() => {
+    hapusHasilPenukaran();
+    return () => {
+      sedangMengirim.current = false;
+      setMengirim(false);
+      setDipilih(null);
+      setPesanGagal(null);
+    };
+  }, []);
 
   useEffect(() => {
     const pengendali = new AbortController();
@@ -85,23 +102,20 @@ export default function HalamanPenukaran() {
     sedangMengirim.current = true;
     setMengirim(true);
     setPesanGagal(null);
+    let pindahHalaman = false;
 
     try {
       const hasil = await penukaranApi.tukar({ idReward: dipilih.idReward });
-      setState((s) =>
-        s.status === "siap"
-          ? {
-              ...s,
-              saldoPoin: hasil.sisaPoin,
-              daftar: s.daftar.map((r) =>
-                r.idReward === dipilih.idReward ? { ...r, stok: r.stok - 1 } : r,
-              ),
-            }
-          : s,
-      );
-      tutupKonfirmasi();
-      // TODO(FE-20): buka I-06 dengan `hasil` alih-alih notifikasi.
-      notify.sukses("Penukaran berhasil");
+      if (simpanHasilPenukaran(hasil)) {
+        pindahHalaman = true;
+        router.push(ROUTE.hadiahBerhasil);
+      } else {
+        // Storage diblokir (mis. mode privat) sehingga I-06 tidak bisa dibuka; kode voucher
+        // tetap ditampilkan lewat notifikasi yang tidak hilang sendiri.
+        tutupKonfirmasi();
+        notify.sukses(`Penukaran berhasil. Kode voucher: ${hasil.kodeVoucher}`, 0);
+        segarkan();
+      }
     } catch (error) {
       const code = error instanceof ApiError ? error.code : "INTERNAL_ERROR";
       const teks = error instanceof ApiError ? error.message : pesanError("INTERNAL_ERROR");
@@ -114,8 +128,11 @@ export default function HalamanPenukaran() {
       }
       if (tindakan.muatUlang) segarkan();
     } finally {
-      sedangMengirim.current = false;
-      setMengirim(false);
+      // Saat pindah ke I-06 tombol dibiarkan nonaktif agar penukaran tidak terkirim dua kali.
+      if (!pindahHalaman) {
+        sedangMengirim.current = false;
+        setMengirim(false);
+      }
     }
   }
 
@@ -138,7 +155,7 @@ export default function HalamanPenukaran() {
           <section className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <h1 className="text-h3 text-dark-teal">Redeem Poin Anda</h1>
-              <Link href="/hadiah/riwayat" className="text-sm font-medium text-dark-teal underline">
+              <Link href={ROUTE.hadiahRiwayat} className="text-sm font-medium text-dark-teal underline">
                 Riwayat
               </Link>
             </div>

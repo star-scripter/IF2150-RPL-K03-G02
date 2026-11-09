@@ -18,6 +18,8 @@ export const ROUTE = {
   reportit: "/reportit",
   lokasi: "/lokasi",
   hadiah: "/hadiah",
+  hadiahBerhasil: "/hadiah/berhasil",
+  hadiahRiwayat: "/hadiah/riwayat",
   profil: "/profil",
   operatorLaporan: "/operator/laporan",
   operatorProfil: "/operator/profil",
