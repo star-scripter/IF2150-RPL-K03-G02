@@ -63,6 +63,13 @@ so-clean/
 ├── components/               # komponen UI dan kelas view DPPL
 │   └── _Template.tsx         # template view
 ├── server/                   # kode BE, tidak boleh di-import oleh view
+│   ├── api/                   # utilitas API bersama (respons, error, validasi, logging)
+│   │   ├── index.ts           # barrel exports helper API
+│   │   ├── handler.ts         # handleApiRequest: error boundary + request logging
+│   │   ├── errors.ts          # ApiError, kode/status, normalisasi ZodError
+│   │   ├── logger.ts          # logging request terstruktur tanpa body/secret
+│   │   ├── responses.ts       # apiSuccess, apiList, apiFailure
+│   │   └── validation.ts      # parseJsonBody, parseQuery, parseFormData (Zod)
 │   ├── auth/                  # validasi akun, hashing password, JWT dan cookie sesi
 │   │   ├── account.ts         # normalisasi dan schema Zod akun
 │   │   ├── password.ts       # hash/verify bcryptjs
@@ -97,14 +104,17 @@ so-clean/
 | Proxy | `proxy.ts` | Pemeriksaan sesi cepat untuk redirect halaman sesuai BE-06 | Menjadi satu-satunya penjaga autentikasi/otorisasi; melakukan query DB |
 | View | `app/(pages)/`, `components/` | Menampilkan data, menerima input, memanggil `/api/...` | Import apa pun dari `server/` |
 | Auth utility | `server/auth/` | Normalisasi/validasi akun, hash password, sign/verify session JWT, serta operasi cookie session | Query database atau menyusun respons API |
-| Route handler | `app/api/**/route.ts` | Mengambil `params`, menerapkan cek autentikasi/role sesuai akses endpoint, memanggil satu fungsi controller | Berisi logika bisnis atau query |
-| Controller | `server/controllers/` | Validasi input, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons `{ data }` atau `{ error }` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
+| Route handler | `app/api/**/route.ts` | Mengambil `params`, menerapkan cek autentikasi/role sesuai akses endpoint, membungkus pemanggilan controller dengan `handleApiRequest(request, routeTemplate, operation)` | Berisi logika bisnis atau query |
+| API bersama | `server/api/` | Membuat respons kontrak, memetakan error, memvalidasi input dengan Zod, mencatat log request terstruktur | Mengakses database atau memuat logika bisnis |
+| Controller | `server/controllers/` | Validasi input dengan helper Zod, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons dengan `apiSuccess`/`apiList`/`apiFailure` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
 | Model (operasi) | `server/models/` | Query lewat `db`, aturan milik satu entitas, memetakan kolom ke field kontrak | Membaca `Request` atau membuat `Response` (tidak tahu soal HTTP) |
 | Model (atribut) | `server/db/schema/` | Definisi tabel: kolom, tipe, constraint, index, relasi | Berisi fungsi/query, atau import selain `drizzle-orm` dan file schema lain |
 | DB | `server/db/index.ts`, `server/db/migrations/` | Koneksi database dan file migrasi hasil `drizzle-kit`; `db` boleh diimpor model untuk query dan controller hanya untuk membuka `db.transaction` | Diimpor oleh view atau kode bersama; controller menjalankan query langsung |
 | Bersama | `lib/`, `types/` | Konstanta, tipe, dan fungsi murni yang dipakai FE dan BE | Import dari `server/` atau mengakses database |
 
 **Pengecualian import DB:** controller boleh mengimpor `db` hanya sebagai koordinator transaksi (`db.transaction(...)`). Semua operasi baca/tulis di dalam transaksi tetap dilakukan melalui fungsi model dengan `tx` yang diteruskan. Controller tidak boleh memanggil query Drizzle atau SQL secara langsung.
+
+Semua Route Handler API membungkus operasi dengan `handleApiRequest(request, routeTemplate, operation)`. `routeTemplate` harus berupa pola statis, misalnya `/api/laporan/[id]`, bukan URL/path aktual. Helper menangani `ApiError` dan `ZodError` sesuai status/kode kontrak, mengubah error tak terduga menjadi 500 `INTERNAL_ERROR`, dan mencatat method, route template, status, durasi, serta kode error bila tersedia. Log tidak boleh berisi body, header/cookie, password, token, path dinamis, atau rahasia. Gunakan `parseJsonBody`, `parseQuery`, atau `parseFormData` agar validasi request konsisten.
 
 ## Konvensi penamaan
 
