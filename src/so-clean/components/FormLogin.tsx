@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Button, Textbox } from "@/components/ui";
 import { authApi } from "@/lib/api/endpoints";
+import { ROUTE } from "@/lib/nav";
 import {
   galatDariError,
   normalisasiEmail,
@@ -87,7 +88,7 @@ export function FormLogin() {
       <p className="py-2.5 text-center text-body text-dark-teal">
         Belum punya akun?{" "}
         <Link
-          href="/register"
+          href={ROUTE.register}
           className="font-medium underline underline-offset-2 hover:text-emerald"
         >
           Daftar
