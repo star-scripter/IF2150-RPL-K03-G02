@@ -63,6 +63,11 @@ so-clean/
 ├── components/               # komponen UI dan kelas view DPPL
 │   └── _Template.tsx         # template view
 ├── server/                   # kode BE, tidak boleh di-import oleh view
+│   ├── auth/                  # validasi akun, hashing password, JWT dan cookie sesi
+│   │   ├── account.ts         # normalisasi dan schema Zod akun
+│   │   ├── password.ts       # hash/verify bcryptjs
+│   │   ├── session-token.ts  # sign/verify JWT dan opsi cookie
+│   │   └── session-cookie.ts # baca/tulis/hapus cookie lewat Next.js cookies()
 │   ├── controllers/
 │   │   └── _template.ts      # template controller
 │   ├── models/
@@ -91,6 +96,7 @@ so-clean/
 | --- | --- | --- | --- |
 | Proxy | `proxy.ts` | Pemeriksaan sesi cepat untuk redirect halaman sesuai BE-06 | Menjadi satu-satunya penjaga autentikasi/otorisasi; melakukan query DB |
 | View | `app/(pages)/`, `components/` | Menampilkan data, menerima input, memanggil `/api/...` | Import apa pun dari `server/` |
+| Auth utility | `server/auth/` | Normalisasi/validasi akun, hash password, sign/verify session JWT, serta operasi cookie session | Query database atau menyusun respons API |
 | Route handler | `app/api/**/route.ts` | Mengambil `params`, menerapkan cek autentikasi/role sesuai akses endpoint, memanggil satu fungsi controller | Berisi logika bisnis atau query |
 | Controller | `server/controllers/` | Validasi input, memanggil model, membuka batas transaksi dengan `db.transaction` dan meneruskan `tx` ke model, menyusun respons `{ data }` atau `{ error }` | Menulis query langsung (`db.select/insert/update/delete` atau SQL) |
 | Model (operasi) | `server/models/` | Query lewat `db`, aturan milik satu entitas, memetakan kolom ke field kontrak | Membaca `Request` atau membuat `Response` (tidak tahu soal HTTP) |
