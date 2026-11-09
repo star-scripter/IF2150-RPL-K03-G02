@@ -82,6 +82,7 @@ so-clean/
 │   │   ├── media.ts          # unggah dan proses bukti media (BE-08)
 │   │   └── _template.ts      # template controller
 │   ├── models/
+│   │   ├── laporan.ts       # operasi query/persistensi laporan (BE-09)
 │   │   ├── media.ts          # query media dan cek penggunaan hash (BE-08)
 │   │   └── _template.ts      # template model
 │   ├── media/
