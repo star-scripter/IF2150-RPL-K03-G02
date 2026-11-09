@@ -14,6 +14,8 @@ export const ROUTE = {
   login: "/login",
   register: "/register",
   beranda: "/beranda",
+  // Form ReportIt (FE-09), tanpa bottom nav; lihat app/(pages)/(masyarakat)/layout.tsx.
+  reportit: "/reportit",
   lokasi: "/lokasi",
   hadiah: "/hadiah",
   profil: "/profil",
