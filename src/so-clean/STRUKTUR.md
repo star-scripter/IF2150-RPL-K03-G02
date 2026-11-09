@@ -108,7 +108,7 @@ so-clean/
 
 **Pengecualian import DB:** controller boleh mengimpor `db` hanya sebagai koordinator transaksi (`db.transaction(...)`). Semua operasi baca/tulis di dalam transaksi tetap dilakukan melalui fungsi model dengan `tx` yang diteruskan. Controller tidak boleh memanggil query Drizzle atau SQL secara langsung.
 
-Semua Route Handler API membungkus operasi dengan `handleApiRequest(request, operation)`. Helper ini menangani `ApiError` dan `ZodError` sesuai status/kode kontrak, mengubah error tak terduga menjadi 500 `INTERNAL_ERROR`, dan mencatat method, path, status, durasi, serta kode error bila tersedia. Log tidak boleh berisi body, header/cookie, password, token, atau rahasia. Gunakan `parseJsonBody`, `parseQuery`, atau `parseFormData` agar validasi request konsisten.
+Semua Route Handler API membungkus operasi dengan `handleApiRequest(request, routeTemplate, operation)`. `routeTemplate` harus berupa pola statis, misalnya `/api/laporan/[id]`, bukan URL/path aktual. Helper menangani `ApiError` dan `ZodError` sesuai status/kode kontrak, mengubah error tak terduga menjadi 500 `INTERNAL_ERROR`, dan mencatat method, route template, status, durasi, serta kode error bila tersedia. Log tidak boleh berisi body, header/cookie, password, token, path dinamis, atau rahasia. Gunakan `parseJsonBody`, `parseQuery`, atau `parseFormData` agar validasi request konsisten.
 
 ## Konvensi penamaan
 

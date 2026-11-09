@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import { ZodError, type ZodIssue } from "zod";
 import type { ApiErrorResponse, KodeError } from "@/types/api";
 
 /** Status HTTP untuk seluruh kode error di kontrak API. */
@@ -37,16 +37,32 @@ export class ApiError extends Error {
   }
 }
 
-/** Ubah issue Zod menjadi pesan per field tanpa memasukkan nilai input ke respons. */
+function pesanZodPublik(issue: ZodIssue): string {
+  // Jangan mengembalikan pesan custom mentah: pesan tersebut dapat memuat nilai
+  // input atau nama field tak dikenal dari request.
+  if (issue.code === "unrecognized_keys") return "Request berisi field yang tidak dikenal.";
+  if (issue.code === "invalid_type") return "Tipe data tidak sesuai.";
+  if (issue.code === "too_small") return "Nilai terlalu kecil atau belum diisi.";
+  if (issue.code === "too_big") return "Nilai melebihi batas.";
+  if (issue.code === "invalid_format") return "Format tidak valid.";
+  return "Nilai tidak valid.";
+}
+
+/** Ubah issue Zod menjadi pesan publik per field tanpa memantulkan nilai input. */
 export function zodIssuesToFields(error: ZodError): Record<string, string> {
-  const fields: Record<string, string> = {};
+  const fields = new Map<string, string>();
 
   for (const issue of error.issues) {
-    const field = issue.path.length > 0 ? issue.path.map(String).join(".") : "_request";
-    if (fields[field] === undefined) fields[field] = issue.message;
+    const field =
+      issue.code !== "unrecognized_keys" && issue.path.length > 0
+        ? issue.path.map(String).join(".")
+        : "_request";
+    if (!fields.has(field)) fields.set(field, pesanZodPublik(issue));
   }
 
-  return fields;
+  // Object.fromEntries creates own data properties even for names such as
+  // `constructor`, `toString`, and `__proto__`.
+  return Object.fromEntries(fields);
 }
 
 /** Normalisasi error yang dilempar controller/validator ke bentuk kontrak. */

@@ -6,5 +6,5 @@ export {
   parseJsonBody,
   parseQuery,
   validateInput,
-  type ValidationErrorCode,
+  type ValidationOptions,
 } from "./validation";

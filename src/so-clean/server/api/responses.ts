@@ -8,6 +8,9 @@ import { ApiError, toApiErrorPayload } from "./errors";
 
 /** Respons sukses `{ data }`. */
 export function apiSuccess<T>(data: T, status = 200): Response {
+  if (data === undefined) {
+    throw new ApiError("INTERNAL_ERROR", "Terjadi kesalahan internal.");
+  }
   const payload: ApiResponse<T> = { data };
   return Response.json(payload, { status });
 }

@@ -1,6 +1,35 @@
 import { logApiRequest } from "./logger";
-import { normalizeApiError } from "./errors";
+import {
+  ApiError,
+  normalizeApiError,
+  STATUS_BY_ERROR_CODE,
+} from "./errors";
+import type { KodeError } from "@/types/api";
+import { ZodError } from "zod";
 import { apiFailure } from "./responses";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+/** Read only the allow-listed error code from a returned API envelope for logging. */
+async function errorCodeFromResponse(response: Response): Promise<KodeError | undefined> {
+  if (response.status < 400 || !response.headers.get("content-type")?.includes("application/json")) {
+    return undefined;
+  }
+
+  try {
+    const payload: unknown = await response.clone().json();
+    if (!isRecord(payload) || !isRecord(payload.error)) return undefined;
+    const code = payload.error.code;
+    if (typeof code !== "string" || !Object.prototype.hasOwnProperty.call(STATUS_BY_ERROR_CODE, code)) {
+      return undefined;
+    }
+    return code as KodeError;
+  } catch {
+    return undefined;
+  }
+}
 
 /**
  * Common error boundary and request logger for Route Handlers.
@@ -8,33 +37,44 @@ import { apiFailure } from "./responses";
  */
 export async function handleApiRequest(
   request: Request,
+  /** Static route template, never `request.url` or a dynamic path value. */
+  route: string,
   operation: () => Response | Promise<Response>,
 ): Promise<Response> {
   const startedAt = Date.now();
   let response: Response;
-  let errorCode: string | undefined;
-  let errorName: string | undefined;
+  let errorCode: KodeError | undefined;
+  let errorCategory: "application" | "validation" | "internal" | "returned" | undefined;
 
   try {
     response = await operation();
   } catch (error) {
     const apiError = normalizeApiError(error);
     errorCode = apiError.code;
-
-    if (apiError.code === "INTERNAL_ERROR") {
-      errorName = error instanceof Error ? error.name : typeof error;
-    }
+    errorCategory =
+      apiError.code === "INTERNAL_ERROR"
+        ? "internal"
+        : error instanceof ZodError
+          ? "validation"
+          : error instanceof ApiError
+            ? "application"
+            : "internal";
 
     response = apiFailure(apiError);
   }
 
+  if (!errorCode) {
+    errorCode = await errorCodeFromResponse(response);
+    if (errorCode) errorCategory = "returned";
+  }
+
   logApiRequest({
     method: request.method,
-    path: new URL(request.url).pathname,
+    route,
     status: response.status,
     durationMs: Date.now() - startedAt,
     ...(errorCode ? { errorCode } : {}),
-    ...(errorName ? { errorName } : {}),
+    ...(errorCategory ? { errorCategory } : {}),
   });
 
   return response;

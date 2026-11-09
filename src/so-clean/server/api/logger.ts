@@ -1,10 +1,15 @@
+import type { KodeError } from "@/types/api";
+
+export type ApiErrorCategory = "application" | "validation" | "internal" | "returned";
+
 type ApiLogRecord = {
   method: string;
-  path: string;
+  /** Static route template, e.g. `/api/laporan/[id]`; never a raw request URL. */
+  route: string;
   status: number;
   durationMs: number;
-  errorCode?: string;
-  errorName?: string;
+  errorCode?: KodeError;
+  errorCategory?: ApiErrorCategory;
 };
 
 /** Structured request logging. Request bodies, headers, cookies and credentials are never logged. */

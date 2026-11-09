@@ -14,7 +14,7 @@
  *
  *      export function GET(request: Request): Promise<Response> {
  *        // Terapkan cek akses sesi/role sesuai BE-06 sebelum menjalankan controller.
- *        return handleApiRequest(request, () => getDaftarReward());
+ *        return handleApiRequest(request, "/api/reward", () => getDaftarReward());
  *      }
  *
  * Tanggung jawab controller:
