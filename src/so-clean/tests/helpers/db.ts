@@ -143,3 +143,48 @@ export async function buatReward(
     .returning({ idReward: reward.id });
   return row;
 }
+
+/**
+ * Membuat satu laporan. ReportIt diisi field lokasi teks/koordinat; CleanIt wajib `lokasiId`.
+ * Laporan selain BELUM_DIPERIKSA wajib `diverifikasiOleh` (CHECK laporan_verifikasi_check).
+ */
+export async function buatLaporan(opsi: {
+  jenis: "REPORTIT" | "CLEANIT";
+  idPengguna: string;
+  judul?: string;
+  lokasiId?: number;
+  status?: "BELUM_DIPERIKSA" | "VALID" | "TIDAK_VALID";
+  alasanPenolakan?: string;
+  diverifikasiOleh?: string;
+  diverifikasiAt?: Date;
+}): Promise<{ idLaporan: number }> {
+  const status = opsi.status ?? "BELUM_DIPERIKSA";
+  const terverifikasi = status !== "BELUM_DIPERIKSA";
+  const fieldReportIt =
+    opsi.jenis === "REPORTIT"
+      ? {
+          lokasiTeks: "Jl. Uji No. 2",
+          latitude: -6.12,
+          longitude: 106.83,
+          sumber: "INFO_WARGA" as const,
+          jenisSampah: "PLASTIK" as const,
+        }
+      : {};
+
+  const [row] = await db
+    .insert(laporan)
+    .values({
+      jenis: opsi.jenis,
+      idPengguna: opsi.idPengguna,
+      judul: opsi.judul ?? `Laporan ${opsi.jenis}`,
+      waktuKejadian: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      ...fieldReportIt,
+      lokasiId: opsi.lokasiId ?? null,
+      status,
+      alasanPenolakan: opsi.alasanPenolakan ?? null,
+      diverifikasiOleh: terverifikasi ? opsi.diverifikasiOleh : null,
+      diverifikasiAt: terverifikasi ? (opsi.diverifikasiAt ?? new Date()) : null,
+    })
+    .returning({ idLaporan: laporan.id });
+  return row;
+}
