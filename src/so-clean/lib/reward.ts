@@ -16,3 +16,13 @@ export function statusTombolReward(
   }
   return { status: "TUKAR" };
 }
+
+export const WARNA_JENIS: Record<string, string> = {
+  VOUCHER: "bg-sky-blue",
+  DONASI: "bg-emerald",
+  MERCHANDISE: "bg-emerald",
+};
+
+export function labelJenis(jenis: string) {
+  return jenis.charAt(0) + jenis.slice(1).toLowerCase();
+}
