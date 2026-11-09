@@ -8,11 +8,11 @@
 import type { Role } from "../types/api";
 import { ApiError } from "./api/client";
 import { PESAN_ERROR } from "./api/pesan-error";
-import { ROUTE } from "./nav";
+import { halamanAwal } from "./akses";
 
-/** Halaman tujuan setelah login: Operator → validasi laporan (I-07), Masyarakat → Beranda (I-03). */
+/** Halaman tujuan setelah login: halaman awal role (aturan di `lib/akses.ts`, FE-05). */
 export function tujuanSetelahLogin(role: Role): string {
-  return role === "OPERATOR" ? ROUTE.operatorLaporan : ROUTE.beranda;
+  return halamanAwal(role);
 }
 
 export type IsianLogin = {

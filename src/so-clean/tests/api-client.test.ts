@@ -1,7 +1,7 @@
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import { ApiError, api, tahanRequestSampai } from "../lib/api/client";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { ApiError, api, aturPenangananSesiHabis, tahanRequestSampai } from "../lib/api/client";
 import { PESAN_ERROR, isKodeError } from "../lib/api/pesan-error";
 import type { KodeError } from "../types/api";
 
@@ -196,5 +196,46 @@ describe("pesan error", () => {
   it("JARINGAN bukan kode error kontrak", () => {
     expect(isKodeError("JARINGAN")).toBe(false);
     expect(isKodeError("TIDAK_ADA")).toBe(false);
+  });
+});
+
+describe("api client: sesi habis (FE-05)", () => {
+  afterEach(() => aturPenangananSesiHabis(null));
+
+  it("UNAUTHORIZED memanggil penanganan sesi habis", async () => {
+    const penangan = vi.fn();
+    aturPenangananSesiHabis(penangan);
+    server.use(
+      http.get("*/api/me", () =>
+        HttpResponse.json({ error: { code: "UNAUTHORIZED", message: "x" } }, { status: 401 }),
+      ),
+    );
+    const error = await tangkap(api.get("/api/me"));
+    expect(error.code).toBe("UNAUTHORIZED");
+    expect(penangan).toHaveBeenCalledTimes(1);
+  });
+
+  it("LOGIN_GAGAL (401) tidak memicu penanganan sesi habis", async () => {
+    const penangan = vi.fn();
+    aturPenangananSesiHabis(penangan);
+    server.use(
+      http.post("*/api/auth/login", () =>
+        HttpResponse.json({ error: { code: "LOGIN_GAGAL", message: "x" } }, { status: 401 }),
+      ),
+    );
+    await tangkap(api.post("/api/auth/login", {}));
+    expect(penangan).not.toHaveBeenCalled();
+  });
+
+  it("FORBIDDEN (403) tidak memicu penanganan sesi habis", async () => {
+    const penangan = vi.fn();
+    aturPenangananSesiHabis(penangan);
+    server.use(
+      http.get("*/api/laporan", () =>
+        HttpResponse.json({ error: { code: "FORBIDDEN", message: "x" } }, { status: 403 }),
+      ),
+    );
+    await tangkap(api.getList("/api/laporan"));
+    expect(penangan).not.toHaveBeenCalled();
   });
 });
