@@ -1,7 +1,7 @@
 /**
  * Wilayah kerja sama SoClean — K10.
  *
- * Sumber: docs/contracts/SoClean — Pembagian Tugas FE & BE v0.7.md,
+ * Sumber: docs/contracts/SoClean — Pembagian Tugas FE & BE v0.8.md,
  * bagian "Wilayah kerja sama (K10)".
  *
  * Batas berupa bounding box lat/lng. Dipakai bersama FE dan BE; file ini
@@ -10,7 +10,7 @@
  * Batas inklusif: titik tepat di tepi kotak dianggap di dalam wilayah.
  * Ini aturan bisnis, bukan pengaman — koordinat tetap bisa diedit pengguna.
  *
- * Jangan ubah nilai di bawah tanpa memperbarui kontrak v0.7 (K10) di PR
+ * Jangan ubah nilai di bawah tanpa memperbarui kontrak final v0.8 (K10) di PR
  * yang sama.
  */
 

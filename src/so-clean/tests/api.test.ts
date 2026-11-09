@@ -41,6 +41,26 @@ describe("API response helpers", () => {
     });
   });
 
+  it("maps the concurrent CleanIt unique-index violation to CLEANIT_SUDAH_MENUNGGU", async () => {
+    const log = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const response = await handleApiRequest(new Request("http://localhost/api/laporan", { method: "POST" }), "/api/laporan", async () => {
+      const error = Object.assign(new Error("duplicate key"), {
+        code: "23505",
+        constraint: "laporan_cleanit_menunggu_uidx",
+      });
+      throw error;
+    });
+
+    expect(response.status).toBe(409);
+    await expect(response.json()).resolves.toEqual({
+      error: {
+        code: "CLEANIT_SUDAH_MENUNGGU",
+        message: "Anda masih memiliki CleanIt yang menunggu untuk lokasi ini.",
+      },
+    });
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('"errorCategory":"application"'));
+  });
+
   it("never exposes details or fields for INTERNAL_ERROR", async () => {
     const response = apiFailure(
       new ApiError("INTERNAL_ERROR", "database password=secret", { detail: "secret" }),

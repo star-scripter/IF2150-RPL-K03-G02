@@ -9,7 +9,7 @@
  * Kelas DPPL: C06 - Lokasi
  */
 import { asc, desc, eq } from "drizzle-orm";
-import { db } from "@/server/db";
+import { db, type Db } from "@/server/db";
 import { laporan, lokasi, media } from "@/server/db/schema";
 import type { Lokasi, LokasiDetail, PilihanPoin, StatusLokasi, TipeMedia } from "@/types/api";
 
@@ -24,6 +24,13 @@ export type MediaTersimpan = {
 /** `LokasiDetail` sebelum URL media dibuat. */
 export type LokasiDenganAsal = Lokasi & {
   laporanAsal: Omit<LokasiDetail["laporanAsal"], "media"> & { media: MediaTersimpan[] };
+};
+
+/** Data minimum CleanIt validator; status lokasi dikunci selama transaksi pembuat laporan. */
+export type LokasiUntukValidasiCleanIt = {
+  idLokasi: number;
+  status: StatusLokasi;
+  waktuKejadianAsal: Date;
 };
 
 const kolomLokasi = {
@@ -110,4 +117,27 @@ export async function get_lokasi(idLokasi: number): Promise<LokasiDenganAsal | n
       media: daftarMedia.map((m) => ({ ...m, createdAt: m.createdAt.toISOString() })),
     },
   };
+}
+
+/**
+ * Baca lokasi dan waktu kejadian laporan asal. `FOR SHARE` harus dijalankan lewat tx yang
+ * nantinya juga menyimpan laporan (BE-11), agar persetujuan CleanIt tetap melihat status stabil.
+ */
+export async function getUntukValidasiCleanIt(
+  idLokasi: number,
+  tx: Pick<Db, "select"> = db,
+): Promise<LokasiUntukValidasiCleanIt | null> {
+  const [baris] = await tx
+    .select({
+      idLokasi: lokasi.id,
+      status: lokasi.status,
+      waktuKejadianAsal: laporan.waktuKejadian,
+    })
+    .from(lokasi)
+    .innerJoin(laporan, eq(laporan.id, lokasi.laporanAsalId))
+    .where(eq(lokasi.id, idLokasi))
+    .for("share", { of: lokasi })
+    .limit(1);
+
+  return baris ?? null;
 }
