@@ -59,7 +59,7 @@ export async function handleApiRequest(
         ? "internal"
         : error instanceof ZodError
           ? "validation"
-          : error instanceof ApiError
+          : error instanceof ApiError || apiError.code === "CLEANIT_SUDAH_MENUNGGU"
             ? "application"
             : "internal";
 

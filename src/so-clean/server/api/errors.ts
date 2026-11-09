@@ -69,6 +69,19 @@ export function zodIssuesToFields(error: ZodError): Record<string, string> {
 export function normalizeApiError(error: unknown): ApiError {
   if (error instanceof ApiError) return error;
 
+  // The partial unique index is the final guard against concurrent CleanIt requests.
+  // Map only this named constraint; unrelated database errors remain opaque INTERNAL_ERRORs.
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    error.code === "23505" &&
+    "constraint" in error &&
+    error.constraint === "laporan_cleanit_menunggu_uidx"
+  ) {
+    return new ApiError("CLEANIT_SUDAH_MENUNGGU", "Anda masih memiliki CleanIt yang menunggu untuk lokasi ini.");
+  }
+
   if (error instanceof ZodError) {
     return new ApiError(
       "FORMAT_TIDAK_VALID",

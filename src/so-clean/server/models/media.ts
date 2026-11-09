@@ -1,8 +1,17 @@
 /** Model Media — menyimpan metadata media dan mengecek penggunaan ulang hash (C03). */
-import { and, eq, ne } from "drizzle-orm";
-import { db } from "@/server/db";
+import { and, eq, inArray, ne } from "drizzle-orm";
+import { db, type Db } from "@/server/db";
 import { laporan, media } from "@/server/db/schema";
 import type { TipeMedia } from "@/types/api";
+
+type Eksekutor = Pick<Db, "select">;
+
+export type MediaUntukLaporan = {
+  idMedia: number;
+  idPengguna: string;
+  laporanId: number | null;
+  sha256: string;
+};
 
 export type MediaBaru = {
   idPengguna: string;
@@ -14,8 +23,8 @@ export type MediaBaru = {
 };
 
 /** Hash dipakai hanya jika media sudah tertaut ke laporan yang tidak ditolak. */
-export async function sudahDipakai(sha256: string): Promise<boolean> {
-  const [baris] = await db
+export async function sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean> {
+  const [baris] = await tx
     .select({ id: media.id })
     .from(media)
     .innerJoin(laporan, eq(media.laporanId, laporan.id))
@@ -23,6 +32,25 @@ export async function sudahDipakai(sha256: string): Promise<boolean> {
     .limit(1);
 
   return baris !== undefined;
+}
+
+/** Ambil hanya media yang dimiliki pengguna; item hilang/asing terdeteksi dari jumlah baris. */
+export async function getUntukLaporan(
+  idMedia: number[],
+  idPengguna: string,
+  tx: Eksekutor = db,
+): Promise<MediaUntukLaporan[]> {
+  if (idMedia.length === 0) return [];
+
+  return tx
+    .select({
+      idMedia: media.id,
+      idPengguna: media.idPengguna,
+      laporanId: media.laporanId,
+      sha256: media.sha256,
+    })
+    .from(media)
+    .where(and(inArray(media.id, idMedia), eq(media.idPengguna, idPengguna)));
 }
 
 /** Simpan metadata setelah object berhasil diunggah; laporanId sengaja tetap NULL. */

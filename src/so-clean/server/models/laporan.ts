@@ -153,6 +153,28 @@ export async function getDaftarLaporan(
   return { data, total };
 }
 
+/** Cek CleanIt BELUM_DIPERIKSA untuk pengguna/lokasi; dipakai oleh validator BE-10. */
+export async function adaCleanItMenunggu(
+  idPengguna: string,
+  lokasiId: number,
+  tx: Pick<Db, "select"> = db,
+): Promise<boolean> {
+  const [baris] = await tx
+    .select({ id: laporan.id })
+    .from(laporan)
+    .where(
+      and(
+        eq(laporan.jenis, "CLEANIT"),
+        eq(laporan.idPengguna, idPengguna),
+        eq(laporan.lokasiId, lokasiId),
+        eq(laporan.status, "BELUM_DIPERIKSA"),
+      ),
+    )
+    .limit(1);
+
+  return baris !== undefined;
+}
+
 /** Ubah status dan metadata verifikasi; kembalikan `null` bila ID tidak ditemukan. */
 export async function ubah_status(
   idLaporan: number,
