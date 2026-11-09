@@ -10,7 +10,7 @@
  * Kelas DPPL: C16 - Penukaran (Controller)
  */
 import { z } from "zod";
-import { ApiError, apiSuccess, parseJsonBody } from "@/server/api";
+import { ApiError, apiList, apiSuccess, parseJsonBody, parseQuery } from "@/server/api";
 import type { Sesi } from "@/server/auth/guard";
 import { db } from "@/server/db";
 import * as ManagerPoin from "@/server/controllers/manager-poin";
@@ -21,6 +21,15 @@ import type { TukarPoinResponse } from "@/types/api";
 const tukarPoinSchema = z.object({
   // Batas kolom serial (int4).
   idReward: z.number().int().positive().max(2_147_483_647),
+});
+
+/** Default `limit` sama dengan mock FE-04; batas atas mencegah satu request mengambil semua. */
+export const LIMIT_RIWAYAT_DEFAULT = 10;
+export const LIMIT_RIWAYAT_MAKS = 50;
+
+const riwayatQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).max(1_000_000).default(1),
+  limit: z.coerce.number().int().min(1).max(LIMIT_RIWAYAT_MAKS).default(LIMIT_RIWAYAT_DEFAULT),
 });
 
 const pesanStokHabis = "Stok reward sudah habis.";
@@ -58,4 +67,11 @@ export async function tukarPoin(request: Request, sesi: Sesi): Promise<Response>
   });
 
   return apiSuccess(hasil, 201);
+}
+
+/** GET /api/penukaran — riwayat penukaran milik pengguna yang login (N13), dengan pagination. */
+export async function getRiwayatPenukaran(request: Request, sesi: Sesi): Promise<Response> {
+  const { page, limit } = await parseQuery(request, riwayatQuerySchema);
+  const { data, total } = await PenukaranModel.getRiwayat(sesi.idPengguna, page, limit);
+  return apiList(data, { page, limit, total });
 }
