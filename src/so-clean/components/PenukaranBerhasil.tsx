@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useSyncExternalStore, type ReactNode } from "react";
 import KodeVoucher from "@/components/KodeVoucher";
 import { Button, Card } from "@/components/ui";
+import { ROUTE } from "@/lib/nav";
 import { formatIdPenukaran, formatWaktuPenukaran, uraiHasilPenukaran } from "@/lib/penukaran";
 import type { TukarPoinResponse } from "@/types/api";
 
@@ -52,7 +53,7 @@ export default function PenukaranBerhasil() {
   );
 
   useEffect(() => {
-    if (hasil === null) router.replace("/hadiah");
+    if (hasil === null) router.replace(ROUTE.hadiah);
   }, [hasil, router]);
 
   if (!hasil) return <main className="flex-1" />;
@@ -61,18 +62,8 @@ export default function PenukaranBerhasil() {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-4 py-6">
       <Card varian="gelap" className="items-center px-5! text-center">
         <span className="grid size-16 place-items-center rounded-full bg-light-green text-dark-teal">
-          <svg
-            aria-hidden
-            viewBox="0 0 24 24"
-            className="size-8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M5 12.5l4.5 4.5L19 7.5" />
-          </svg>
+          {/* eslint-disable-next-line @next/next/no-img-element -- ikon SVG statis dari Figma */}
+          <img src="/icons/check.svg" alt="" width={17} height={17} className="size-6" />
         </span>
         <h1 className="font-heading text-h3">Penukaran berhasil</h1>
         <p className="text-sm">{hasil.namaReward} sudah menjadi milik Anda.</p>
@@ -102,10 +93,10 @@ export default function PenukaranBerhasil() {
       </dl>
 
       <div className="mt-auto flex flex-col gap-3">
-        <Button lebarPenuh onClick={() => router.push("/hadiah")}>
+        <Button lebarPenuh onClick={() => router.push(ROUTE.hadiah)}>
           Kembali ke Hadiah
         </Button>
-        <Button varian="sekunder" lebarPenuh onClick={() => router.push("/hadiah/riwayat")}>
+        <Button varian="sekunder" lebarPenuh onClick={() => router.push(ROUTE.hadiahRiwayat)}>
           Lihat Riwayat
         </Button>
       </div>

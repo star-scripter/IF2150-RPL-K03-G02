@@ -312,4 +312,17 @@ describe("API route error boundary", () => {
     expect(logRecord.errorCode).toBe("NOT_FOUND");
     expect(logRecord.route).toBe("/api/reward/[id]");
   });
+
+  it("rethrows Next.js request-time control-flow errors instead of mapping them to 500", async () => {
+    const dynamicError = Object.assign(new Error("request-time API used during prerender"), {
+      digest: "DYNAMIC_SERVER_USAGE",
+    });
+    const request = new Request("http://localhost/api/me");
+
+    await expect(
+      handleApiRequest(request, "/api/me", () => {
+        throw dynamicError;
+      }),
+    ).rejects.toBe(dynamicError);
+  });
 });

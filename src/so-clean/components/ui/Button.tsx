@@ -41,6 +41,34 @@ const KELAS_UKURAN: Record<UkuranButton, string> = {
   lg: "min-h-16 px-9 py-[18px] text-h3",
 };
 
+/**
+ * Kelas gaya Button, untuk elemen lain yang harus tampil sebagai tombol, terutama tautan
+ * `<Link>` ke halaman lain (mis. "Tukar Hadiah" di Beranda):
+ *
+ *   <Link href={ROUTE.hadiah} className={kelasButton({ ukuran: "lg", lebarPenuh: true })}>
+ */
+export function kelasButton({
+  varian = "primer",
+  ukuran = "md",
+  lebarPenuh = false,
+  className,
+}: {
+  varian?: VarianButton;
+  ukuran?: UkuranButton;
+  lebarPenuh?: boolean;
+  className?: string;
+} = {}): string {
+  return cn(
+    "inline-flex items-center justify-center gap-2 font-heading font-semibold transition",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-teal",
+    "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:brightness-100",
+    varian === "teks" ? "p-0 text-body" : cn("rounded-button", KELAS_UKURAN[ukuran]),
+    KELAS_VARIAN[varian],
+    lebarPenuh && "w-full",
+    className,
+  );
+}
+
 export function Button({
   varian = "primer",
   ukuran = "md",
@@ -58,15 +86,7 @@ export function Button({
       type={type}
       disabled={nonaktif}
       aria-busy={memuat || undefined}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 font-heading font-semibold transition",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-teal",
-        "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:brightness-100",
-        varian === "teks" ? "p-0 text-body" : cn("rounded-button", KELAS_UKURAN[ukuran]),
-        KELAS_VARIAN[varian],
-        lebarPenuh && "w-full",
-        className,
-      )}
+      className={kelasButton({ varian, ukuran, lebarPenuh, className })}
       {...props}
     >
       {memuat && (
