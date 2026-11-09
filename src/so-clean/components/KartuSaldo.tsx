@@ -8,9 +8,9 @@ type Props = {
 
 export default function KartuSaldo({ saldoPoin }: Props) {
   return (
-    <section aria-label="Saldo poin" className="rounded-2xl bg-emerald-950 p-5 text-white">
-      <p className="text-sm">Poin Anda</p>
-      <p className="mt-1 text-4xl font-bold text-lime-300">
+    <section aria-label="Saldo poin" className="rounded-card bg-dark-teal p-5 text-white">
+      <p className="text-body">Poin Anda</p>
+      <p className="mt-1 font-heading text-h1 text-light-green">
         {saldoPoin.toLocaleString("id-ID")}
       </p>
     </section>

@@ -9,7 +9,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import DaftarReward from "@/components/DaftarReward";
 import KartuSaldo from "@/components/KartuSaldo";
-import { bacaSkenarioMock, muatRewardMock, muatSaldoMock } from "@/mocks/hadiah";
+import { ApiError } from "@/lib/api/client";
+import { poinApi, rewardApi } from "@/lib/api/endpoints";
+import { pesanError } from "@/lib/api/pesan-error";
 import type { Reward } from "@/types/api";
 
 type StateHalaman =
@@ -18,27 +20,33 @@ type StateHalaman =
   | { status: "siap"; saldoPoin: number; daftar: Reward[] };
 
 // Saldo dan reward dimuat paralel; jika salah satu gagal, seluruh halaman menampilkan error.
-async function ambilData(): Promise<StateHalaman> {
-  const skenario = bacaSkenarioMock();
-  const [saldo, reward] = await Promise.all([muatSaldoMock(skenario), muatRewardMock(skenario)]);
-  if ("error" in saldo) return { status: "gagal", pesan: saldo.error.message };
-  if ("error" in reward) return { status: "gagal", pesan: reward.error.message };
-  return { status: "siap", saldoPoin: saldo.data.saldoPoin, daftar: reward.data };
+async function ambilData(signal: AbortSignal): Promise<StateHalaman> {
+  try {
+    const [saldo, daftar] = await Promise.all([
+      poinApi.saldo({ signal }),
+      rewardApi.daftar({ signal }),
+    ]);
+    return { status: "siap", saldoPoin: saldo.saldoPoin, daftar };
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") throw error;
+    return {
+      status: "gagal",
+      pesan: error instanceof ApiError ? error.message : pesanError("INTERNAL_ERROR"),
+    };
+  }
 }
 
 export default function HalamanPenukaran() {
   const [state, setState] = useState<StateHalaman>({ status: "memuat" });
+  const [percobaan, setPercobaan] = useState(0);
   const [pesan, setPesan] = useState<string | null>(null);
 
   useEffect(() => {
-    let aktif = true;
-    ambilData().then((hasil) => {
-      if (aktif) setState(hasil);
-    });
-    return () => {
-      aktif = false;
-    };
-  }, []);
+    const pengendali = new AbortController();
+    // Penolakan hanya terjadi saat request dibatalkan (unmount atau coba lagi), jadi diabaikan.
+    ambilData(pengendali.signal).then(setState, () => {});
+    return () => pengendali.abort();
+  }, [percobaan]);
 
   // TODO(FE-02): ganti dengan Toast `notify` dari komponen UI dasar.
   useEffect(() => {
@@ -49,7 +57,7 @@ export default function HalamanPenukaran() {
 
   function cobaLagi() {
     setState({ status: "memuat" });
-    ambilData().then(setState);
+    setPercobaan((n) => n + 1);
   }
 
   // TODO(FE-19): buka bottom sheet KonfirmasiPenukaran untuk reward ini.
@@ -62,12 +70,12 @@ export default function HalamanPenukaran() {
       {state.status === "memuat" && <KerangkaMuat />}
 
       {state.status === "gagal" && (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div role="alert" className="rounded-card border border-danger/30 bg-danger/5 p-4 text-sm text-danger">
           <p>{state.pesan}</p>
           <button
             type="button"
             onClick={cobaLagi}
-            className="mt-3 rounded-lg bg-red-700 px-4 py-2 font-medium text-white"
+            className="mt-3 rounded-button bg-danger px-4 py-2 font-medium text-white"
           >
             Coba lagi
           </button>
@@ -79,8 +87,8 @@ export default function HalamanPenukaran() {
           <KartuSaldo saldoPoin={state.saldoPoin} />
           <section className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <h1 className="text-lg font-medium text-emerald-950">Redeem Poin Anda</h1>
-              <Link href="/hadiah/riwayat" className="text-sm font-medium text-emerald-950 underline">
+              <h1 className="text-h3 text-dark-teal">Redeem Poin Anda</h1>
+              <Link href="/hadiah/riwayat" className="text-sm font-medium text-dark-teal underline">
                 Riwayat
               </Link>
             </div>
@@ -97,7 +105,7 @@ export default function HalamanPenukaran() {
       <p
         role="status"
         aria-live="polite"
-        className={`fixed inset-x-4 bottom-24 mx-auto max-w-sm rounded-lg bg-zinc-900 px-4 py-3 text-center text-sm text-white ${pesan ? "" : "hidden"}`}
+        className={`fixed inset-x-4 bottom-24 mx-auto max-w-sm rounded-button bg-ink px-4 py-3 text-center text-sm text-white ${pesan ? "" : "hidden"}`}
       >
         {pesan}
       </p>
@@ -108,10 +116,10 @@ export default function HalamanPenukaran() {
 function KerangkaMuat() {
   return (
     <div aria-busy="true" aria-label="Memuat hadiah" className="flex animate-pulse flex-col gap-5">
-      <div className="h-28 rounded-2xl bg-zinc-200" />
-      <div className="h-5 w-40 rounded bg-zinc-200" />
+      <div className="h-28 rounded-card bg-border" />
+      <div className="h-5 w-40 rounded bg-border" />
       {[0, 1, 2].map((i) => (
-        <div key={i} className="h-20 rounded-xl bg-zinc-200" />
+        <div key={i} className="h-20 rounded-card bg-border" />
       ))}
     </div>
   );

@@ -15,14 +15,13 @@ type Props = {
   onKurang: (reward: Reward) => void;
 };
 
-// TODO(FE-01): ganti warna dengan design tokens dari Figma.
 const WARNA_JENIS: Record<string, string> = {
-  VOUCHER: "bg-sky-200",
-  DONASI: "bg-emerald-400",
-  MERCHANDISE: "bg-emerald-400",
+  VOUCHER: "bg-sky-blue",
+  DONASI: "bg-emerald",
+  MERCHANDISE: "bg-emerald",
 };
 
-const GAYA_TOMBOL = "shrink-0 rounded-lg px-4 py-2 text-sm font-medium";
+const GAYA_TOMBOL = "shrink-0 rounded-button px-4 py-2 text-sm font-medium";
 
 function labelJenis(jenis: string) {
   return jenis.charAt(0) + jenis.slice(1).toLowerCase();
@@ -31,7 +30,7 @@ function labelJenis(jenis: string) {
 export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: Props) {
   if (daftar.length === 0) {
     return (
-      <p className="rounded-xl bg-zinc-100 p-6 text-center text-sm text-zinc-500">
+      <p className="rounded-card bg-border/40 p-6 text-center text-sm text-dark-teal">
         Belum ada reward yang tersedia.
       </p>
     );
@@ -43,13 +42,13 @@ export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: P
         const tombol = statusTombolReward(reward, saldoPoin);
         const habis = tombol.status === "HABIS";
         const warnaKartu = habis
-          ? "bg-zinc-200 text-zinc-500"
-          : `${WARNA_JENIS[reward.jenis] ?? "bg-zinc-100"} text-emerald-950`;
+          ? "bg-border text-dark-teal/60"
+          : `${WARNA_JENIS[reward.jenis] ?? "bg-border/40"} text-dark-teal`;
 
         return (
           <li
             key={reward.idReward}
-            className={`flex items-center justify-between gap-3 rounded-xl p-4 ${warnaKartu}`}
+            className={`flex items-center justify-between gap-3 rounded-card p-4 ${warnaKartu}`}
           >
             <div className="min-w-0">
               <p className="text-xs">
@@ -63,7 +62,7 @@ export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: P
               <button
                 type="button"
                 onClick={() => onTukar(reward)}
-                className={`${GAYA_TOMBOL} bg-emerald-950 text-white`}
+                className={`${GAYA_TOMBOL} bg-dark-teal text-white`}
               >
                 Tukar
               </button>
@@ -72,13 +71,13 @@ export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: P
               <button
                 type="button"
                 onClick={() => onKurang(reward)}
-                className={`${GAYA_TOMBOL} bg-white text-emerald-950`}
+                className={`${GAYA_TOMBOL} bg-white text-dark-teal`}
               >
                 Kurang {tombol.selisih.toLocaleString("id-ID")}
               </button>
             )}
             {habis && (
-              <button type="button" disabled className={`${GAYA_TOMBOL} bg-white text-zinc-500`}>
+              <button type="button" disabled className={`${GAYA_TOMBOL} bg-white text-dark-teal/60`}>
                 Habis
               </button>
             )}
