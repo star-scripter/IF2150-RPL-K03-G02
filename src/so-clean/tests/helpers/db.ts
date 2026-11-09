@@ -7,7 +7,7 @@
 import { randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/server/db";
-import { laporan, lokasi, media, pengguna } from "@/server/db/schema";
+import { laporan, lokasi, media, pengguna, reward } from "@/server/db/schema";
 import type { JenisSampah, PilihanPoin, Role, StatusLokasi, Sumber, TipeMedia } from "@/types/api";
 import { DATABASE_TEST_AKTIF } from "./database-test";
 
@@ -126,4 +126,20 @@ export async function buatMedia(opsi: {
     })
     .returning({ id: media.id });
   return { idMedia: row.id, storageKey };
+}
+
+export async function buatReward(
+  opsi: { nama?: string; jenis?: string; hargaPoin?: number; stok?: number } = {},
+): Promise<{ idReward: number }> {
+  const [row] = await db
+    .insert(reward)
+    .values({
+      nama: opsi.nama ?? "Voucher Uji",
+      jenis: opsi.jenis ?? "VOUCHER",
+      deskripsi: "Reward dummy untuk test.",
+      hargaPoin: opsi.hargaPoin ?? 50,
+      stok: opsi.stok ?? 10,
+    })
+    .returning({ idReward: reward.id });
+  return row;
 }
