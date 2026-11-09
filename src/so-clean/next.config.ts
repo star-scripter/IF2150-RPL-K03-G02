@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
+    resolveAlias: {
+      // Mock API (FE-04): `msw/browser` tidak tersedia di server. Di browser, `@/mocks/worker`
+      // diarahkan ke worker MSW asli; di server tetap ke stub kosong `mocks/worker.ts`.
+      "@/mocks/worker": { browser: "./mocks/browser.ts" },
+    },
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],
