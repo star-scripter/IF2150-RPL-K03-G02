@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Button, Textbox, notify } from "@/components/ui";
 import { authApi } from "@/lib/api/endpoints";
+import { tujuanSetelahLogin } from "@/lib/login";
+import { ROUTE } from "@/lib/nav";
 import {
   MAKS_NAMA,
   MAKS_PASSWORD,
@@ -23,15 +25,6 @@ import {
   type GalatRegister,
   type IsianRegister,
 } from "@/lib/register";
-
-/**
- * Tujuan sementara setelah register berhasil.
- * TODO(FE-03): ganti dengan `ROUTE.beranda` dari `lib/nav.ts` (I-03) setelah FE-03 masuk `dev`.
- */
-const TUJUAN_SETELAH_REGISTER = "/";
-
-/** Route halaman Login (FE-06). */
-const ROUTE_LOGIN = "/login";
 
 const ISIAN_KOSONG: IsianRegister = { nama: "", email: "", password: "" };
 
@@ -64,13 +57,13 @@ export function FormRegister() {
     }
 
     try {
-      await authApi.login({ email: body.email, password: body.password });
-      router.replace(TUJUAN_SETELAH_REGISTER);
+      const pengguna = await authApi.login({ email: body.email, password: body.password });
+      router.replace(tujuanSetelahLogin(pengguna.role));
       // Tombol tetap memuat sampai halaman berpindah, agar tidak bisa diklik dua kali.
     } catch {
       // Akun sudah dibuat; jangan minta daftar ulang. Arahkan ke Login untuk masuk manual.
       notify.sukses("Akun berhasil dibuat. Silakan masuk.");
-      router.replace(ROUTE_LOGIN);
+      router.replace(ROUTE.login);
     }
   }
 
@@ -129,7 +122,7 @@ export function FormRegister() {
       <p className="py-2.5 text-center text-body text-dark-teal">
         Sudah punya akun?{" "}
         <Link
-          href={ROUTE_LOGIN}
+          href={ROUTE.login}
           className="font-medium underline underline-offset-2 hover:text-emerald"
         >
           Masuk

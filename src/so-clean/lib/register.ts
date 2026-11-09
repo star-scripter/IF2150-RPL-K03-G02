@@ -8,6 +8,8 @@
  */
 import { ApiError } from "./api/client";
 import { PESAN_ERROR } from "./api/pesan-error";
+// Normalisasi dan format email sama dengan form Login (FE-06).
+import { POLA_EMAIL, normalisasiEmail } from "./login";
 
 export type IsianRegister = {
   nama: string;
@@ -26,13 +28,6 @@ export const MAKS_NAMA = 100;
 export const MAKS_EMAIL = 255;
 export const MIN_PASSWORD = 8;
 export const MAKS_PASSWORD = 72;
-
-const POLA_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** Normalisasi email seperti server (N7): trim dan huruf kecil. */
-export function normalisasiEmail(email: string): string {
-  return email.trim().toLowerCase();
-}
 
 /** Normalisasi nama seperti server: trim. */
 export function normalisasiNama(nama: string): string {

@@ -27,7 +27,8 @@ export type GalatLogin = {
   fields: Partial<Record<keyof IsianLogin, string>>;
 };
 
-const POLA_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** Format email minimal untuk validasi klien (dipakai juga oleh form Register). */
+export const POLA_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** Normalisasi email seperti server (N7): trim dan huruf kecil. */
 export function normalisasiEmail(email: string): string {
