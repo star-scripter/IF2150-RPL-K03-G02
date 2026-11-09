@@ -3,7 +3,7 @@
  *
  * Kelas DPPL: C09 - Reward
  */
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, sql } from "drizzle-orm";
 import { db, type Db } from "@/server/db";
 import { reward } from "@/server/db/schema";
 import type { Reward } from "@/types/api";
@@ -40,4 +40,18 @@ export async function cariReward(idReward: number, tx: Eksekutor = db): Promise<
 /** tersedia() — Algo-004: true jika stok reward masih lebih dari nol. */
 export function tersedia(data: Pick<Reward, "stok">): boolean {
   return data.stok > 0;
+}
+
+/**
+ * kurangiStok() — Q-003. UPDATE bersyarat `stok > 0`, jadi penukaran bersamaan tidak bisa
+ * membuat stok negatif. Mengembalikan stok baru, atau `null` jika stok sudah habis.
+ * Dipanggil di dalam transaksi penukaran.
+ */
+export async function kurangiStok(idReward: number, tx: Eksekutor = db): Promise<number | null> {
+  const [row] = await tx
+    .update(reward)
+    .set({ stok: sql`${reward.stok} - 1` })
+    .where(and(eq(reward.id, idReward), gt(reward.stok, 0)))
+    .returning({ stok: reward.stok });
+  return row?.stok ?? null;
 }
