@@ -1,9 +1,8 @@
 /**
- * Route /hadiah/berhasil (I-06), tanpa bottom nav.
+ * Route /hadiah/berhasil (I-06).
  * Kelas DPPL: C12 - HalamanPenukaran
  *
- * TODO(FE-03): pindahkan ke app/(pages)/(masyarakat)/hadiah/berhasil/ (di luar group (nav))
- * agar mendapat header dari layout FE-03.
+ * Diletakkan di luar group `(nav)`: header dari layout Masyarakat (FE-03), tanpa bottom nav.
  */
 import type { Metadata } from "next";
 import PenukaranBerhasil from "@/components/PenukaranBerhasil";

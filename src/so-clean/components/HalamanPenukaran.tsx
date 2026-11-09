@@ -16,6 +16,7 @@ import { ApiError } from "@/lib/api/client";
 import { penukaranApi, poinApi, rewardApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
 import { hapusHasilPenukaran, simpanHasilPenukaran } from "@/components/PenukaranBerhasil";
+import { ROUTE } from "@/lib/nav";
 import { tindakanGagalTukar } from "@/lib/penukaran";
 import type { Reward } from "@/types/api";
 
@@ -107,7 +108,7 @@ export default function HalamanPenukaran() {
       const hasil = await penukaranApi.tukar({ idReward: dipilih.idReward });
       if (simpanHasilPenukaran(hasil)) {
         pindahHalaman = true;
-        router.push("/hadiah/berhasil");
+        router.push(ROUTE.hadiahBerhasil);
       } else {
         // Storage diblokir (mis. mode privat) sehingga I-06 tidak bisa dibuka; kode voucher
         // tetap ditampilkan lewat notifikasi yang tidak hilang sendiri.
@@ -154,7 +155,7 @@ export default function HalamanPenukaran() {
           <section className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <h1 className="text-h3 text-dark-teal">Redeem Poin Anda</h1>
-              <Link href="/hadiah/riwayat" className="text-sm font-medium text-dark-teal underline">
+              <Link href={ROUTE.hadiahRiwayat} className="text-sm font-medium text-dark-teal underline">
                 Riwayat
               </Link>
             </div>
