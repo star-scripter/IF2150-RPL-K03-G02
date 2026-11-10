@@ -34,7 +34,7 @@ export default function KodeVoucher({ kode }: Props) {
       <button
         type="button"
         onClick={salin}
-        aria-label="Salin kode voucher"
+        aria-label={`Salin kode voucher ${kode}`}
         className="grid size-10 place-items-center rounded-button text-ink hover:bg-white/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-teal"
       >
         <svg

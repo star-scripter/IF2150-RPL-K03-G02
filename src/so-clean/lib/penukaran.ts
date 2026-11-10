@@ -74,3 +74,16 @@ export function formatWaktuPenukaran(iso: string): string {
 export function formatIdPenukaran(id: string): string {
   return id.slice(0, 8).toUpperCase();
 }
+
+// Riwayat memakai limit default BE-22 (10, maks 50).
+export const LIMIT_RIWAYAT = 10;
+
+// BE-22 menolak page > 1.000.000 dengan FORMAT_TIDAK_VALID.
+const HALAMAN_MAKS = 1_000_000;
+
+// `?page=` bisa diketik pengguna; selain bilangan bulat 1..HALAMAN_MAKS dianggap halaman 1.
+export function bacaHalaman(param: string | null): number {
+  if (!param || !/^\d+$/.test(param)) return 1;
+  const n = Number(param);
+  return n >= 1 && n <= HALAMAN_MAKS ? n : 1;
+}
