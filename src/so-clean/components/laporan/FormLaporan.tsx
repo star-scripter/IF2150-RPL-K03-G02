@@ -65,45 +65,49 @@ function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
 
   return (
     <main ref={area} className="flex flex-1 flex-col bg-surface text-dark-teal">
-      <div className="flex items-center gap-1 bg-white px-3 py-2">
-        {langkah === 0 && !bagianDiedit ? (
-          <Link href={cleanit ? ROUTE.lokasi : ROUTE.beranda} aria-label="Kembali tanpa mengirim laporan" className={kelasKembali}>
-            <IkonLaporan nama="kembali" className="size-5" />
-          </Link>
-        ) : (
-          <button
-            type="button" className={kelasKembali} onClick={() => dispatch({ tipe: "kembali" })}
-            aria-label={bagianDiedit ? "Kembali ke tinjauan laporan" : `Kembali ke ${LANGKAH_LAPORAN[langkah - 1]}`}
-          ><IkonLaporan nama="kembali" className="size-5" /></button>
-        )}
-        <p className="font-heading text-base font-semibold text-ink">Form Laporan</p>
+      <div className="md:flex md:items-center md:justify-between md:gap-8">
+        <div className="flex items-center gap-1 bg-white px-3 py-2 md:bg-transparent md:px-0">
+          {langkah === 0 && !bagianDiedit ? (
+            <Link href={cleanit ? ROUTE.lokasi : ROUTE.beranda} aria-label="Kembali tanpa mengirim laporan" className={kelasKembali}>
+              <IkonLaporan nama="kembali" className="size-5" />
+            </Link>
+          ) : (
+            <button
+              type="button" className={kelasKembali} onClick={() => dispatch({ tipe: "kembali" })}
+              aria-label={bagianDiedit ? "Kembali ke tinjauan laporan" : `Kembali ke ${LANGKAH_LAPORAN[langkah - 1]}`}
+            ><IkonLaporan nama="kembali" className="size-5" /></button>
+          )}
+          <p className="font-heading text-base font-semibold whitespace-nowrap text-ink">Form Laporan</p>
+        </div>
+        <ProgressLangkah langkah={LANGKAH_LAPORAN} aktif={langkah} className="py-4 md:max-w-[480px] md:bg-transparent md:px-0 md:py-0" />
       </div>
-      <ProgressLangkah langkah={LANGKAH_LAPORAN} aktif={langkah} className="py-4" />
       <form
         className="flex flex-1 flex-col" aria-label={`Form Laporan · ${LANGKAH_LAPORAN[langkah]}`}
         onSubmit={(event) => { event.preventDefault(); if (langkah < 2) dispatch({ tipe: "lanjut" }); }}
       >
-        <section aria-labelledby="judul-langkah" className="flex flex-1 flex-col gap-4 px-4 pt-6 pb-8 min-[400px]:px-5">
+        <section aria-labelledby="judul-langkah" className="flex flex-1 flex-col gap-4 px-4 pt-6 pb-8 min-[400px]:px-5 md:gap-6 md:px-0 md:pt-8">
           <div className="space-y-1.5">
-            <h1 id="judul-langkah" tabIndex={-1} className="font-heading text-xl leading-7 font-bold outline-none">{judul[langkah]}</h1>
-            <p className="text-xs leading-relaxed text-text-secondary">{deskripsi[langkah]}</p>
+            <h1 id="judul-langkah" tabIndex={-1} className="font-heading text-xl leading-7 font-bold outline-none md:text-h1">{judul[langkah]}</h1>
+            <p className="text-xs leading-relaxed text-text-secondary md:text-body">{deskripsi[langkah]}</p>
           </div>
           {isiLangkah?.[langkah] ?? [<InformasiDasar key="informasi" />, <BuktiMedia key="media" />, <TinjauLaporan key="tinjau" />][langkah]}
         </section>
-        <footer className="mt-auto space-y-2 border-t border-border/50 bg-white px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] min-[400px]:px-5">
-          <p className="text-center text-[10px] font-medium uppercase tracking-wide text-text-secondary" role="status">Langkah {langkah + 1} dari 3</p>
-          {langkah === 2 ? (
-            aksiKirim ?? (
-              <>
-                <Button disabled lebarPenuh aria-describedby="status-kirim">Kirim Laporan<IkonLaporan nama="panah" className="size-4 -rotate-45" /></Button>
-                <p id="status-kirim" className="text-center text-xs text-text-secondary">Pengiriman laporan belum tersedia.</p>
-              </>
-            )
-          ) : (
-            <Button type="submit" lebarPenuh disabled={langkah === 1 && state.media.length === 0}>
-              {bagianDiedit ? "Simpan Perubahan" : "Lanjut"}<IkonLaporan nama="panah" className="size-4" />
-            </Button>
-          )}
+        <footer className="mt-auto space-y-2 border-t border-border/50 bg-white px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] min-[400px]:px-5 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 md:bg-transparent md:px-0 md:pt-5 md:pb-0">
+          <p className="text-center text-[10px] font-medium uppercase tracking-wide text-text-secondary md:text-left md:text-xs" role="status">Langkah {langkah + 1} dari 3</p>
+          <div className="space-y-2 md:w-64 md:shrink-0">
+            {langkah === 2 ? (
+              aksiKirim ?? (
+                <>
+                  <Button disabled lebarPenuh aria-describedby="status-kirim">Kirim Laporan<IkonLaporan nama="panah" className="size-4 -rotate-45" /></Button>
+                  <p id="status-kirim" className="text-center text-xs text-text-secondary">Pengiriman laporan belum tersedia.</p>
+                </>
+              )
+            ) : (
+              <Button type="submit" lebarPenuh disabled={langkah === 1 && state.media.length === 0}>
+                {bagianDiedit ? "Simpan Perubahan" : "Lanjut"}<IkonLaporan nama="panah" className="size-4" />
+              </Button>
+            )}
+          </div>
         </footer>
       </form>
     </main>

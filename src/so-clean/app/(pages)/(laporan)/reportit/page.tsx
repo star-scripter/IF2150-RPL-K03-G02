@@ -3,7 +3,7 @@ import { FormLaporan } from "@/components/laporan/FormLaporan";
 
 export const metadata: Metadata = { title: "Form Laporan · SoClean" };
 
-/** I-11–I-13 menggunakan layout Masyarakat yang sudah ada, tanpa bottom nav. */
+/** URL tetap /reportit; I-11–I-13 memakai layout form responsif tanpa bottom nav. */
 export default function Page() {
   return <FormLaporan />;
 }

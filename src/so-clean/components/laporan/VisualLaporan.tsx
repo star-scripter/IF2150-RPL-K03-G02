@@ -28,7 +28,7 @@ export function PratinjauLokasi({ ringkas = false }: { ringkas?: boolean }) {
     <div
       role="img"
       aria-label="Ilustrasi lokasi. Peta interaktif belum tersedia."
-      className={`relative overflow-hidden rounded-button bg-light-green/20 ${ringkas ? "h-24 w-24 shrink-0" : "h-36 w-full"}`}
+      className={`relative overflow-hidden rounded-button bg-light-green/20 ${ringkas ? "h-24 w-24 shrink-0 md:h-32 md:w-32" : "h-36 w-full md:h-52"}`}
     >
       <svg aria-hidden viewBox="0 0 400 160" preserveAspectRatio="none" className="absolute size-full">
         <path fill="#d9efdf" d="M0 0h400v160H0z" />
@@ -58,7 +58,7 @@ export function PratinjauMedia({ media, ringkas = false }: { media: MediaFormLap
     };
   }, [media.berkas]);
 
-  const kelas = `${ringkas ? "h-20" : "h-32"} w-full rounded-button bg-border/30 object-cover`;
+  const kelas = `${ringkas ? "h-20 md:h-32" : "h-32 md:h-40"} w-full rounded-button bg-border/30 object-cover`;
   return adalahVideo ? (
     <video ref={video} controls playsInline preload="metadata" aria-label={media.berkas.name} className={kelas} />
   ) : (
