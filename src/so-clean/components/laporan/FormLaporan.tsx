@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, type ReactNode } from "react";
 import { Button, ProgressLangkah } from "@/components/ui";
-import { LANGKAH_LAPORAN, type AwalFormLaporan, type LangkahLaporan } from "@/lib/form-laporan";
+import { LANGKAH_LAPORAN, type AwalFormLaporan, type LangkahLaporan, type StateFormLaporan } from "@/lib/form-laporan";
 import { ROUTE } from "@/lib/nav";
 import { BuktiMedia } from "./BuktiMedia";
 import { FormLaporanProvider, useFormLaporan } from "./FormLaporanProvider";
@@ -17,6 +17,8 @@ type Props = {
   isiLangkah?: Partial<Record<LangkahLaporan, ReactNode>>;
   /** FE-12 memasang komponen tombol yang memakai useFormLaporan untuk mengirim. */
   aksiKirim?: ReactNode;
+  /** Pengait validasi FE-10/11. false menahan navigasi tanpa mereset draf FE-09. */
+  sebelumLanjut?: Partial<Record<0 | 1, (state: StateFormLaporan) => boolean>>;
 };
 
 const AWAL_REPORTIT: AwalFormLaporan = { konfigurasi: { jenis: "REPORTIT" } };
@@ -29,7 +31,7 @@ export function FormLaporan({ awal = AWAL_REPORTIT, ...props }: Props) {
   );
 }
 
-function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
+function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "awal">) {
   const { state, dispatch } = useFormLaporan();
   const area = useRef<HTMLElement>(null);
   const pertamaRender = useRef(true);
@@ -83,7 +85,11 @@ function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
       </div>
       <form
         className="flex flex-1 flex-col" aria-label={`Form Laporan · ${LANGKAH_LAPORAN[langkah]}`}
-        onSubmit={(event) => { event.preventDefault(); if (langkah < 2) dispatch({ tipe: "lanjut" }); }}
+        noValidate={langkah !== 2 && Boolean(sebelumLanjut?.[langkah])}
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (langkah !== 2 && (sebelumLanjut?.[langkah]?.(state) ?? true)) dispatch({ tipe: "lanjut" });
+        }}
       >
         <section aria-labelledby="judul-langkah" className="flex flex-1 flex-col gap-4 px-4 pt-6 pb-8 min-[400px]:px-5 md:gap-6 md:px-0 md:pt-8">
           <div className="space-y-1.5">
