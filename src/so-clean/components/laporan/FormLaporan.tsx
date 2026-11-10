@@ -8,6 +8,7 @@ import { ROUTE } from "@/lib/nav";
 import { BuktiMedia } from "./BuktiMedia";
 import { FormLaporanProvider, useFormLaporan } from "./FormLaporanProvider";
 import { InformasiDasar } from "./InformasiDasar";
+import { PemberitahuanDraf } from "./PemberitahuanDraf";
 import { TinjauLaporan } from "./TinjauLaporan";
 import { IkonLaporan } from "./VisualLaporan";
 
@@ -90,6 +91,7 @@ function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
             <h1 id="judul-langkah" tabIndex={-1} className="font-heading text-xl leading-7 font-bold outline-none md:text-h1">{judul[langkah]}</h1>
             <p className="text-xs leading-relaxed text-text-secondary md:text-body">{deskripsi[langkah]}</p>
           </div>
+          <PemberitahuanDraf />
           {isiLangkah?.[langkah] ?? [<InformasiDasar key="informasi" />, <BuktiMedia key="media" />, <TinjauLaporan key="tinjau" />][langkah]}
         </section>
         <footer className="mt-auto space-y-2 border-t border-border/50 bg-white px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] min-[400px]:px-5 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 md:bg-transparent md:px-0 md:pt-5 md:pb-0">
