@@ -14,6 +14,7 @@ import { IkonLaporan } from "./VisualLaporan";
 import { UnggahMediaProvider } from "./UnggahMediaProvider";
 import { mediaSiapDikirim } from "@/lib/bukti-media";
 import { notify } from "@/components/ui/toast-store";
+import { PengirimanLaporanProvider, usePengirimanLaporan } from "./PengirimanLaporanProvider";
 
 type Props = {
   awal?: AwalFormLaporan;
@@ -30,13 +31,14 @@ const AWAL_REPORTIT: AwalFormLaporan = { konfigurasi: { jenis: "REPORTIT" } };
 export function FormLaporan({ awal = AWAL_REPORTIT, ...props }: Props) {
   return (
     <FormLaporanProvider awal={awal}>
-      <UnggahMediaProvider><IsiFormLaporan {...props} /></UnggahMediaProvider>
+      <UnggahMediaProvider><PengirimanLaporanProvider><IsiFormLaporan {...props} /></PengirimanLaporanProvider></UnggahMediaProvider>
     </FormLaporanProvider>
   );
 }
 
 function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "awal">) {
   const { state, dispatch } = useFormLaporan();
+  const { mengirim, kirim } = usePengirimanLaporan();
   const area = useRef<HTMLElement>(null);
   const pertamaRender = useRef(true);
   const cleanit = state.konfigurasi.jenis === "CLEANIT";
@@ -80,7 +82,7 @@ function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "a
             </Link>
           ) : (
             <button
-              type="button" className={kelasKembali} onClick={() => dispatch({ tipe: "kembali" })}
+              type="button" className={kelasKembali} disabled={mengirim} onClick={() => { if (!mengirim) dispatch({ tipe: "kembali" }); }}
               aria-label={bagianDiedit ? "Kembali ke tinjauan laporan" : `Kembali ke ${LANGKAH_LAPORAN[langkah - 1]}`}
             ><IkonLaporan nama="kembali" className="size-5" /></button>
           )}
@@ -93,6 +95,8 @@ function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "a
         noValidate={langkah !== 2 && Boolean(sebelumLanjut?.[langkah])}
         onSubmit={(event) => {
           event.preventDefault();
+          if (mengirim) return;
+          if (langkah === 2 && aksiKirim) { void kirim(); return; }
           if (langkah === 1 && !mediaSiap) {
             notify.gagal("Tambahkan minimal satu bukti dan tunggu hingga semua unggahan selesai.");
             return;
@@ -105,8 +109,10 @@ function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "a
             <h1 id="judul-langkah" tabIndex={-1} className="font-heading text-xl leading-7 font-bold outline-none md:text-h1">{judul[langkah]}</h1>
             <p className="text-xs leading-relaxed text-text-secondary md:text-body">{deskripsi[langkah]}</p>
           </div>
-          <PemberitahuanDraf />
-          {isiLangkah?.[langkah] ?? [<InformasiDasar key="informasi" />, <BuktiMedia key="media" />, <TinjauLaporan key="tinjau" />][langkah]}
+          <fieldset disabled={mengirim} className="min-w-0 space-y-4 border-0 p-0 md:space-y-6">
+            <PemberitahuanDraf />
+            {isiLangkah?.[langkah] ?? [<InformasiDasar key="informasi" />, <BuktiMedia key="media" />, <TinjauLaporan key="tinjau" />][langkah]}
+          </fieldset>
         </section>
         <footer className="mt-auto space-y-2 border-t border-border/50 bg-white px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] min-[400px]:px-5 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 md:bg-transparent md:px-0 md:pt-5 md:pb-0">
           <p className="text-center text-[10px] font-medium uppercase tracking-wide text-text-secondary md:text-left md:text-xs" role="status">Langkah {langkah + 1} dari 3</p>
