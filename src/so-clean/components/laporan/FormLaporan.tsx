@@ -11,6 +11,9 @@ import { InformasiDasar } from "./InformasiDasar";
 import { PemberitahuanDraf } from "./PemberitahuanDraf";
 import { TinjauLaporan } from "./TinjauLaporan";
 import { IkonLaporan } from "./VisualLaporan";
+import { UnggahMediaProvider } from "./UnggahMediaProvider";
+import { mediaSiapDikirim } from "@/lib/bukti-media";
+import { notify } from "@/components/ui/toast-store";
 
 type Props = {
   awal?: AwalFormLaporan;
@@ -27,7 +30,7 @@ const AWAL_REPORTIT: AwalFormLaporan = { konfigurasi: { jenis: "REPORTIT" } };
 export function FormLaporan({ awal = AWAL_REPORTIT, ...props }: Props) {
   return (
     <FormLaporanProvider awal={awal}>
-      <IsiFormLaporan {...props} />
+      <UnggahMediaProvider><IsiFormLaporan {...props} /></UnggahMediaProvider>
     </FormLaporanProvider>
   );
 }
@@ -38,6 +41,7 @@ function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "a
   const pertamaRender = useRef(true);
   const cleanit = state.konfigurasi.jenis === "CLEANIT";
   const { langkah, bagianDiedit } = state;
+  const mediaSiap = mediaSiapDikirim(state.media);
   const judul = [
     cleanit ? "Buat Laporan Pembersihan" : "Buat Laporan Pencemaran",
     cleanit ? "Unggah Bukti Pembersihan" : "Unggah Bukti Pencemaran",
@@ -89,6 +93,10 @@ function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "a
         noValidate={langkah !== 2 && Boolean(sebelumLanjut?.[langkah])}
         onSubmit={(event) => {
           event.preventDefault();
+          if (langkah === 1 && !mediaSiap) {
+            notify.gagal("Tambahkan minimal satu bukti dan tunggu hingga semua unggahan selesai.");
+            return;
+          }
           if (langkah !== 2 && (sebelumLanjut?.[langkah]?.(state) ?? true)) dispatch({ tipe: "lanjut" });
         }}
       >
@@ -111,10 +119,11 @@ function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "a
                 </>
               )
             ) : (
-              <Button type="submit" lebarPenuh disabled={langkah === 1 && state.media.length === 0}>
+              <Button type="submit" lebarPenuh disabled={langkah === 1 && !mediaSiap} aria-describedby={langkah === 1 && !mediaSiap ? "kesiapan-media" : undefined}>
                 {bagianDiedit ? "Simpan Perubahan" : "Lanjut"}<IkonLaporan nama="panah" className="size-4" />
               </Button>
             )}
+            {langkah === 1 && !mediaSiap && <p id="kesiapan-media" className="text-center text-xs leading-relaxed text-text-secondary">Tambahkan minimal satu bukti dan tunggu hingga semua unggahan selesai.</p>}
           </div>
         </footer>
       </form>
