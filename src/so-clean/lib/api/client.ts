@@ -18,6 +18,7 @@ import type { KodeError, PaginationMeta } from "../../types/api";
 import { HALAMAN_PUBLIK } from "../akses";
 import { ROUTE } from "../nav";
 import { type KodeErrorKlien, isKodeError, pesanError } from "./pesan-error";
+import { requestDenganProgres, type ProgresUnggah } from "./upload-progress";
 
 /** Error dari pemanggilan API, dengan pesan yang siap ditampilkan ke pengguna. */
 export class ApiError extends Error {
@@ -59,6 +60,8 @@ export type OpsiRequest = {
   /** Query string; nilai `undefined`/`null` dilewati. */
   query?: Record<string, NilaiQuery>;
   signal?: AbortSignal;
+  /** FE-11: progres byte asli. Tanpa callback, transport fetch tetap dipakai. */
+  onUploadProgress?: (progres: ProgresUnggah) => void;
 };
 
 function buatUrl(path: string, query?: OpsiRequest["query"]): string {
@@ -132,7 +135,7 @@ export function aturPenangananSesiHabis(penangan: (() => void) | null): void {
 
 async function kirim(path: string, opsi: OpsiRequest = {}): Promise<unknown> {
   if (penundaRequest) await penundaRequest;
-  const { method = "GET", body, query, signal } = opsi;
+  const { method = "GET", body, query, signal, onUploadProgress } = opsi;
   const headers: Record<string, string> = { Accept: "application/json" };
   let payload: BodyInit | undefined;
 
@@ -146,7 +149,8 @@ async function kirim(path: string, opsi: OpsiRequest = {}): Promise<unknown> {
 
   let res: Response;
   try {
-    res = await fetch(urlAbsolut(buatUrl(path, query)), {
+    const url = urlAbsolut(buatUrl(path, query));
+    res = onUploadProgress ? await requestDenganProgres(url, { method, headers, body: payload, signal, onUploadProgress }) : await fetch(url, {
       method,
       headers,
       body: payload,
