@@ -36,6 +36,7 @@ import type {
   TukarPoinResponse,
 } from "../../types/api";
 import { api } from "./client";
+import type { ProgresUnggah } from "./upload-progress";
 
 type Opsi = { signal?: AbortSignal };
 
@@ -68,7 +69,7 @@ export const authApi = {
 
 export const mediaApi = {
   /** POST /api/media; `file` JPG/PNG/MP4, maks. 20 MB, dikirim sebagai multipart. */
-  upload: (file: File | Blob, opsi?: Opsi) => {
+  upload: (file: File | Blob, opsi?: Opsi & { onUploadProgress?: (progres: ProgresUnggah) => void }) => {
     const form = new FormData();
     form.append("file", file);
     return api.post<MediaUploadResponse>("/api/media", form, opsi);

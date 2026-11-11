@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  bacaHalaman,
   formatIdPenukaran,
   formatWaktuPenukaran,
   tindakanGagalTukar,
@@ -57,4 +58,22 @@ describe("format tampilan I-06", () => {
   it("ID penukaran dipendekkan menjadi 8 karakter huruf besar", () => {
     expect(formatIdPenukaran(HASIL.idPenukaran)).toBe("3F2A9C1E");
   });
+});
+
+describe("bacaHalaman", () => {
+  it.each([
+    ["1", 1],
+    ["2", 2],
+    ["15", 15],
+    ["1000000", 1_000_000],
+  ])("'%s' dibaca sebagai halaman %i", (param, hasil) => {
+    expect(bacaHalaman(param)).toBe(hasil);
+  });
+
+  it.each([null, "", "0", "-1", "1.5", "abc", "2a", " 2", "1e3", "1000001"])(
+    "%s dianggap halaman 1",
+    (param) => {
+      expect(bacaHalaman(param)).toBe(1);
+    },
+  );
 });
