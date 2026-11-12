@@ -8,12 +8,15 @@
  * Notifikasi juga lewat sini karena isinya diturunkan dari laporan yang sudah diverifikasi
  * (N8); query-nya ada di model Pengguna sebagai pengganti `notify`.
  *
+ * Daftar laporan untuk Operator (`get_all_laporan_unverified`, BE-12) juga di sini; detail,
+ * setujui, dan tolak ada di ValidatorLaporan (C05) yang memakai helper dari file ini.
+ *
  * Cek sesi/role dilakukan di route handler sebelum memanggil fungsi di sini.
  *
  * Kelas DPPL: C15 - ManagerLaporan
  */
 import { z } from "zod";
-import { ApiError, apiSuccess, parseJsonBody, parseQuery, validateInput } from "@/server/api";
+import { ApiError, apiList, apiSuccess, parseJsonBody, parseQuery, validateInput } from "@/server/api";
 import { zodIssuesToFields } from "@/server/api/errors";
 import type { Sesi } from "@/server/auth/guard";
 import { diDalamWilayah } from "@/lib/wilayah";
@@ -23,7 +26,15 @@ import * as LaporanModel from "@/server/models/laporan";
 import * as MediaModel from "@/server/models/media";
 import * as PenggunaModel from "@/server/models/pengguna";
 import { getUrl } from "@/server/storage/s3";
-import type { BuatLaporanResponse, JenisSampah, LokasiDetail, Media, OkResponse, Sumber } from "@/types/api";
+import type {
+  BuatLaporanResponse,
+  JenisSampah,
+  Laporan,
+  LokasiDetail,
+  Media,
+  OkResponse,
+  Sumber,
+} from "@/types/api";
 
 /** Batas kolom `serial` (int4), supaya ID di luar rentang tidak sampai ke database. */
 const MAKS_ID = 2_147_483_647;
@@ -39,6 +50,23 @@ const idParamSchema = z.object({
 const daftarLokasiQuerySchema = z.object({
   status: z.enum(["TERCEMAR", "DIBERSIHKAN"]).default("TERCEMAR"),
 });
+
+/** Batas atas `limit` daftar laporan; default 6 sesuai kontrak (pagination I-07). */
+export const LIMIT_DAFTAR_LAPORAN_MAKS = 50;
+
+const daftarLaporanQuerySchema = z.object({
+  jenis: z.enum(["REPORTIT", "CLEANIT"]).optional(),
+  status: z.enum(["BELUM_DIPERIKSA", "VALID", "TIDAK_VALID"]).default("BELUM_DIPERIKSA"),
+  sort: z.enum(["terbaru", "terlama"]).default("terbaru"),
+  page: z.coerce.number().int().min(1).max(1_000_000).default(1),
+  limit: z.coerce.number().int().min(1).max(LIMIT_DAFTAR_LAPORAN_MAKS).default(6),
+});
+
+/** Validasi parameter `:id` rute (bilangan bulat positif dalam rentang `serial`). */
+export async function bacaIdParam(idParam: string): Promise<number> {
+  const { id } = await validateInput({ id: idParam }, idParamSchema);
+  return id;
+}
 
 type EksekutorValidasiLaporan = Pick<Db, "select">;
 
@@ -250,7 +278,7 @@ export async function buat_laporan(request: Request, sesi: Sesi): Promise<Respon
 }
 
 /** Ubah `storage_key` media menjadi presigned URL (BE-07). */
-async function keMedia(daftar: LokasiModel.MediaTersimpan[]): Promise<Media[]> {
+export async function keMedia(daftar: MediaModel.MediaTersimpan[]): Promise<Media[]> {
   return Promise.all(
     daftar.map(async ({ idMedia, tipe, storageKey, createdAt }) => ({
       idMedia,
@@ -259,6 +287,72 @@ async function keMedia(daftar: LokasiModel.MediaTersimpan[]): Promise<Media[]> {
       createdAt,
     })),
   );
+}
+
+/**
+ * Bentuk `Laporan` kontrak dari baris model. ReportIt memakai teks lokasi dan koordinatnya
+ * sendiri; CleanIt memakai nama, koordinat, dan jenis sampah lokasi terkait (`sumber` = null).
+ */
+export function keLaporan(
+  row: LaporanModel.LaporanTersimpan,
+  lokasiCleanIt?: LokasiModel.RingkasanLokasi,
+): Laporan {
+  const dasar = {
+    idLaporan: row.idLaporan,
+    jenis: row.jenis,
+    judul: row.judul,
+  };
+  const waktu = { waktu: row.waktu.toISOString(), createdAt: row.createdAt.toISOString() };
+
+  if (row.jenis === "REPORTIT") {
+    // Dijaga CHECK laporan_field_per_jenis_check: field ini wajib terisi untuk ReportIt.
+    if (row.lokasi === null || row.latitude === null || row.longitude === null || row.jenisSampah === null) {
+      throw new Error(`ReportIt ${row.idLaporan} tidak memiliki data lokasi.`);
+    }
+    return {
+      ...dasar,
+      lokasi: row.lokasi,
+      latitude: row.latitude,
+      longitude: row.longitude,
+      ...waktu,
+      sumber: row.sumber,
+      jenisSampah: row.jenisSampah,
+      status: row.status,
+    };
+  }
+
+  if (!lokasiCleanIt) {
+    throw new Error(`Lokasi CleanIt ${row.idLaporan} tidak ditemukan.`);
+  }
+  return {
+    ...dasar,
+    lokasi: lokasiCleanIt.nama,
+    latitude: lokasiCleanIt.latitude,
+    longitude: lokasiCleanIt.longitude,
+    ...waktu,
+    sumber: null,
+    jenisSampah: lokasiCleanIt.jenisSampah,
+    status: row.status,
+  };
+}
+
+/**
+ * GET /api/laporan — get_all_laporan_unverified (Algo-007) untuk I-07. Default `status`
+ * BELUM_DIPERIKSA; filter `jenis`, urutan `created_at`, dan pagination dengan `meta.total`.
+ */
+export async function get_all_laporan_unverified(request: Request): Promise<Response> {
+  const query = await parseQuery(request, daftarLaporanQuerySchema);
+  const { data, total } = await LaporanModel.getDaftarLaporan(query);
+
+  const idLokasiCleanIt = data.flatMap((row) =>
+    row.jenis === "CLEANIT" && row.lokasiId !== null ? [row.lokasiId] : [],
+  );
+  const lokasi = await LokasiModel.getRingkasanByIds([...new Set(idLokasiCleanIt)]);
+
+  const daftar = data.map((row) =>
+    keLaporan(row, row.lokasiId === null ? undefined : lokasi.get(row.lokasiId)),
+  );
+  return apiList(daftar, { page: query.page, limit: query.limit, total });
 }
 
 /** GET /api/lokasi — UC04, I-09/I-10. Default status TERCEMAR, tanpa filter radius (N11). */
