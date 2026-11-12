@@ -157,17 +157,24 @@ export async function buatLaporan(opsi: {
   alasanPenolakan?: string;
   diverifikasiOleh?: string;
   diverifikasiAt?: Date;
+  /** Khusus ReportIt (default titik di wilayah Ancol). */
+  lokasiTeks?: string;
+  latitude?: number;
+  longitude?: number;
+  jenisSampah?: JenisSampah;
+  waktuKejadian?: Date;
+  createdAt?: Date;
 }): Promise<{ idLaporan: number }> {
   const status = opsi.status ?? "BELUM_DIPERIKSA";
   const terverifikasi = status !== "BELUM_DIPERIKSA";
   const fieldReportIt =
     opsi.jenis === "REPORTIT"
       ? {
-          lokasiTeks: "Jl. Uji No. 2",
-          latitude: -6.12,
-          longitude: 106.83,
+          lokasiTeks: opsi.lokasiTeks ?? "Jl. Uji No. 2",
+          latitude: opsi.latitude ?? -6.12,
+          longitude: opsi.longitude ?? 106.83,
           sumber: "INFO_WARGA" as const,
-          jenisSampah: "PLASTIK" as const,
+          jenisSampah: opsi.jenisSampah ?? ("PLASTIK" as const),
         }
       : {};
 
@@ -177,13 +184,14 @@ export async function buatLaporan(opsi: {
       jenis: opsi.jenis,
       idPengguna: opsi.idPengguna,
       judul: opsi.judul ?? `Laporan ${opsi.jenis}`,
-      waktuKejadian: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      waktuKejadian: opsi.waktuKejadian ?? new Date(Date.now() - 2 * 60 * 60 * 1000),
       ...fieldReportIt,
       lokasiId: opsi.lokasiId ?? null,
       status,
       alasanPenolakan: opsi.alasanPenolakan ?? null,
       diverifikasiOleh: terverifikasi ? opsi.diverifikasiOleh : null,
       diverifikasiAt: terverifikasi ? (opsi.diverifikasiAt ?? new Date()) : null,
+      ...(opsi.createdAt ? { createdAt: opsi.createdAt } : {}),
     })
     .returning({ idLaporan: laporan.id });
   return row;

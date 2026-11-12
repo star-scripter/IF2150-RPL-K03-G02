@@ -1,10 +1,18 @@
 /** Model Media — menyimpan metadata media dan mengecek penggunaan ulang hash (C03). */
-import { and, eq, inArray, isNull, ne } from "drizzle-orm";
+import { and, asc, eq, inArray, isNull, ne } from "drizzle-orm";
 import { db, type Db } from "@/server/db";
 import { laporan, media } from "@/server/db/schema";
 import type { TipeMedia } from "@/types/api";
 
 type Eksekutor = Pick<Db, "select">;
+
+/** Media yang sudah tertaut ke laporan; `storageKey` diubah menjadi `url` oleh controller. */
+export type MediaTersimpan = {
+  idMedia: number;
+  tipe: TipeMedia;
+  storageKey: string;
+  createdAt: string;
+};
 
 export type MediaUntukLaporan = {
   idMedia: number;
@@ -82,4 +90,19 @@ export async function buatMedia(input: MediaBaru): Promise<number> {
     .returning({ id: media.id });
 
   return baris.id;
+}
+
+/** Media milik satu laporan untuk ditampilkan (detail laporan/lokasi), urut ID unggah. */
+export async function getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]> {
+  const rows = await tx
+    .select({
+      idMedia: media.id,
+      tipe: media.tipe,
+      storageKey: media.storageKey,
+      createdAt: media.createdAt,
+    })
+    .from(media)
+    .where(eq(media.laporanId, idLaporan))
+    .orderBy(asc(media.id));
+  return rows.map((m) => ({ ...m, createdAt: m.createdAt.toISOString() }));
 }
