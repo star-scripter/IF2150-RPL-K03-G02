@@ -75,7 +75,7 @@ so-clean/
 │   │   ├── password.ts       # hash/verify bcryptjs
 │   │   ├── session-token.ts  # sign/verify JWT dan opsi cookie
 │   │   ├── session-cookie.ts # baca/tulis/hapus cookie lewat Next.js cookies()
-│   │   └── guard.ts          # shim sementara cek sesi/role di route handler (BE-06)
+│   │   └── guard.ts          # wajibLogin: cek sesi/role di setiap route handler (BE-06)
 │   ├── storage/
 │   │   └── s3.ts              # adapter S3: upload(file), getUrl(key) (BE-07)
 │   ├── controllers/
