@@ -236,3 +236,21 @@ export async function simpan_lokasi(data: LokasiBaru, tx: Pick<Db, "insert"> = d
     .returning({ idLokasi: lokasi.id });
   return baris.idLokasi;
 }
+
+/**
+ * Lokasi → DIBERSIHKAN hanya jika masih TERCEMAR (K2, K12). Mengembalikan `poin` lokasi untuk
+ * pelapor CleanIt, atau `null` jika lokasi sudah dibersihkan atau tidak ada. UPDATE ini juga
+ * menunggu `SELECT … FOR SHARE` dari CleanIt yang sedang dibuat (Aturan CleanIt nomor 1).
+ */
+export async function tandaiDibersihkan(
+  idLokasi: number,
+  tx: Pick<Db, "update"> = db,
+): Promise<PilihanPoin | null> {
+  const [baris] = await tx
+    .update(lokasi)
+    .set({ status: "DIBERSIHKAN" })
+    .where(and(eq(lokasi.id, idLokasi), eq(lokasi.status, "TERCEMAR")))
+    .returning({ poin: lokasi.poin });
+  // Dijaga CHECK lokasi_poin_check: hanya 50, 100, atau 200 (K3).
+  return baris ? (baris.poin as PilihanPoin) : null;
+}

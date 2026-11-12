@@ -281,3 +281,38 @@ export async function tautkanLokasi(
 ): Promise<void> {
   await tx.update(laporan).set({ lokasiId: idLokasi }).where(eq(laporan.id, idLaporan));
 }
+
+/** Alasan penolakan otomatis CleanIt lain setelah lokasinya dibersihkan (K12). */
+export const ALASAN_LOKASI_SUDAH_DIBERSIHKAN = "Lokasi sudah dibersihkan";
+
+/**
+ * Tolak otomatis CleanIt lain yang masih menunggu untuk lokasi yang baru dibersihkan (K12).
+ * `diverifikasi_oleh` = Operator yang menyetujui. Dijalankan setelah UPDATE lokasi, sehingga
+ * CleanIt yang tersimpan selama UPDATE lokasi menunggu kunci ikut tertolak (statement baru di
+ * READ COMMITTED melihat baris yang sudah di-commit). Mengembalikan ID laporan yang ditolak.
+ */
+export async function tolakCleanItMenungguLain(
+  idLokasi: number,
+  kecualiIdLaporan: number,
+  diverifikasiOleh: string,
+  tx: Pick<Db, "update"> = db,
+): Promise<number[]> {
+  const rows = await tx
+    .update(laporan)
+    .set({
+      status: "TIDAK_VALID",
+      alasanPenolakan: ALASAN_LOKASI_SUDAH_DIBERSIHKAN,
+      diverifikasiOleh,
+      diverifikasiAt: sql`now()`,
+    })
+    .where(
+      and(
+        eq(laporan.jenis, "CLEANIT"),
+        eq(laporan.lokasiId, idLokasi),
+        eq(laporan.status, "BELUM_DIPERIKSA"),
+        ne(laporan.id, kecualiIdLaporan),
+      ),
+    )
+    .returning({ idLaporan: laporan.id });
+  return rows.map((row) => row.idLaporan);
+}
