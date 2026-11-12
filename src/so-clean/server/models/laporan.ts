@@ -239,3 +239,36 @@ export async function hitungBersihkanSendiri30Hari(
     );
   return jumlah;
 }
+
+/** Keputusan verifikasi Operator untuk satu laporan. */
+export type KeputusanVerifikasi = {
+  status: "VALID" | "TIDAK_VALID";
+  diverifikasiOleh: string;
+  /** Wajib untuk CleanIt yang ditolak (CHECK laporan_alasan_cleanit_check). */
+  alasanPenolakan?: string | null;
+};
+
+/**
+ * Ubah status verifikasi hanya jika laporan masih BELUM_DIPERIKSA (BE-16). Status, alasan,
+ * `diverifikasi_oleh`, dan `diverifikasi_at` diisi dalam satu UPDATE, supaya CHECK alasan CleanIt
+ * dan CHECK status–verifikasi selalu terpenuhi. Mengembalikan `null` jika tidak ada baris yang
+ * berubah (laporan tidak ada atau sudah diverifikasi); dua verifikasi bersamaan hanya satu yang
+ * berhasil karena UPDATE kedua menunggu kunci baris lalu mengevaluasi ulang syarat status.
+ */
+export async function ubah_status_verifikasi(
+  idLaporan: number,
+  keputusan: KeputusanVerifikasi,
+  tx: Eksekutor = db,
+): Promise<LaporanTersimpan | null> {
+  const [row] = await tx
+    .update(laporan)
+    .set({
+      status: keputusan.status,
+      alasanPenolakan: keputusan.alasanPenolakan ?? null,
+      diverifikasiOleh: keputusan.diverifikasiOleh,
+      diverifikasiAt: sql`now()`,
+    })
+    .where(and(eq(laporan.id, idLaporan), eq(laporan.status, "BELUM_DIPERIKSA")))
+    .returning(kolomLaporan);
+  return row ?? null;
+}
