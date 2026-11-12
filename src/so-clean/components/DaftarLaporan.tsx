@@ -9,7 +9,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState, type ReactNode } from "react";
-import { Badge, Button, Card, Modal, Pagination } from "@/components/ui";
+import LaporanView from "@/components/LaporanView";
+import { Badge, Button, Card, Pagination } from "@/components/ui";
 import { cn } from "@/components/ui/cn";
 import { ApiError } from "@/lib/api/client";
 import { laporanApi } from "@/lib/api/endpoints";
@@ -177,31 +178,8 @@ function IsiValidasi() {
         {isi}
       </section>
 
-      {/* TODO(FE-23): ganti isi sementara dengan LaporanView (I-08), lalu panggil muatUlang setelah setujui/tolak. */}
-      <Modal
-        terbuka={dipilih !== null}
-        onTutup={() => setDipilih(null)}
-        label={dipilih ? formatIdLaporan(dipilih.idLaporan) : undefined}
-        judul={dipilih?.judul ?? ""}
-      >
-        {dipilih && (
-          <div className="flex flex-col gap-4">
-            <dl className="grid gap-3 sm:grid-cols-2">
-              <Card varian="lembut" className="gap-1">
-                <dt className="text-sm text-text-secondary">Lokasi</dt>
-                <dd className="text-dark-teal">{dipilih.lokasi}</dd>
-              </Card>
-              <Card varian="lembut" className="gap-1">
-                <dt className="text-sm text-text-secondary">Dikirim</dt>
-                <dd className="text-dark-teal">{formatWaktuLengkap(dipilih.createdAt)}</dd>
-              </Card>
-            </dl>
-            <p className="text-sm text-text-secondary">
-              Detail lengkap, galeri bukti, serta tombol Setujui dan Tolak dikerjakan di FE-23.
-            </p>
-          </div>
-        )}
-      </Modal>
+      {/* Setelah setujui/tolak, list dimuat ulang agar laporan yang sudah diverifikasi hilang dari antrean. */}
+      <LaporanView laporan={dipilih} onTutup={() => setDipilih(null)} onDiverifikasi={muatUlang} />
     </>
   );
 }
