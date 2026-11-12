@@ -156,14 +156,19 @@ export async function cariTerdekatTercemar(
   latitude: number,
   longitude: number,
   tx: Pick<Db, "select"> = db,
+  opsi: { kunci?: boolean } = {},
 ): Promise<{ idLokasi: number; nama: string; jarakMeter: number } | null> {
   const jarak = jarakMeterKe(latitude, longitude);
-  const [baris] = await tx
+  const query = tx
     .select({ idLokasi: lokasi.id, nama: lokasi.nama, jarakMeter: jarak })
     .from(lokasi)
     .where(and(eq(lokasi.status, "TERCEMAR"), lte(jarak, RADIUS_GABUNG_METER)))
     .orderBy(asc(jarak), asc(lokasi.id))
-    .limit(1);
+    .limit(1)
+    .$dynamic();
+  // `kunci`: FOR SHARE agar persetujuan CleanIt yang mengubah lokasi ini ke DIBERSIHKAN menunggu
+  // sampai penggabungan selesai (dan sebaliknya, baris yang sudah DIBERSIHKAN tidak terpilih).
+  const [baris] = await (opsi.kunci ? query.for("share", { of: lokasi }) : query);
   return baris ?? null;
 }
 
@@ -198,4 +203,36 @@ export async function getPelaporAsal(
     .where(eq(lokasi.id, idLokasi))
     .limit(1);
   return baris?.idPengguna ?? null;
+}
+
+/**
+ * Kunci transaksi (advisory lock) untuk pemetaan lokasi ReportIt. Persetujuan ReportIt berjalan
+ * satu per satu, sehingga dua ReportIt berdekatan yang disetujui bersamaan tidak sama-sama
+ * membuat lokasi baru dalam radius 50 m (K13). Kunci lepas otomatis saat transaksi selesai.
+ */
+export async function kunciPemetaanLokasi(tx: Pick<Db, "execute">): Promise<void> {
+  await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('soclean:petakan_lokasi'))`);
+}
+
+/** Data lokasi baru dari ReportIt yang disetujui (K3, K8, K9). */
+export type LokasiBaru = {
+  nama: string;
+  alamat: string;
+  latitude: number;
+  longitude: number;
+  jenisSampah: JenisSampah;
+  poin: PilihanPoin;
+  laporanAsalId: number;
+};
+
+/**
+ * simpan_lokasi() — Q-002: menyimpan lokasi pencemaran baru berstatus TERCEMAR dan mengembalikan
+ * `idLokasi`. Cek duplikat Q-001 diganti `cariTerdekatTercemar` (radius 50 m, K13).
+ */
+export async function simpan_lokasi(data: LokasiBaru, tx: Pick<Db, "insert"> = db): Promise<number> {
+  const [baris] = await tx
+    .insert(lokasi)
+    .values({ ...data, status: "TERCEMAR" })
+    .returning({ idLokasi: lokasi.id });
+  return baris.idLokasi;
 }

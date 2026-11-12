@@ -272,3 +272,12 @@ export async function ubah_status_verifikasi(
     .returning(kolomLaporan);
   return row ?? null;
 }
+
+/** Isi `laporan.lokasi_id` ReportIt yang disetujui dengan lokasi baru atau lokasi tujuan penggabungan. */
+export async function tautkanLokasi(
+  idLaporan: number,
+  idLokasi: number,
+  tx: Pick<Db, "update"> = db,
+): Promise<void> {
+  await tx.update(laporan).set({ lokasiId: idLokasi }).where(eq(laporan.id, idLaporan));
+}
