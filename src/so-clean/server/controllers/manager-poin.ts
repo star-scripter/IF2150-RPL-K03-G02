@@ -4,7 +4,8 @@
  * Endpoint poin dan reward melewati ManagerPoin, bukan memanggil model langsung dari route
  * handler. Cek sesi/role dilakukan di route handler; fungsi di sini menerima sesi yang sudah
  * diverifikasi. `cekPoin` dan `kurangiPoin` bukan endpoint, melainkan dipakai controller
- * Penukaran (C16) sesuai Algo-001 `tukarPoin`.
+ * Penukaran (C16) sesuai Algo-001 `tukarPoin`; `tambah_poin` dipakai ValidatorLaporan (C05)
+ * saat CleanIt disetujui.
  *
  * Kelas DPPL: C11 - ManagerPoin
  */
@@ -58,4 +59,18 @@ export async function kurangiPoin(
   if (jumlah <= 0) return null;
   if (!(await cekPoin(idPengguna, jumlah, tx))) return null;
   return PenggunaModel.kurangiPoin(idPengguna, jumlah, tx);
+}
+
+/**
+ * tambah_poin(idPengguna, jumlahPoin) — Algo-001, dipanggil di transaksi setujui CleanIt setelah
+ * laporan dinyatakan VALID. Jumlah ≤ 0 diabaikan. Mengembalikan saldo baru, atau `null` jika
+ * tidak ada perubahan.
+ */
+export async function tambah_poin(
+  idPengguna: string,
+  jumlahPoin: number,
+  tx: Transaksi,
+): Promise<number | null> {
+  if (jumlahPoin <= 0) return null;
+  return PenggunaModel.tambah_poin(idPengguna, jumlahPoin, tx);
 }
