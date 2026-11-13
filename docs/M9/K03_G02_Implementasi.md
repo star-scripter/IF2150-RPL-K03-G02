@@ -34,7 +34,7 @@ Dipersiapkan oleh:
 
 ---
 
-**Deadline:** Rabu, 11 November 2026, 21.50 WIB
+**Deadline:** Jumat, 13 November 2026, 21.50 WIB
 
 ---
 
@@ -184,11 +184,7 @@ Ketentuan:
 
 ## B.1 Perubahan dari DPPL
 
-Catat semua perbedaan antara perancangan (DPPL) dan implementasi akhir. Jika tidak ada perubahan, tuliskan "Tidak ada perubahan".
-
 Tabel B.1. Perubahan dari DPPL
-
-Acuan implementasi adalah kontrak v0.6 (`docs/contracts/SoClean — Pembagian Tugas FE & BE v0.6.md`). Kode K1–K13 dan N1–N16 merujuk ke tabel keputusan di kontrak tersebut.
 
 | No | Bagian DPPL | Rancangan Awal | Implementasi Akhir | Alasan |
 | :--- | :--- | :--- | :--- | :--- |
@@ -231,11 +227,11 @@ Tabel B.2. Bukti Best Practices
 
 | Praktik | Bukti | Keterangan |
 | :--- | :--- | :--- |
-| Branching | *[Tautan ke daftar branch / graph commit]* | *[Skema yang dipakai]* |
-| Semantic commit | *[Tautan ke riwayat commit]* | *[Ringkasan]* |
-| Track tasks | *[Tautan ke Issues/Projects]* | *[Jumlah issue, pembagian]* |
-| Pull request dan review | *[Tautan ke 2-3 PR representatif]* | *[Siapa me-review siapa]* |
-| Pengujian | *[Tautan ke `src/tests/` dan hasil test]* | *[Apa yang diuji, cara menjalankan]* |
+| Branching | https://github.com/star-scripter/IF2150-RPL-K03-G02/branches/all | Skema `main` + `dev`. `dev` menjadi branch integrasi dan default branch; `main` hanya menerima rilis lewat PR dan sync dari repo asisten. Setiap tugas dikerjakan di branch sendiri dari `dev` dengan format <tipe>/<ID>-<nama> (mis. feat/FE-06-login, feat/BE-13-setujui-reportit, docs/FE-A-laporan-implementasi), lalu digabung ke dev. |
+| Semantic commit | https://github.com/star-scripter/IF2150-RPL-K03-G02/commits/dev | Format <tipe>(<ID tugas>): <deskripsi>, dengan ID tugas dari kontrak yang sudah ditentukan sebagai scope, misalnya feat(FE-13): draf offline form laporan…, fix(FE-02): perbaiki dialog…, perf(BE-26): add partial index…. |
+| Track tasks | https://github.com/star-scripter/IF2150-RPL-K03-G02/issues?q=is%3Aissue | Satu Issue per tugas FE/BE dibuat sebelum branch, dengan judul [ID] [TIPE] Ringkasan, acceptance criteria dari kontrak, dan label tipe/prioritas/status (todo → in-progress → review → done). |
+| Pull request dan review | https://github.com/star-scripter/IF2150-RPL-K03-G02/pull/89, https://github.com/star-scripter/IF2150-RPL-K03-G02/pull/22   | Deskripsi PR mengikuti template kontrak: ringkasan, Issue terkait, konfirmasi AC, checklist Definition of Done, serta bukti (screenshot 360 px dan desktop untuk UI; hasil test untuk BE). Hampir semua PR di-review minimal satu anggota lain, dengan FE di-review oleh FE lain, dan BE di-review oleh BE lainnya. |
+| Pengujian | https://github.com/star-scripter/IF2150-RPL-K03-G02/tree/dev/src/so-clean/tests | *[Apa yang diuji, cara menjalankan]* |
 
 ### B.2.1 Profiling dan Optimasi
 
@@ -253,9 +249,9 @@ Jika tidak ada perbaikan yang perlu dilakukan, jelaskan hasil profiling dan alas
 
 ## B.3 Kendala dan Catatan Penting
 
-Tuliskan kendala yang ditemui, fitur yang belum sempurna (*known issues*), serta hal yang perlu diketahui asisten saat menjalankan atau menilai aplikasi (misalnya akun uji khusus, urutan menjalankan, atau batasan).
+<!-- Tuliskan kendala yang ditemui, fitur yang belum sempurna (*known issues*), serta hal yang perlu diketahui asisten saat menjalankan atau menilai aplikasi (misalnya akun uji khusus, urutan menjalankan, atau batasan).
 
-*Known issues* yang sudah diketahui sejak perancangan (kontrak v0.6):
+*Known issues* yang sudah diketahui sejak perancangan (kontrak v0.6): -->
 
 - **Multi-akun dan kolusi.** Registrasi cukup dengan email tanpa verifikasi identitas, jadi satu orang bisa memakai beberapa akun (akun A melapor, akun B membersihkan). Pertahanannya verifikasi Operator.
 - **Membuang sampah lalu membersihkannya sendiri.** Foto sebelum dan sesudah asli, sehingga tidak bisa dideteksi sistem. Tanda "Pelapor = Relawan" dan hitungan 30 hari di I-08 hanya membuat pola ini terlihat oleh Operator.
@@ -264,6 +260,8 @@ Tuliskan kendala yang ditemui, fitur yang belum sempurna (*known issues*), serta
 - **Tanpa batas percobaan login** dan tanpa reset password.
 - **Draf offline tidak terikat akun.** Draf form laporan disimpan per perangkat di `localStorage`, jadi pada perangkat yang dipakai bersama, pengguna lain yang login di browser yang sama bisa melihat draf yang belum terkirim.
 - **Figma belum diperbarui** untuk tautan Lupa password yang dihapus, halaman Profil, Riwayat Penukaran, galeri Sebelum/Sesudah, dan dropdown poin; desainnya dibuat langsung dari komponen yang ada.
+- **FE dikerjakan sebelum BE siap.** View dikembangkan dengan mock MSW yang meniru respons, lalu dicocokkan ulang dengan endpoint asli setelah di-merge.
+- **Banyak tugas mengubah file yang sama.** Form laporan dikerjakan beberapa tugas sekaligus (FE-09 sampai FE-13). Konflik dikurangi dengan sering me-merge `dev` ke branch tugas.
 
 ## B.4 Kontribusi Anggota
 
