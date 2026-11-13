@@ -1,21 +1,15 @@
-import { sql } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ubah_status } from "@/server/controllers/manager-laporan";
 import { db } from "@/server/db";
 import { getLaporanById, ubah_status_verifikasi } from "@/server/models/laporan";
-import { DATABASE_TEST_AKTIF, buatLaporan, buatLokasi, buatPengguna, kosongkanDatabase } from "./helpers/db";
-
-/** Tunggu sampai ada query lain di database ini yang sedang menunggu kunci baris. */
-async function tungguAdaYangMenungguKunci(): Promise<void> {
-  for (let i = 0; i < 100; i++) {
-    const { rows } = await db.execute<{ jumlah: number }>(sql`
-      SELECT count(*)::int AS jumlah FROM pg_stat_activity
-      WHERE datname = current_database() AND wait_event_type = 'Lock'`);
-    if (rows[0].jumlah > 0) return;
-    await new Promise((r) => setTimeout(r, 20));
-  }
-  throw new Error("Tidak ada transaksi yang menunggu kunci.");
-}
+import {
+  DATABASE_TEST_AKTIF,
+  buatLaporan,
+  buatLokasi,
+  buatPengguna,
+  kosongkanDatabase,
+  tungguAdaYangMenungguKunci,
+} from "./helpers/db";
 
 describe.runIf(DATABASE_TEST_AKTIF)("cegah verifikasi ganda (BE-16)", () => {
   let pelapor: string;

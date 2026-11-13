@@ -196,3 +196,18 @@ export async function buatLaporan(opsi: {
     .returning({ idLaporan: laporan.id });
   return row;
 }
+
+/**
+ * Tunggu sampai ada query lain di database test yang sedang menunggu kunci (kunci baris atau
+ * advisory lock). Dipakai test konkurensi agar dua transaksi benar-benar tumpang tindih.
+ */
+export async function tungguAdaYangMenungguKunci(): Promise<void> {
+  for (let i = 0; i < 100; i++) {
+    const { rows } = await db.execute<{ jumlah: number }>(sql`
+      SELECT count(*)::int AS jumlah FROM pg_stat_activity
+      WHERE datname = current_database() AND wait_event_type = 'Lock'`);
+    if (rows[0].jumlah > 0) return;
+    await new Promise((r) => setTimeout(r, 20));
+  }
+  throw new Error("Tidak ada transaksi yang menunggu kunci.");
+}

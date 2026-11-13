@@ -6,17 +6,55 @@
  * CleanIt, detail memuat laporan asal lokasi (galeri Sebelum, N9) dan tanda pelapor asal
  * (Aturan CleanIt nomor 6). Data laporan dibaca lewat helper ManagerLaporan (C15).
  *
+ * `setujui` (Algo-001) berjalan dalam satu transaksi lewat ManagerLaporan (N14): `ubah_status`
+ * bersyarat (BE-16), lalu untuk ReportIt `petakan_lokasi` (BE-13). Pelapor ReportIt tidak mendapat
+ * poin (N1).
+ *
  * Cek sesi/role Operator dilakukan di route handler.
  *
  * Kelas DPPL: C05 - ValidatorLaporan
  */
-import { ApiError, apiSuccess } from "@/server/api";
+import { z } from "zod";
+import { ApiError, apiSuccess, validateInput } from "@/server/api";
+import type { Sesi } from "@/server/auth/guard";
 import * as ManagerLaporan from "@/server/controllers/manager-laporan";
+import { db } from "@/server/db";
 import * as LaporanModel from "@/server/models/laporan";
 import * as LokasiModel from "@/server/models/lokasi";
 import * as MediaModel from "@/server/models/media";
 import * as PenggunaModel from "@/server/models/pengguna";
-import type { LaporanDetail } from "@/types/api";
+import type { LaporanDetail, SetujuiLaporanResponse } from "@/types/api";
+
+/** Body setujui ReportIt (K3, K9). Nama kosong/spasi memakai teks lokasi laporan. */
+const setujuiReportItSchema = z.object({
+  poin: z.union([z.literal(50), z.literal(100), z.literal(200)]).default(50),
+  namaLokasi: z.string().trim().max(255).optional(),
+});
+
+/** Baca body JSON yang boleh kosong (dianggap `{}`); JSON rusak → 400 FORMAT_TIDAK_VALID. */
+async function bacaBodyOpsional(request: Request): Promise<unknown> {
+  const teks = await request.text();
+  if (teks.trim() === "") return {};
+  try {
+    return JSON.parse(teks);
+  } catch {
+    throw new ApiError("FORMAT_TIDAK_VALID", "Body request harus berupa JSON yang valid.", {
+      body: "Body request harus berupa JSON yang valid.",
+    });
+  }
+}
+
+/** Laporan harus ada dan masih BELUM_DIPERIKSA sebelum body divalidasi (urutan sama dengan mock FE-04). */
+async function wajibMenunggu(idLaporan: number): Promise<LaporanModel.LaporanTersimpan> {
+  const laporan = await LaporanModel.getLaporanById(idLaporan);
+  if (!laporan) {
+    throw new ApiError("NOT_FOUND", "Laporan tidak ditemukan.");
+  }
+  if (laporan.status !== "BELUM_DIPERIKSA") {
+    throw new ApiError("SUDAH_DIVERIFIKASI", "Laporan sudah diverifikasi oleh Operator lain.");
+  }
+  return laporan;
+}
 
 /** Field khusus CleanIt di `LaporanDetail`. */
 type DetailCleanIt = Pick<
@@ -97,4 +135,35 @@ export async function get_detail(idParam: string): Promise<Response> {
     ...detailCleanIt,
   };
   return apiSuccess(detail);
+}
+
+/**
+ * POST /api/laporan/:id/setujui — setujui(idLaporan), Algo-001.
+ * ReportIt: status VALID lalu dipetakan ke lokasi baru atau lokasi dalam radius 50 m (BE-13).
+ */
+export async function setujui(request: Request, idParam: string, sesi: Sesi): Promise<Response> {
+  const idLaporan = await ManagerLaporan.bacaIdParam(idParam);
+  const laporan = await wajibMenunggu(idLaporan);
+  const body = await bacaBodyOpsional(request);
+
+  if (laporan.jenis !== "REPORTIT") {
+    // Persetujuan CleanIt (poin dan lokasi DIBERSIHKAN) ditambahkan di BE-14.
+    throw new Error("Persetujuan CleanIt belum tersedia.");
+  }
+
+  const { poin, namaLokasi } = await validateInput(body, setujuiReportItSchema);
+  const data = await db.transaction(async (tx): Promise<SetujuiLaporanResponse> => {
+    const terverifikasi = await ManagerLaporan.ubah_status(
+      idLaporan,
+      { status: "VALID", diverifikasiOleh: sesi.idPengguna },
+      tx,
+    );
+    const { idLokasi, digabung } = await ManagerLaporan.petakan_lokasi(
+      terverifikasi,
+      { poin, namaLokasi: namaLokasi || undefined },
+      tx,
+    );
+    return { idLaporan, status: "VALID", idLokasi, digabung };
+  });
+  return apiSuccess(data);
 }

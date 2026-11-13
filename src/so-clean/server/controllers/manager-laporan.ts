@@ -33,6 +33,7 @@ import type {
   LokasiDetail,
   Media,
   OkResponse,
+  PilihanPoin,
   Sumber,
 } from "@/types/api";
 
@@ -415,4 +416,45 @@ export async function ubah_status(
     throw new ApiError("NOT_FOUND", "Laporan tidak ditemukan.");
   }
   throw new ApiError("SUDAH_DIVERIFIKASI", "Laporan sudah diverifikasi oleh Operator lain.");
+}
+
+/**
+ * petakan_lokasi (Algo-011): memetakan ReportIt yang baru disetujui ke lokasi pencemaran (K13).
+ * Jika ada lokasi TERCEMAR dalam radius 50 m, laporan ditautkan ke lokasi itu (`digabung`) dan
+ * poin/nama dari Operator diabaikan; jika tidak, lokasi baru dibuat dengan nama default = teks
+ * lokasi laporan (K9). Dijalankan di transaksi setujui setelah `ubah_status`.
+ */
+export async function petakan_lokasi(
+  laporan: LaporanModel.LaporanTersimpan,
+  opsi: { poin: PilihanPoin; namaLokasi?: string },
+  tx: Transaksi,
+): Promise<{ idLokasi: number; digabung: boolean }> {
+  if (laporan.jenis !== "REPORTIT" || laporan.status !== "VALID") {
+    throw new Error(`petakan_lokasi hanya untuk ReportIt VALID (laporan ${laporan.idLaporan}).`);
+  }
+  const data = keLaporan(laporan);
+
+  await LokasiModel.kunciPemetaanLokasi(tx);
+  const terdekat = await LokasiModel.cariTerdekatTercemar(data.latitude, data.longitude, tx, {
+    kunci: true,
+  });
+  if (terdekat) {
+    await LaporanModel.tautkanLokasi(laporan.idLaporan, terdekat.idLokasi, tx);
+    return { idLokasi: terdekat.idLokasi, digabung: true };
+  }
+
+  const idLokasi = await LokasiModel.simpan_lokasi(
+    {
+      nama: opsi.namaLokasi ?? data.lokasi,
+      alamat: data.lokasi,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      jenisSampah: data.jenisSampah,
+      poin: opsi.poin,
+      laporanAsalId: laporan.idLaporan,
+    },
+    tx,
+  );
+  await LaporanModel.tautkanLokasi(laporan.idLaporan, idLokasi, tx);
+  return { idLokasi, digabung: false };
 }
