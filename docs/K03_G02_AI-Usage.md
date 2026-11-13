@@ -95,6 +95,9 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
 | :------ | :---------------- | :------------------ | :---------------------------- |
+| Claude Code | (FE-A, Jovan) Mengimplementasikan FE-01–FE-08 dan FE-13: design tokens, komponen UI, layout dan navigasi, API client dan mock MSW, auth guard, halaman Login, Register, dan Beranda, draf offline, beserta unit test | "Coba bantu saya kerjakan bagian FE-06 yang tidak butuh FE-03", "Tolong lanjutkan untuk yang FE-05" | Diff setiap tugas direview sebelum di-commit; commit, push, dan PR dilakukan sendiri; menjalankan `npm run lint`, `tsc`, dan `npm test`; mencoba hasilnya di browser lewat Docker dengan akun seed; memperbaiki dari yang sudah digenerate |
+| Claude Code + Figma MCP | (FE-A, Jovan) Membaca desain Figma (warna, font, radius, frame Login, Register, dan Beranda) untuk diterjemahkan ke design tokens dan komponen | "Coba eksekusikan untuk FE-01" | Hasil dibandingkan dengan Figma lewat screenshot; keputusan font dan ukuran ditentukan sendiri |
+| Claude Code | (FE-A, Jovan) Menyusun teks Issue dan PR sesuai template kontrak v0.8. | "Buatlah teks PR serta issues untuk FE-06" | Teks diedit, screenshot diberikan, nomor Issue dan reviewer diisi sendiri |
 
 ### Pernyataan Integritas dan Persetujuan
 
