@@ -8,7 +8,7 @@
  *
  * Kelas DPPL: C06 - Lokasi
  */
-import { and, asc, desc, eq, inArray, lte, sql } from "drizzle-orm";
+import { and, asc, between, desc, eq, inArray, lte, sql, type SQL } from "drizzle-orm";
 import { db, type Db } from "@/server/db";
 import { laporan, lokasi } from "@/server/db/schema";
 import { getByLaporan, type MediaTersimpan } from "@/server/models/media";
@@ -152,6 +152,38 @@ function jarakMeterKe(latitude: number, longitude: number) {
  * `lokasiTerdekat` di detail laporan dan sebagai tujuan penggabungan saat ReportIt disetujui.
  * Pengganti C06 Q-001 yang membandingkan koordinat persis.
  */
+/** Jari-jari bumi (meter) yang sama dengan rumus haversine di atas. */
+const JARI_JARI_BUMI_METER = 6_371_000;
+
+/**
+ * Kotak lat/lng yang pasti memuat seluruh lingkaran berjari-jari `radiusMeter` di sekitar titik
+ * (rumus tepi topi bola: Δlat = δ, Δlng = asin(sin δ / cos φ)), ditambah margin kecil untuk galat
+ * pembulatan. Dipakai sebagai prefilter yang bisa memakai index sebelum haversine yang mahal (BE-26).
+ * `lngMin`/`lngMax` bernilai null jika kotak melewati kutub atau garis ±180°, sehingga longitude
+ * tidak difilter dan hasilnya tetap benar.
+ */
+export function kotakPencarian(
+  latitude: number,
+  longitude: number,
+  radiusMeter: number = RADIUS_GABUNG_METER,
+): { latMin: number; latMax: number; lngMin: number | null; lngMax: number | null } {
+  const derajat = (rad: number) => (rad * 180) / Math.PI;
+  const delta = radiusMeter / JARI_JARI_BUMI_METER;
+  const margin = 1.001;
+  const dLat = derajat(delta) * margin;
+
+  const sinLng = Math.sin(delta) / Math.cos((latitude * Math.PI) / 180);
+  const dLng = sinLng < 1 ? derajat(Math.asin(sinLng)) * margin : null;
+  const melewatiBatas = dLng === null || longitude - dLng < -180 || longitude + dLng > 180;
+
+  return {
+    latMin: latitude - dLat,
+    latMax: latitude + dLat,
+    lngMin: melewatiBatas ? null : longitude - dLng,
+    lngMax: melewatiBatas ? null : longitude + dLng,
+  };
+}
+
 export async function cariTerdekatTercemar(
   latitude: number,
   longitude: number,
@@ -159,10 +191,20 @@ export async function cariTerdekatTercemar(
   opsi: { kunci?: boolean } = {},
 ): Promise<{ idLokasi: number; nama: string; jarakMeter: number } | null> {
   const jarak = jarakMeterKe(latitude, longitude);
+  const kotak = kotakPencarian(latitude, longitude);
+  const syarat: SQL[] = [
+    eq(lokasi.status, "TERCEMAR"),
+    // Prefilter kotak memakai index lokasi_tercemar_koordinat_idx; haversine menentukan hasil akhir.
+    between(lokasi.latitude, kotak.latMin, kotak.latMax),
+    ...(kotak.lngMin === null || kotak.lngMax === null
+      ? []
+      : [between(lokasi.longitude, kotak.lngMin, kotak.lngMax)]),
+    lte(jarak, RADIUS_GABUNG_METER),
+  ];
   const query = tx
     .select({ idLokasi: lokasi.id, nama: lokasi.nama, jarakMeter: jarak })
     .from(lokasi)
-    .where(and(eq(lokasi.status, "TERCEMAR"), lte(jarak, RADIUS_GABUNG_METER)))
+    .where(and(...syarat))
     .orderBy(asc(jarak), asc(lokasi.id))
     .limit(1)
     .$dynamic();
