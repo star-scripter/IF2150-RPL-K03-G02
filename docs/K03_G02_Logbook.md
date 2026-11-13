@@ -174,6 +174,8 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 04-11-2026 | Jovan Nathanael | Menyiapkan dokumen Milestone 9: form asistensi, identitas kelompok, dan kerangka laporan implementasi | 2 jam | Done | - |
 | 08-11-2026 | Jovan Nathanael | Revisi kontrak pembagian tugas (v0.6) dan konsistensi dengan DPPL; mengisi B.1 Perubahan dari DPPL dan known issues B.3; perbaikan batas wilayah peta di kontrak | 2 jam | Done | - |
+| 08-11-2026 | M. Aqsha Bagus R.I.B. & M. Dhafin Al Khairy | Setup proyek dan docker compose | 3 jam | Done | - |
+| 09-11-2026 | M. Aqsha Bagus R.I.B. | Revisi kontrak hingga v0.8, finishing BE-01, BE-02, BE-04 s.d. BE-11 | 8 jam? | Done | - |
 | 09-11-2026 | Jovan Nathanael | FE-01: setup Tailwind CSS 4, design tokens dari Figma, dan layout dasar | 1 jam | Done | |
 | 09-11-2026 | Jovan Nathanael | FE-04: API client, peta pesan error, dan mock MSW sesuai kontrak | 2 jam | Done | |
 | 09-11-2026 | Jovan Nathanael | FE-02: komponen UI dasar beserta perbaikan hasil review (dialog, toast, card, pagination) | 1,5 jam | Done | - |
