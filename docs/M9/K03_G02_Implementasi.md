@@ -223,6 +223,7 @@ Acuan implementasi adalah kontrak v0.6 (`docs/contracts/SoClean — Pembagian Tu
 | 29 | C03 Algo-002 `is_penyimpanan_penuh()`, `MAX_MEDIA_SIZE` | Mengecek penyimpanan perangkat penuh; batas ukuran tanpa nilai | "Gagal menyimpan media secara lokal" (`QuotaExceededError` atau kuota situs kurang); `MAX_MEDIA_SIZE` = 20 MB | Browser tidak bisa membaca sisa ruang perangkat (N15) |
 | 30 | Tipe data, nama method, dan alur MVC di BAB 4–5 | ID dan waktu bertipe campur, status berupa string, nama method ganda, View melakukan INSERT | Kontrak v0.6 sebagai satu-satunya acuan; pemetaan nama di B.5 | Menyatukan acuan implementasi (N16) |
 | 31 | Tabel 2.1 DPPL (Storage), komponen middleware | Cloudflare R2; middleware Next.js | RustFS (S3) untuk lokal, R2 untuk deploy; `proxy.ts` | Image MinIO dihapus dari Docker Hub; Next.js 16 mengganti nama middleware menjadi proxy |
+| 32 | Layar I-01 (IO1-004), I-03 (IO3-002) | Login yang berhasil selalu membuka Beranda; skor di Beranda ditampilkan lewat C12 `tampilkanSaldo` | Setelah login, Masyarakat diarahkan ke Beranda (I-03) dan Operator ke Validasi Laporan (I-07); halaman dijaga sesuai role dan sesi yang habis (401) kembali ke Login. Beranda menampilkan nama dan saldo dari `GET /api/me` (C08) | Operator tidak punya Beranda maupun saldo poin; nama dan saldo cukup diambil dengan satu request (FE-05, FE-08) |
 
 ## B.2 Bukti Penerapan Best Practices
 
@@ -261,6 +262,7 @@ Tuliskan kendala yang ditemui, fitur yang belum sempurna (*known issues*), serta
 - **Watermark bukan bukti keaslian.** Di aplikasi web, server tidak bisa memastikan file berasal dari kamera. Watermark hanya membuktikan file sudah ada saat diunggah. Cek SHA-256 hanya menolak file yang identik persis; foto yang dipotong atau diubah ukurannya lolos, dan dua laporan yang dikirim tepat bersamaan dengan file identik juga bisa sama-sama lolos.
 - **Wilayah kerja sama dan reward adalah data contoh.** Mitra kerja sama (Sungai Cikapundung, Pantai Ancol, Pantai Pangandaran) dan voucher bersifat dummy. Batas wilayah berupa kotak lat/lng, dan koordinat ReportIt bisa diedit pengguna.
 - **Tanpa batas percobaan login** dan tanpa reset password.
+- **Draf offline tidak terikat akun.** Draf form laporan disimpan per perangkat di `localStorage`, jadi pada perangkat yang dipakai bersama, pengguna lain yang login di browser yang sama bisa melihat draf yang belum terkirim.
 - **Figma belum diperbarui** untuk tautan Lupa password yang dihapus, halaman Profil, Riwayat Penukaran, galeri Sebelum/Sesudah, dan dropdown poin; desainnya dibuat langsung dari komponen yang ada.
 
 ## B.4 Kontribusi Anggota
@@ -286,7 +288,7 @@ Tabel B.5. Traceability Kelas Perancangan ke Implementasi
 | C01 | *FormLaporan* | *[Diisi FE-B: komponen form ReportIt dan CleanIt]* | *[Diisi FE-B]* | *[Diisi FE-B]* |
 | C01 | *FormLaporan* | Komponen (kartu menu di Beranda) | `src/so-clean/components/Beranda.tsx` - `Beranda`; `src/so-clean/lib/beranda.ts` - `MENU_LAPORAN` | `buka_reportit()` menjadi kartu ReportIt yang membuka `/reportit` (I-11). `buka_menu_cleanit()` menjadi kartu CleanIt yang membuka daftar lokasi `/lokasi` (I-09), bukan form CleanIt langsung (B.1 no. 17) |
 | C01 | *FormLaporan* | Fungsi, hook, dan komponen (draf offline) | `src/so-clean/lib/draf-laporan.ts` - `simpanDraf`, `bacaDraf`, `hapusDraf`; `src/so-clean/components/laporan/useDrafLaporan.ts` - `useDrafLaporan`; `src/so-clean/components/laporan/PemberitahuanDraf.tsx` - `PemberitahuanDraf` | Penyimpanan lokal saat luring (Tabel 2.1 DPPL). Atribut teks form (judul, `lokasi`, koordinat, `waktu`, `sumber`, jenis sampah) disimpan di `localStorage` setiap kali berubah, dipulihkan saat form dibuka lagi, dan dihapus setelah laporan terkirim. `idMedia` dan berkas media tidak masuk draf; form meminta pengguna memilih ulang media jika tab sempat ditutup (B.1 no. 19) |
-| C01 | *FormLaporan* | Fungsi dan komponen (notifikasi) | `src/so-clean/components/ui/toast-store.ts` - `notify`; `src/so-clean/components/ui/Toast.tsx` - `Toaster` | `notify(msg)` menjadi toast bersama (`notify.sukses`, `notify.gagal`, `notify.info`) yang juga dipakai View lain yang punya operasi `notify` (C07, C14) dan `tampilkanNotifikasi` (C12). Atribut `msg` menjadi argumen pesan |
+| C01 | *FormLaporan* | Fungsi dan komponen (notifikasi) | `src/so-clean/components/ui/toast-store.ts` - `notify`; `src/so-clean/components/ui/Toast.tsx` - `Toaster` | `notify(msg)` menjadi toast bersama (`notify.sukses`, `notify.gagal`, `notify.info`); dipakai form laporan dan juga View lain, misalnya C12 HalamanPenukaran untuk `tampilkanNotifikasi`. Atribut `msg` menjadi argumen pesan |
 | C02 | *Laporan* | *[Diisi BE-A]* | *[Diisi BE-A]* | *[Diisi BE-A]* |
 | C03 | *Media* | *[Diisi BE-A]* | *[Diisi BE-A]* | *[Diisi BE-A]* |
 | C04 | *DaftarLaporan* | *[Diisi FE-C]* | *[Diisi FE-C]* | *[Diisi FE-C]* |
@@ -294,7 +296,7 @@ Tabel B.5. Traceability Kelas Perancangan ke Implementasi
 | C06 | *Lokasi* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
 | C07 | *DaftarLokasi* | *[Diisi FE-B]* | *[Diisi FE-B]* | *[Diisi FE-B]* |
 | C08 | *Pengguna* | *[Diisi BE-A dan BE-B: model dan tabel `pengguna`]* | *[Diisi BE-A dan BE-B]* | *[Diisi BE-A dan BE-B]* |
-| C08 | *Pengguna* | Komponen (tampilan data pengguna) | `src/so-clean/components/Beranda.tsx` - `Beranda`; `src/so-clean/lib/api/endpoints.ts` - `authApi.me` | Atribut `nama` dan `saldoPoin` ditampilkan di Beranda dari `GET /api/me`. Saldo selalu dibaca ulang dari server, tidak disimpan di client |
+| C08 | *Pengguna* | Komponen (tampilan data pengguna) | `src/so-clean/components/Beranda.tsx` - `Beranda`; `src/so-clean/lib/api/endpoints.ts` - `authApi.me` | Atribut `nama` dan `saldoPoin` ditampilkan di Beranda dari `GET /api/me` (B.1 no. 32). Saldo selalu dibaca ulang dari server, tidak disimpan di client |
 | C08 | *Pengguna* | Komponen dan fungsi (akun: Login dan Register) | `src/so-clean/components/FormLogin.tsx` - `FormLogin`; `src/so-clean/components/FormRegister.tsx` - `FormRegister`; `src/so-clean/lib/login.ts` - `validasiLogin`; `src/so-clean/lib/register.ts` - `validasiRegister` | Tambahan di luar DPPL karena C08 tidak punya email, password, maupun role (B.1 no. 21). Validasi client meniru aturan akun (nama 1–100, email dinormalisasi, password 8–72 dan tidak sama dengan email); setelah login, Masyarakat diarahkan ke Beranda dan Operator ke validasi laporan |
 | C09 | *Reward* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
 | C10 | *DaftarReward* | *[Diisi FE-C]* | *[Diisi FE-C]* | *[Diisi FE-C]* |
@@ -305,7 +307,7 @@ Tabel B.5. Traceability Kelas Perancangan ke Implementasi
 | C15 | *ManagerLaporan* | *[Diisi BE-A]* | *[Diisi BE-A]* | *[Diisi BE-A]* |
 | C16 | *Penukaran (Controller)* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
 
-Unit pendukung FE tanpa padanan kelas DPPL (dikerjakan FE-A):
+Unit pendukung FE tanpa acuan terhadap kelas DPPL:
 
 | Unit | Lokasi (File dan Nama) | Peran |
 | :--- | :--- | :--- |
