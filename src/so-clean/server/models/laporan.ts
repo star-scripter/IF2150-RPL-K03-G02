@@ -1,7 +1,8 @@
 /** Model Laporan — operasi persistensi ReportIt/CleanIt (C02). */
-import { and, asc, count, desc, eq, type SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, ne, sql, type SQL } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { db, type Db } from "@/server/db";
-import { laporan } from "@/server/db/schema";
+import { laporan, lokasi } from "@/server/db/schema";
 import type { JenisLaporan, JenisSampah, Sumber, StatusLaporan } from "@/types/api";
 
 /** `db` atau `tx` dari `db.transaction(...)`. */
@@ -209,4 +210,32 @@ export async function simpan_alasan_penolakan(
     .where(eq(laporan.id, idLaporan))
     .returning(kolomLaporan);
   return row ?? null;
+}
+
+/**
+ * Jumlah CleanIt pengguna untuk lokasi yang ia laporkan sendiri dalam 30 hari terakhir
+ * (berdasarkan `created_at`), tidak termasuk laporan `kecualiIdLaporan` (Aturan CleanIt nomor 6).
+ * Semua status dihitung, supaya Operator melihat seberapa sering pola ini terjadi.
+ */
+export async function hitungBersihkanSendiri30Hari(
+  idPengguna: string,
+  kecualiIdLaporan: number,
+  tx: Pick<Db, "select"> = db,
+): Promise<number> {
+  const asal = alias(laporan, "laporan_asal");
+  const [{ jumlah }] = await tx
+    .select({ jumlah: count() })
+    .from(laporan)
+    .innerJoin(lokasi, eq(lokasi.id, laporan.lokasiId))
+    .innerJoin(asal, eq(asal.id, lokasi.laporanAsalId))
+    .where(
+      and(
+        eq(laporan.jenis, "CLEANIT"),
+        eq(laporan.idPengguna, idPengguna),
+        eq(asal.idPengguna, idPengguna),
+        ne(laporan.id, kecualiIdLaporan),
+        gte(laporan.createdAt, sql`now() - interval '30 days'`),
+      ),
+    );
+  return jumlah;
 }

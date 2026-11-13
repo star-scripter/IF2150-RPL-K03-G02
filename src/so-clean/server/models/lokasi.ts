@@ -8,18 +8,16 @@
  *
  * Kelas DPPL: C06 - Lokasi
  */
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, lte, sql } from "drizzle-orm";
 import { db, type Db } from "@/server/db";
-import { laporan, lokasi, media } from "@/server/db/schema";
-import type { Lokasi, LokasiDetail, PilihanPoin, StatusLokasi, TipeMedia } from "@/types/api";
+import { laporan, lokasi } from "@/server/db/schema";
+import { getByLaporan, type MediaTersimpan } from "@/server/models/media";
+import type { JenisSampah, Lokasi, LokasiDetail, PilihanPoin, StatusLokasi } from "@/types/api";
 
-/** Media yang tersimpan; `storageKey` diubah menjadi `url` oleh controller. */
-export type MediaTersimpan = {
-  idMedia: number;
-  tipe: TipeMedia;
-  storageKey: string;
-  createdAt: string;
-};
+export type { MediaTersimpan };
+
+/** Radius penggabungan lokasi (K13): lokasi dianggap sama jika berjarak ≤ 50 m. */
+export const RADIUS_GABUNG_METER = 50;
 
 /** `LokasiDetail` sebelum URL media dibuat. */
 export type LokasiDenganAsal = Lokasi & {
@@ -96,16 +94,7 @@ export async function get_lokasi(idLokasi: number): Promise<LokasiDenganAsal | n
     throw new Error(`Laporan asal lokasi ${idLokasi} tidak memiliki sumber.`);
   }
 
-  const daftarMedia = await db
-    .select({
-      idMedia: media.id,
-      tipe: media.tipe,
-      storageKey: media.storageKey,
-      createdAt: media.createdAt,
-    })
-    .from(media)
-    .where(eq(media.laporanId, asalId))
-    .orderBy(asc(media.id));
+  const daftarMedia = await getByLaporan(asalId);
 
   return {
     ...keLokasi(dataLokasi),
@@ -114,7 +103,7 @@ export async function get_lokasi(idLokasi: number): Promise<LokasiDenganAsal | n
       judul: asalJudul,
       waktu: asalWaktu.toISOString(),
       sumber: asalSumber,
-      media: daftarMedia.map((m) => ({ ...m, createdAt: m.createdAt.toISOString() })),
+      media: daftarMedia,
     },
   };
 }
@@ -140,4 +129,73 @@ export async function getUntukValidasiCleanIt(
     .limit(1);
 
   return baris ?? null;
+}
+
+/** Ringkasan lokasi untuk mengisi field `Laporan` CleanIt (lokasi, koordinat, jenis sampah). */
+export type RingkasanLokasi = {
+  nama: string;
+  latitude: number;
+  longitude: number;
+  jenisSampah: JenisSampah;
+};
+
+/** Jarak (meter) dari kolom koordinat lokasi ke titik (latitude, longitude), rumus haversine. */
+function jarakMeterKe(latitude: number, longitude: number) {
+  return sql<number>`(2 * 6371000 * asin(least(1, sqrt(
+    power(sin(radians(${lokasi.latitude} - ${latitude}) / 2), 2)
+    + cos(radians(${latitude})) * cos(radians(${lokasi.latitude}))
+      * power(sin(radians(${lokasi.longitude} - ${longitude}) / 2), 2)))))`.mapWith(Number);
+}
+
+/**
+ * Lokasi TERCEMAR terdekat dalam radius 50 m dari titik ReportIt (K13), atau null. Dipakai untuk
+ * `lokasiTerdekat` di detail laporan dan sebagai tujuan penggabungan saat ReportIt disetujui.
+ * Pengganti C06 Q-001 yang membandingkan koordinat persis.
+ */
+export async function cariTerdekatTercemar(
+  latitude: number,
+  longitude: number,
+  tx: Pick<Db, "select"> = db,
+): Promise<{ idLokasi: number; nama: string; jarakMeter: number } | null> {
+  const jarak = jarakMeterKe(latitude, longitude);
+  const [baris] = await tx
+    .select({ idLokasi: lokasi.id, nama: lokasi.nama, jarakMeter: jarak })
+    .from(lokasi)
+    .where(and(eq(lokasi.status, "TERCEMAR"), lte(jarak, RADIUS_GABUNG_METER)))
+    .orderBy(asc(jarak), asc(lokasi.id))
+    .limit(1);
+  return baris ?? null;
+}
+
+/** Ringkasan beberapa lokasi sekaligus, dalam Map dengan kunci `idLokasi`. */
+export async function getRingkasanByIds(
+  idLokasi: number[],
+  tx: Pick<Db, "select"> = db,
+): Promise<Map<number, RingkasanLokasi>> {
+  if (idLokasi.length === 0) return new Map();
+  const rows = await tx
+    .select({
+      idLokasi: lokasi.id,
+      nama: lokasi.nama,
+      latitude: lokasi.latitude,
+      longitude: lokasi.longitude,
+      jenisSampah: lokasi.jenisSampah,
+    })
+    .from(lokasi)
+    .where(inArray(lokasi.id, idLokasi));
+  return new Map(rows.map(({ idLokasi: id, ...ringkasan }) => [id, ringkasan]));
+}
+
+/** ID pelapor laporan asal lokasi (Aturan CleanIt nomor 6), atau null jika lokasi tidak ada. */
+export async function getPelaporAsal(
+  idLokasi: number,
+  tx: Pick<Db, "select"> = db,
+): Promise<string | null> {
+  const [baris] = await tx
+    .select({ idPengguna: laporan.idPengguna })
+    .from(lokasi)
+    .innerJoin(laporan, eq(laporan.id, lokasi.laporanAsalId))
+    .where(eq(lokasi.id, idLokasi))
+    .limit(1);
+  return baris?.idPengguna ?? null;
 }
