@@ -9,7 +9,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import KodeVoucher from "@/components/KodeVoucher";
-import { Button, Card, Pagination } from "@/components/ui";
+import { Button, Card, KotakGagal, KotakKosong, Pagination } from "@/components/ui";
 import { ApiError } from "@/lib/api/client";
 import { penukaranApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
@@ -86,27 +86,18 @@ function DaftarRiwayat() {
   if (!aktif) return <KerangkaDaftar />;
 
   if (aktif.status === "gagal") {
-    return (
-      <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
-        <p>{aktif.pesan}</p>
-        <Button varian="bahaya" onClick={cobaLagi}>
-          Coba lagi
-        </Button>
-      </div>
-    );
+    return <KotakGagal pesan={aktif.pesan} onCobaLagi={cobaLagi} />;
   }
 
   const { data, meta } = aktif;
 
   if (meta.total === 0) {
     return (
-      <Card varian="lembut" className="items-center py-8 text-center">
-        <p className="font-semibold text-ink">Belum ada penukaran</p>
-        <p className="text-sm text-text-secondary">
-          Tukarkan poin Anda dengan hadiah, kode vouchernya akan tersimpan di sini.
-        </p>
-        <Button onClick={() => router.push("/hadiah")}>Lihat Hadiah</Button>
-      </Card>
+      <KotakKosong
+        judul="Belum ada penukaran"
+        keterangan="Tukarkan poin Anda dengan hadiah, kode vouchernya akan tersimpan di sini."
+        aksi={<Button onClick={() => router.push("/hadiah")}>Lihat Hadiah</Button>}
+      />
     );
   }
 

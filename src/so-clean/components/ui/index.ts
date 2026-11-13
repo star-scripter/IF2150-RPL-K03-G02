@@ -12,5 +12,6 @@ export { Dropdown, type PilihanDropdown } from "./Dropdown";
 export { Modal } from "./Modal";
 export { Pagination } from "./Pagination";
 export { ProgressBar, ProgressLangkah } from "./ProgressIndicator";
+export { KotakGagal, KotakKosong } from "./StatusHalaman";
 export { Textarea, Textbox } from "./Textbox";
 export { Toaster, notify, tutupToast, type JenisToast, type OpsiToast } from "./Toast";

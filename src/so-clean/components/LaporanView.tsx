@@ -22,6 +22,7 @@ import {
   Button,
   Card,
   Dropdown,
+  KotakGagal,
   Modal,
   Textarea,
   Textbox,
@@ -162,20 +163,17 @@ function IsiDetail({ idLaporan, ...props }: PropsIsi) {
 
   if (state.status === "gagal") {
     return (
-      <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
-        <p>{state.pesan}</p>
-        {state.bisaUlang && (
-          <Button
-            varian="bahaya"
-            onClick={() => {
-              setState({ status: "memuat" });
-              setPercobaan((n) => n + 1);
-            }}
-          >
-            Coba lagi
-          </Button>
-        )}
-      </div>
+      <KotakGagal
+        pesan={state.pesan}
+        onCobaLagi={
+          state.bisaUlang
+            ? () => {
+                setState({ status: "memuat" });
+                setPercobaan((n) => n + 1);
+              }
+            : undefined
+        }
+      />
     );
   }
 

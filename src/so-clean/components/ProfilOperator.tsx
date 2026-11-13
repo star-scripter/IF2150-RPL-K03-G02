@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { TombolKeluar } from "@/components/TombolKeluar";
-import { Badge, Button, Card } from "@/components/ui";
+import { Badge, Card, KotakGagal } from "@/components/ui";
 import { ApiError } from "@/lib/api/client";
 import { authApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
@@ -52,12 +52,7 @@ export function ProfilOperator() {
 
       <Card varian="garis" className="w-full max-w-md gap-5">
         {state.status === "gagal" ? (
-          <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
-            <p>{state.pesan}</p>
-            <Button varian="bahaya" onClick={cobaLagi}>
-              Coba lagi
-            </Button>
-          </div>
+          <KotakGagal pesan={state.pesan} onCobaLagi={cobaLagi} />
         ) : (
           <div className="flex items-center gap-4">
             <span

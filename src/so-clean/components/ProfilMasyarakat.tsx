@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from "react";
 import KartuSaldo from "@/components/KartuSaldo";
 import { TombolKeluar } from "@/components/TombolKeluar";
-import { Badge, Button, Card, notify } from "@/components/ui";
+import { Badge, Button, Card, KotakGagal, KotakKosong, notify } from "@/components/ui";
 import { cn } from "@/components/ui/cn";
 import { ApiError } from "@/lib/api/client";
 import { authApi, notifikasiApi } from "@/lib/api/endpoints";
@@ -178,12 +178,10 @@ function BagianNotifikasi({ state, onCobaLagi, onDiperbarui }: PropsBagianNotifi
       ) : state.status === "gagal" ? (
         <KotakGagal pesan={state.pesan} onCobaLagi={onCobaLagi} />
       ) : daftar.length === 0 ? (
-        <Card varian="lembut" className="items-center py-8 text-center">
-          <p className="font-semibold text-ink">Belum ada notifikasi</p>
-          <p className="text-sm text-text-secondary">
-            Hasil pemeriksaan laporan ReportIt dan CleanIt Anda oleh Operator akan muncul di sini.
-          </p>
-        </Card>
+        <KotakKosong
+          judul="Belum ada notifikasi"
+          keterangan="Hasil pemeriksaan laporan ReportIt dan CleanIt Anda oleh Operator akan muncul di sini."
+        />
       ) : (
         <ul className="flex flex-col gap-3">
           {daftar.map((n) => (
@@ -227,16 +225,5 @@ function KartuNotifikasi({ notifikasi: n }: { notifikasi: Notifikasi }) {
         {n.poinDiberikan ? <Badge>+{n.poinDiberikan.toLocaleString("id-ID")} poin</Badge> : null}
       </div>
     </Card>
-  );
-}
-
-function KotakGagal({ pesan, onCobaLagi }: { pesan: string; onCobaLagi: () => void }) {
-  return (
-    <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
-      <p>{pesan}</p>
-      <Button varian="bahaya" onClick={onCobaLagi}>
-        Coba lagi
-      </Button>
-    </div>
   );
 }

@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import DaftarReward from "@/components/DaftarReward";
 import KartuSaldo from "@/components/KartuSaldo";
 import KonfirmasiPenukaran from "@/components/KonfirmasiPenukaran";
-import { Button, notify } from "@/components/ui";
+import { KotakGagal, notify } from "@/components/ui";
 import { ApiError } from "@/lib/api/client";
 import { penukaranApi, poinApi, rewardApi } from "@/lib/api/endpoints";
 import { pesanError } from "@/lib/api/pesan-error";
@@ -140,14 +140,7 @@ export default function HalamanPenukaran() {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-4 py-6">
       {state.status === "memuat" && <KerangkaMuat />}
 
-      {state.status === "gagal" && (
-        <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
-          <p>{state.pesan}</p>
-          <Button varian="bahaya" onClick={cobaLagi}>
-            Coba lagi
-          </Button>
-        </div>
-      )}
+      {state.status === "gagal" && <KotakGagal pesan={state.pesan} onCobaLagi={cobaLagi} />}
 
       {state.status === "siap" && (
         <>
