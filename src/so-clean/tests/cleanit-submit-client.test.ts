@@ -7,7 +7,7 @@ import { bacaDetailLokasi } from "@/lib/detail-lokasi";
 import { buatStateFormLaporan } from "@/lib/form-laporan";
 import { kegagalanKirimLaporan, siapkanKirimLaporan } from "@/lib/kirim-laporan";
 import { cookieSesi } from "./helpers/sesi";
-import { detailLokasiUji } from "./helpers/detail-lokasi-fe16";
+import { detailLokasiUji } from "./helpers/detail-lokasi";
 
 // Jalur client → route → JWT → controller/validator asli; hanya penyimpanan memakai fixture.
 const be = vi.hoisted(() => ({ transaction: vi.fn(), detail: vi.fn(), lokasi: vi.fn(), menunggu: vi.fn(), media: vi.fn(), dipakai: vi.fn(), buat: vi.fn(), tautkan: vi.fn() }));

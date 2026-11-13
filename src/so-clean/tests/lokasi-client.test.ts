@@ -4,7 +4,7 @@ import { aturPenangananSesiHabis, tahanRequestSampai } from "@/lib/api/client";
 import { lokasiApi } from "@/lib/api/endpoints";
 import { bacaDaftarLokasi, urutkanLokasi } from "@/lib/lokasi";
 import { cookieSesi } from "./helpers/sesi";
-import { LOKASI_UJI_FE14, POSISI_UJI_FE14 } from "./helpers/lokasi-fe14";
+import { LOKASI_UJI_FE14, POSISI_UJI_FE14 } from "./helpers/lokasi";
 
 // Client, route, guard JWT, controller, dan validasi BE-17 asli; hanya model penyimpanan diganti.
 const model = vi.hoisted(() => ({ daftar: vi.fn() }));
