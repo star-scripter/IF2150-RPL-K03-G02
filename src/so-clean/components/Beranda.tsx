@@ -1,6 +1,7 @@
 /**
  * Isi halaman Beranda Masyarakat (FE-08). Sumber: frame Figma "Main Page" (41:57), Body (41:64).
  * Padding mengikuti Figma (lebar 440px) mulai 400px; di HP yang lebih sempit dibuat lebih rapat.
+ * Mulai `md`, saldo poin dan menu Buat Laporan disusun dua kolom.
  *
  * Objek DPPL I-03: IO3-001 username, IO3-002 saldo poin, IO3-003 Tukar Hadiah,
  * IO3-004 ReportIt, IO3-005 CleanIt. IO3-006–IO3-009 (bottom nav) dari layout FE-03.
@@ -54,8 +55,8 @@ export function Beranda() {
   }
 
   return (
-    <main className="flex flex-col gap-[25px] px-4 py-6 min-[400px]:px-[35px] min-[400px]:py-[31px]">
-      <section aria-label="Sapaan" className="flex items-start gap-2.5 p-2.5">
+    <main className="flex flex-col gap-[25px] px-4 py-6 min-[400px]:px-[35px] min-[400px]:py-[31px] md:grid md:grid-cols-2 md:gap-6 md:p-0">
+      <section aria-label="Sapaan" className="flex items-start gap-2.5 p-2.5 md:col-span-2">
         <h1 className="min-w-0 flex-1 text-h1 break-words text-ink">
           Horas,
           <br />
@@ -101,28 +102,30 @@ export function Beranda() {
         </Link>
       </section>
 
-      <h2 className="text-h2 text-dark-teal">Buat Laporan</h2>
+      <section aria-labelledby="judul-buat-laporan" className="flex flex-col gap-[25px]">
+        <h2 id="judul-buat-laporan" className="text-h2 text-dark-teal">Buat Laporan</h2>
 
-      {MENU_LAPORAN.map((menu) => (
-        <Link
-          key={menu.id}
-          href={menu.href}
-          className={`flex items-start justify-between gap-[18px] rounded-card border border-border px-6 py-[26px] text-ink min-[400px]:px-9 transition hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-teal ${menu.latar}`}
-        >
-          <span className="flex min-w-0 flex-col">
-            <span className="text-body min-[400px]:whitespace-nowrap">{menu.deskripsi}</span>
-            <span className="font-heading text-h2">{menu.judul}</span>
-          </span>
-          {/* eslint-disable-next-line @next/next/no-img-element -- SVG statis dari Figma */}
-          <img
-            src={menu.ikon.src}
-            alt=""
-            width={menu.ikon.width}
-            height={menu.ikon.height}
-            className="mt-0.5 shrink-0"
-          />
-        </Link>
-      ))}
+        {MENU_LAPORAN.map((menu) => (
+          <Link
+            key={menu.id}
+            href={menu.href}
+            className={`flex items-start justify-between gap-[18px] rounded-card border border-border px-6 py-[26px] text-ink min-[400px]:px-9 transition hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-teal ${menu.latar}`}
+          >
+            <span className="flex min-w-0 flex-col">
+              <span className="text-body min-[400px]:whitespace-nowrap">{menu.deskripsi}</span>
+              <span className="font-heading text-h2">{menu.judul}</span>
+            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element -- SVG statis dari Figma */}
+            <img
+              src={menu.ikon.src}
+              alt=""
+              width={menu.ikon.width}
+              height={menu.ikon.height}
+              className="mt-0.5 shrink-0"
+            />
+          </Link>
+        ))}
+      </section>
     </main>
   );
 }

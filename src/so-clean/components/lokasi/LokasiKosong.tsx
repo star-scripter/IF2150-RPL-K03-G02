@@ -5,7 +5,7 @@ import { ROUTE } from "@/lib/nav";
 /** I-10 / FE-15. Dipasang di slot sukses-kosong FE-14; tidak mengambil data sendiri. */
 export function LokasiKosong() {
   return (
-    <section aria-labelledby="judul-lokasi-kosong" className="flex flex-col items-center gap-5 py-6 text-center min-[400px]:gap-6 min-[400px]:py-12">
+    <section aria-labelledby="judul-lokasi-kosong" className="flex flex-col items-center gap-5 py-6 text-center min-[400px]:gap-6 min-[400px]:py-12 md:mx-auto md:max-w-md">
       <div aria-hidden className="flex size-24 shrink-0 items-center justify-center rounded-full bg-emerald/10 min-[400px]:size-30">
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" focusable="false" className="size-12 text-dark-teal min-[400px]:size-14">
           <path d="M39 19c0 11-15 25-15 25S9 30 9 19a15 15 0 1 1 30 0Z" />

@@ -39,7 +39,7 @@ async function ambilRiwayat(halaman: number, signal: AbortSignal): Promise<State
 
 export default function RiwayatPenukaran() {
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-4 py-6">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-4 py-6 md:max-w-none md:p-0">
       <div className="flex flex-col gap-1">
         <Link href="/hadiah" className="flex w-fit items-center gap-1 text-sm font-medium text-dark-teal">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -115,7 +115,7 @@ function DaftarRiwayat() {
 
   return (
     <>
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-3 md:grid md:grid-cols-2">
         {data.map((p) => (
           <li key={p.idPenukaran}>
             <KartuRiwayat penukaran={p} />
@@ -149,7 +149,7 @@ function KartuRiwayat({ penukaran }: { penukaran: Penukaran }) {
 
 function KerangkaDaftar() {
   return (
-    <div aria-busy="true" aria-label="Memuat riwayat penukaran" className="flex animate-pulse flex-col gap-3">
+    <div aria-busy="true" aria-label="Memuat riwayat penukaran" className="flex animate-pulse flex-col gap-3 md:grid md:grid-cols-2">
       {[0, 1, 2].map((i) => (
         <div key={i} className="h-44 rounded-card bg-border" />
       ))}

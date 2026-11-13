@@ -57,7 +57,7 @@ export function DaftarLokasi({ kosong }: { kosong?: ReactNode }) {
 
   function cobaGps() { setGps({ status: "mencari" }); setPercobaanGps((nilai) => nilai + 1); }
 
-  return <main className="flex flex-1 flex-col gap-5 px-4 py-6 text-dark-teal min-[400px]:px-[35px] min-[400px]:py-[31px]">
+  return <main className="flex flex-1 flex-col gap-5 px-4 py-6 text-dark-teal min-[400px]:px-[35px] min-[400px]:py-[31px] md:p-0">
     <div className="space-y-1">
       <h1 className="text-h2">Lokasi Tercemar</h1>
       <p className="text-body text-text-secondary">Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt.</p>
@@ -91,7 +91,7 @@ export function DaftarLokasi({ kosong }: { kosong?: ReactNode }) {
         <p role="status">{gps.pesan} Daftar diurutkan dari laporan terbaru.</p>
         <button type="button" onClick={() => { setPilihanUrutan("terdekat"); cobaGps(); }} className="min-h-8 rounded-button font-semibold text-dark-teal underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-dark-teal">Coba GPS lagi</button>
       </div>}
-      <ul aria-label="Daftar lokasi tercemar" className="space-y-4">
+      <ul aria-label="Daftar lokasi tercemar" className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
         {terurut.map((lokasi) => <li key={lokasi.idLokasi}><KartuLokasi lokasi={lokasi} sekarang={sekarang} /></li>)}
       </ul>
     </>}
@@ -99,7 +99,7 @@ export function DaftarLokasi({ kosong }: { kosong?: ReactNode }) {
 }
 
 function MemuatDaftar() {
-  return <div role="status" aria-label="Memuat lokasi" className="space-y-4">
+  return <div role="status" aria-label="Memuat lokasi" className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
     {[0, 1, 2].map((nomor) => <div key={nomor} aria-hidden className="space-y-4 rounded-card border border-border p-5">
       <div className="h-6 w-2/3 animate-pulse rounded bg-surface" />
       <div className="h-14 animate-pulse rounded bg-surface" />

@@ -14,14 +14,15 @@ import { cn } from "./ui/cn";
 
 /**
  * Tinggi bottom nav 124px (sesuai Figma) + area aman bawah HP. Jika tinggi ini berubah, ubah
- * juga ruang bawah konten di `app/(pages)/(masyarakat)/(nav)/layout.tsx`.
+ * juga ruang bawah konten di `app/(pages)/(masyarakat)/(nav)/layout.tsx`. Mulai `md` disembunyikan;
+ * menu desktop ada di header (`NavHeaderMasyarakat`).
  */
 export function BottomNav({ pathname }: { pathname: string | null }) {
   return (
     <nav
       aria-label="Navigasi utama"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[440px] border-t border-border bg-white",
+        "fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[440px] border-t border-border bg-white md:hidden",
         "pb-[env(safe-area-inset-bottom)]",
       )}
     >

@@ -72,23 +72,27 @@ export function ProfilMasyarakat() {
   const pengguna = useMuat<MeResponse>(ambilPengguna);
   const notifikasi = useMuat<Notifikasi[]>(ambilNotifikasi);
 
+  // Desktop: kolom kiri akun, saldo, dan Keluar; kolom kanan notifikasi. Urutan DOM tetap
+  // urutan HP (Keluar paling bawah), penempatan kolom hanya lewat grid.
   return (
-    <main className="flex flex-col gap-6 px-4 py-6 min-[400px]:px-8">
-      <h1 className="text-h2 text-dark-teal">Profil</h1>
+    <main className="flex flex-col gap-6 px-4 py-6 min-[400px]:px-8 md:grid md:grid-cols-[minmax(0,380px)_minmax(0,1fr)] md:grid-rows-[auto_auto_1fr] md:items-start md:gap-x-8 md:p-0">
+      <h1 className="text-h2 text-dark-teal md:col-span-2">Profil</h1>
 
-      {pengguna.state.status === "gagal" ? (
-        <KotakGagal pesan={pengguna.state.pesan} onCobaLagi={pengguna.cobaLagi} />
-      ) : pengguna.state.status === "memuat" ? (
-        <div aria-busy="true" aria-label="Memuat profil" className="flex animate-pulse flex-col gap-4">
-          <div className="h-[108px] rounded-card bg-border" />
-          <div className="h-[104px] rounded-card bg-border" />
-        </div>
-      ) : (
-        <>
-          <KartuAkun pengguna={pengguna.state.data} />
-          <KartuSaldo saldoPoin={pengguna.state.data.saldoPoin} />
-        </>
-      )}
+      <div className="flex flex-col gap-6 md:col-start-1">
+        {pengguna.state.status === "gagal" ? (
+          <KotakGagal pesan={pengguna.state.pesan} onCobaLagi={pengguna.cobaLagi} />
+        ) : pengguna.state.status === "memuat" ? (
+          <div aria-busy="true" aria-label="Memuat profil" className="flex animate-pulse flex-col gap-4">
+            <div className="h-[108px] rounded-card bg-border" />
+            <div className="h-[104px] rounded-card bg-border" />
+          </div>
+        ) : (
+          <>
+            <KartuAkun pengguna={pengguna.state.data} />
+            <KartuSaldo saldoPoin={pengguna.state.data.saldoPoin} />
+          </>
+        )}
+      </div>
 
       <BagianNotifikasi
         state={notifikasi.state}
@@ -96,7 +100,9 @@ export function ProfilMasyarakat() {
         onDiperbarui={(daftar) => notifikasi.setState({ status: "siap", data: daftar })}
       />
 
-      <TombolKeluar />
+      <div className="md:col-start-1 md:row-start-3">
+        <TombolKeluar />
+      </div>
     </main>
   );
 }
@@ -150,7 +156,7 @@ function BagianNotifikasi({ state, onCobaLagi, onDiperbarui }: PropsBagianNotifi
   }
 
   return (
-    <section aria-labelledby="judul-notifikasi" className="flex flex-col gap-3">
+    <section aria-labelledby="judul-notifikasi" className="flex flex-col gap-3 md:col-start-2 md:row-span-2 md:row-start-2">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <div className="flex items-center gap-2">
           <h2 id="judul-notifikasi" className="text-h3 text-dark-teal">

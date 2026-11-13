@@ -29,7 +29,7 @@ export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: P
   }
 
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col gap-3 md:grid md:grid-cols-2">
       {daftar.map((reward) => {
         const tombol = statusTombolReward(reward, saldoPoin);
         const habis = tombol.status === "HABIS";
