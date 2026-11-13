@@ -104,6 +104,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Codex | (FE-B, Justin), Merapikan struktur kode dan menyesuaikan penamaan file, serta verifikasi keberhasilan program | "Analisis file yang sudah saya buat di lokal, verifikasi dan pastikan semuanya terintegrasi setelah itu rapikan kode dan nama file. " | Testing ulang secara manual, dan memastikan penamaan file sesuai/selaras dengan tujuan file tersebut. "
 | Claude Code | (FE-C, Faishal) Mengimplementasikan FE-18–FE-25: halaman Hadiah, konfirmasi dan hasil penukaran, riwayat penukaran, validasi Operator, modal detail laporan, profil, serta state umum dan tampilan responsif. | "Mulai mengerjakan FE-22. Pertama buat format issue sesuai dengan ketentuan kontrak dan contoh yang sudah ada…" | Rancangan tampilan dan file ditinjau sebelum ditulis; keputusan desain (pagination di URL, modal tetap terbuka setelah aksi) ditentukan sendiri; diverifikasi dengan tsc, lint, `npm test`, dan pengujian manual di browser 360 px dan desktop |
 | Claude Code | (FE-C, Faishal) Menyusun teks Issue dan PR sesuai template kontrak v0.8 beserta langkah pengambilan bukti. | "Sekarang buat format PR berdasarkan contoh yang sudah dibuat beserta langkah pengambilan bukti…" | Teks diedit; screenshot diambil dan diunggah sendiri; commit dan push dijalankan sendiri |
+| Claude Code | (BE-B, Dhafin) Implementasi tugas BE-B | "Implementasi BE-xx sesuai dengan ketentuan"  | Testing ulang, cross-review untuk PR |
 
 ### Pernyataan Integritas dan Persetujuan
 
