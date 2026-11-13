@@ -14,7 +14,13 @@ export type BagianLaporan = "judul" | "lokasi" | "waktu" | "sumber" | "jenisSamp
 
 export type KonfigurasiFormLaporan =
   | { jenis: "REPORTIT" }
-  | { jenis: "CLEANIT"; lokasiId: number; namaLokasi: string };
+  | {
+    jenis: "CLEANIT";
+    lokasiId: number;
+    namaLokasi: string;
+    /** FE-17 mengisi dari detail BE-17, bukan dari draf atau input pengguna. */
+    waktuKejadianAsal?: string;
+  };
 
 export type InformasiLaporan = {
   judul: string;
