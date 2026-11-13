@@ -1,5 +1,5 @@
 import type { LokasiDetail, StatusLokasi } from "@/types/api";
-import { LOKASI_UJI_FE14 } from "./lokasi-fe14";
+import { LOKASI_UJI_FE14 } from "./lokasi";
 
 /** Lokasi dan bukti fiktif untuk kontrak FE-16/BE-17. */
 export function detailLokasiUji(idLokasi = 32, status: StatusLokasi = "TERCEMAR"): LokasiDetail {

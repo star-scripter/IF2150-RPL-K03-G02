@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ApiError } from "@/lib/api/client";
 import { bacaDetailLokasi, bacaIdLokasi, urlFormCleanIt } from "@/lib/detail-lokasi";
 import { formatWaktuLengkap } from "@/lib/laporan";
-import { detailLokasiUji } from "./helpers/detail-lokasi-fe16";
+import { detailLokasiUji } from "./helpers/detail-lokasi";
 
 describe("ID dan tujuan navigasi FE-16", () => {
   it.each(["", "0", "-1", "01", "1.5", "1e2", "abc", " 32", "32 ", "2147483648", "Infinity"])("menolak ID URL yang tidak sah: %j", (value) => {

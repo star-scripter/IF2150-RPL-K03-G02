@@ -4,7 +4,7 @@ import { aturPenangananSesiHabis, tahanRequestSampai } from "@/lib/api/client";
 import { lokasiApi } from "@/lib/api/endpoints";
 import { bacaDetailLokasi } from "@/lib/detail-lokasi";
 import { cookieSesi } from "./helpers/sesi";
-import { detailLokasiUji } from "./helpers/detail-lokasi-fe16";
+import { detailLokasiUji } from "./helpers/detail-lokasi";
 
 // Client, route, JWT, controller, dan validator BE-17 asli; model/storage memakai fixture.
 const be = vi.hoisted(() => ({ lokasi: vi.fn(), url: vi.fn() }));

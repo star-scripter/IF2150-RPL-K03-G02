@@ -1,6 +1,7 @@
 /** FE-12: payload dan pemetaan kegagalan pengiriman, tanpa mengubah state form. */
 import { ApiError } from "@/lib/api/client";
 import { mediaSiapDikirim } from "@/lib/bukti-media";
+import { validasiInformasiCleanIt } from "@/lib/form-cleanit";
 import type { BagianLaporan, StateFormLaporan } from "@/lib/form-laporan";
 import { validasiInformasiDasar, waktuWibKeIso } from "@/lib/informasi-dasar";
 import type { BuatLaporanRequest, BuatLaporanResponse, JenisSampah, Sumber } from "@/types/api";
@@ -36,9 +37,10 @@ function tambahError(bagian: ErrorBagianLaporan, key: BagianLaporan, pesan: stri
 export function siapkanKirimLaporan(state: StateFormLaporan, sekarang = new Date()): PersiapanKirim {
   const { informasi, konfigurasi, media } = state;
   const bagian: ErrorBagianLaporan = {};
-  const validasi = validasiInformasiDasar(informasi, sekarang);
+  const validasi = konfigurasi.jenis === "CLEANIT"
+    ? validasiInformasiCleanIt(informasi, konfigurasi.waktuKejadianAsal, sekarang)
+    : validasiInformasiDasar(informasi, sekarang);
   for (const [field, pesan] of Object.entries(validasi.fields)) {
-    if (konfigurasi.jenis === "CLEANIT" && field !== "judul" && field !== "waktu") continue;
     const key = bagianField(field);
     if (key) tambahError(bagian, key, pesan);
   }

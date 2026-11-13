@@ -20,7 +20,12 @@ export function PengirimanLaporanProvider({ children }: { children: ReactNode })
   const [error, setError] = useState<KegagalanKirim | null>(null);
   const aktif = useRef<AbortController | null>(null);
 
-  useEffect(() => () => { aktif.current?.abort(); aktif.current = null; }, []);
+  useEffect(() => () => {
+    const pengendali = aktif.current;
+    aktif.current = null; pengendali?.abort();
+    // Activity mempertahankan state route. Buka kunci saat kembali setelah request dibatalkan.
+    setMengirim(false);
+  }, []);
 
   async function kirim() {
     // Ref mengunci langsung, termasuk beberapa klik sebelum React merender ulang.

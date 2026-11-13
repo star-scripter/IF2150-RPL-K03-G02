@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ambilPosisiPengguna, bacaDaftarLokasi, formatDilaporkan, formatJarakLokasi, jarakHaversineKm, LABEL_SAMPAH_LOKASI, urutkanLokasi } from "@/lib/lokasi";
-import { LOKASI_UJI_FE14, POSISI_UJI_FE14 } from "./helpers/lokasi-fe14";
+import { LOKASI_UJI_FE14, POSISI_UJI_FE14 } from "./helpers/lokasi";
 
 afterEach(() => vi.useRealTimers());
 describe("Haversine dan urutan FE-14", () => {
