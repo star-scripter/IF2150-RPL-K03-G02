@@ -3,13 +3,18 @@
 import Link from "next/link";
 import { useEffect, useRef, type ReactNode } from "react";
 import { Button, ProgressLangkah } from "@/components/ui";
-import { LANGKAH_LAPORAN, type AwalFormLaporan, type LangkahLaporan } from "@/lib/form-laporan";
+import { LANGKAH_LAPORAN, type AwalFormLaporan, type LangkahLaporan, type StateFormLaporan } from "@/lib/form-laporan";
 import { ROUTE } from "@/lib/nav";
 import { BuktiMedia } from "./BuktiMedia";
 import { FormLaporanProvider, useFormLaporan } from "./FormLaporanProvider";
 import { InformasiDasar } from "./InformasiDasar";
+import { PemberitahuanDraf } from "./PemberitahuanDraf";
 import { TinjauLaporan } from "./TinjauLaporan";
 import { IkonLaporan } from "./VisualLaporan";
+import { UnggahMediaProvider } from "./UnggahMediaProvider";
+import { mediaSiapDikirim } from "@/lib/bukti-media";
+import { notify } from "@/components/ui/toast-store";
+import { PengirimanLaporanProvider, usePengirimanLaporan } from "./PengirimanLaporanProvider";
 
 type Props = {
   awal?: AwalFormLaporan;
@@ -17,6 +22,8 @@ type Props = {
   isiLangkah?: Partial<Record<LangkahLaporan, ReactNode>>;
   /** FE-12 memasang komponen tombol yang memakai useFormLaporan untuk mengirim. */
   aksiKirim?: ReactNode;
+  /** Pengait validasi FE-10/11. false menahan navigasi tanpa mereset draf FE-09. */
+  sebelumLanjut?: Partial<Record<0 | 1, (state: StateFormLaporan) => boolean>>;
 };
 
 const AWAL_REPORTIT: AwalFormLaporan = { konfigurasi: { jenis: "REPORTIT" } };
@@ -24,17 +31,19 @@ const AWAL_REPORTIT: AwalFormLaporan = { konfigurasi: { jenis: "REPORTIT" } };
 export function FormLaporan({ awal = AWAL_REPORTIT, ...props }: Props) {
   return (
     <FormLaporanProvider awal={awal}>
-      <IsiFormLaporan {...props} />
+      <UnggahMediaProvider><PengirimanLaporanProvider><IsiFormLaporan {...props} /></PengirimanLaporanProvider></UnggahMediaProvider>
     </FormLaporanProvider>
   );
 }
 
-function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
+function IsiFormLaporan({ isiLangkah, aksiKirim, sebelumLanjut }: Omit<Props, "awal">) {
   const { state, dispatch } = useFormLaporan();
+  const { mengirim, kirim } = usePengirimanLaporan();
   const area = useRef<HTMLElement>(null);
   const pertamaRender = useRef(true);
   const cleanit = state.konfigurasi.jenis === "CLEANIT";
   const { langkah, bagianDiedit } = state;
+  const mediaSiap = mediaSiapDikirim(state.media);
   const judul = [
     cleanit ? "Buat Laporan Pembersihan" : "Buat Laporan Pencemaran",
     cleanit ? "Unggah Bukti Pembersihan" : "Unggah Bukti Pencemaran",
@@ -73,7 +82,7 @@ function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
             </Link>
           ) : (
             <button
-              type="button" className={kelasKembali} onClick={() => dispatch({ tipe: "kembali" })}
+              type="button" className={kelasKembali} disabled={mengirim} onClick={() => { if (!mengirim) dispatch({ tipe: "kembali" }); }}
               aria-label={bagianDiedit ? "Kembali ke tinjauan laporan" : `Kembali ke ${LANGKAH_LAPORAN[langkah - 1]}`}
             ><IkonLaporan nama="kembali" className="size-5" /></button>
           )}
@@ -83,14 +92,27 @@ function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
       </div>
       <form
         className="flex flex-1 flex-col" aria-label={`Form Laporan · ${LANGKAH_LAPORAN[langkah]}`}
-        onSubmit={(event) => { event.preventDefault(); if (langkah < 2) dispatch({ tipe: "lanjut" }); }}
+        noValidate={langkah !== 2 && Boolean(sebelumLanjut?.[langkah])}
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (mengirim) return;
+          if (langkah === 2 && aksiKirim) { void kirim(); return; }
+          if (langkah === 1 && !mediaSiap) {
+            notify.gagal("Tambahkan minimal satu bukti dan tunggu hingga semua unggahan selesai.");
+            return;
+          }
+          if (langkah !== 2 && (sebelumLanjut?.[langkah]?.(state) ?? true)) dispatch({ tipe: "lanjut" });
+        }}
       >
         <section aria-labelledby="judul-langkah" className="flex flex-1 flex-col gap-4 px-4 pt-6 pb-8 min-[400px]:px-5 md:gap-6 md:px-0 md:pt-8">
           <div className="space-y-1.5">
             <h1 id="judul-langkah" tabIndex={-1} className="font-heading text-xl leading-7 font-bold outline-none md:text-h1">{judul[langkah]}</h1>
             <p className="text-xs leading-relaxed text-text-secondary md:text-body">{deskripsi[langkah]}</p>
           </div>
-          {isiLangkah?.[langkah] ?? [<InformasiDasar key="informasi" />, <BuktiMedia key="media" />, <TinjauLaporan key="tinjau" />][langkah]}
+          <fieldset disabled={mengirim} className="min-w-0 space-y-4 border-0 p-0 md:space-y-6">
+            <PemberitahuanDraf />
+            {isiLangkah?.[langkah] ?? [<InformasiDasar key="informasi" />, <BuktiMedia key="media" />, <TinjauLaporan key="tinjau" />][langkah]}
+          </fieldset>
         </section>
         <footer className="mt-auto space-y-2 border-t border-border/50 bg-white px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] min-[400px]:px-5 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 md:bg-transparent md:px-0 md:pt-5 md:pb-0">
           <p className="text-center text-[10px] font-medium uppercase tracking-wide text-text-secondary md:text-left md:text-xs" role="status">Langkah {langkah + 1} dari 3</p>
@@ -103,10 +125,11 @@ function IsiFormLaporan({ isiLangkah, aksiKirim }: Omit<Props, "awal">) {
                 </>
               )
             ) : (
-              <Button type="submit" lebarPenuh disabled={langkah === 1 && state.media.length === 0}>
+              <Button type="submit" lebarPenuh disabled={langkah === 1 && !mediaSiap} aria-describedby={langkah === 1 && !mediaSiap ? "kesiapan-media" : undefined}>
                 {bagianDiedit ? "Simpan Perubahan" : "Lanjut"}<IkonLaporan nama="panah" className="size-4" />
               </Button>
             )}
+            {langkah === 1 && !mediaSiap && <p id="kesiapan-media" className="text-center text-xs leading-relaxed text-text-secondary">Tambahkan minimal satu bukti dan tunggu hingga semua unggahan selesai.</p>}
           </div>
         </footer>
       </form>

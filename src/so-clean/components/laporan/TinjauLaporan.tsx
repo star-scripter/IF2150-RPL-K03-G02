@@ -5,10 +5,16 @@ import { Card } from "@/components/ui";
 import { LABEL_JENIS_SAMPAH, LABEL_SUMBER, formatWaktuLaporan, type BagianLaporan } from "@/lib/form-laporan";
 import { useFormLaporan } from "./FormLaporanProvider";
 import { PratinjauLokasi, IkonLaporan, PratinjauMedia } from "./VisualLaporan";
+import { usePengirimanLaporan } from "./PengirimanLaporanProvider";
 
 export function TinjauLaporan({ peta }: { peta?: ReactNode }) {
   const { state, dispatch } = useFormLaporan();
+  const { mengirim, error } = usePengirimanLaporan();
   const { informasi, konfigurasi } = state;
+
+  function pesanError(bagian: BagianLaporan) {
+    return error?.bagian[bagian]?.map((pesan) => <p key={pesan} className="rounded-lg border border-danger/30 bg-danger/5 px-3 py-2 text-xs leading-relaxed text-dark-teal">{pesan}</p>);
+  }
 
   function ringkasan(judul: string, bagian: BagianLaporan, isi: ReactNode) {
     return (
@@ -16,12 +22,13 @@ export function TinjauLaporan({ peta }: { peta?: ReactNode }) {
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-xs font-semibold text-dark-teal md:text-sm">{judul}</h2>
           <button
-            type="button" aria-label={`Ubah ${judul}`}
-            onClick={() => dispatch({ tipe: "ubah", bagian })}
-            className="inline-flex min-h-8 items-center gap-1.5 rounded-lg bg-sky-blue/15 px-3 text-xs font-medium text-dark-teal hover:bg-sky-blue/30 focus-visible:outline-2 focus-visible:outline-dark-teal"
+            type="button" aria-label={`Ubah ${judul}`} disabled={mengirim}
+            onClick={() => { if (!mengirim) dispatch({ tipe: "ubah", bagian }); }}
+            className="inline-flex min-h-8 items-center gap-1.5 rounded-lg bg-sky-blue/15 px-3 text-xs font-medium text-dark-teal hover:bg-sky-blue/30 focus-visible:outline-2 focus-visible:outline-dark-teal disabled:cursor-not-allowed disabled:opacity-50"
           ><IkonLaporan nama="ubah" className="size-3" />Ubah</button>
         </div>
         {isi}
+        {pesanError(bagian)}
       </Card>
     );
   }
@@ -48,6 +55,7 @@ export function TinjauLaporan({ peta }: { peta?: ReactNode }) {
           <Card className="p-3.5">
             <h2 className="text-xs font-semibold text-dark-teal">Lokasi Pembersihan</h2>
             <p className="break-words text-sm text-text-secondary">{konfigurasi.namaLokasi}</p>
+            {pesanError("lokasi")}
           </Card>
         )}
         {ringkasan(konfigurasi.jenis === "CLEANIT" ? "Waktu Pembersihan" : "Waktu Kejadian", "waktu", (

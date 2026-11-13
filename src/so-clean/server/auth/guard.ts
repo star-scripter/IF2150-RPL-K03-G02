@@ -1,9 +1,9 @@
 /**
  * Cek sesi dan role di route handler (akses endpoint di kontrak: Login, Masyarakat, Operator).
  *
- * SHIM SEMENTARA (BE-B): BE-05 (sesi) dan BE-06 (cek role) milik BE-A belum ada di `dev`.
- * `session-token.ts` disalin apa adanya dari branch `feat/auth-backend` (BE-05) agar merge-nya
- * bersih. Saat BE-06 merge, ganti pemakaian `wajibLogin` dengan helper BE-06 lalu hapus file ini.
+ * Ini penjaga akses yang sebenarnya untuk endpoint API (BE-06). `proxy.ts` hanya mengecek sesi
+ * secara cepat untuk redirect halaman, sehingga setiap route handler tetap wajib memanggil
+ * `wajibLogin` dengan role yang sesuai kontrak.
  *
  * Dipanggil di dalam `handleApiRequest`, sehingga `ApiError` yang dilempar di sini otomatis
  * menjadi respons 401/403 sesuai kontrak:

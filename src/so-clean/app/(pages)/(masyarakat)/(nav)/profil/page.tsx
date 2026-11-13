@@ -1,13 +1,13 @@
 /**
- * Route /profil (Profil Masyarakat). Placeholder dari FE-03; isi halaman dikerjakan di FE-24.
+ * Route /profil (Profil Masyarakat, FE-24). Header dan bottom nav dari layout Masyarakat (FE-03).
  */
 import type { Metadata } from "next";
-import { HalamanSementara } from "@/components/HalamanSementara";
+import { ProfilMasyarakat } from "@/components/ProfilMasyarakat";
 
 export const metadata: Metadata = {
   title: "Profil · SoClean",
 };
 
 export default function Page() {
-  return <HalamanSementara judul="Profil" tugas="FE-24" />;
+  return <ProfilMasyarakat />;
 }

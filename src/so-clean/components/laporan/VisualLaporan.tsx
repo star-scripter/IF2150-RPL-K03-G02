@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type SVGProps } from "react";
+import { useEffect, useReducer, useRef, type SVGProps } from "react";
 import type { MediaFormLaporan } from "@/lib/form-laporan";
+import { notify } from "@/components/ui/toast-store";
+import { pesanGagalMedia } from "@/lib/bukti-media";
 
 export function IkonLaporan({
   nama,
@@ -46,23 +48,43 @@ export function PratinjauMedia({ media, ringkas = false }: { media: MediaFormLap
   const gambar = useRef<HTMLImageElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const adalahVideo = media.berkas.type === "video/mp4";
+  const [gagal, aturGagal] = useReducer((_lama: boolean, baru: boolean) => baru, false);
+  const hasil = media.unggahan?.url;
 
   useEffect(() => {
     const elemen = gambar.current ?? video.current;
     if (!elemen) return;
-    const url = URL.createObjectURL(media.berkas);
-    elemen.src = url;
+    let lokal: string | undefined;
+    let memakaiLokal = false;
+    function gagalLokal(error?: unknown) {
+      aturGagal(true);
+      notify.gagal(`Gagal menampilkan pratinjau ${media.berkas.name}. ${error ? pesanGagalMedia(error) : "File mungkin rusak atau tidak didukung perangkat ini."}`);
+    }
+    function pakaiLokal() {
+      try { memakaiLokal = true; lokal = URL.createObjectURL(media.berkas); elemen!.src = lokal; }
+      catch (error) { gagalLokal(error); }
+    }
+    const gagalMuat = () => { if (hasil && !memakaiLokal) pakaiLokal(); else gagalLokal(); };
+    elemen.addEventListener("error", gagalMuat);
+    aturGagal(false);
+    // Hasil foto menampilkan watermark BE-08. File lokal tetap tersedia saat URL server gagal/offline.
+    if (hasil) elemen.src = hasil;
+    else pakaiLokal();
     return () => {
+      elemen.removeEventListener("error", gagalMuat);
       elemen.removeAttribute("src");
-      URL.revokeObjectURL(url);
+      if (lokal) URL.revokeObjectURL(lokal);
     };
-  }, [media.berkas]);
+  }, [media.berkas, hasil]);
 
-  const kelas = `${ringkas ? "h-20 md:h-32" : "h-32 md:h-40"} w-full rounded-button bg-border/30 object-cover`;
-  return adalahVideo ? (
-    <video ref={video} controls playsInline preload="metadata" aria-label={media.berkas.name} className={kelas} />
-  ) : (
-    // eslint-disable-next-line @next/next/no-img-element -- File lokal di memori, bukan URL yang dapat dioptimasi next/image.
-    <img ref={gambar} alt={media.berkas.name} className={kelas} />
-  );
+  const kelas = `${ringkas ? "h-20 md:h-32" : "h-32 md:h-40"} w-full rounded-button bg-border/30 object-contain`;
+  return <div className="relative">
+    {adalahVideo ? (
+      <video ref={video} controls playsInline preload="metadata" aria-label={media.berkas.name} className={`${kelas} ${gagal ? "invisible" : ""}`} />
+    ) : (
+      // eslint-disable-next-line @next/next/no-img-element -- Blob lokal atau URL hasil unggah BE-08.
+      <img ref={gambar} alt={media.berkas.name} className={`${kelas} ${gagal ? "invisible" : ""}`} />
+    )}
+    {gagal && <p className="absolute inset-0 flex items-center justify-center rounded-button bg-surface p-2 text-center text-xs text-text-secondary">Pratinjau tidak tersedia. Hapus dan pilih ulang bila file rusak.</p>}
+  </div>;
 }
