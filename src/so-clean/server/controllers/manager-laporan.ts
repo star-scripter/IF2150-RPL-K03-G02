@@ -39,6 +39,9 @@ import type {
 /** Batas kolom `serial` (int4), supaya ID di luar rentang tidak sampai ke database. */
 const MAKS_ID = 2_147_483_647;
 
+/** Transaksi yang dibuka controller dengan `db.transaction(...)`. */
+export type Transaksi = Parameters<Parameters<Db["transaction"]>[0]>[0];
+
 const idParamSchema = z.object({
   id: z
     .string()
@@ -393,4 +396,23 @@ export async function tandaiNotifikasiDibaca(sesi: Sesi): Promise<Response> {
   }
   const data: OkResponse = { ok: true };
   return apiSuccess(data);
+}
+
+/**
+ * ubah_status (Algo-009) + simpan_alasan_penolakan (Algo-010) untuk keputusan Operator, dalam
+ * satu UPDATE bersyarat di transaksi setujui/tolak (N14, BE-16). Jika laporan sudah diverifikasi
+ * → 409 `SUDAH_DIVERIFIKASI`; jika tidak ada → 404 `NOT_FOUND`. Error ini membatalkan transaksi.
+ */
+export async function ubah_status(
+  idLaporan: number,
+  keputusan: LaporanModel.KeputusanVerifikasi,
+  tx: Transaksi,
+): Promise<LaporanModel.LaporanTersimpan> {
+  const hasil = await LaporanModel.ubah_status_verifikasi(idLaporan, keputusan, tx);
+  if (hasil) return hasil;
+
+  if (!(await LaporanModel.getLaporanById(idLaporan, tx))) {
+    throw new ApiError("NOT_FOUND", "Laporan tidak ditemukan.");
+  }
+  throw new ApiError("SUDAH_DIVERIFIKASI", "Laporan sudah diverifikasi oleh Operator lain.");
 }
