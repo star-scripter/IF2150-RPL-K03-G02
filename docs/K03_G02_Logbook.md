@@ -174,6 +174,8 @@
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 04-11-2026 | Jovan Nathanael | Menyiapkan dokumen Milestone 9: form asistensi, identitas kelompok, dan kerangka laporan implementasi | 2 jam | Done | - |
 | 08-11-2026 | Jovan Nathanael | Revisi kontrak pembagian tugas (v0.6) dan konsistensi dengan DPPL; mengisi B.1 Perubahan dari DPPL dan known issues B.3; perbaikan batas wilayah peta di kontrak | 2 jam | Done | - |
+| 08-11-2026 | M. Aqsha Bagus R.I.B. & M. Dhafin Al Khairy | Setup proyek dan docker compose | 3 jam | Done | - |
+| 09-11-2026 | M. Aqsha Bagus R.I.B. | Revisi kontrak hingga v0.8, finishing BE-01, BE-02, BE-04 s.d. BE-11 | 8 jam? | Done | - |
 | 09-11-2026 | Jovan Nathanael | FE-01: setup Tailwind CSS 4, design tokens dari Figma, dan layout dasar | 1 jam | Done | |
 | 09-11-2026 | Jovan Nathanael | FE-04: API client, peta pesan error, dan mock MSW sesuai kontrak | 2 jam | Done | |
 | 09-11-2026 | Jovan Nathanael | FE-02: komponen UI dasar beserta perbaikan hasil review (dialog, toast, card, pagination) | 1,5 jam | Done | - |
@@ -182,5 +184,13 @@
 | 09-11-2026 | Jovan Nathanael | FE-07: halaman Register dengan validasi aturan akun | 1 jam | Done | BE register tidak memasang session cookies, jadi FE langsung login setelah register |
 | 09-11-2026 | Jovan Nathanael | FE-08: halaman Beranda dengan saldo dan menu laporan | 0,5 jam | Done | - |
 | 09-11-2026 | Jovan Nathanael | FE-05: auth guard, pengarahan sesuai role, dan redirect saat sesi habis | 0,5 jam | Done |  |
+| 09-11-2026 | Faishal Ahmad Nurdin | FE-18: halaman Hadiah dengan kartu saldo, daftar reward, dan tiga state tombol (Tukar / Kurang / Habis) | 2 jam | Done | FE-02 dan FE-03 belum di-merge, jadi memakai kerangka sementara lalu di-refactor |
+| 09-11-2026 | Faishal Ahmad Nurdin | FE-19: konfirmasi penukaran dengan pratinjau sisa poin, pencegahan klik ganda, serta penanganan POIN_TIDAK_CUKUP dan STOK_HABIS | 1,5 jam | Done | Bottom sheet langsung tertutup saat dipasang dalam keadaan terbuka (StrictMode); PR ditunda sampai FE-02 dan FE-03 masuk dev |
+| 09-11-2026 | Faishal Ahmad Nurdin | FE-20: halaman Penukaran Berhasil dengan detail transaksi dan salin kode voucher | 0,5 jam | Done | Branch bertumpuk di atas FE-19 yang belum di-merge; route dipindah setelah FE-03 masuk |
+| 09-11-2026 | Faishal Ahmad Nurdin | FE-21: halaman Riwayat Penukaran dengan pagination di URL | 2 jam | Done | Setelah FE-05, semua halaman butuh sesi login sehingga uji UI perlu stack Docker |
 | 10-11-2026 | Jovan Nathanael | FE-13: draf offline form laporan, banner offline, dan banner pilih ulang media | 1,5 jam | Done |  |
+| 10-11-2026 | Faishal Ahmad Nurdin | FE-22: halaman validasi Operator dengan tab, badge total, urutan, dan pagination | 2 jam | Done | Endpoint BE-12 belum ada, jadi diuji dengan stub; grid melebar di 360 px |
+| 10-11-2026 | Faishal Ahmad Nurdin | FE-23: modal detail laporan dengan setujui/tolak, galeri Sebelum/Sesudah, dan penanganan verifikasi ganda | 1,5 jam | Done | BE-12 sampai BE-16 belum di-merge; klik ganda pada "Tolak" langsung menolak laporan, lalu diperbaiki |
+| 11-11-2026 | Faishal Ahmad Nurdin | FE-24: halaman Profil Masyarakat (notifikasi, tandai dibaca, logout) dan Profil Operator | 1,5 jam | Done | - |
 | 13-11-2026 | Jovan Nathanael | Mengisi bagian FE-A laporan implementasi (B.1, B.3, B.4, B.5), AI-Usage, dan logbook | 1,5 jam | Done | - |
+| 13-11-2026 | Faishal Ahmad Nurdin | FE-25: tampilan responsif 360 px dan desktop, komponen error/empty state bersama, halaman 404 dan error | 1 jam | Done | Tipe route Next usang membuat tsc gagal sampai `next typegen` dijalankan |
