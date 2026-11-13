@@ -8,7 +8,8 @@
  *
  * `setujui` (Algo-001) berjalan dalam satu transaksi lewat ManagerLaporan (N14): `ubah_status`
  * bersyarat (BE-16), lalu untuk ReportIt `petakan_lokasi` (BE-13). Pelapor ReportIt tidak mendapat
- * poin (N1).
+ * poin (N1). CleanIt (BE-14) membersihkan lokasi, memberi poin lewat ManagerPoin, dan menolak
+ * otomatis CleanIt lain untuk lokasi itu (K12).
  *
  * Cek sesi/role Operator dilakukan di route handler.
  *
@@ -18,6 +19,7 @@ import { z } from "zod";
 import { ApiError, apiSuccess, validateInput } from "@/server/api";
 import type { Sesi } from "@/server/auth/guard";
 import * as ManagerLaporan from "@/server/controllers/manager-laporan";
+import * as ManagerPoin from "@/server/controllers/manager-poin";
 import { db } from "@/server/db";
 import * as LaporanModel from "@/server/models/laporan";
 import * as LokasiModel from "@/server/models/lokasi";
@@ -140,15 +142,17 @@ export async function get_detail(idParam: string): Promise<Response> {
 /**
  * POST /api/laporan/:id/setujui — setujui(idLaporan), Algo-001.
  * ReportIt: status VALID lalu dipetakan ke lokasi baru atau lokasi dalam radius 50 m (BE-13).
+ * CleanIt: lokasi DIBERSIHKAN, poin ke pelapor, CleanIt lain ditolak otomatis (BE-14).
  */
 export async function setujui(request: Request, idParam: string, sesi: Sesi): Promise<Response> {
   const idLaporan = await ManagerLaporan.bacaIdParam(idParam);
   const laporan = await wajibMenunggu(idLaporan);
   const body = await bacaBodyOpsional(request);
 
-  if (laporan.jenis !== "REPORTIT") {
-    // Persetujuan CleanIt (poin dan lokasi DIBERSIHKAN) ditambahkan di BE-14.
-    throw new Error("Persetujuan CleanIt belum tersedia.");
+  if (laporan.jenis === "CLEANIT") {
+    // Body `poin`/`namaLokasi` khusus ReportIt; untuk CleanIt diabaikan (poin dari lokasi).
+    const data = await db.transaction((tx) => setujui_cleanit(laporan, sesi.idPengguna, tx));
+    return apiSuccess(data);
   }
 
   const { poin, namaLokasi } = await validateInput(body, setujuiReportItSchema);
@@ -166,4 +170,36 @@ export async function setujui(request: Request, idParam: string, sesi: Sesi): Pr
     return { idLaporan, status: "VALID", idLokasi, digabung };
   });
   return apiSuccess(data);
+}
+
+/**
+ * Isi transaksi setujui CleanIt (BE-14, K12). Urutan kunci: lokasi → laporan → saldo → penolakan
+ * otomatis. Lokasi dikunci lebih dulu supaya dua persetujuan CleanIt untuk lokasi yang sama tidak
+ * saling mengunci (deadlock): yang kedua menunggu UPDATE lokasi, lalu mendapat
+ * `LOKASI_SUDAH_DIBERSIHKAN`. Penolakan otomatis dijalankan terakhir (setelah UPDATE lokasi), jadi
+ * CleanIt yang tersimpan selama persetujuan menunggu kunci `FOR SHARE` dari BE-11 ikut tertolak.
+ */
+export async function setujui_cleanit(
+  laporan: LaporanModel.LaporanTersimpan,
+  idOperator: string,
+  tx: ManagerLaporan.Transaksi,
+): Promise<SetujuiLaporanResponse> {
+  if (laporan.jenis !== "CLEANIT" || laporan.lokasiId === null) {
+    throw new Error(`setujui_cleanit hanya untuk CleanIt (laporan ${laporan.idLaporan}).`);
+  }
+
+  const poin = await LokasiModel.tandaiDibersihkan(laporan.lokasiId, tx);
+  if (poin === null) {
+    throw new ApiError("LOKASI_SUDAH_DIBERSIHKAN", "Lokasi sudah dibersihkan.");
+  }
+
+  const terverifikasi = await ManagerLaporan.ubah_status(
+    laporan.idLaporan,
+    { status: "VALID", diverifikasiOleh: idOperator },
+    tx,
+  );
+  await ManagerPoin.tambah_poin(terverifikasi.idPengguna, poin, tx);
+  await LaporanModel.tolakCleanItMenungguLain(laporan.lokasiId, laporan.idLaporan, idOperator, tx);
+
+  return { idLaporan: laporan.idLaporan, status: "VALID", poinDiberikan: poin };
 }
