@@ -10,7 +10,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState, type ReactNode } from "react";
 import LaporanView from "@/components/LaporanView";
-import { Badge, Button, Card, Pagination } from "@/components/ui";
+import { Badge, Button, Card, KotakGagal, KotakKosong, Pagination } from "@/components/ui";
 import { cn } from "@/components/ui/cn";
 import { ApiError } from "@/lib/api/client";
 import { laporanApi } from "@/lib/api/endpoints";
@@ -116,25 +116,18 @@ function IsiValidasi() {
   if (!aktif) {
     isi = <KerangkaKartu />;
   } else if (aktif.status === "gagal") {
-    isi = (
-      <div role="alert" className="flex flex-col items-start gap-3 rounded-card bg-danger-bg p-4 text-sm text-danger-text">
-        <p>{aktif.pesan}</p>
-        <Button varian="bahaya" onClick={muatUlang}>
-          Coba lagi
-        </Button>
-      </div>
-    );
+    isi = <KotakGagal pesan={aktif.pesan} onCobaLagi={muatUlang} />;
   } else if (aktif.meta.total === 0) {
     isi = (
-      <Card varian="lembut" className="items-center py-10 text-center">
-        <p className="font-semibold text-ink">
-          Tidak ada laporan {LABEL_JENIS[jenis]} yang menunggu validasi
-        </p>
-        <p className="text-sm text-text-secondary">Laporan baru dari warga akan muncul di sini.</p>
-        <Button varian="sekunder" onClick={muatUlang}>
-          Muat ulang
-        </Button>
-      </Card>
+      <KotakKosong
+        judul={`Tidak ada laporan ${LABEL_JENIS[jenis]} yang menunggu validasi`}
+        keterangan="Laporan baru dari warga akan muncul di sini."
+        aksi={
+          <Button varian="sekunder" onClick={muatUlang}>
+            Muat ulang
+          </Button>
+        }
+      />
     );
   } else if (aktif.data.length === 0) {
     // Total > 0 tetapi halaman kosong: `?page=` melewati akhir, mis. karena laporan sudah diverifikasi.

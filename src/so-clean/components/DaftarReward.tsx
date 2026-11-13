@@ -5,6 +5,7 @@
  */
 "use client";
 
+import { KotakKosong } from "@/components/ui";
 import { WARNA_JENIS, labelJenis, statusTombolReward } from "@/lib/reward";
 import type { Reward } from "@/types/api";
 
@@ -20,9 +21,10 @@ const GAYA_TOMBOL = "shrink-0 rounded-button px-4 py-2 text-sm font-medium";
 export default function DaftarReward({ daftar, saldoPoin, onTukar, onKurang }: Props) {
   if (daftar.length === 0) {
     return (
-      <p className="rounded-card bg-border/40 p-6 text-center text-sm text-dark-teal">
-        Belum ada reward yang tersedia.
-      </p>
+      <KotakKosong
+        judul="Belum ada reward yang tersedia"
+        keterangan="Hadiah baru akan muncul di sini. Poin Anda tetap tersimpan."
+      />
     );
   }
 
