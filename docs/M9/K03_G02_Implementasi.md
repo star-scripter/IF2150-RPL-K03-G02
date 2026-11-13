@@ -238,17 +238,35 @@ Tabel B.2. Bukti Best Practices
 
 ### B.2.1 Profiling dan Optimasi
 
-Pilih minimal satu fitur yang diprofil.
+Profiling dilakukan pada dua query backend (BE-26) dengan skrip `npm run db:profil` (`src/so-clean/server/db/profiling/`) di database terpisah `soclean_test` yang berisi data sintetis: 10.000 lokasi (8.972 TERCEMAR) di dalam tiga wilayah kerja sama dan 22.000 laporan (10.000 menunggu verifikasi). SQL yang diukur adalah SQL asli yang dihasilkan fungsi model, dijalankan dengan `EXPLAIN (ANALYZE, BUFFERS)` sebanyak 7 kali; angka di bawah adalah median.
+
+**1. Pencarian lokasi dalam radius 50 m (diperbaiki)**
 
 | Informasi | Keterangan |
 | :--- | :--- |
-| Fitur / proses yang diprofil | *[Nama fitur]* |
-| Alat | *[mis. Chrome DevTools, cProfile, EXPLAIN]* |
-| Temuan (sebelum) | *[Bottleneck yang ditemukan, sertakan angka/tangkapan layar]* |
-| Perbaikan | *[Yang diubah]* |
-| Hasil (sesudah) | *[Perbandingan dengan sebelumnya]* |
+| Fitur / proses yang diprofil | Pencarian lokasi TERCEMAR terdekat dalam radius 50 m (K13), `cariTerdekatTercemar` di `server/models/lokasi.ts`. Dipakai saat Operator menyetujui ReportIt (penggabungan lokasi, BE-13) dan untuk `lokasiTerdekat` di detail laporan (BE-12) |
+| Alat | PostgreSQL `EXPLAIN (ANALYZE, BUFFERS)` lewat skrip `npm run db:profil` |
+| Temuan (sebelum) | `Seq Scan on lokasi`: seluruh 10.000 baris dibaca dan rumus haversine dihitung untuk setiap baris, padahal hanya 46 lokasi yang berada dalam radius 50 m (titik uji Cikapundung). Median 2,1–3,6 ms per pencarian (142 buffer) dan naik linear dengan jumlah lokasi. Index `lokasi_status_idx` tidak membantu karena hampir semua lokasi berstatus TERCEMAR |
+| Perbaikan | (1) Prefilter kotak lat/lng di query (`kotakPencarian`): rentang lintang dan bujur yang pasti memuat seluruh lingkaran 50 m, sehingga haversine hanya dihitung untuk kandidat di dalam kotak; hasil tidak berubah karena haversine tetap menjadi penentu akhir. (2) Index parsial `lokasi_tercemar_koordinat_idx` pada `(latitude, longitude) WHERE status = 'TERCEMAR'` (migrasi `0003_lokasi_tercemar_koordinat.sql`) agar kotak itu dibaca lewat index |
+| Hasil (sesudah) | Query membaca index `lokasi_tercemar_koordinat_idx`: `Index Scan` di Pangandaran dan Ancol (2 dan 4 buffer), `Bitmap Index Scan` di Cikapundung yang terpadat (55 kandidat diperiksa, bukan 10.000, dengan 47 buffer). Median turun menjadi 0,03–0,16 ms, sekitar 23–75 kali lebih cepat. Prefilter kotak saja (tanpa index) sudah menurunkan median ke ±0,62 ms |
 
-Jika tidak ada perbaikan yang perlu dilakukan, jelaskan hasil profiling dan alasan kenapa fitur tersebut sudah memadai.
+| Titik uji | Sebelum | Prefilter kotak | Prefilter + index |
+| :--- | ---: | ---: | ---: |
+| Pangandaran (−7,7202; 108,6593) | 2,135 ms | 0,619 ms | 0,051 ms |
+| Cikapundung (−6,8842; 107,6072), wilayah terpadat | 3,626 ms | 0,651 ms | 0,158 ms |
+| Ancol (−6,1310; 106,8672) | 2,567 ms | 0,620 ms | 0,034 ms |
+
+**2. Daftar laporan Operator (sudah memadai)**
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Fitur / proses yang diprofil | Daftar laporan Operator `GET /api/laporan` (I-07), `getDaftarLaporan` di `server/models/laporan.ts`: query data per halaman dan query `count` untuk `meta.total` |
+| Alat | PostgreSQL `EXPLAIN (ANALYZE, BUFFERS)` lewat skrip `npm run db:profil` |
+| Temuan | Query data halaman 1 memakai index `laporan_antrean_idx (jenis, status, created_at)`: 0,03 ms (ReportIt) dan 0,04 ms (CleanIt). `count` ReportIt memakai Seq Scan (2,9 ms) karena 6.000 dari 22.000 baris cocok sehingga planner memilih scan penuh; `count` CleanIt memakai index (0,8 ms). Skenario terberat adalah halaman ke-1.000 (count 4,1 ms + data 3,6 ms, akibat OFFSET) dan daftar tanpa filter `jenis` (count 4,8 ms + data 6,2 ms) |
+| Perbaikan | Tidak ada perubahan |
+| Hasil | Sudah memadai: semua skenario di bawah 7 ms pada 22.000 laporan. FE-22 selalu mengirim `jenis` dan menampilkan 6 laporan per halaman, sehingga skenario terberat (tanpa `jenis` atau ribuan halaman) tidak terjadi di aplikasi. Karena itu tidak ditambahkan index lain pada tabel `laporan` |
+
+Cara mengulang (dari folder `src/`): `docker compose exec -e POSTGRES_DB=soclean_test web npm run db:profil`. Skrip ini mengosongkan `soclean_test` dan hanya berjalan pada database berakhiran `_test`; sebaliknya, `npm test` juga mengosongkan database itu, jadi jalankan profiling setelah test.
 
 ## B.3 Kendala dan Catatan Penting
 

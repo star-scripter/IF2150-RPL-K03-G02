@@ -1,0 +1,1 @@
+CREATE INDEX "lokasi_tercemar_koordinat_idx" ON "lokasi" USING btree ("latitude","longitude") WHERE "lokasi"."status" = 'TERCEMAR';
