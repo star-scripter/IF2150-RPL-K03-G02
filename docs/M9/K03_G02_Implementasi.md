@@ -289,7 +289,7 @@ Tabel B.4. Kontribusi Anggota
 | :--- | :--- | :--- | :--- |
 | 13525027 | Faishal Ahmad Nurdin | *[Modul/fitur]* | *[%]* |
 | 13525042 | Justin William | *[Modul/fitur]* | *[%]* |
-| 13525060 | M. Aqsha Bagus R.I.B. | *[Modul/fitur]* | *[%]* |
+| 13525060 | M. Aqsha Bagus R.I.B. | **BE-A: infrastruktur, authentication, media, dan pembuatan laporan** (BE-01 dan BE-02 bareng DapinKoding 13525147), BE-04 s.d. BE-11. Setup Docker Compose dan `.env.example`; Drizzle dan migrasi mostly bagian Dhafin, tapi ada kontribusi pembaruan dan testing juga; helper API bersama (respons, error, validasi, logging); autentikasi dan sesi JWT; `proxy.ts` serta pengecekan role di route handler; adapter storage S3/RustFS/R2; upload media, hash SHA-256, dan watermark foto; model Laporan; validasi ReportIt/CleanIt; serta `POST /api/laporan` dengan transaksi dan penautan media.| 20% |
 | 13525087 | Jovan Nathanael | **FE-A: fondasi FE, auth, dan draf offline** (FE-01–FE-08, FE-13). Setup Tailwind CSS 4 dan design tokens dari Figma; komponen UI dasar (Button, Card, Badge, Textbox, Dropdown, Modal, Bottom Sheet, Toast `notify`, Pagination, Progress Indicator); layout dan navigasi Masyarakat dan Operator; API client dengan peta pesan error dan mock MSW; auth guard dan pengarahan sesuai role; halaman Login (I-01), Register (I-02), dan Beranda (I-03); draf offline form laporan | 20% |
 | 13525147 | Muhammad Dhafin Al Khairy | *[Modul/fitur]* | *[%]* |
 
