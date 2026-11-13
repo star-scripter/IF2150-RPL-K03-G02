@@ -95,6 +95,7 @@ so-clean/
 │       │   ├── enums.ts      # enum dan helper kolom bersama
 │       │   └── <tabel>.ts    # pengguna, media, lokasi, laporan, reward, penukaran
 │       ├── migrations/       # file SQL hasil drizzle-kit (jangan diedit manual)
+│       ├── profiling/        # profiling query BE-26 (npm run db:profil, hanya database *_test)
 │       └── seed/             # data contoh fiktif: data.ts (isi), seed.ts (logika), index.ts (npm run db:seed)
 ├── lib/                      # kode bersama FE–BE tanpa akses DB (mis. lib/wilayah.ts)
 ├── types/                    # tipe bersama FE–BE (types/api.ts, sesuai kontrak)
@@ -189,6 +190,7 @@ docker compose up -d --build --renew-anon-volumes   # pertama kali / setelah pac
 docker compose exec web npm run db:migrate          # menerapkan migrasi yang belum dijalankan
 docker compose exec web npm run db:generate         # membuat file migrasi baru setelah skema diubah
 docker compose exec web npm run db:seed             # MENGHAPUS semua data lalu mengisi data contoh
+docker compose exec -e POSTGRES_DB=soclean_test web npm run db:profil   # profiling query (BE-26), hanya *_test
 ```
 
 Aturan:

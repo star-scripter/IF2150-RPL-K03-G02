@@ -12,7 +12,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio --host 0.0.0.0",
-    "db:seed": "tsx server/db/seed/index.ts"
+    "db:seed": "tsx server/db/seed/index.ts",
+    "db:profil": "tsx server/db/profiling/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1164.0",
