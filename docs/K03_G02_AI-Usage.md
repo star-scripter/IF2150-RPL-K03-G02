@@ -100,6 +100,8 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Claude Code | (FE-A, Jovan) Menyusun teks Issue dan PR sesuai template kontrak v0.8. | "Buatlah teks PR serta issues untuk FE-06" | Teks diedit, screenshot diberikan, nomor Issue dan reviewer diisi sendiri |
 | Opencode (GPT 6 Luna) | (BE-A, Aqsha) Implementasi tugas BE-A: koreksi setup BE-01, pengecekan ulang BE-02 karena sebelumnya Dhafin yang buat, BE-04 s.d. BE-11 | "Implementasi BE-xx sesuai dengan ketentuan"  | Testing ulang, cross-review untuk PR |
 | Opencode (GPT 6 Luna & Deepseek 5.1 Flash) | Kepentingan dokumen berkaitan dengan BE-01, seperti ketentuan Issues dan PR, dokumen Implementasi | "Buat issues... buat PR... untuk #blablabla" | Beberapa diparafrase, screenshot diberikan, nomor issue dan reviewer diisi sendiri |
+| Codex | (FE-B, Justin), Membuat deskripsi Issue dan PR sesuai template kontrak | "Analisis file kontrak secara menyeluruh, dan buatkan teks Issues dan PR untuk FE-09" | Cross check dengan kontrak dan memastikan isi deskripsi sesuai dengan tugas yang dikerjakan. |
+| Codex | (FE-B, Justin), Merapikan struktur kode dan menyesuaikan penamaan file, serta verifikasi keberhasilan program | "Analisis file yang sudah saya buat di lokal, verifikasi dan pastikan semuanya terintegrasi setelah itu rapikan kode dan nama file. " | Testing ulang secara manual, dan memastikan penamaan file sesuai/selaras dengan tujuan file tersebut. "
 
 ### Pernyataan Integritas dan Persetujuan
 
