@@ -188,9 +188,17 @@
 | 09-11-2026 | Faishal Ahmad Nurdin | FE-19: konfirmasi penukaran dengan pratinjau sisa poin, pencegahan klik ganda, serta penanganan POIN_TIDAK_CUKUP dan STOK_HABIS | 1,5 jam | Done | Bottom sheet langsung tertutup saat dipasang dalam keadaan terbuka (StrictMode); PR ditunda sampai FE-02 dan FE-03 masuk dev |
 | 09-11-2026 | Faishal Ahmad Nurdin | FE-20: halaman Penukaran Berhasil dengan detail transaksi dan salin kode voucher | 0,5 jam | Done | Branch bertumpuk di atas FE-19 yang belum di-merge; route dipindah setelah FE-03 masuk |
 | 09-11-2026 | Faishal Ahmad Nurdin | FE-21: halaman Riwayat Penukaran dengan pagination di URL | 2 jam | Done | Setelah FE-05, semua halaman butuh sesi login sehingga uji UI perlu stack Docker |
+| 10-11-2026 | Justin William | FE-09: Mengimplementasikan state form multistep agar data tetap tersimpan saat berpindah langkah dan mengubah isian | 2 jam | Done | - |
 | 10-11-2026 | Jovan Nathanael | FE-13: draf offline form laporan, banner offline, dan banner pilih ulang media | 1,5 jam | Done |  |
 | 10-11-2026 | Faishal Ahmad Nurdin | FE-22: halaman validasi Operator dengan tab, badge total, urutan, dan pagination | 2 jam | Done | Endpoint BE-12 belum ada, jadi diuji dengan stub; grid melebar di 360 px |
 | 10-11-2026 | Faishal Ahmad Nurdin | FE-23: modal detail laporan dengan setujui/tolak, galeri Sebelum/Sesudah, dan penanganan verifikasi ganda | 1,5 jam | Done | BE-12 sampai BE-16 belum di-merge; klik ganda pada "Tolak" langsung menolak laporan, lalu diperbaiki |
 | 11-11-2026 | Faishal Ahmad Nurdin | FE-24: halaman Profil Masyarakat (notifikasi, tandai dibaca, logout) dan Profil Operator | 1,5 jam | Done | - |
+| 11-11-2026 | Justin William | FE-10: Mengimplementasikan informasi dasar ReportIt dengan peta, GPS, judul, waktu, sumber laporan, jenis sampah, dan validasi input. | 1.5 jam | Done | - |
+| 11-11-2026 | Justin William | FE-11: Mengimplementasikan unggah bukti foto/video dengan preview, hapus, progress, validasi berkas, dan penanganan offline. | 2.5 jam | Done | - |
+| 12-11-2026 | Justin William | FE-12: Mengimplementasikan tinjauan dan pengiriman laporan melalui API dengan notifikasi sukses serta penanganan error tanpa menghapus isian. | 3 jam | Done | - |
+| 12-11-2026 | Justin William | FE-14: Mengimplementasikan daftar lokasi pencemaran dengan kartu informasi dan pengurutan berdasarkan jarak atau waktu terbaru. | 1 jam | Done | - |
+| 13-11-2026 | Justin William | FE-15: Mengimplementasikan empty state daftar lokasi dengan tombol menuju form ReportIt. | 1.5 jam | Done | - |
+| 13-11-2026 | Justin William | FE-16: Mengimplementasikan detail lokasi beserta peta, bukti laporan asal, dan modal konfirmasi menuju form CleanIt. | 1.5 jam | Done | - |
+| 13-11-2026 | Justin William | FE-17: Mengimplementasikan form bukti pembersihan CleanIt dengan pemeriksaan lokasi, validasi waktu, unggah media, dan pengiriman laporan. | 2.5 jam | Done | - |
 | 13-11-2026 | Jovan Nathanael | Mengisi bagian FE-A laporan implementasi (B.1, B.3, B.4, B.5), AI-Usage, dan logbook | 1,5 jam | Done | - |
 | 13-11-2026 | Faishal Ahmad Nurdin | FE-25: tampilan responsif 360 px dan desktop, komponen error/empty state bersama, halaman 404 dan error | 1 jam | Done | Tipe route Next usang membuat tsc gagal sampai `next typegen` dijalankan |
