@@ -31,6 +31,10 @@ export const lokasi = pgTable(
   },
   (t) => [
     index("lokasi_status_idx").on(t.status),
+    // BE-26: prefilter kotak lat/lng untuk pencarian lokasi TERCEMAR dalam radius 50 m (K13).
+    index("lokasi_tercemar_koordinat_idx")
+      .on(t.latitude, t.longitude)
+      .where(sql`${t.status} = 'TERCEMAR'`),
     check("lokasi_poin_check", sql`${t.poin} IN (50, 100, 200)`),
     check(
       "lokasi_koordinat_check",

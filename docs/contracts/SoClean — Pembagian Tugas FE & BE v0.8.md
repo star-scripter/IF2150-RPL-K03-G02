@@ -103,7 +103,7 @@ Kontrak ini adalah versi 0.7 dan menjadi acuan implementasi FE dan BE. Riwayat p
 
 ### Skema database
 
-Semua kolom NOT NULL kecuali bertanda `NULL`. `ts` = `timestamptz`, `coord` = `double precision`; enum ditulis `A|B`. Migrasi berurutan: `0000_init.sql` (v0.5), `0001_v0_6_hash_poin_cleanit.sql` (v0.6), dan `0002_lokasi_nama_255.sql` (v0.7: `lokasi.nama` menjadi `varchar(255)`). Jalankan migrasi yang belum diterapkan dengan `npm run db:migrate`.
+Semua kolom NOT NULL kecuali bertanda `NULL`. `ts` = `timestamptz`, `coord` = `double precision`; enum ditulis `A|B`. Migrasi berurutan: `0000_init.sql` (v0.5), `0001_v0_6_hash_poin_cleanit.sql` (v0.6), `0002_lokasi_nama_255.sql` (v0.7: `lokasi.nama` menjadi `varchar(255)`), dan `0003_lokasi_tercemar_koordinat.sql` (v0.8.1, BE-26: index parsial koordinat lokasi TERCEMAR). Jalankan migrasi yang belum diterapkan dengan `npm run db:migrate`.
 
 ```sql
 pengguna   (id uuid PK DEFAULT gen_random_uuid(), nama varchar(100), email varchar UNIQUE, password_hash varchar,
@@ -123,7 +123,8 @@ lokasi     (id serial PK, nama varchar(255), alamat varchar(255),
             jenis_sampah JenisSampah, status TERCEMAR|DIBERSIHKAN DEFAULT 'TERCEMAR',
             poin int DEFAULT 50 CHECK (poin IN (50, 100, 200)),                    -- v0.6
             laporan_asal_id int FK → laporan, created_at ts DEFAULT now())
-            INDEX (status)
+            INDEX (status),
+            INDEX (latitude, longitude) WHERE status = 'TERCEMAR'                  -- v0.8.1 (BE-26)
 
 laporan    (id serial PK, jenis REPORTIT|CLEANIT, id_pengguna uuid FK → pengguna, judul varchar(80),
             waktu_kejadian ts,
@@ -182,6 +183,7 @@ Catatan skema:
 | 0.6 | Kontrak dijadikan satu-satunya acuan (N16) dan dipindah ke file baru. Keputusan N1–N16 dan Aturan CleanIt ditambahkan. **Skema (migrasi `0001`):** kolom `media.sha256` + index; `lokasi.poin` hanya 50/100/200 dengan default 50; unique index parsial satu CleanIt menunggu per pengguna per lokasi. **API:** `poin` setujui dibatasi 50/100/200 dan respons ditambah `digabung`; `LaporanDetail` ditambah `lokasiTerdekat`, `laporanAsal`, `pelaporAsalSama`, `jumlahBersihkanSendiri30Hari`; `GET /api/reward` mengembalikan semua reward; aturan akun register. Kode error baru `MEDIA_SUDAH_DIGUNAKAN` dan `CLEANIT_SUDAH_MENUNGGU`; `LOKASI_SUDAH_DIBERSIHKAN` juga dipakai saat membuat CleanIt, dengan status lokasi dibaca memakai `SELECT … FOR SHARE`. K3, K5, K6, K7, K10, K11, K13 difinalkan (dropdown poin, voucher `SC-XXXX-XXXX`, label watermark, judul otomatis CleanIt, tiga wilayah, Lupa password dihapus, penggabungan lokasi). Ringkasan diperbaiki menjadi 26 tugas BE |
 | 0.7 | **Skema (migrasi `0002_lokasi_nama_255.sql`):** `lokasi.nama` menjadi `varchar(255)` agar selaras dengan `lokasi.alamat` dan `laporan.lokasi_teks`. **K7:** judul default CleanIt dipotong otomatis di FE menjadi maksimum 80 karakter (maks. 79 karakter + `…` bila terpotong); judul yang diedit pengguna tetap divalidasi BE. Pilihan implementasi dikunci: Tailwind CSS 4, `jose` untuk JWT, `bcryptjs` cost 12, Zod, MSW, dan koleksi Postman. |
 | 0.8 (draf) | **Workflow Git:** task branch dibuat dari `dev`, PR task masuk ke `dev`, `main` menjadi branch rilis; Issue dibuat sebelum branch dengan format, label, acceptance criteria, dan bukti yang konsisten. `dev` menjadi default branch GitHub agar `Closes #n` pada PR task yang di-merge ke `dev` otomatis menutup Issue. **DoD:** dibedakan dari acceptance criteria per Issue dan mensyaratkan bukti yang sesuai jenis tugas. Belum disetujui; v0.7 tetap acuan sampai review selesai. |
+| 0.8.1 | **Skema (migrasi `0003_lokasi_tercemar_koordinat.sql`, BE-26):** index parsial `lokasi (latitude, longitude) WHERE status = 'TERCEMAR'` untuk pencarian lokasi dalam radius 50 m (K13), dipakai bersama prefilter kotak lat/lng di query. Hasil profiling di B.2.1 laporan M9. Tidak ada perubahan API, tipe, atau kode error |
 
 ### Daftar endpoint
 

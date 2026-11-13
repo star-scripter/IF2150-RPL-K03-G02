@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Design tokens SoClean (FE-01).
+ * Sumber: Figma "UI-Prototype-CleanIt", variabel pada frame Content (node 41:58).
+ * Setiap token otomatis menjadi utility Tailwind, mis. --color-emerald → bg-emerald / text-emerald,
+ * --radius-card → rounded-card, --text-h1 → text-h1.
+ * Token yang tidak berasal dari Figma ditandai "(non-Figma)".
+ */
+@theme {
+  /* Warna (Figma) */
+  --color-dark-teal: #094542;
+  --color-emerald: #05c274;
+  --color-light-green: #bcfb89;
+  --color-sky-blue: #85d5f6;
+  --color-border: #d5e0dc;
+  --color-white: #ffffff;
+  --color-text-secondary: #5b6b67;
+  --color-yellow: #f2a93b;
+  --color-navy: #212161; /* teks avatar Operator (FE-03) */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Warna dari desain Figma yang tidak disimpan sebagai variabel (FE-02) */
+  --color-surface: #f5faf8; /* latar halaman Operator dan kotak info Detail Laporan */
+  --color-warning-bg: #fff4df; /* badge "menunggu validasi" */
+  --color-warning-text: #82601f;
+  --color-danger: #d64545; /* tombol "Tolak" di Detail Laporan; juga pesan error */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Warna pendukung (non-Figma) */
+  --color-ink: #000000; /* teks utama; Figma memakai hitam tanpa variabel */
+  --color-danger-text: #b42318; /* teks error di atas latar putih (kontras ≥ 4.5:1) */
+  --color-danger-bg: #fdecea; /* latar badge/toast bahaya */
+
+  /* Tipografi (Figma): Heading 1–3 memakai Plus Jakarta Sans, Body memakai Inter */
+  --text-h1: 2rem; /* 32px */
+  --text-h1--line-height: 2.5rem; /* 40px */
+  --text-h1--font-weight: 700;
+  --text-h2: 1.5rem; /* 24px */
+  --text-h2--line-height: 2rem; /* 32px */
+  --text-h2--font-weight: 600;
+  --text-h3: 1.25rem; /* 20px */
+  --text-h3--line-height: 1.75rem; /* 28px */
+  --text-h3--font-weight: 600;
+  --text-body: 1rem; /* 16px */
+  --text-body--line-height: 1.5rem; /* 24px */
+  --text-body--font-weight: 400;
+
+  /* Radius (dari komponen Figma; tidak disimpan sebagai variabel).
+   * FE-02: card dan button disamakan dengan komponen "General Card", "Lokasi Card", "Button",
+   * dan "Login Field" yang memakai 12px. */
+  --radius-card: 12px;
+  --radius-button: 12px;
+  --radius-sheet: 16px; /* sudut atas bottom sheet "Dialog" */
+
+  /* Animasi komponen (FE-02): animate-muncul (Modal, Toast) dan animate-naik (Bottom Sheet) */
+  --animate-muncul: muncul 150ms ease-out;
+  --animate-naik: naik 200ms ease-out;
+
+  @keyframes muncul {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+
+  @keyframes naik {
+    from {
+      transform: translateY(100%);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::backdrop {
+    animation: none !important;
+  }
+}
+
+/* Font dimuat oleh next/font di app/layout.tsx sebagai CSS variable. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+  }
 }
