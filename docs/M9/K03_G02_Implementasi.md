@@ -269,8 +269,11 @@ Tabel B.4. Kontribusi Anggota
 
 | NIM | Nama | Modul / Fitur yang Dikerjakan | Persentase Kontribusi |
 | :--- | :--- | :--- | :--- |
-| *[NIM 1]* | *[Nama]* | *[Modul/fitur]* | *[%]* |
-| *...* | *...* | *...* | *...* |
+| 13525027 | Faishal Ahmad Nurdin | *[Modul/fitur]* | *[%]* |
+| 13525042 | Justin William | *[Modul/fitur]* | *[%]* |
+| 13525060 | M. Aqsha Bagus R.I.B. | *[Modul/fitur]* | *[%]* |
+| 13525087 | Jovan Nathanael | **FE-A: fondasi FE, auth, dan draf offline** (FE-01–FE-08, FE-13). Setup Tailwind CSS 4 dan design tokens dari Figma; komponen UI dasar (Button, Card, Badge, Textbox, Dropdown, Modal, Bottom Sheet, Toast `notify`, Pagination, Progress Indicator); layout dan navigasi Masyarakat dan Operator; API client dengan peta pesan error dan mock MSW; auth guard dan pengarahan sesuai role; halaman Login (I-01), Register (I-02), dan Beranda (I-03); draf offline form laporan | 20% |
+| 13525147 | Muhammad Dhafin Al Khairy | *[Modul/fitur]* | *[%]* |
 
 ## B.5 Traceability Kelas Perancangan ke Implementasi
 
@@ -280,10 +283,38 @@ Tabel B.5. Traceability Kelas Perancangan ke Implementasi
 
 | ID Kelas | Nama Kelas Perancangan | Bentuk Implementasi | Lokasi (File dan Nama) | Keterangan |
 | :--- | :--- | :--- | :--- | :--- |
-| *[C01]* | *[Nama kelas pada DPPL]* | *[mis. Kelas / Fungsi / Komponen / Route / Tabel]* | *[mis. `src/models/user.py` - `User`]* | *[Cara atribut dan operasi kelas diwujudkan; "-" jika tidak ada penjelasan tambahan]* |
-| *[C02]* | *[Nama kelas pada DPPL]* | *[Bentuk implementasi]* | *[mis. `src/components/LoginForm.tsx` - `LoginForm`]* | *[mis. atribut menjadi *state*, operasi menjadi *handler*]* |
-| *[C03]* | *[Nama kelas pada DPPL]* | *[Bentuk implementasi]* | *[mis. `src/routes/auth.js` - `POST /login`]* | *[Keterangan]* |
-| *...* | *...* | *...* | *...* | *...* |
+| C01 | *FormLaporan* | *[Diisi FE-B: komponen form ReportIt dan CleanIt]* | *[Diisi FE-B]* | *[Diisi FE-B]* |
+| C01 | *FormLaporan* | Komponen (kartu menu di Beranda) | `src/so-clean/components/Beranda.tsx` - `Beranda`; `src/so-clean/lib/beranda.ts` - `MENU_LAPORAN` | `buka_reportit()` menjadi kartu ReportIt yang membuka `/reportit` (I-11). `buka_menu_cleanit()` menjadi kartu CleanIt yang membuka daftar lokasi `/lokasi` (I-09), bukan form CleanIt langsung (B.1 no. 17) |
+| C01 | *FormLaporan* | Fungsi, hook, dan komponen (draf offline) | `src/so-clean/lib/draf-laporan.ts` - `simpanDraf`, `bacaDraf`, `hapusDraf`; `src/so-clean/components/laporan/useDrafLaporan.ts` - `useDrafLaporan`; `src/so-clean/components/laporan/PemberitahuanDraf.tsx` - `PemberitahuanDraf` | Penyimpanan lokal saat luring (Tabel 2.1 DPPL). Atribut teks form (judul, `lokasi`, koordinat, `waktu`, `sumber`, jenis sampah) disimpan di `localStorage` setiap kali berubah, dipulihkan saat form dibuka lagi, dan dihapus setelah laporan terkirim. `idMedia` dan berkas media tidak masuk draf; form meminta pengguna memilih ulang media jika tab sempat ditutup (B.1 no. 19) |
+| C01 | *FormLaporan* | Fungsi dan komponen (notifikasi) | `src/so-clean/components/ui/toast-store.ts` - `notify`; `src/so-clean/components/ui/Toast.tsx` - `Toaster` | `notify(msg)` menjadi toast bersama (`notify.sukses`, `notify.gagal`, `notify.info`) yang juga dipakai View lain yang punya operasi `notify` (C07, C14) dan `tampilkanNotifikasi` (C12). Atribut `msg` menjadi argumen pesan |
+| C02 | *Laporan* | *[Diisi BE-A]* | *[Diisi BE-A]* | *[Diisi BE-A]* |
+| C03 | *Media* | *[Diisi BE-A]* | *[Diisi BE-A]* | *[Diisi BE-A]* |
+| C04 | *DaftarLaporan* | *[Diisi FE-C]* | *[Diisi FE-C]* | *[Diisi FE-C]* |
+| C05 | *ValidatorLaporan* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
+| C06 | *Lokasi* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
+| C07 | *DaftarLokasi* | *[Diisi FE-B]* | *[Diisi FE-B]* | *[Diisi FE-B]* |
+| C08 | *Pengguna* | *[Diisi BE-A dan BE-B: model dan tabel `pengguna`]* | *[Diisi BE-A dan BE-B]* | *[Diisi BE-A dan BE-B]* |
+| C08 | *Pengguna* | Komponen (tampilan data pengguna) | `src/so-clean/components/Beranda.tsx` - `Beranda`; `src/so-clean/lib/api/endpoints.ts` - `authApi.me` | Atribut `nama` dan `saldoPoin` ditampilkan di Beranda dari `GET /api/me`. Saldo selalu dibaca ulang dari server, tidak disimpan di client |
+| C08 | *Pengguna* | Komponen dan fungsi (akun: Login dan Register) | `src/so-clean/components/FormLogin.tsx` - `FormLogin`; `src/so-clean/components/FormRegister.tsx` - `FormRegister`; `src/so-clean/lib/login.ts` - `validasiLogin`; `src/so-clean/lib/register.ts` - `validasiRegister` | Tambahan di luar DPPL karena C08 tidak punya email, password, maupun role (B.1 no. 21). Validasi client meniru aturan akun (nama 1–100, email dinormalisasi, password 8–72 dan tidak sama dengan email); setelah login, Masyarakat diarahkan ke Beranda dan Operator ke validasi laporan |
+| C09 | *Reward* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
+| C10 | *DaftarReward* | *[Diisi FE-C]* | *[Diisi FE-C]* | *[Diisi FE-C]* |
+| C11 | *ManagerPoin* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
+| C12 | *HalamanPenukaran* | *[Diisi FE-C]* | *[Diisi FE-C]* | *[Diisi FE-C]* |
+| C13 | *Penukaran (Model)* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
+| C14 | *LaporanView* | *[Diisi FE-C]* | *[Diisi FE-C]* | *[Diisi FE-C]* |
+| C15 | *ManagerLaporan* | *[Diisi BE-A]* | *[Diisi BE-A]* | *[Diisi BE-A]* |
+| C16 | *Penukaran (Controller)* | *[Diisi BE-B]* | *[Diisi BE-B]* | *[Diisi BE-B]* |
+
+Unit pendukung FE tanpa padanan kelas DPPL (dikerjakan FE-A):
+
+| Unit | Lokasi (File dan Nama) | Peran |
+| :--- | :--- | :--- |
+| Design tokens | `src/so-clean/app/globals.css` (`@theme`) | Warna, font, dan radius dari Figma menjadi utility Tailwind yang dipakai semua View |
+| Komponen UI dasar | `src/so-clean/components/ui/` - `Button`, `Card`, `Badge`, `Textbox`, `Dropdown`, `Modal`, `BottomSheet`, `Pagination`, `ProgressLangkah` | Komponen bersama semua View; contoh pemakaian di halaman `/design` |
+| Layout dan navigasi | `src/so-clean/components/BottomNav.tsx` - `BottomNav`; `src/so-clean/components/HeaderOperator.tsx` - `HeaderOperator`; `src/so-clean/lib/nav.ts` - `ROUTE` | Bottom nav Masyarakat (Home/Lokasi/Hadiah/Profil) dan header Operator |
+| API client | `src/so-clean/lib/api/client.ts` - `api`, `ApiError`; `src/so-clean/lib/api/endpoints.ts`; `src/so-clean/lib/api/pesan-error.ts` - `PESAN_ERROR` | Satu pintu pemanggilan View ke Controller (`/api/...`): membaca `{ data }`/`{ error }` dan memetakan seluruh kode error kontrak ke pesan Indonesia |
+| Mock API | `src/so-clean/mocks/` (MSW) | Meniru respons kontrak agar View bisa dikembangkan sebelum endpoint siap |
+| Auth guard | `src/so-clean/lib/akses.ts` - `aturanHalaman`, `halamanAwal`; `src/so-clean/proxy.ts` (bersama BE-06) | Tamu hanya bisa membuka Login/Register; halaman Operator hanya untuk Operator dan halaman Masyarakat hanya untuk Masyarakat; respons 401 mengarahkan ke Login |
 
 Catatan:
 - Satu kelas perancangan boleh diwujudkan oleh beberapa file/unit, dan satu file/unit boleh mewujudkan beberapa kelas perancangan. Tuliskan semuanya.
