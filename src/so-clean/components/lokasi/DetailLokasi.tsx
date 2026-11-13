@@ -72,36 +72,43 @@ export function DetailLokasi({ idLokasi }: { idLokasi: number | null }) {
       <h1 className="text-h2 break-words">{lokasi.nama}</h1>
       <p className="break-words text-sm leading-relaxed text-text-secondary">{lokasi.alamat}</p>
     </div>
-    <Card>
-      <h2 className="text-h3">Lokasi Pencemaran</h2>
-      <div className="h-56 rounded-button border border-border"><PetaLaporan koordinat={{ latitude: lokasi.latitude, longitude: lokasi.longitude }} interaktif={false} /></div>
-      <p className="text-xs text-text-secondary">Koordinat: {lokasi.latitude.toFixed(6)}, {lokasi.longitude.toFixed(6)}</p>
-      <dl className="space-y-3 text-sm">
-        <div><dt className="font-semibold">Jenis Sampah</dt><dd className="mt-1 text-text-secondary">{LABEL_JENIS_SAMPAH[lokasi.jenisSampah]}</dd></div>
-        <div><dt className="font-semibold">Laporan masuk</dt><dd className="mt-1 text-text-secondary"><time dateTime={lokasi.dilaporkanAt}>{formatWaktuLengkap(lokasi.dilaporkanAt)}</time></dd></div>
-      </dl>
-    </Card>
-    <Card>
-      <div className="space-y-1"><h2 className="text-h3">Laporan Asal</h2><p className="text-xs text-text-secondary">{formatIdLaporan(lokasi.laporanAsal.idLaporan)}</p></div>
-      <h3 className="break-words text-base font-semibold">{lokasi.laporanAsal.judul}</h3>
-      <dl className="space-y-3 text-sm">
-        <div><dt className="font-semibold">Waktu Kejadian</dt><dd className="mt-1 text-text-secondary"><time dateTime={lokasi.laporanAsal.waktu}>{formatWaktuLengkap(lokasi.laporanAsal.waktu)}</time></dd></div>
-        <div><dt className="font-semibold">Sumber Laporan</dt><dd className="mt-1 text-text-secondary">{LABEL_SUMBER[lokasi.laporanAsal.sumber]}</dd></div>
-      </dl>
-      <section aria-label="Bukti laporan asal" className="space-y-4 border-t border-border pt-4">
-        <h3 className="text-sm font-semibold">Bukti Laporan Asal</h3>
-        {lokasi.laporanAsal.media.length
-          ? lokasi.laporanAsal.media.map((media, index) => <MediaLokasi key={`${media.idMedia}:${media.url}`} media={media} nomor={index + 1} />)
-          : <p className="text-sm text-text-secondary">Belum ada bukti media pada laporan asal.</p>}
-      </section>
-    </Card>
-    <Card varian="lembut">
-      <h2 className="text-h3">{bersih ? "Lokasi sudah dibersihkan" : "Bantu bersihkan lokasi ini"}</h2>
-      <p id="status-pembersihan" role={bersih ? "status" : undefined} className="text-sm leading-relaxed text-text-secondary">{bersih
-        ? "Lokasi ini sudah dibersihkan. Pilih lokasi tercemar lain untuk berkontribusi."
-        : `Kirim bukti pembersihan lewat CleanIt. Anda memperoleh ${lokasi.poin.toLocaleString("id-ID")} poin setelah bukti dinyatakan valid oleh Operator.`}</p>
-      <Button disabled={bersih} aria-describedby="status-pembersihan" lebarPenuh onClick={() => { if (!bersih) setKonfirmasi(true); }}>Bersihkan</Button>
-    </Card>
+    {/* Desktop: peta dan laporan asal di kolom lebar, ajakan Bersihkan tetap terlihat di kolom kanan. */}
+    <div className="flex flex-col gap-5 md:grid md:grid-cols-[minmax(0,1fr)_340px] md:items-start md:gap-6">
+      <div className="flex flex-col gap-5">
+        <Card>
+          <h2 className="text-h3">Lokasi Pencemaran</h2>
+          <div className="h-56 rounded-button border border-border"><PetaLaporan koordinat={{ latitude: lokasi.latitude, longitude: lokasi.longitude }} interaktif={false} /></div>
+          <p className="text-xs text-text-secondary">Koordinat: {lokasi.latitude.toFixed(6)}, {lokasi.longitude.toFixed(6)}</p>
+          <dl className="space-y-3 text-sm">
+            <div><dt className="font-semibold">Jenis Sampah</dt><dd className="mt-1 text-text-secondary">{LABEL_JENIS_SAMPAH[lokasi.jenisSampah]}</dd></div>
+            <div><dt className="font-semibold">Laporan masuk</dt><dd className="mt-1 text-text-secondary"><time dateTime={lokasi.dilaporkanAt}>{formatWaktuLengkap(lokasi.dilaporkanAt)}</time></dd></div>
+          </dl>
+        </Card>
+        <Card>
+          <div className="space-y-1"><h2 className="text-h3">Laporan Asal</h2><p className="text-xs text-text-secondary">{formatIdLaporan(lokasi.laporanAsal.idLaporan)}</p></div>
+          <h3 className="break-words text-base font-semibold">{lokasi.laporanAsal.judul}</h3>
+          <dl className="space-y-3 text-sm">
+            <div><dt className="font-semibold">Waktu Kejadian</dt><dd className="mt-1 text-text-secondary"><time dateTime={lokasi.laporanAsal.waktu}>{formatWaktuLengkap(lokasi.laporanAsal.waktu)}</time></dd></div>
+            <div><dt className="font-semibold">Sumber Laporan</dt><dd className="mt-1 text-text-secondary">{LABEL_SUMBER[lokasi.laporanAsal.sumber]}</dd></div>
+          </dl>
+          <section aria-label="Bukti laporan asal" className="space-y-4 border-t border-border pt-4">
+            <h3 className="text-sm font-semibold">Bukti Laporan Asal</h3>
+            {lokasi.laporanAsal.media.length
+              ? lokasi.laporanAsal.media.map((media, index) => <MediaLokasi key={`${media.idMedia}:${media.url}`} media={media} nomor={index + 1} />)
+              : <p className="text-sm text-text-secondary">Belum ada bukti media pada laporan asal.</p>}
+          </section>
+        </Card>
+      </div>
+      <div className="md:sticky md:top-8">
+        <Card varian="lembut">
+          <h2 className="text-h3">{bersih ? "Lokasi sudah dibersihkan" : "Bantu bersihkan lokasi ini"}</h2>
+          <p id="status-pembersihan" role={bersih ? "status" : undefined} className="text-sm leading-relaxed text-text-secondary">{bersih
+            ? "Lokasi ini sudah dibersihkan. Pilih lokasi tercemar lain untuk berkontribusi."
+            : `Kirim bukti pembersihan lewat CleanIt. Anda memperoleh ${lokasi.poin.toLocaleString("id-ID")} poin setelah bukti dinyatakan valid oleh Operator.`}</p>
+          <Button disabled={bersih} aria-describedby="status-pembersihan" lebarPenuh onClick={() => { if (!bersih) setKonfirmasi(true); }}>Bersihkan</Button>
+        </Card>
+      </div>
+    </div>
     <KonfirmasiBersihkan lokasi={lokasi} terbuka={konfirmasi} onTutup={() => setKonfirmasi(false)} />
   </BingkaiDetailLokasi>;
 }
