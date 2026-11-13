@@ -5,8 +5,8 @@
  * Seperti `BottomNav`, komponen ini hanya tampilan dan menerima `pathname`; versi yang membaca
  * route ada di `HeaderOperatorAktif.tsx` (dibungkus `Suspense` di layout Operator).
  *
- * Avatar masih inisial statis "O"; nama asli dari `GET /api/me` dipasang di FE-05/FE-24
- * lewat prop `namaOperator`.
+ * Avatar memakai inisial `namaOperator` (dari `GET /api/me` di `HeaderOperatorAktif`, FE-24);
+ * selama belum dimuat atau jika gagal, inisial bawaan "O".
  */
 import Link from "next/link";
 import { NAV_OPERATOR, ROUTE, isNavAktif } from "@/lib/nav";
