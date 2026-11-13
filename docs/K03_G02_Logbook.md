@@ -172,3 +172,15 @@
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 04-11-2026 | Jovan Nathanael | Menyiapkan dokumen Milestone 9: form asistensi, identitas kelompok, dan kerangka laporan implementasi | 2 jam | Done | - |
+| 08-11-2026 | Jovan Nathanael | Revisi kontrak pembagian tugas (v0.6) dan konsistensi dengan DPPL; mengisi B.1 Perubahan dari DPPL dan known issues B.3; perbaikan batas wilayah peta di kontrak | 2 jam | Done | - |
+| 09-11-2026 | Jovan Nathanael | FE-01: setup Tailwind CSS 4, design tokens dari Figma, dan layout dasar | 1 jam | Done | |
+| 09-11-2026 | Jovan Nathanael | FE-04: API client, peta pesan error, dan mock MSW sesuai kontrak | 2 jam | Done | |
+| 09-11-2026 | Jovan Nathanael | FE-02: komponen UI dasar beserta perbaikan hasil review (dialog, toast, card, pagination) | 1,5 jam | Done | - |
+| 09-11-2026 | Jovan Nathanael | FE-03: layout dan navigasi Masyarakat dan Operator | 1 jam | Done | - |
+| 09-11-2026 | Jovan Nathanael | FE-06: halaman Login dengan validasi, pesan error, dan redirect sesuai role | 1 jam | Done | Database Docker belum dimigrasi sehingga API membalas 500; migrasi dan seed dijalankan |
+| 09-11-2026 | Jovan Nathanael | FE-07: halaman Register dengan validasi aturan akun | 1 jam | Done | BE register tidak memasang session cookies, jadi FE langsung login setelah register |
+| 09-11-2026 | Jovan Nathanael | FE-08: halaman Beranda dengan saldo dan menu laporan | 0,5 jam | Done | - |
+| 09-11-2026 | Jovan Nathanael | FE-05: auth guard, pengarahan sesuai role, dan redirect saat sesi habis | 0,5 jam | Done |  |
+| 10-11-2026 | Jovan Nathanael | FE-13: draf offline form laporan, banner offline, dan banner pilih ulang media | 1,5 jam | Done |  |
+| 13-11-2026 | Jovan Nathanael | Mengisi bagian FE-A laporan implementasi (B.1, B.3, B.4, B.5), AI-Usage, dan logbook | 1,5 jam | Done | - |
