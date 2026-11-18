@@ -151,13 +151,13 @@ Tabel 3.1. Lingkungan Implementasi
 
 | Aspek | Keterangan |
 | :--- | :--- |
-| *Hardware* | *[Spesifikasi perangkat keras]* |
-| *Operating System* | *[Nama dan versi OS]* |
-| *Bahasa Pemrograman* | *[Bahasa dan versi]* |
-| *Framework/Library* | *[Daftar framework/library beserta versi]* |
-| *DBMS* | *[Nama dan versi DBMS]* |
-| *Development Tools* | *[IDE, version control, tools lain]* |
-| *Testing Tools* | *[Framework unit test, alat ukur performa, alat coverage]* |
+| *Hardware* | Perangkat desktop maupun mobile yang dilengkapi dengan internet, GPS, dan kamera. |
+| *Operating System* | Cross-platform: Linux (di dalam container Docker untuk server), serta Windows, Linux, dan Android (diakses melalui web browser pada perangkat desktop maupun mobile). |
+| *Bahasa Pemrograman* | TypeScript / JavaScript, HTML, CSS, dan SQL. |
+| *Framework/Library* | Next.js 16 (Node.js). |
+| *DBMS* | PostgreSQL 18 (untuk penyimpanan data relasional dan persisten). |
+| *Development Tools* | Docker (untuk kontainerisasi), Git & GitHub (untuk manajemen versi kode), Visual Studio Code (sebagai IDE/code editor), serta Mermaid.js, Draw.io, dan StarUML (untuk pemodelan diagram). |
+| *Testing Tools* | Vitest (unit testing), Chrome DevTools & Firefox DevTools (non-functional testing), Vitest Coverage V8 (coverage testing) |
 
 ## 3.2 Implementasi Modul
 
