@@ -2071,7 +2071,7 @@ Tabel 5.2.2. Atribut Kelas Laporan
 
 **Nama Kelas:** *Laporan*  
 **Nama Operasi:** *simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: String)*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-005*
 
 ```text
 function simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: String)
@@ -2095,7 +2095,7 @@ function simpan_laporan(lokasi: String, waktu: Date, idMedia: Number, sumber: St
 
 **Nama Kelas:** *Laporan*  
 **Nama Operasi:** *is_unverified() Boolean*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-006*
 
 ```text
 function get_unverified()
@@ -2117,7 +2117,7 @@ function get_unverified()
 
 **Nama Kelas:** *Laporan*  
 **Nama Operasi:** *get_detail()*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-007*
 
 ```text
 function get_detail()
@@ -2136,7 +2136,7 @@ function get_detail()
 
 **Nama Kelas:** *Laporan*  
 **Nama Operasi:** *ubah_status(status: String)*  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-008*
 
 ```text
 function ubah_status(status: String)
@@ -2155,7 +2155,7 @@ function ubah_status(status: String)
 
 **Nama Kelas:** *Laporan*  
 **Nama Operasi:** *simpan_alasan_penolakan(alasan: String)*  
-**ID Algoritma:** *Algo-005*
+**ID Algoritma:** *Algo-009*
 
 ```text
 function simpan_alasan_penolakan(alasan: String)
@@ -2193,7 +2193,7 @@ Tabel 5.3.2. Atribut Kelas Media
 
 **Nama Kelas:** *Media*  
 **Nama Operasi:** *input_media(): Number*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-010*
 
 ```text
 function input_media(): Number
@@ -2222,7 +2222,7 @@ Tabel 5.3.3. Query Operasi input_media()
 
 **Nama Kelas:** *Media*  
 **Nama Operasi:** *is_penyimpanan_penuh(): Boolean*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-011*
 
 ```text
 function is_penyimpanan_penuh(): Boolean
@@ -2259,7 +2259,7 @@ Tabel 5.4.2. Atribut Kelas DaftarLaporan
 
 **Nama Kelas:** *DaftarLaporan*  
 **Nama Operasi:** *daftar_laporan(laporan: Laporan)*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-012*
 
 ```text
 function daftar_laporan(laporan: Laporan)
@@ -2280,7 +2280,7 @@ Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
 
 **Nama Kelas:** *DaftarLaporan*  
 **Nama Operasi:** *pilih_menu_verifikasi()*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-013*
 
 ```text
 function pilih_menu_verifikasi()
@@ -2300,7 +2300,7 @@ Tabel 5.4.3. Query Operasi daftar_laporan(laporan: Laporan)
 
 **Nama Kelas:** *DaftarLaporan*  
 **Nama Operasi:** *tampilkan_daftar(list: List of Laporan)*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-014*
 
 ```text
 function tampilkan_daftar(list: List of Laporan)
@@ -2339,7 +2339,7 @@ Tabel 5.5.1. Operasi Kelas [Nama Kelas 5]
 
 **Nama Kelas:** *ValidatorLaporan*  
 **Nama Operasi:** *setujui(idLaporan: String): void*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-015*
 
 ```text
 function setujui(idLaporan: String)
@@ -2368,7 +2368,7 @@ function setujui(idLaporan: String)
 
 **Nama Kelas:** *ValidatorLaporan*  
 **Nama Operasi:** *tolak(idLaporan: String, alasan: String): void*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-016*
 
 ```text
 function tolak(idLaporan: String, alasan: String)
@@ -2418,7 +2418,7 @@ Tabel 5.6.2. Atribut Kelas Lokasi
 
 **Nama Kelas:** *Lokasi*  
 **Nama Operasi:** *simpan_lokasi(koordinat: String): Boolean*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-017*
 
 ```text
 function simpan_lokasi(koordinat: String): Boolean
@@ -2443,7 +2443,7 @@ Tabel 5.6.3. Query Operasi simpan_lokasi(koordinat: String)
 
 **Nama Kelas:** *Lokasi*  
 **Nama Operasi:** *get_all_lokasi_valid(): List of Lokasi*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-018*
 
 ```text
 function get_all_lokasi_valid(): List of Lokasi
@@ -2464,7 +2464,7 @@ Tabel 5.6.4. Query Operasi get_all_lokasi_valid()
 
 **Nama Kelas:** *Lokasi*  
 **Nama Operasi:** *get_lokasi(idLokasi: Number): Lokasi*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-019*
 
 ```text
 function get_lokasi(idLokasi: Number): Lokasi
@@ -2506,7 +2506,7 @@ Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Al
 
 **Nama Kelas:** *DaftarLokasi*  
 **Nama Operasi:** *buka_fitur_cleanit()*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-020*
 
 ```text
 function buka_fitur_cleanit()
@@ -2519,7 +2519,7 @@ function buka_fitur_cleanit()
 
 **Nama Kelas:** *DaftarLokasi*  
 **Nama Operasi:** *pilih_lokasi(idLokasi: String)*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-021*
 
 ```text
 function pilih_lokasi(idLokasi: String)
@@ -2533,7 +2533,7 @@ function pilih_lokasi(idLokasi: String)
 
 **Nama Kelas:** *DaftarLokasi*  
 **Nama Operasi:** *tampilkan_daftar(list: List)*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-022*
 
 ```text
 function tampilkan_daftar(list: List)
@@ -2551,7 +2551,7 @@ function tampilkan_daftar(list: List)
 
 **Nama Kelas:** *DaftarLokasi*  
 **Nama Operasi:** *notify(msg: String)*  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-023*
 
 ```text
 function notify(msg: String)
@@ -2587,7 +2587,7 @@ Tabel 5.8.2. Atribut Kelas Pengguna
 
 **Nama Kelas:** *Pengguna*  
 **Nama Operasi:** *getSaldoPoin(): int*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-024*
 
 ```text
 function getSaldoPoin(): int
@@ -2606,7 +2606,7 @@ Tabel 5.8.3. Query Operasi getSaldoPoin()
 
 **Nama Kelas:** *Pengguna*  
 **Nama Operasi:** *cukupPoin(harga: int): Boolean*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-025*
 
 ```text
 function cukupPoin(harga: int): Boolean
@@ -2621,7 +2621,7 @@ function cukupPoin(harga: int): Boolean
 
 **Nama Kelas:** *Pengguna*  
 **Nama Operasi:** *kurangiPoin(jumlah: int): Boolean*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-026*
 
 ```text
 function kurangiPoin(jumlah: int): Boolean
@@ -2648,7 +2648,7 @@ Tabel 5.8.4. Query Operasi kurangiPoin(jumlah: int)
 
 **Nama Kelas:** *Pengguna*  
 **Nama Operasi:** *tambah_poin(jumlahPoin: int): int*  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-027*
 
 ```text
 function tambah_poin(jumlahPoin: int): int
@@ -2673,7 +2673,7 @@ Tabel 5.8.5. Query Operasi tambah_poin(jumlahPoin: int)
 
 **Nama Kelas:** *Pengguna*  
 **Nama Operasi:** *notify(msg: String)*  
-**ID Algoritma:** *Algo-005*
+**ID Algoritma:** *Algo-028*
 
 ```text
 function notify(msg: String)
@@ -2717,7 +2717,7 @@ Tabel 5.9.2. Atribut Kelas Reward
 
 **Nama Kelas:** *Reward*  
 **Nama Operasi:** *getRewardTersedia(): List of Reward*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-029*
 
 ```text
 function getRewardTersedia(): List of Reward
@@ -2736,7 +2736,7 @@ Tabel 5.9.3. Query Operasi getRewardTersedia()
 
 **Nama Kelas:** *Reward*  
 **Nama Operasi:** *cariReward(idReward: String): Reward*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-030*
 
 ```text
 function cariReward(idReward: String): Reward
@@ -2755,7 +2755,7 @@ Tabel 5.9.4. Query Operasi cariReward(idReward: String)
 
 **Nama Kelas:** *Reward*  
 **Nama Operasi:** *getHargaPoin(): int*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-031*
 
 ```text
 function getHargaPoin(): int
@@ -2767,7 +2767,7 @@ function getHargaPoin(): int
 
 **Nama Kelas:** *Reward*  
 **Nama Operasi:** *tersedia(): Boolean*  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-032*
 
 ```text
 function tersedia(): Boolean
@@ -2782,7 +2782,7 @@ function tersedia(): Boolean
 
 **Nama Kelas:** *Reward*  
 **Nama Operasi:** *kurangiStok(): Boolean*  
-**ID Algoritma:** *Algo-005*
+**ID Algoritma:** *Algo-033*
 
 ```text
 function kurangiStok(): Boolean
@@ -2831,7 +2831,7 @@ Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Al
 
 **Nama Kelas:** *DaftarReward*  
 **Nama Operasi:** *muatRewardTersedia*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-034*
 
 ```text
 function muatRewardTersedia()
@@ -2844,7 +2844,7 @@ function muatRewardTersedia()
 
 **Nama Kelas:** *DaftarReward*  
 **Nama Operasi:** *tampilkanDaftarReward(daftar: List)*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-035*
 
 ```text
 function tampilkanDaftarReward(daftar: List)
@@ -2861,7 +2861,7 @@ function tampilkanDaftarReward(daftar: List)
 
 **Nama Kelas:** *DaftarReward*  
 **Nama Operasi:** *pilihReward(idReward: String)*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-036*
 
 ```text
 function pilihReward(idReward: String)
@@ -2895,7 +2895,7 @@ Tabel 5.11.1. Operasi Kelas ManagerPoin
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *tambah_poin(idPengguna: String, jumlahPoin: int): void*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-037*
 
 ```text
 function tambah_poin(idPengguna: String, jumlahPoin: int)
@@ -2914,7 +2914,7 @@ function tambah_poin(idPengguna: String, jumlahPoin: int)
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *lihatSaldo(pengguna: Pengguna): int*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-038*
 
 ```text
 function lihatSaldo(pengguna: Pengguna): int
@@ -2931,7 +2931,7 @@ function lihatSaldo(pengguna: Pengguna): int
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *lihatRewardTersedia(): List of Reward*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-039*
 
 ```text
 function lihatRewardTersedia(): List of Reward
@@ -2945,7 +2945,7 @@ function lihatRewardTersedia(): List of Reward
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean*  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-040*
 
 ```text
 function kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean
@@ -2970,7 +2970,7 @@ function kurangiPoin(pengguna: Pengguna, jumlah: int): Boolean
 
 **Nama Kelas:** *ManagerPoin*  
 **Nama Operasi:** *cekPoin(pengguna: Pengguna, harga: int): Boolean*  
-**ID Algoritma:** *Algo-005*
+**ID Algoritma:** *Algo-041*
 
 ```text
 function cekPoin(pengguna: Pengguna, harga: int): Boolean
@@ -3012,7 +3012,7 @@ Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Al
 
 **Nama Kelas:** *HalamanPenukaran*  
 **Nama Operasi:** *tampilkanSaldo(saldo: int)*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-042*
 
 ```text
 function tampilkanSaldo(saldo: int)
@@ -3024,7 +3024,7 @@ function tampilkanSaldo(saldo: int)
 
 **Nama Kelas:** *HalamanPenukaran*  
 **Nama Operasi:** *pilihReward(idReward: string)*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-043*
 
 ```text
 function pilihReward(idReward: String)
@@ -3045,7 +3045,7 @@ function pilihReward(idReward: String)
 
 **Nama Kelas:** *HalamanPenukaran*  
 **Nama Operasi:** *tampilkanNotifikasi(pesan: String)*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-044*
 
 ```text
 function tampilkanNotifikasi(pesan: String)
@@ -3081,7 +3081,7 @@ Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Al
 
 **Nama Kelas:** *Penukaran (Model)*  
 **Nama Operasi:** *buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-045*
 
 ```text
 function buatPenukaran(pengguna: Pengguna, reward: Reward): Boolean
@@ -3138,7 +3138,7 @@ Atribut *data* menyimpan detail laporan atau lokasi yang sedang ditampilkan dala
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *tampilkan_laporan(data: String)*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-046*
 
 ```text
 function tampilkan_laporan(data: String)
@@ -3155,7 +3155,7 @@ function tampilkan_laporan(data: String)
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *setujui(idLaporan: Number)*  
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-047*
 
 ```text
 function setujui(idLaporan: Number)
@@ -3169,7 +3169,7 @@ function setujui(idLaporan: Number)
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *tolak(idLaporan: Number)*  
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-048*
 
 ```text
 function tolak(idLaporan: Number)
@@ -3183,7 +3183,7 @@ function tolak(idLaporan: Number)
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *notify(msg: String)*  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-049*
 
 ```text
 function notify(msg: String)
@@ -3196,7 +3196,7 @@ function notify(msg: String)
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *tampilkan_lokasi(detail: String)*  
-**ID Algoritma:** *Algo-005*
+**ID Algoritma:** *Algo-050*
 
 ```text
 function tampilkan_lokasi(detail: String)
@@ -3211,7 +3211,7 @@ function tampilkan_lokasi(detail: String)
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *konfirmasi_bersihkan()*  
-**ID Algoritma:** *Algo-006*
+**ID Algoritma:** *Algo-051*
 
 ```text
 function konfirmasi_bersihkan()
@@ -3223,7 +3223,7 @@ function konfirmasi_bersihkan()
 
 **Nama Kelas:** *LaporanView*  
 **Nama Operasi:** *tampilkan_konfirmasi(msg: String)*  
-**ID Algoritma:** *Algo-007*
+**ID Algoritma:** *Algo-052*
 
 ```text
 function tampilkan_konfirmasi(msg: String)
@@ -3265,7 +3265,7 @@ Bagian ini diisi untuk kerangka algoritma proses yang dianggap cukup penting. Al
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** *cek_laporan(lokasi: String, waktu: Date, idMedia: int, sumber: String)*  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-053*
 
 ```text
 function cek_laporan(lokasi, waktu, idMedia, sumber)
@@ -3290,7 +3290,7 @@ function cek_laporan(lokasi, waktu, idMedia, sumber)
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** is_terisi(lokasi: String, waktu: Date, idMedia: int, sumber: String): Boolean 
-**ID Algoritma:** *Algo-002*
+**ID Algoritma:** *Algo-054*
 
 ```text
 function is_terisi(lokasi, waktu, idMedia, sumber)
@@ -3306,7 +3306,7 @@ function is_terisi(lokasi, waktu, idMedia, sumber)
 ### 5.15.3 Algoritma/Query
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** is_format_valid(lokasi: String, waktu: Date, idMedia: int, sumber: String): Boolean
-**ID Algoritma:** *Algo-003*
+**ID Algoritma:** *Algo-055*
 
 ```text
 function is_format_valid(lokasi, waktu, idMedia, sumber)
@@ -3334,7 +3334,7 @@ function is_format_valid(lokasi, waktu, idMedia, sumber)
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `get_daftar_lokasi(): List<Lokasi>`  
-**ID Algoritma:** *Algo-004*
+**ID Algoritma:** *Algo-056*
 
 ```text
 function get_daftar_lokasi()
@@ -3348,7 +3348,7 @@ function get_daftar_lokasi()
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `get_detail_lokasi(idLokasi: String)`  
-**ID Algoritma:** *Algo-005*
+**ID Algoritma:** *Algo-057*
 
 ```text
 function get_detail_lokasi(idLokasi)
@@ -3367,7 +3367,7 @@ function get_detail_lokasi(idLokasi)
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `is_valid(idLaporan: Number, lokasi: String, waktu: Date, idMedia: int): Boolean`  
-**ID Algoritma:** *Algo-006*
+**ID Algoritma:** *Algo-058*
 
 ```text
 function is_valid(idLaporan, lokasi, waktu, idMedia)
@@ -3395,7 +3395,7 @@ Operasi ini didefinisikan sebagai pemeriksaan konsistensi data. Keputusan apakah
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `get_all_laporan_unverified(): List<Laporan>`  
-**ID Algoritma:** *Algo-007*
+**ID Algoritma:** *Algo-059*
 
 ```text
 function get_all_laporan_unverified()
@@ -3418,7 +3418,7 @@ Pengambilan koleksi laporan merupakan tanggung jawab akses data Model. Mekanisme
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `get_data(idLaporan: Number)`  
-**ID Algoritma:** *Algo-008*
+**ID Algoritma:** *Algo-060*
 
 ```text
 function get_data(idLaporan)
@@ -3431,7 +3431,7 @@ function get_data(idLaporan)
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `ubah_status(idLaporan: Number, status: String)`  
-**ID Algoritma:** *Algo-009*
+**ID Algoritma:** *Algo-061*
 
 ```text
 function ubah_status(idLaporan, status)
@@ -3447,7 +3447,7 @@ function ubah_status(idLaporan, status)
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `simpan_alasan_penolakan(idLaporan: Number, alasan: String)`  
-**ID Algoritma:** *Algo-010*
+**ID Algoritma:** *Algo-062*
 
 ```text
 function simpan_alasan_penolakan(idLaporan, alasan)
@@ -3462,7 +3462,7 @@ function simpan_alasan_penolakan(idLaporan, alasan)
 
 **Nama Kelas:** *ManagerLaporan*  
 **Nama Operasi:** `petakan_lokasi(idLaporan: Number)`  
-**ID Algoritma:** *Algo-011*
+**ID Algoritma:** *Algo-063*
 
 ```text
 function petakan_lokasi(idLaporan)
@@ -3507,7 +3507,7 @@ Tabel 5.16.2. Atribut Kelas Penukaran (Controller)
 
 **Nama Kelas:** *Penukaran (Controller)*  
 **Nama Operasi:** `tukarPoin(pengguna: Pengguna, idReward: String): Boolean`  
-**ID Algoritma:** *Algo-001*
+**ID Algoritma:** *Algo-064*
 
 ```text
 function tukarPoin(pengguna: Pengguna, idReward: String): Boolean
@@ -3632,7 +3632,7 @@ Tabel 6.1. Spesifikasi Objek Antarmuka I-03
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
 | IO3-001 | Teks | Username | Berisi data username pengguna |
-| IO3-002 | Teks | Jumlah skor | Menampilkan skor sesuai C-12 Algo-001 dengan tampilkanSaldo(poin: Number) |
+| IO3-002 | Teks | Jumlah skor | Menampilkan skor sesuai C-12 Algo-042 dengan tampilkanSaldo(poin: Number) |
 | IO3-003 | Button | Tukar Hadiah | Pengguna masuk ke halaman penukaran |
 | IO3-004 | Button | Fitur ReportIt | Pengguna masuk ke ReportIt (buka_reportit()) |
 | IO3-005 | Button | Fitur CleanIt | Pengguna masuk ke CleanIt (buka_cleanit()) |
@@ -3658,15 +3658,15 @@ Tabel 6.4. Spesifikasi Objek Antarmuka I-04
 | Id_Objek | Jenis | Konten | Keterangan |
 | :--- | :--- | :--- | :--- |
 | *I04-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
-| *I04-02* | *Card* | *"Poin Anda", saldo poin pengguna (contoh: 67)* | *Menampilkan saldo poin melalui HalamanPenukaran.tampilkanSaldo(saldo) (Algo-001 kelas HalamanPenukaran). Saldo diperoleh dari ManagerPoin.lihatSaldo(pengguna) (UC07)* |
+| *I04-02* | *Card* | *"Poin Anda", saldo poin pengguna (contoh: 67)* | *Menampilkan saldo poin melalui HalamanPenukaran.tampilkanSaldo(saldo) (Algo-042 kelas HalamanPenukaran). Saldo diperoleh dari ManagerPoin.lihatSaldo(pengguna) (UC07)* |
 | *I04-03* | *Label* | *"Redeem Poin Anda"* | *Judul bagian daftar reward* |
 | *I04-04* | *Link* | *"Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
-| *I04-05* | *List of Card* | *Jenis dan stok reward, nama reward, harga poin* | *Daftar reward dari DaftarReward.muatRewardTersedia() dan DaftarReward.tampilkanDaftarReward(daftar) (Algo-001 dan Algo-002 kelas DaftarReward) (UC08)* |
+| *I04-05* | *List of Card* | *Jenis dan stok reward, nama reward, harga poin* | *Daftar reward dari DaftarReward.muatRewardTersedia() dan DaftarReward.tampilkanDaftarReward(daftar) (Algo-034 dan Algo-035 kelas DaftarReward) (UC08)* |
 | *I04-06* | *Button* | *"Tukar"* | *Muncul jika saldo mencukupi dan stok tersedia. Membuka I-05 untuk reward yang dipilih* |
-| *I04-07* | *Button* | *"Kurang [selisih poin]"* | *Muncul jika saldo kurang dari harga reward. Menampilkan notifikasi "Poin tidak cukup" melalui HalamanPenukaran.tampilkanNotifikasi(pesan) (Algo-003 kelas HalamanPenukaran) (UC09 skenario alternatif)* |
+| *I04-07* | *Button* | *"Kurang [selisih poin]"* | *Muncul jika saldo kurang dari harga reward. Menampilkan notifikasi "Poin tidak cukup" melalui HalamanPenukaran.tampilkanNotifikasi(pesan) (Algo-044 kelas HalamanPenukaran) (UC09 skenario alternatif)* |
 | *I04-08* | *Button (disabled)* | *"Habis"* | *Muncul jika stok reward 0. Tidak memiliki aksi* |
 | *I04-09* | *Navigation Button* | *"Home"* | *Membuka I-03* |
-| *I04-10* | *Navigation Button* | *"Lokasi"* | *Membuka daftar lokasi CleanIt melalui DaftarLokasi.buka_fitur_cleanit() (Algo-001 kelas DaftarLokasi)* |
+| *I04-10* | *Navigation Button* | *"Lokasi"* | *Membuka daftar lokasi CleanIt melalui DaftarLokasi.buka_fitur_cleanit() (Algo-020 kelas DaftarLokasi)* |
 | *I04-11* | *Navigation Button (aktif)* | *"Hadiah"* | *Menandakan layar yang sedang dibuka (I-04)* |
 | *I04-12* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
 
@@ -3689,11 +3689,11 @@ Tabel 6.5. Spesifikasi Objek Antarmuka I-05
 | *I05-01* | *Dialog (Bottom Sheet)* | *"Konfirmasi penukaran"* | *Ditampilkan di atas I-04 setelah pengguna menekan I04-06* |
 | *I05-02* | *Card* | *Jenis dan stok reward, nama reward* | *Reward yang dipilih pada I-04* |
 | *I05-03* | *Label* | *"Poin Anda", saldo poin pengguna* | *Saldo poin saat ini* |
-| *I05-04* | *Label* | *"Harga reward", harga poin reward* | *Harga poin dari Reward.getHargaPoin() (Algo-003 kelas Reward)* |
+| *I05-04* | *Label* | *"Harga reward", harga poin reward* | *Harga poin dari Reward.getHargaPoin() (Algo-031 kelas Reward)* |
 | *I05-05* | *Label* | *"Sisa poin", saldo dikurangi harga reward* | *Pratinjau saldo setelah penukaran. Belum mengubah data* |
 | *I05-06* | *Label* | *"Poin yang sudah ditukarkan tidak dapat dikembalikan."* | *Peringatan sebelum penukaran* |
 | *I05-07* | *Button* | *"Batal"* | *Menutup dialog dan kembali ke I-04 tanpa perubahan data* |
-| *I05-08* | *Button* | *"Tukarkan"* | *Menjalankan DaftarReward.pilihReward(idReward) (Algo-003 kelas DaftarReward), HalamanPenukaran.pilihReward(idReward) (Algo-002 kelas HalamanPenukaran), lalu Penukaran.tukarPoin(pengguna, idReward) (Algo-001 kelas Penukaran (Controller)). Jika berhasil, membuka I-06. Jika gagal, menampilkan notifikasi melalui HalamanPenukaran.tampilkanNotifikasi(pesan) (Algo-003 kelas HalamanPenukaran)* |
+| *I05-08* | *Button* | *"Tukarkan"* | *Menjalankan DaftarReward.pilihReward(idReward) (Algo-036 kelas DaftarReward), HalamanPenukaran.pilihReward(idReward) (Algo-043 kelas HalamanPenukaran), lalu Penukaran.tukarPoin(pengguna, idReward) (Algo-064 kelas Penukaran (Controller)). Jika berhasil, membuka I-06. Jika gagal, menampilkan notifikasi melalui HalamanPenukaran.tampilkanNotifikasi(pesan) (Algo-044 kelas HalamanPenukaran)* |
 
 ## 6.6 Rancangan Antarmuka I-06
 
@@ -3718,7 +3718,7 @@ Tabel 6.6. Spesifikasi Objek Antarmuka I-06
 | *I06-05* | *Label* | *"ID penukaran", idPenukaran* | *ID transaksi dari Penukaran (Model)* |
 | *I06-06* | *Label* | *"Waktu penukaran", waktuPenukaran* | *Waktu transaksi dari Penukaran (Model)* |
 | *I06-07* | *Label* | *"Poin dipakai", poinDipakai* | *Jumlah poin yang dipakai dari Penukaran (Model)* |
-| *I06-08* | *Label* | *"Sisa poin", saldo poin terbaru* | *Saldo setelah penukaran dari Pengguna.getSaldoPoin() (Algo-001 kelas Pengguna)* |
+| *I06-08* | *Label* | *"Sisa poin", saldo poin terbaru* | *Saldo setelah penukaran dari Pengguna.getSaldoPoin() (Algo-024 kelas Pengguna)* |
 | *I06-09* | *Button* | *"Kembali ke Hadiah"* | *Membuka I-04 dengan saldo dan stok terbaru* |
 | *I06-10* | *Button* | *"Lihat Riwayat"* | *Membuka layar riwayat penukaran pengguna* |
 
@@ -3748,10 +3748,10 @@ Tabel 6.7. Spesifikasi Objek Antarmuka I-07
 | *I07-08* | *Label* | *"Periksa laporan warga dan pilih laporan untuk ditinjau."* | *Memberikan instruksi kepada Operator* |
 | *I07-09* | *Badge* | *"12 menunggu validasi"* | *Menampilkan jumlah laporan yang belum diverifikasi* |
 | *I07-10* | *Dropdown / Sort Button* | *"Terbaru lebih dulu"* | *Mengurutkan daftar laporan berdasarkan waktu pengiriman* |
-| *I07-11* | *List of Card* | *ID laporan, judul laporan, lokasi, waktu pengiriman* | *Menampilkan daftar laporan dari ManagerLaporan.get_all_laporan_unverified() (Algo-007 kelas ManagerLaporan)* |
+| *I07-11* | *List of Card* | *ID laporan, judul laporan, lokasi, waktu pengiriman* | *Menampilkan daftar laporan dari ManagerLaporan.get_all_laporan_unverified() (Algo-059 kelas ManagerLaporan)* |
 | *I07-12* | *Checkbox* | *Pilihan laporan* | *Memilih laporan yang akan ditinjau melalui DaftarLaporan.pilih_laporan(idLaporan) (UC03/UC06)* |
 | *I07-13* | *Hyperlink* | *"Batalkan"* | *Membatalkan pemilihan laporan* |
-| *I07-14* | *Button* | *"Tinjau laporan"* | *Membuka I-08 untuk menampilkan detail laporan yang dipilih melalui LaporanView.tampilkan_laporan(data) (Algo-001 kelas LaporanView)* |
+| *I07-14* | *Button* | *"Tinjau laporan"* | *Membuka I-08 untuk menampilkan detail laporan yang dipilih melalui LaporanView.tampilkan_laporan(data) (Algo-046 kelas LaporanView)* |
 | *I07-15* | *Label* | *"Menampilkan 1–6 dari 12 laporan"* | *Menampilkan informasi jumlah laporan pada halaman aktif* |
 | *I07-16* | *Pagination Button* | *"1", "2", ikon sebelumnya dan berikutnya* | *Berpindah halaman untuk melihat laporan lainnya* |
 
@@ -3803,12 +3803,12 @@ Tabel 6.9. Spesifikasi Objek Antarmuka I-09
 | :--- | :--- | :--- | :--- |
 | *I09-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
 | *I09-02* | *Label* | *"Lokasi Tercemar", "Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt."* | *Judul dan petunjuk layar* |
-| *I09-03* | *Label (Badge)* | *"[jumlah] lokasi menunggu"* | *Jumlah lokasi pada daftar yang ditampilkan DaftarLokasi.tampilkan_daftar(list) (Algo-003 kelas DaftarLokasi)* |
+| *I09-03* | *Label (Badge)* | *"[jumlah] lokasi menunggu"* | *Jumlah lokasi pada daftar yang ditampilkan DaftarLokasi.tampilkan_daftar(list) (Algo-022 kelas DaftarLokasi)* |
 | *I09-04* | *Dropdown* | *"Terdekat"* | *Mengurutkan kartu lokasi pada daftar yang sudah dimuat. Tidak mengambil data baru* |
-| *I09-05* | *List of Card* | *Nama lokasi, poin yang didapat, jarak dan koordinat, jenis sampah, waktu dilaporkan* | *Daftar lokasi berstatus "Tercemar" dari ManagerLaporan.get_daftar_lokasi() (Algo-004 kelas ManagerLaporan), ditampilkan melalui DaftarLokasi.tampilkan_daftar(list) (Algo-003 kelas DaftarLokasi) (UC04 skenario normal)* |
-| *I09-06* | *Button* | *"Lihat Detail"* | *Menjalankan DaftarLokasi.pilih_lokasi(idLokasi) (Algo-002 kelas DaftarLokasi) untuk lokasi pada kartu tersebut, lalu ManagerLaporan.get_detail_lokasi(idLokasi) (Algo-005 kelas ManagerLaporan). Detail lokasi ditampilkan melalui LaporanView.tampilkan_lokasi(detail) (Algo-005 kelas LaporanView)* |
+| *I09-05* | *List of Card* | *Nama lokasi, poin yang didapat, jarak dan koordinat, jenis sampah, waktu dilaporkan* | *Daftar lokasi berstatus "Tercemar" dari ManagerLaporan.get_daftar_lokasi() (Algo-056 kelas ManagerLaporan), ditampilkan melalui DaftarLokasi.tampilkan_daftar(list) (Algo-022 kelas DaftarLokasi) (UC04 skenario normal)* |
+| *I09-06* | *Button* | *"Lihat Detail"* | *Menjalankan DaftarLokasi.pilih_lokasi(idLokasi) (Algo-021 kelas DaftarLokasi) untuk lokasi pada kartu tersebut, lalu ManagerLaporan.get_detail_lokasi(idLokasi) (Algo-057 kelas ManagerLaporan). Detail lokasi ditampilkan melalui LaporanView.tampilkan_lokasi(detail) (Algo-050 kelas LaporanView)* |
 | *I09-07* | *Navigation Button* | *"Home"* | *Membuka I-03* |
-| *I09-08* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-09). Layar dibuka melalui DaftarLokasi.buka_fitur_cleanit() (Algo-001 kelas DaftarLokasi)* |
+| *I09-08* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-09). Layar dibuka melalui DaftarLokasi.buka_fitur_cleanit() (Algo-020 kelas DaftarLokasi)* |
 | *I09-09* | *Navigation Button* | *"Hadiah"* | *Membuka I-04* |
 | *I09-10* | *Navigation Button* | *"Profil"* | *Membuka layar profil pengguna* |
 
@@ -3831,7 +3831,7 @@ Tabel 6.10. Spesifikasi Objek Antarmuka I-10
 | *I10-01* | *Image + Label* | *Logo SoClean, "SoClean"* | *Header aplikasi* |
 | *I10-02* | *Label* | *"Lokasi Tercemar", "Pilih lokasi, bersihkan, lalu kirim buktinya lewat CleanIt."* | *Judul dan petunjuk layar* |
 | *I10-03* | *Icon* | *Ikon lokasi dengan tanda centang* | *Ilustrasi keadaan kosong* |
-| *I10-04* | *Label* | *"Belum terdapat lokasi pencemaran", "Belum ada laporan yang terverifikasi di sekitarmu. Nemu sampah di perairan? Laporkan lewat ReportIt."* | *Ditampilkan melalui DaftarLokasi.notify(msg) (Algo-004 kelas DaftarLokasi) jika ManagerLaporan.get_daftar_lokasi() (Algo-004 kelas ManagerLaporan) tidak mengembalikan lokasi (UC04 skenario alternatif 1)* |
+| *I10-04* | *Label* | *"Belum terdapat lokasi pencemaran", "Belum ada laporan yang terverifikasi di sekitarmu. Nemu sampah di perairan? Laporkan lewat ReportIt."* | *Ditampilkan melalui DaftarLokasi.notify(msg) (Algo-023 kelas DaftarLokasi) jika ManagerLaporan.get_daftar_lokasi() (Algo-056 kelas ManagerLaporan) tidak mengembalikan lokasi (UC04 skenario alternatif 1)* |
 | *I10-05* | *Button* | *"Buat Laporan ReportIt"* | *Membuka form laporan ReportIt melalui FormLaporan.buka_reportit() (Algo-001 kelas FormLaporan)* |
 | *I10-06* | *Navigation Button* | *"Home"* | *Membuka I-03* |
 | *I10-07* | *Navigation Button (aktif)* | *"Lokasi"* | *Menandakan layar yang sedang dibuka (I-10)* |
@@ -3890,7 +3890,7 @@ Tabel 6.12. Spesifikasi Objek Antarmuka I-12
 | *I12-04* | *Progress Indicator* | *"Informasi Dasar", "Bukti Media", "Tinjau & Kirim"* | *Menunjukkan bahwa Informasi Dasar telah dilalui dan Bukti Media merupakan tahap aktif* |
 | *I12-05* | *Label* | *"Unggah Bukti Pencemaran", "Tambahkan foto atau video yang menunjukkan kondisi pencemaran di lokasi tersebut."* | *Menampilkan judul dan petunjuk pengumpulan bukti media untuk laporan (UC02)* |
 | *I12-06* | *Information Card* | *"Pastikan media yang diunggah jelas, relevan, dan sesuai dengan kondisi di lokasi."* | *Memberikan panduan agar bukti yang disertakan dapat diperiksa oleh Operator* |
-| *I12-07* | *File Upload Area* | *"Unggah Foto atau Video", "Klik untuk memilih file atau seret ke sini", "JPG, PNG, MP4 - Maks. 20 MB"* | *Area pemilihan bukti foto/video. Proses pengambilan media pada rancangan kelas dilakukan melalui FormLaporan.ambil_gambar() dan Media.input_media() (Algo-001 kelas Media). Dukungan pemilihan berkas dan drag-and-drop merupakan detail UI yang perlu diselaraskan dengan implementasi Media* |
+| *I12-07* | *File Upload Area* | *"Unggah Foto atau Video", "Klik untuk memilih file atau seret ke sini", "JPG, PNG, MP4 - Maks. 20 MB"* | *Area pemilihan bukti foto/video. Proses pengambilan media pada rancangan kelas dilakukan melalui FormLaporan.ambil_gambar() dan Media.input_media() (Algo-010 kelas Media). Dukungan pemilihan berkas dan drag-and-drop merupakan detail UI yang perlu diselaraskan dengan implementasi Media* |
 | *I12-08* | *Image Preview* | *Pratinjau foto/video yang dipilih* | *Menampilkan bukti media yang telah dipilih sebelum laporan dikirim. Media.input_media() menghasilkan idMedia yang digunakan dalam laporan (UC02)* |
 | *I12-09* | *Icon Button* | *Ikon silang (X)* | *Menghapus media dari pilihan sementara pengguna sebelum pengiriman laporan* |
 | *I12-10* | *Button* | *"Tambah media (lainnya)"* | *Membuka kembali pemilihan media tambahan. Dukungan banyak berkas memerlukan penyesuaian apabila Model Laporan hanya menyimpan satu idMedia* |
