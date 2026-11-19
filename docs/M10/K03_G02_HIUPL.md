@@ -64,7 +64,7 @@ Dipersiapkan oleh:
 | Revisi | Deskripsi |
 | :--- | :--- |
 | *A* | Penyesuaian ID algoritma pada DPPL2 |
-| *B* |  |
+| *B* | Update tests dari implementasi |
 | *C* |  |
 | ... |  |
 
@@ -362,7 +362,36 @@ Tabel 4.2.1b. Ringkasan Cakupan Kelas [C02]
 | Daftar operasi public pada DPPL | `buatLaporan(input: LaporanBaru, tx: Eksekutor = db): Promise<LaporanTersimpan>`, `getDaftarLaporan(filter: FilterDaftarLaporan, tx: Eksekutor = db,): Promise<{ data: LaporanTersimpan[]; total: number }>`, `ubah_status(idLaporan: number, perubahan: PerubahanStatusLaporan, tx: Eksekutor = db,)`, `simpan_alasan_penolakan(idLaporan: number, alasanPenolakan: string, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`, `adaCleanItMenunggu(idPengguna: string,lokasiId: number,tx: Pick<Db, "select"> = db,): Promise<boolean>`, sisanya diuji pada integration testing, yaitu `hitungBersihkanSendiri30Hari(idPengguna: string, kecualiIdLaporan: number, tx: Pick<Db, "select"> = db,): Promise<number>`, `ubah_status_verifikasi(idLaporan: number, keputusan: KeputusanVerifikasi, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`, `tolakCleanItMenungguLain(idLokasi: number kecualiIdLaporan: number, diverifikasiOleh: string, tx: Pick<Db, "update"> = db,): Promise<number[]>`|
 | Operasi yang diuji | `buatLaporan(input: LaporanBaru, tx: Eksekutor = db): Promise<LaporanTersimpan>`, `getDaftarLaporan(filter: FilterDaftarLaporan, tx: Eksekutor = db,): Promise<{ data: LaporanTersimpan[]; total: number }>`, `ubah_status(idLaporan: number, perubahan: PerubahanStatusLaporan, tx: Eksekutor = db,)`, `simpan_alasan_penolakan(idLaporan: number, alasanPenolakan: string, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`, `adaCleanItMenunggu(idPengguna: string,lokasiId: number,tx: Pick<Db, "select"> = db,): Promise<boolean>` |
 | ID Algoritma yang tercakup | Algo-005, Algo-006 (berubah bentuk), Algo-007 (berubah bentuk), Algo-008, Algo-009 |
-| Coverage (wajib ≥ 70%) | 58.33% function (hanya mengacu pada `model-laporan.test.ts`), 100% (model-detail-laporan.test.ts, verifikasi-ganda.test.ts, validasi-laporan.test.ts, api-setujui-reportit.test.ts, tests/api-setujui-cleanit.test.ts ) |
+| Coverage (wajib ≥ 70%) | 73.33% branch dan 74.19% lines (hanya mengacu pada `model-laporan.test.ts`), 100% (model-detail-laporan.test.ts, verifikasi-ganda.test.ts, validasi-laporan.test.ts, api-setujui-reportit.test.ts, tests/api-setujui-cleanit.test.ts ) |
+
+### 4.2.3 Kelas Media
+
+**ID Kelas:** *[C03]*
+**Nama Kelas:** *[Media]*
+**Tingkat:** *[Mendalam]*
+
+Note: hanya melaporkan operasi pada `server/models/media.ts`. Pengujian controller upload, pemrosesan gambar/video, dan adapter object storage tidak dihitung sebagai coverage Model Media.
+
+Tabel 4.2.3. Hasil Pengujian Unit Kelas [C03]
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| *C03-UT01* | `sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean>` | Normal/negatif | Periksa hash yang tertaut ke laporan `VALID`, laporan `TIDAK_VALID`, media belum tertaut, dan hash yang tidak ada | True hanya untuk hash media pada laporan yang tidak ditolak, sisanya false | True hanya untuk hash media pada laporan yang tidak ditolak, sisanya false | *Pass* |
+| *C03-UT02* | `buatMedia(input: MediaBaru): Promise<number>` | Normal | Simpan metadata media berisi pengguna, storage key, tipe, ukuran, hash, dan waktu unggah | Baris media tersimpan dengan nilai sesuai input dan `laporan_id` NULL | Baris media tersimpan dengan nilai sesuai input dan `laporan_id` NULL| *Pass* |
+| *C03-UT03* | `getUntukLaporan(idMedia: number[], idPengguna: string, tx: Eksekutor = db,): Promise<MediaUntukLaporan[]>` | Normal/negatif | Ambil ID media milik pengguna, ID media milik pengguna lain, ID yang tidak ada, panggil juga dengan daftar ID kosong | Media milik pengguna dikembalikan, daftar kosong menghasilkan `[]` | Media milik pengguna dikembalikan, daftar kosong menghasilkan `[]` | *Pass* |
+| *C03-UT04* | `tautkanKeLaporan(idMedia: number[], idPengguna: string, idLaporan: number,: Pick<Db, "update"> = db,): Promise<number>` | Normal/negatif | Tautkan media belum terpakai milik pengguna, sertakan juga media pengguna lain, media yang sudah tertaut, ID tidak ada, dan daftar kosong | Hanya media belum tertaut milik pengguna yang berubah dengan nilai kembalian adalah jumlah baris yang berubah, daftar kosong menghasilkan `0` | Hanya media belum tertaut milik pengguna yang berubah dengan nilai kembalian adalah jumlah baris yang berubah, daftar kosong menghasilkan `0` | *Pass* |
+| *C03-UT05* | `getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]>` | Normal/negatif | Buat dua media pada satu laporan dan satu media tanpa tautan, lalu ambil media berdasarkan ID laporan | Hanya media pada laporan tersebut yang dikembalikan dalam urutan ID unggah | Hanya media pada laporan tersebut yang dikembalikan dalam urutan ID unggah | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.3b. Ringkasan Cakupan Kelas [C03]
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Operasi pada Model Media yang diuji | `sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean>`, `buatMedia(input: MediaBaru): Promise<number>`, `getUntukLaporan(idMedia: number[], idPengguna: string, tx: Eksekutor = db,): Promise<MediaUntukLaporan[]>`, `tautkanKeLaporan(idMedia: number[], idPengguna: string, idLaporan: number,: Pick<Db, "update"> = db,): Promise<number>`, `getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]>` |
+| Operasi yang diuji | `sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean>`, `buatMedia(input: MediaBaru): Promise<number>`, `getUntukLaporan(idMedia: number[], idPengguna: string, tx: Eksekutor = db,): Promise<MediaUntukLaporan[]>`, `tautkanKeLaporan(idMedia: number[], idPengguna: string, idLaporan: number,: Pick<Db, "update"> = db,): Promise<number>`, `getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]>` |
+| ID Algoritma yang tercakup | Algo-010 |
+| Coverage (wajib ≥ 70%) | 100% |
 
 <br>
 
