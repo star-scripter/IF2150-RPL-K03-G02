@@ -48,7 +48,9 @@ Dipersiapkan oleh:
   - [4.1 Strategi dan Kedalaman Pengujian Kelas](#41-strategi-dan-kedalaman-pengujian-kelas)
   - [4.2 Pengujian Unit Kelas](#42-pengujian-unit-kelas)
     - [4.2.1 Kelas \[Nama Kelas 1\]](#421-kelas-nama-kelas-1)
-    - [4.2.2 Kelas \[Nama Kelas 2\]](#422-kelas-nama-kelas-2)
+    - [4.2.2 Kelas Laporan](#422-kelas-laporan)
+    - [4.2.3 Kelas Media](#423-kelas-media)
+    - [4.2.9 C08 Pengguna – FE-A](#429-c08-pengguna--fe-a)
   - [4.3 Pengujian Integrasi](#43-pengujian-integrasi)
   - [4.4 Pengujian Use Case](#44-pengujian-use-case)
     - [4.4.1 Use Case \[Nama Use Case 1\]](#441-use-case-nama-use-case-1)
@@ -395,6 +397,22 @@ Tabel 4.2.3b. Ringkasan Cakupan Kelas [C03]
 
 <br>
 
+### 4.2.9 C08 Pengguna – FE-A
+
+**ID Kelas:** C08  
+**Nama Kelas:** Pengguna – UI auth/Beranda  
+**Tingkat:** Sedang  
+
+Note: Operasi C08 pada DPPL (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`, `notify`) berada di sisi server dan diuji pada bagian backend. Bagian ini menguji sisi tampilan C08 sesuai Tabel B.5 dokumen Implementasi: data Beranda (atribut `nama` dan `saldoPoin`) serta validasi Login/Register, yang merupakan tambahan di luar DPPL (B.1 no. 21). 
+
+Tabel 4.2.9. Hasil Pengujian Unit C08 (FE-A)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT01 | `authApi.me(): Promise<MeResponse>` dan `formatPoin(poin: number): string` (data Beranda) | Normal | Login ke mock API sebagai `masyarakat@soclean.test`, lalu ambil data pengguna lewat `authApi.me()` dan format saldonya dengan `formatPoin()` | Nama "Dapin Tampan" dan saldo "67" siap ditampilkan di Beranda | Nama "Dapin Tampan" dan saldo "67" | *Pass* |
+| C08-UT02 | `validasiRegister(isian: IsianRegister): GalatRegister \| null` | Batas | Nama dan email valid; password 7 karakter (`1234567`), 72 karakter, dan 73 karakter | 7 karakter ditolak ("Password minimal 8 karakter."); 72 karakter diterima; 73 karakter ditolak ("Password maksimal 72 karakter.") | Sesuai harapan untuk ketiga masukan | *Pass* |
+| C08-UT03 | `validasiLogin(isian: IsianLogin): GalatLogin \| null` | Negatif | Email `warga@` (format salah), password `x` | Galat pada field email: "Format email tidak valid." | Galat "Format email tidak valid." muncul | *Pass* |
+
 ## 4.3 Pengujian Integrasi
 
 Pengujian integrasi memeriksa interaksi antarkomponen yang melewati batas, yaitu *Controller* ke *Model*, aplikasi ke basis data, dan aplikasi ke sistem eksternal. Daftar antarmuka mengacu pada dokumen DPPL, dengan minimal satu test case untuk setiap antarmuka. Pengujian memakai komponen nyata, bukan *mock*. Apabila ada antarmuka tambahan yang belum didaftarkan pada dokumen DPPL, cantumkan juga.
@@ -466,6 +484,7 @@ Tabel 4.6. Bukti Hasil Pengujian
 
 | ID Pengujian | Bukti Hasil Pengujian |
 | :--- | :--- |
+| C08-UT01 – C08-UT03 (BUKTI-09) | ![BUKTI-09](assets/BUKTI-09.png) |
 | *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
 | *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
 | *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |
