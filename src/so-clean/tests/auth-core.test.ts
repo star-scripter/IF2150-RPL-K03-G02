@@ -38,6 +38,18 @@ describe("auth account rules", () => {
     expect(() => registerSchema.parse({ nama: "Budi", email: "budi@example.test", password: "p".repeat(73) })).toThrow();
   });
 
+  it("accepts the exact name/password boundaries and rejects values just outside them", () => {
+    const base = { email: "budi@example.test", password: "password123" };
+
+    expect(registerSchema.parse({ ...base, nama: "B" }).nama).toBe("B");
+    expect(registerSchema.parse({ ...base, nama: "n".repeat(100) }).nama).toHaveLength(100);
+    expect(() => registerSchema.parse({ ...base, nama: "n".repeat(101) })).toThrow();
+
+    expect(registerSchema.parse({ ...base, nama: "Budi", password: "p".repeat(8) }).password).toHaveLength(8);
+    expect(registerSchema.parse({ ...base, nama: "Budi", password: "p".repeat(72) }).password).toHaveLength(72);
+    expect(() => registerSchema.parse({ ...base, nama: "Budi", password: "p".repeat(73) })).toThrow();
+  });
+
   it("rejects a password identical to the normalized email", () => {
     const parsed = registerSchema.safeParse({
       nama: "Budi",
@@ -81,6 +93,16 @@ describe("JWT session helper", () => {
     await expect(
       verifySessionToken(token, new Date(issuedAt.getTime() + SESSION_TTL_SECONDS * 1000 + 1000)),
     ).resolves.toBeNull();
+  });
+
+  it("stays valid until the TTL boundary and expires exactly at it", async () => {
+    vi.stubEnv("SESSION_SECRET", "a-test-only-session-secret-with-enough-entropy");
+    const token = await signSessionToken(session, issuedAt);
+    const sesaatSebelum = new Date(issuedAt.getTime() + (SESSION_TTL_SECONDS - 1) * 1000);
+    const tepatKedaluwarsa = new Date(issuedAt.getTime() + SESSION_TTL_SECONDS * 1000);
+
+    await expect(verifySessionToken(token, sesaatSebelum)).resolves.toEqual(session);
+    await expect(verifySessionToken(token, tepatKedaluwarsa)).resolves.toBeNull();
   });
 
   it("rejects a token signed with a different secret", async () => {

@@ -1,9 +1,82 @@
+import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { db } from "@/server/db";
-import { cukupPoin, getSaldoPoin, kurangiPoin, tambah_poin } from "@/server/models/pengguna";
+import { pengguna } from "@/server/db/schema";
+import {
+  buatMasyarakat,
+  cariUntukLogin,
+  cukupPoin,
+  getMe,
+  getSaldoPoin,
+  kurangiPoin,
+  tambah_poin,
+} from "@/server/models/pengguna";
 import { DATABASE_TEST_AKTIF, buatPengguna, kosongkanDatabase } from "./helpers/db";
 
 const ID_TIDAK_ADA = "00000000-0000-4000-8000-000000000000";
+
+describe.runIf(DATABASE_TEST_AKTIF)("model Pengguna — auth (C08, BE-A)", () => {
+  beforeEach(async () => {
+    await kosongkanDatabase();
+  });
+
+  it("cariUntukLogin mencocokkan email ternormalisasi dan null jika tidak ada", async () => {
+    const dibuat = await buatMasyarakat({
+      nama: "  Budi Santoso ",
+      email: " Budi@Example.test ",
+      passwordHash: "hash-budi",
+    });
+
+    expect(dibuat).toMatchObject({
+      nama: "Budi Santoso",
+      email: "budi@example.test",
+      role: "MASYARAKAT",
+    });
+
+    const hasil = await cariUntukLogin(" BUDI@example.test ");
+    expect(hasil).toMatchObject({ id: dibuat?.id, email: "budi@example.test", passwordHash: "hash-budi" });
+    await expect(cariUntukLogin("tidak-ada@example.test")).resolves.toBeNull();
+  });
+
+  it("buatMasyarakat selalu role MASYARAKAT dan null untuk email duplikat", async () => {
+    const pertama = await buatMasyarakat({
+      nama: "Budi Santoso",
+      email: "budi@example.test",
+      passwordHash: "hash-budi",
+    });
+    expect(pertama?.role).toBe("MASYARAKAT");
+
+    const duplikat = await buatMasyarakat({
+      nama: "Budi Lain",
+      email: " BUDI@example.test ",
+      passwordHash: "hash-lain",
+    });
+    expect(duplikat).toBeNull();
+
+    const semua = await db.select().from(pengguna);
+    expect(semua).toHaveLength(1);
+    expect(semua[0]).toMatchObject({ nama: "Budi Santoso", email: "budi@example.test" });
+  });
+
+  it("getMe mengembalikan profil terbaru dan null jika pengguna tidak ada", async () => {
+    const dibuat = await buatMasyarakat({
+      nama: "Budi Santoso",
+      email: "budi@example.test",
+      passwordHash: "hash-budi",
+    });
+    if (!dibuat) throw new Error("Pengguna uji gagal dibuat.");
+    await db.update(pengguna).set({ saldoPoin: 75 }).where(eq(pengguna.id, dibuat.id));
+
+    await expect(getMe(dibuat.id)).resolves.toMatchObject({
+      id: dibuat.id,
+      nama: "Budi Santoso",
+      email: "budi@example.test",
+      role: "MASYARAKAT",
+      saldoPoin: 75,
+    });
+    await expect(getMe(ID_TIDAK_ADA)).resolves.toBeNull();
+  });
+});
 
 describe.runIf(DATABASE_TEST_AKTIF)("model Pengguna — saldo poin (C08)", () => {
   let id: string;
