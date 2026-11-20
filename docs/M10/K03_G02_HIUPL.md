@@ -341,11 +341,22 @@ Tabel 4.1.1. Identifikasi Tingkat Pengujian Kelas
 
 | ID Kelas | Nama Kelas | Tingkat | Alasan | Test Case Terkait |
 | :--- | :--- | :--- | :--- | :--- |
-| *C02* | *Pesanan* | *Mendalam* | *Memuat `hitungTotal()` dan transisi status pembayaran* | *C02-UT01 s.d. C02-UT08* |
-| *C03* | *Keranjang* | *Sedang* | *Delegasi sederhana ke Produk dan Pesanan* | *C03-UT01 s.d. C03-UT03, INT-TC02* |
-| *C01* | *Pelanggan* | *Tidak perlu* | *Hanya menyimpan data akun, tanpa logika* | *-* |
-| *[CXX]* | *[Nama kelas]* | *[Mendalam/Sedang/Tidak perlu]* | *[Alasan penentuan tingkat pengujian]* | *[ID test case atau -]* |
-| *...* | *...* | *...* | *...* | *...* |
+| C01 | *FormLaporan* | Mendalam | Memuat validasi masukan sisi klien (field wajib dan validasi seperti waktu dan koordinat), validasi berkas media (tipe, ukuran, jumlah, kuota penyimpanan), antrean unggah saat offline, draf lokal, serta penyusunan payload dan pemetaan error pengiriman | C01-UT01 s.d. C01-UT08 |
+| C02 | *Laporan* | Mendalam | Menyimpan dan membaca laporan dengan aturan per jenis (ReportIt/CleanIt), filter dan paginasi daftar, perubahan status bersyarat (hanya dari `BELUM_DIPERIKSA`), penolakan otomatis CleanIt lain, dan perhitungan CleanIt 30 hari | C02-UT01 s.d. C02-UT09 |
+| C03 | *Media* | Mendalam | Memeriksa penggunaan ulang hash SHA-256, kepemilikan media, penautan media ke laporan secara bersyarat, serta pemrosesan watermark dan penyimpanan ke S3 | C03-UT01 s.d. C03-UT06 |
+| C04 | *DaftarLaporan* | Mendalam | Mengelola filter jenis, urutan, dan halaman yang tersimpan di URL, format ID `RPT-xxxx` dan waktu, serta state loading, kosong, dan gagal pada daftar validasi | C04-UT01 s.d. C04-UT04 |
+| C05 | *ValidatorLaporan* | Mendalam | Memuat aturan verifikasi: setujui ReportIt dengan penggabungan lokasi radius 50 m, setujui CleanIt dengan pemberian poin dan penolakan otomatis, tolak dengan alasan wajib untuk CleanIt, pencegahan verifikasi ganda, dan validasi masukan Operator | C05-UT01 s.d. C05-UT05 |
+| C06 | *Lokasi* | Mendalam | Memuat perhitungan jarak haversine dan prefilter kotak untuk radius 50 m, perubahan status `TERCEMAR` → `DIBERSIHKAN` secara bersyarat, serta pembuatan dan pembacaan lokasi beserta laporan asalnya | C06-UT01 s.d. C06-UT05 |
+| C07 | *DaftarLokasi* | Sedang | Menampilkan daftar lokasi dan menghitung jarak dari posisi pengguna untuk urutan Terdekat. Logika utamanya hanya pengurutan dan validasi respons, sedangkan data diambil dari API | C07-UT01 s.d. C07-UT03 |
+| C08 | *Pengguna* | Mendalam | Memuat aturan akun dan autentikasi (normalisasi email, hash password, sesi JWT), perubahan saldo poin bersyarat agar tidak negatif, serta pemberian notifikasi dari laporan terverifikasi | C08-UT01 s.d. C08-UT16 |
+| C09 | *Reward* | Sedang | Membaca katalog reward dengan urutan stok tersedia lalu harga, mencari reward, dan mengurangi stok secara bersyarat. Logikanya sederhana dan transaksi penukarannya diuji di C16 | C09-UT01 s.d. C09-UT03 |
+| C10 | *DaftarReward* | Sedang | Menampilkan katalog reward dan menentukan status tombol (Tukar, Kurang, Habis) dari saldo dan stok sehingga tidak mengubah data | C10-UT01 s.d. C10-UT03 |
+| C11 | *ManagerPoin* | Sedang | Mengoordinasikan pembacaan saldo dan reward serta meneruskan pengecekan, pengurangan, dan penambahan poin ke model Pengguna dan Reward | C11-UT01 s.d. C11-UT03 |
+| C12 | *HalamanPenukaran* | Mendalam | Mengatur alur konfirmasi penukaran, pratinjau sisa poin, pencegahan klik ganda, pemetaan error (`POIN_TIDAK_CUKUP`, `STOK_HABIS`), serta tampilan hasil dan riwayat penukaran | C12-UT01 s.d. C12-UT05 |
+| C13 | *Penukaran (Model)* | Mendalam | Membuat kode voucher unik `SC-XXXX-XXXX` dengan percobaan ulang saat bentrok, menyimpan transaksi penukaran, dan membaca riwayat dengan paginasi | C13-UT01 s.d. C13-UT05 |
+| C14 | *LaporanView* | Mendalam | Menyusun body setujui/tolak sesuai jenis laporan dan penggabungan lokasi, memvalidasi isian Operator, menampilkan galeri Sebelum/Sesudah, dan menangani hasil serta error verifikasi | C14-UT01 s.d. C14-UT05 |
+| C15 | *ManagerLaporan* | Mendalam | Memuat validasi laporan (`is_terisi`, `is_format_valid`, `cek_laporan`), pembuatan laporan dan penautan media dalam transaksi, serta query daftar laporan, pemetaan lokasi, dan perubahan status untuk verifikasi | C15-UT01 s.d. C15-UT08 |
+| C16 | *Penukaran (Controller)* | Mendalam | Menjalankan transaksi penukaran: validasi masukan, pengecekan reward, stok, dan saldo, lalu pengurangan saldo, pengurangan stok, dan pencatatan penukaran dalam satu transaksi dengan rollback | C16-UT01 s.d. C16-UT05 |
 
 ## 4.2 Pengujian Unit Kelas
 
@@ -477,6 +488,64 @@ Tabel 4.2.5b. Ringkasan Cakupan C04
 | ID Algoritma yang tercakup | Algo-002 (`pilih_menu_verifikasi`), Algo-003 (`tampilkan_daftar`). Algo-001 dipindah ke C02/C15 |
 | Coverage (wajib ≥ 70%) | 98,27% lines (57/58) dan 96,55% branch (56/58) pada `lib/laporan.ts`, 93,33% fungsi (14/15). Satu-satunya fungsi yang tidak tereksekusi adalah `urlPeta` (tautan OpenStreetMap di I-08). File ini dipakai bersama C04 dan C14. Alat: Vitest Coverage V8, bukti pada BUKTI-43 |
 
+### 4.2.6 C05 ValidatorLaporan
+
+**ID Kelas:** C05\
+**Nama Kelas:** ValidatorLaporan\
+**Tingkat:** Mendalam
+
+Note: ValidatorLaporan diwujudkan sebagai controller `server/controllers/validator-laporan.ts` yang dipanggil route handler `GET /api/laporan/:id`, `POST /api/laporan/:id/setujui`, dan `POST /api/laporan/:id/tolak`. Pengujian memanggil route handler nyata dengan PostgreSQL test (`soclean_test`), sehingga setiap kasus juga memeriksa isi database setelah aksi. `setujui` untuk CleanIt dijalankan oleh `setujui_cleanit` di dalam transaksi yang sama.
+
+Tabel 4.2.6. Hasil Pengujian Unit C05
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C05-UT01 | `get_detail(idParam: string): Promise<Response>` | Normal | Buka detail ReportIt menunggu yang berjarak ±30 m dari lokasi TERCEMAR beserta medianya, lalu detail CleanIt milik pelapor asal lokasi dan CleanIt milik pengguna lain | ReportIt memuat media (presigned URL), pelapor, dan `lokasiTerdekat` dengan jarak 30 m; CleanIt memuat `laporanAsal` beserta media Sebelum, `pelaporAsalSama` (`true`/`false`), dan `jumlahBersihkanSendiri30Hari` | ReportIt memuat media, pelapor, dan `lokasiTerdekat` 30 m; CleanIt memuat `laporanAsal`, `pelaporAsalSama: true` dengan jumlah 1 untuk pelapor asal dan `false` dengan jumlah 0 untuk pengguna lain | *Pass* |
+| C05-UT02 | `setujui(request, idParam, sesi)` dan `tolak(request, idParam, sesi)` pada nilai batas | Batas | Setujui ReportIt yang di sekitarnya hanya ada lokasi tepat di luar radius (±51 m) dan lokasi yang sudah DIBERSIHKAN; tolak dengan alasan tepat 500 karakter dan 501 karakter | Lokasi ±51 m dan lokasi DIBERSIHKAN tidak dipakai untuk penggabungan sehingga lokasi baru dibuat (batas ≤ 50 m diuji pada C06-UT02); alasan 500 karakter diterima, 501 karakter ditolak `FORMAT_TIDAK_VALID` | `digabung: false` dan jumlah lokasi bertambah satu; alasan 500 karakter diterima, 501 karakter ditolak 400 `FORMAT_TIDAK_VALID` | *Pass* |
+| C05-UT03 | `setujui(...)` dan `tolak(...)` dengan masukan tidak valid | Negatif | Setujui dengan `poin: 75`, `poin: "50"`, `namaLokasi` 256 karakter, dan body bukan JSON; tolak CleanIt tanpa body, dengan alasan kosong, spasi, atau `null`, dan alasan bukan string; ID `abc`/`0` dan laporan yang tidak ada | Masukan salah ditolak 400 `FORMAT_TIDAK_VALID`; CleanIt tanpa alasan ditolak 400 `DATA_TIDAK_LENGKAP` pada `fields.alasan`; ID tidak valid 400 dan laporan tidak ada 404; status laporan dan data lokasi tidak berubah | Semua masukan salah ditolak dengan kode dan `fields` sesuai; laporan tetap `BELUM_DIPERIKSA` dan tidak ada lokasi baru | *Pass* |
+| C05-UT04 | `setujui(...)` untuk ReportIt dan CleanIt (`setujui_cleanit`), `tolak(...)` | Normal | Setujui ReportIt tanpa body, dengan poin/nama dari Operator, dan di dekat lokasi lama; setujui CleanIt pada lokasi berpoin 100 yang juga punya CleanIt lain menunggu; tolak ReportIt tanpa/dengan alasan dan CleanIt dengan alasan | ReportIt menjadi `VALID` dengan lokasi baru (poin default 50, nama = teks lokasi) atau `digabung: true`, tanpa poin bagi pelapor; CleanIt `VALID`, lokasi `DIBERSIHKAN`, pelapor +100 poin, CleanIt lain ditolak otomatis dengan alasan "Lokasi sudah dibersihkan"; tolak menyimpan status `TIDAK_VALID`, alasan, dan Operator | ReportIt dan CleanIt diverifikasi sesuai harapan, termasuk saldo pelapor ReportIt yang tetap dan saldo pelapor CleanIt yang bertambah 100; penolakan tersimpan dan muncul di notifikasi pelapor | *Pass* |
+| C05-UT05 | `setujui(...)` dan `tolak(...)` pada konflik dan akses | Negatif | Verifikasi ulang laporan yang sudah diverifikasi; setujui CleanIt pada lokasi yang sudah DIBERSIHKAN; dua persetujuan CleanIt bersamaan untuk satu lokasi; CleanIt yang tersimpan saat persetujuan menunggu kunci; akses oleh tamu dan Masyarakat | 409 `SUDAH_DIVERIFIKASI` dan 409 `LOKASI_SUDAH_DIBERSIHKAN` tanpa perubahan data; persetujuan kedua menunggu lalu 409 dan poin hanya diberikan sekali; CleanIt yang baru tersimpan ikut ditolak otomatis; tamu 401 dan Masyarakat 403 | Semua kasus menghasilkan kode yang diharapkan; saldo pengguna kedua tetap 0 dan CleanIt yang tersimpan saat menunggu berstatus `TIDAK_VALID` | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.6b. Ringkasan Cakupan C05
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `get_laporan_unverified()`, `get_detail(idLaporan)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `tolak(idLaporan, alasan)`, `tampilkan_konfirmasi()` |
+| Operasi yang diuji | `get_detail`, `setujui` (termasuk `setujui_cleanit`), `tolak`. `get_laporan_unverified` diwujudkan sebagai `get_all_laporan_unverified` pada ManagerLaporan dan diuji pada 4.2.20; `tampilkan_konfirmasi` diwujudkan sebagai respons JSON yang diperiksa pada setiap kasus dan ditampilkan oleh LaporanView (C14) |
+| ID Algoritma yang tercakup | Algo-015, Algo-016 |
+| Coverage (wajib ≥ 70%) | 94,02% line, 88,88% branch, 94,2% statement, 100% function (`validator-laporan.ts`, dari `api-daftar-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-tolak-laporan`). Baris yang tidak tercakup hanya `throw` defensif: keadaan yang dicegah constraint database (pelapor atau lokasi CleanIt tidak ada) dan pemanggilan internal yang salah (`setujui_cleanit` untuk laporan non-CleanIt). Alat: Vitest Coverage V8, bukti pada BUKTI-44 |
+
+### 4.2.7 C06 Lokasi
+
+**ID Kelas:** C06\
+**Nama Kelas:** Lokasi\
+**Tingkat:** Mendalam
+
+Note: Q-001 pada DPPL (kesamaan koordinat persis) diganti pencarian lokasi TERCEMAR dalam radius 50 m (`cariTerdekatTercemar`, K13) dengan prefilter kotak lat/lng (`kotakPencarian`, BE-26). `simpan_lokasi` dan `tandaiDibersihkan` diuji melalui persetujuan laporan (C05) karena keduanya hanya dipanggil di dalam transaksi tersebut.
+
+Tabel 4.2.7. Hasil Pengujian Unit C06
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C06-UT01 | `get_all_lokasi_valid(status)` dan `get_lokasi(idLokasi)` | Normal | Buat dua lokasi TERCEMAR dengan waktu laporan asal berbeda dan satu lokasi DIBERSIHKAN beserta media laporan asal; baca daftar dengan status bawaan dan `DIBERSIHKAN`, lalu baca detail satu lokasi | Status bawaan hanya mengembalikan TERCEMAR, urut laporan asal terbaru, dengan `dilaporkanAt` dari laporan asal; filter `DIBERSIHKAN` hanya mengembalikan lokasi itu; detail memuat laporan asal (judul, waktu, sumber) dan media yang tertaut saja | Daftar, urutan, `dilaporkanAt`, filter status, dan detail beserta media sesuai harapan | *Pass* |
+| C06-UT02 | `cariTerdekatTercemar(lat, lng)` dan `kotakPencarian(lat, lng)` | Batas | Cari dari titik ±49 m dan ±51 m ke utara, serta 49,9 m dan 50,1 m ke timur dan barat; periksa kotak untuk titik yang tepat 50 m di 7 lintang × 48 arah | Titik ≤ 50 m menemukan lokasi (batas inklusif), titik > 50 m tidak; semua titik tepat 50 m berada di dalam kotak dan kotak hanya ±0,1% lebih lebar dari batas minimal | ±49 m dan 49,9 m menemukan lokasi, ±51 m dan 50,1 m tidak; semua titik 50 m berada di dalam kotak dengan lebar sesuai | *Pass* |
+| C06-UT03 | `get_all_lokasi_valid`, `get_lokasi`, `cariTerdekatTercemar`, `kotakPencarian` | Negatif | Baca daftar saat belum ada lokasi; baca detail ID 999; cari lokasi terdekat saat lokasi terdekat sudah DIBERSIHKAN; hitung kotak di dekat kutub dan garis ±180° | Daftar kosong `[]` (bukan null); detail tidak ada `null`; lokasi DIBERSIHKAN diabaikan; kotak tidak memfilter longitude di dekat kutub/±180° agar hasil tetap benar | Daftar kosong, `null`, lokasi DIBERSIHKAN diabaikan, dan `lngMin`/`lngMax` bernilai `null` sesuai harapan | *Pass* |
+| C06-UT04 | `simpan_lokasi(data, tx)`, `tandaiDibersihkan(idLokasi, tx)`, `getRingkasanByIds`, `getPelaporAsal` | Normal | Setujui ReportIt tanpa lokasi di sekitarnya, setujui CleanIt pada lokasi berpoin 100; baca ringkasan beberapa lokasi dan pelapor asal lokasi | Lokasi baru tersimpan berstatus TERCEMAR dengan nama, alamat, koordinat, jenis sampah, poin, dan laporan asal; lokasi CleanIt menjadi DIBERSIHKAN dan poinnya dikembalikan; ringkasan dan pelapor asal sesuai | Lokasi baru dan perubahan status sesuai; ringkasan memuat nama, koordinat, dan jenis sampah per lokasi; pelapor asal sesuai | *Pass* |
+| C06-UT05 | `tandaiDibersihkan`, `kunciPemetaanLokasi` + `cariTerdekatTercemar(..., { kunci: true })`, `getPelaporAsal`, `getRingkasanByIds` | Negatif | Setujui CleanIt pada lokasi yang sudah DIBERSIHKAN; dua ReportIt berdekatan disetujui bersamaan (transaksi kedua dipastikan menunggu kunci); baca pelapor asal lokasi 999 dan ringkasan untuk ID yang tidak ada | `tandaiDibersihkan` tidak mengubah lokasi DIBERSIHKAN (409 tanpa perubahan data); hanya satu lokasi dibuat dan ReportIt kedua digabung; ID tidak ada menghasilkan `null` dan dilewati pada ringkasan | Lokasi tetap, hanya satu lokasi tersimpan dengan ReportIt kedua `digabung: true`, `null` dan ringkasan tanpa ID yang tidak ada | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.7b. Ringkasan Cakupan C06
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `simpan_lokasi(koordinat)`, `get_all_lokasi_valid()`, `get_lokasi(idLokasi)` |
+| Operasi yang diuji | `simpan_lokasi`, `get_all_lokasi_valid`, `get_lokasi`, ditambah operasi implementasi `cariTerdekatTercemar` (pengganti Q-001), `kotakPencarian`, `kunciPemetaanLokasi`, `tandaiDibersihkan`, `getRingkasanByIds`, `getPelaporAsal` |
+| ID Algoritma yang tercakup | Algo-017 (berubah bentuk: cek duplikat radius 50 m), Algo-018, Algo-019 |
+| Coverage (wajib ≥ 70%) | 97,5% line, 92,1% branch, 97,72% statement, 100% function (`server/models/lokasi.ts`, dari `model-lokasi`, `model-detail-laporan`, `kotak-pencarian`, `api-setujui-reportit`, `api-setujui-cleanit`). Baris yang tidak tercakup hanya `throw` defensif untuk laporan asal tanpa sumber, yang dicegah CHECK `laporan_field_per_jenis_check`. Alat: Vitest Coverage V8, bukti pada BUKTI-45 |
+
 ### 4.2.8 C07 DaftarLokasi
 
 **ID Kelas:** C07  
@@ -539,6 +608,36 @@ Tabel 4.2.10b. Ringkasan Cakupan C08 (BE-A)
 | Operasi yang diuji | `cariUntukLogin`, `buatMasyarakat`, `getMe`, `normalisasiEmail`, `normalisasiNama`, `registerSchema`, `loginSchema`, `hashPassword`, `verifyPassword`, `signSessionToken`, `verifySessionToken`, `sessionCookieOptions`, `setSessionCookie`, `getSessionCookie`, `deleteSessionCookie`, `requireRoleCookie`, `wajibLogin` |
 | ID Algoritma yang tercakup | Aturan akun N7 dan aturan sesi 7 hari. Algo-002 dan Algo-004 (saldo poin) dicakup pada 4.2.11 BE-B |
 | Coverage (wajib ≥ 70%) | `server/auth/*`: 96,72% baris dan 96,87% cabang. Operasi auth pada `server/models/pengguna.ts` diuji DB-backed, tetapi angka berkasnya tidak dipakai untuk BE-A karena berkas yang sama memuat operasi saldo/notifikasi milik BE-B. Untuk kelas C08 utuh bersama BE-B: 96,55% baris, 96,87% cabang, 100% fungsi. |
+
+### 4.2.11 C08 Pengguna (Saldo Poin dan Notifikasi)
+
+**ID Kelas:** C08\
+**Nama Kelas:** Pengguna (Saldo Poin dan Notifikasi)\
+**Tingkat:** Mendalam
+
+Note: Bagian ini menguji operasi C08 pada DPPL yang berkaitan dengan saldo poin (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`) dan `notify`, yang diwujudkan tanpa tabel notifikasi: `getNotifikasi` menurunkan notifikasi dari laporan terverifikasi dan `tandaiNotifikasiDibaca` mengisi `notifikasi_dilihat_at`. Operasi auth dan sesi diuji pada 4.2.10 (BE-A).
+
+Tabel 4.2.11. Hasil Pengujian Unit C08 (BE-B)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT09 | `getSaldoPoin(idPengguna, tx)` dan `cukupPoin(idPengguna, harga, tx)` | Normal | Pengguna bersaldo 100; baca saldo, lalu periksa kecukupan untuk harga 50 | Saldo 100 dibaca dari database; `cukupPoin(50)` bernilai `true` | Saldo 100 dan `true` | *Pass* |
+| C08-UT10 | `cukupPoin`, `kurangiPoin(idPengguna, jumlah, tx)`, `tambah_poin(idPengguna, jumlahPoin, tx)` pada nilai batas | Batas | Saldo 100: periksa harga 100 dan 101; kurangi 40 lalu 60 sampai saldo tepat 0; tambah poin dengan jumlah 0 | Harga sama dengan saldo `true`, lebih satu `false`; saldo bisa mencapai tepat 0; jumlah 0 tidak mengubah saldo (Algo-004 pada DPPL) | `true`/`false` sesuai, saldo 60 lalu 0, dan saldo tetap 100 untuk jumlah 0 | *Pass* |
+| C08-UT11 | `kurangiPoin`, `tambah_poin`, `getSaldoPoin`, `cukupPoin` | Negatif | Kurangi 101 dari saldo 100; kurangi dengan jumlah 0, -5, dan 1,5; tambah poin negatif; baca saldo, cek kecukupan, dan tambah poin untuk pengguna yang tidak ada | Pengurangan melebihi saldo menghasilkan `null` tanpa perubahan; jumlah bukan bilangan bulat positif ditolak `RangeError`; poin negatif diabaikan; pengguna tidak ada menghasilkan `null`/`false` | `null` dengan saldo tetap 100, `RangeError` untuk ketiga jumlah, saldo tetap, `null`/`false` untuk pengguna tidak ada | *Pass* |
+| C08-UT12 | `tambah_poin`, `getNotifikasi(idPengguna)`, `tandaiNotifikasiDibaca(idPengguna)` | Normal | Tambah 200 poin; buat ReportIt VALID dan TIDAK_VALID serta CleanIt VALID (lokasi 200 poin) dan TIDAK_VALID milik pengguna, satu laporan menunggu, lalu baca notifikasi sebelum dan sesudah menandai dibaca | Saldo menjadi 300; notifikasi hanya dari laporan terverifikasi, urut terbaru, `poinDiberikan` hanya untuk CleanIt VALID, alasan penolakan ikut; status dibaca mengikuti `notifikasi_dilihat_at` dan verifikasi berikutnya kembali belum dibaca | Saldo 300; 4 notifikasi dengan urutan, `poinDiberikan: 200` hanya pada CleanIt VALID, alasan, dan status dibaca sesuai harapan | *Pass* |
+| C08-UT13 | `kurangiPoin`, `getNotifikasi` pada kondisi bersamaan dan kosong | Negatif | Dua `kurangiPoin(70)` bersamaan pada saldo 100; `kurangiPoin(50)` di dalam transaksi yang lalu dibatalkan; baca notifikasi pengguna tanpa laporan terverifikasi; akses endpoint notifikasi oleh tamu dan Operator | Hanya satu pengurangan berhasil dan saldo tidak negatif; rollback mengembalikan saldo; daftar notifikasi kosong; tamu 401 dan Operator 403 | Satu pengurangan berhasil dengan saldo akhir 30, saldo kembali 100 setelah rollback, daftar kosong, 401 dan 403 | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.11b. Ringkasan Cakupan C08 (BE-B)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `getSaldoPoin()`, `cukupPoin(harga)`, `kurangiPoin(jumlah)`, `tambah_poin(jumlahPoin)`, `notify(msg)` |
+| Operasi yang diuji | `getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`, `getNotifikasi` dan `tandaiNotifikasiDibaca` (pengganti `notify`) |
+| ID Algoritma yang tercakup | Algo-024, Algo-025, Algo-026, Algo-027, Algo-028 (berubah bentuk: notifikasi diturunkan dari laporan) |
+| Coverage (wajib ≥ 70%) | Fungsi BE-B pada `server/models/pengguna.ts` saja: 95,24% statement, 95,45% branch, 100% function (dari `model-pengguna` dan `api-notifikasi`). Satu-satunya cabang yang tidak tercakup adalah `throw` defensif untuk laporan terverifikasi tanpa `diverifikasi_at`, yang dicegah CHECK `laporan_verifikasi_check`. Satu file penuh bersama test BE-A: 96,15% line, 96,87% branch. Alat: Vitest Coverage V8, bukti pada BUKTI-47 |
+
 ### 4.2.12 C08 Pengguna (Profil)
 
 **ID Kelas:** C08  
@@ -555,6 +654,22 @@ Tabel 4.2.12. Hasil Pengujian Unit C08 (FE-C)
 | C08-UT15 | `notify(msg)` → `alasanNotifikasi(n: Notifikasi): string \| null` | Batas | Notifikasi ReportIt `TIDAK_VALID` dengan `alasanPenolakan` `null` dan `"   "` (hanya spasi) | `null`, sehingga kotak alasan tidak ditampilkan | Mengembalikan `null` untuk kedua masukan | *Pass* |
 | C08-UT16 | `notify(msg)` → `pesanNotifikasi(n: Notifikasi): string` | Negatif | Notifikasi CleanIt `VALID` tanpa data poin (`poinDiberikan: null`) | Pesan tidak memuat "null", "undefined", maupun "poin" | Pesan "Bukti pembersihan Anda disetujui." | *Pass* |
 
+### 4.2.13 C09 Reward
+
+**ID Kelas:** C09\
+**Nama Kelas:** Reward\
+**Tingkat:** Sedang
+
+Note: `getHargaPoin()` pada DPPL cukup dibaca dari field `hargaPoin`, sehingga tidak diuji tersendiri. `getRewardTersedia` mengikuti N3: semua reward dikembalikan, termasuk stok 0.
+
+Tabel 4.2.13. Hasil Pengujian Unit C09
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C09-UT01 | `getRewardTersedia()` dan `cariReward(idReward)` | Normal | Buat empat reward dengan harga dan stok berbeda (termasuk stok 0), baca katalog, lalu cari satu reward | Semua reward dikembalikan, stok > 0 dulu lalu harga naik, reward stok 0 paling akhir; `cariReward` mengembalikan data reward | Urutan murah, sedang, mahal, lalu stok 0; data reward sesuai | *Pass* |
+| C09-UT02 | `kurangiStok(idReward, tx)` dan `tersedia(reward)` pada batas stok | Batas | Kurangi stok 2 sampai 0; dua pengurangan bersamaan pada stok terakhir; periksa `tersedia` untuk stok 1 dan 0 | Stok menjadi 1 lalu 0; hanya satu pengurangan bersamaan berhasil dan stok tidak negatif; `tersedia` `true` untuk stok 1 dan `false` untuk stok 0 | Stok 1 lalu 0, hasil bersamaan `[0, null]` dengan stok akhir 0, `true`/`false` sesuai | *Pass* |
+| C09-UT03 | `kurangiStok`, `cariReward`, `getRewardTersedia` | Negatif | Kurangi stok reward yang stoknya 0; cari reward dengan ID yang tidak ada; baca katalog saat belum ada reward | Pengurangan menghasilkan `null` dan stok tetap 0; reward tidak ada `null`; katalog kosong `[]` | `null` dengan stok 0, `null`, dan `[]` | *Pass* |
+
 ### 4.2.14 C10 DaftarReward
 
 **ID Kelas:** C10  
@@ -570,6 +685,22 @@ Tabel 4.2.14. Hasil Pengujian Unit C10
 | C10-UT01 | `tampilkanDaftarReward(daftar)` → `statusTombolReward(reward: Pick<Reward, "hargaPoin" \| "stok">, saldoPoin: number): StatusTombolReward` | Normal | Reward harga 50, stok 3; saldo 120 | `{ status: "TUKAR" }` | `{ status: "TUKAR" }` | *Pass* |
 | C10-UT02 | `statusTombolReward(reward: Pick<Reward, "hargaPoin" \| "stok">, saldoPoin: number): StatusTombolReward` | Batas | Reward harga 100, stok 1; saldo tepat 100 | `{ status: "TUKAR" }` | `{ status: "TUKAR" }` | *Pass* |
 | C10-UT03 | `statusTombolReward(reward: Pick<Reward, "hargaPoin" \| "stok">, saldoPoin: number): StatusTombolReward` | Negatif | (a) Reward harga 200, stok 5; saldo 120.<br>(b) Reward harga 50, stok 0; saldo 500 | (a) `{ status: "KURANG", selisih: 80 }`; (b) `{ status: "HABIS" }` | (a) `{ status: "KURANG", selisih: 80 }`; (b) `{ status: "HABIS" }` | *Pass* |
+
+### 4.2.15 C11 ManagerPoin
+
+**ID Kelas:** C11\
+**Nama Kelas:** ManagerPoin\
+**Tingkat:** Sedang
+
+Note: `lihatSaldo` dan `lihatRewardTersedia` diuji lewat route `GET /api/poin/saldo` dan `GET /api/reward`. `cekPoin`, `kurangiPoin`, dan `tambah_poin` diuji langsung (`manager-poin.test.ts`) karena hanya dipanggil controller lain di dalam transaksi. Operasi `tambahPoin` yang ganda dengan `tambah_poin` pada DPPL disatukan menjadi `tambah_poin`.
+
+Tabel 4.2.15. Hasil Pengujian Unit C11
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C11-UT01 | `lihatSaldo(sesi)`, `lihatRewardTersedia()`, `cekPoin`, `kurangiPoin`, `tambah_poin` | Normal | Masyarakat bersaldo 150 membuka saldo dan katalog reward; pengguna bersaldo 100 dicek untuk harga 50, dikurangi 30, lalu ditambah 200 | Saldo 150 dan semua reward dengan urutan N3; `cekPoin` `true`; pengurangan 30 menghasilkan saldo 70 dan penambahan 200 (dari saldo awal 100) menghasilkan 300, masing-masing dalam transaksi | `{ saldoPoin: 150 }`, katalog berurutan sesuai N3, `true`, saldo 70, dan saldo 300 | *Pass* |
+| C11-UT02 | `cekPoin`, `kurangiPoin`, `tambah_poin` pada nilai batas | Batas | Saldo 100: cek harga tepat 100; kurangi dengan jumlah 0; tambah dengan jumlah 0 | Harga sama dengan saldo `true`; jumlah 0 diabaikan (`null`) tanpa mengubah saldo | `true`, `null`, dan saldo tidak berubah | *Pass* |
+| C11-UT03 | `cekPoin`, `kurangiPoin`, `tambah_poin`, `lihatSaldo` | Negatif | Cek harga negatif, harga melebihi saldo, dan pengguna tidak ada; kurangi melebihi saldo dan jumlah negatif; tambah poin pengguna tidak ada; buka saldo sebagai tamu, Operator, dan dengan sesi akun yang sudah dihapus | `cekPoin` `false`; pengurangan gagal (`null`) tanpa perubahan saldo; tambah poin pengguna tidak ada `null`; tamu 401, Operator 403, akun terhapus 401 | `false`, `null` dengan saldo tetap, `null`, 401, 403, dan 401 | *Pass* |
 
 ### 4.2.16 C12 HalamanPenukaran
 
@@ -599,6 +730,35 @@ Tabel 4.2.16b. Ringkasan Cakupan C12
 | Operasi yang diuji | `pilihReward(idReward)` (berhasil dan gagal: `uraiHasilPenukaran`, `tindakanGagalTukar`), `tampilkanNotifikasi(pesan)` (format I-06: `formatWaktuPenukaran`, `formatIdPenukaran`), riwayat penukaran N13 (`bacaHalaman`). `tampilkanSaldo(saldo)` hanya menampilkan angka dari `GET /api/poin/saldo` di `KartuSaldo` tanpa logika, sehingga diverifikasi pada UC08-TC01 dan UC09-TC01 |
 | ID Algoritma yang tercakup | Algo-002 (`pilihReward`); Algo-001 dan Algo-003 berupa tampilan saja, diverifikasi lewat UC09 |
 | Coverage (wajib ≥ 70%) | 100% lines (20/20), 100% branch (31/31), dan 100% fungsi (5/5) pada `lib/penukaran.ts`. Alat: Vitest Coverage V8, bukti pada BUKTI-48 |
+
+### 4.2.17 C13 Penukaran (Model)
+
+**ID Kelas:** C13\
+**Nama Kelas:** Penukaran (Model)\
+**Tingkat:** Mendalam
+
+Note: `buatPenukaran` mengembalikan data penukaran (bukan Boolean seperti di DPPL) untuk respons `POST /api/penukaran`. Implementasi menambahkan `buatKodeVoucher` (K5) dan `getRiwayat` (riwayat penukaran, N13).
+
+Tabel 4.2.17. Hasil Pengujian Unit C13
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C13-UT01 | `buatPenukaran(idPengguna, reward, tx)` | Normal | Buat penukaran untuk reward berharga 50 | Baris `penukaran` tersimpan dengan `poin_dipakai` 50, ID uuid, waktu ISO, dan kode voucher berformat `SC-XXXX-XXXX` | Baris tersimpan dengan nilai yang sama dengan respons fungsi | *Pass* |
+| C13-UT02 | `buatKodeVoucher()` dan `buatPenukaran` saat kode bentrok | Batas | Buat 200 kode voucher; buat penukaran ketika kode pertama yang dihasilkan sudah dipakai | Setiap kode cocok pola `SC-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}` (tanpa 0, O, 1, I); saat bentrok dibuat kode baru tanpa membatalkan transaksi | 200 kode sesuai pola; penukaran kedua memakai kode berikutnya `SC-BBBB-BBBB` | *Pass* |
+| C13-UT03 | `buatPenukaran` saat kode terus bentrok | Negatif | Generator kode selalu menghasilkan kode yang sudah dipakai | Gagal dengan error setelah `MAKS_PERCOBAAN_VOUCHER` (5) percobaan | Error "Gagal membuat kode voucher unik…" setelah 5 percobaan | *Pass* |
+| C13-UT04 | `getRiwayat(idPengguna, page, limit)` | Normal | Buat penukaran untuk dua pengguna, lalu baca riwayat satu pengguna dengan beberapa halaman | Hanya penukaran milik pengguna, urut waktu terbaru, dengan nama reward dan `total` sesuai | Riwayat, urutan, dan `meta.total` sesuai | *Pass* |
+| C13-UT05 | `getRiwayat` pada data kosong dan halaman di luar data | Negatif | Baca riwayat pengguna tanpa penukaran; baca halaman ke-4 dengan limit 2 dari 5 penukaran | Daftar kosong dengan `total` 0; halaman di luar data kosong dengan `total` tetap 5 | `[]` dengan total 0, dan `[]` dengan total 5 | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.17b. Ringkasan Cakupan C13
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `buatPenukaran(pengguna, reward)` |
+| Operasi yang diuji | `buatPenukaran`, ditambah operasi implementasi `buatKodeVoucher` dan `getRiwayat` |
+| ID Algoritma yang tercakup | Algo-045 |
+| Coverage (wajib ≥ 70%) | 100% line, 100% branch, 100% function (`server/models/penukaran.ts`, dari `model-penukaran` dan `api-riwayat-penukaran`). Alat: Vitest Coverage V8, bukti pada BUKTI-49 |
 
 ### 4.2.18 C14 LaporanView
 
@@ -660,6 +820,51 @@ Tabel 4.2.19b. Ringkasan Cakupan C15 (BE-A)
 | ID Algoritma yang tercakup | Algo-053, Algo-054, Algo-055 |
 | Coverage (wajib ≥ 70%) | Test BE-A saja: 55,83% line dan 62.22% branch, sisanya ada di bagian pengujian ManagerLaporan 4.2.20 untuk bagian query dan verifikasi. Gabungan dengan 4.2.20 menghasilkan 96,66% line, 93,33% branch |
 
+### 4.2.20 C15 ManagerLaporan (query/verifikasi)
+
+**ID Kelas:** C15\
+**Nama Kelas:** ManagerLaporan (query/verifikasi)\
+**Tingkat:** Sedang
+
+Note: Bagian ini menguji operasi ManagerLaporan untuk daftar laporan Operator, lokasi, notifikasi, dan dukungan verifikasi (`get_all_laporan_unverified`, `get_daftar_lokasi`, `get_detail_lokasi`, `getNotifikasi`, `tandaiNotifikasiDibaca`, `ubah_status`, `petakan_lokasi`). Operasi validasi dan pembuatan laporan diuji pada 4.2.19 (BE-A). Walaupun tingkatnya Sedang, coverage fungsi BE-B dicatat: 92,59% statement, 87,5% branch, 100% function (dari `api-daftar-laporan`, `verifikasi-ganda`, `api-setujui-reportit`, `api-lokasi`, `api-notifikasi`).
+
+Tabel 4.2.20. Hasil Pengujian Unit C15 (BE-B)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C15-UT06 | `get_all_laporan_unverified(request)`, `get_daftar_lokasi(request)`, `get_detail_lokasi(idParam)`, `petakan_lokasi(laporan, opsi, tx)` | Normal | Buka daftar laporan tanpa query dan dengan `status`, `sort=terlama`, `page=2&limit=2`; buka daftar dan detail lokasi; setujui ReportIt tanpa dan dengan lokasi di sekitarnya | Daftar bawaan `BELUM_DIPERIKSA`, terbaru dulu, limit 6, `meta.total` sesuai; CleanIt memakai nama, koordinat, dan jenis sampah lokasi; lokasi bawaan TERCEMAR dan detail memuat media laporan asal; `petakan_lokasi` membuat lokasi baru atau menggabungkan | Daftar, `meta`, filter, urutan, halaman, isi CleanIt, daftar/detail lokasi, dan pemetaan lokasi sesuai harapan | *Pass* |
+| C15-UT07 | `ubah_status(idLaporan, keputusan, tx)` dan `petakan_lokasi` pada kondisi bersamaan | Batas | Dua Operator memverifikasi laporan yang sama (transaksi kedua dipastikan menunggu kunci baris); dua ReportIt berjarak ±22 m disetujui bersamaan | Hanya verifikasi pertama tersimpan, verifikasi kedua mendapat `SUDAH_DIVERIFIKASI`; hanya satu lokasi dibuat dan ReportIt kedua digabung | Status tetap `VALID` dari Operator pertama dan transaksi kedua 409; satu lokasi dengan ReportIt kedua `digabung: true` | *Pass* |
+| C15-UT08 | `get_all_laporan_unverified`, `get_detail_lokasi`, `ubah_status`, `tandaiNotifikasiDibaca` | Negatif | Query `jenis=SEMUA`, `status=SELESAI`, `sort=acak`, `page=0`, `limit=51`, `limit=1.5`; ID lokasi `abc`, `0`, `-1`, `1.5`, `99999999999` dan lokasi yang tidak ada; `ubah_status` pada laporan terverifikasi dan ID yang tidak ada; akses oleh role yang salah | Query dan ID tidak valid 400 `FORMAT_TIDAK_VALID` dengan `fields`; lokasi tidak ada 404; laporan terverifikasi 409 `SUDAH_DIVERIFIKASI` dan tidak ada 404; tamu 401, role salah 403 | Semua kasus menghasilkan kode dan `fields` yang diharapkan | *Pass* |
+
+### 4.2.21 C16 Penukaran (Controller)
+
+**ID Kelas:** C16\
+**Nama Kelas:** Penukaran (Controller)\
+**Tingkat:** Mendalam
+
+Note: `tukarPoin` mengikuti Algo-064: pengecekan reward, stok, dan saldo lewat ManagerPoin, lalu pengurangan saldo, pengurangan stok, dan pencatatan penukaran dalam satu `db.transaction`. Respons berupa 201 dengan voucher dan `sisaPoin` (bukan Boolean). Implementasi menambahkan `getRiwayatPenukaran` untuk `GET /api/penukaran`.
+
+Tabel 4.2.21. Hasil Pengujian Unit C16
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C16-UT01 | `tukarPoin(request, sesi)` | Normal | Pengguna bersaldo 120 menukar reward seharga 50 dengan stok 3 | 201 dengan `idPenukaran`, `kodeVoucher`, `namaReward`, `poinDipakai`, `waktuPenukaran`, `sisaPoin: 70`; saldo 70, stok 2, satu baris penukaran | 201 dengan isi respons sesuai; saldo 70, stok 2, satu baris penukaran | *Pass* |
+| C16-UT02 | `tukarPoin` pada nilai batas | Batas | Saldo tepat sama dengan harga (100); dua pengguna berebut stok terakhir | `sisaPoin` 0; hanya satu penukaran berhasil, yang lain 422 `STOK_HABIS` dan saldonya utuh | `sisaPoin: 0`; status `[201, 422]`, stok 0, saldo pihak yang kalah tetap 100 | *Pass* |
+| C16-UT03 | `tukarPoin` dengan masukan dan kondisi tidak valid | Negatif | Body tanpa `idReward`, `idReward` string, pecahan, dan 0; reward tidak ada; stok 0; saldo 49 untuk harga 50; tamu dan Operator | 400 `FORMAT_TIDAK_VALID` pada `fields.idReward`; 404 `NOT_FOUND`; 422 `STOK_HABIS` tanpa mengubah saldo; 422 `POIN_TIDAK_CUKUP` tanpa mengubah stok; tamu 401, Operator 403 | Semua kasus menghasilkan kode yang diharapkan tanpa perubahan saldo, stok, atau baris penukaran | *Pass* |
+| C16-UT04 | `getRiwayatPenukaran(request, sesi)` | Normal | Baca riwayat tanpa query, lalu `page=2&limit=2` dari 5 penukaran | Bawaan `page` 1 dan `limit` 10; hanya milik pengguna, urut terbaru; halaman 2 berisi data ke-3 dan ke-4 dengan `meta.total` 5 | `meta` bawaan, isi, urutan, dan halaman sesuai harapan | *Pass* |
+| C16-UT05 | `tukarPoin` saat gagal di tengah transaksi dan `getRiwayatPenukaran` dengan query salah | Negatif | Pencatatan penukaran dipaksa gagal; dua penukaran bersamaan dengan saldo untuk satu; saldo dipakai transaksi lain setelah pengecekan awal (transaksi kedua dipastikan menunggu kunci); query riwayat `page=0`, `page=abc`, `limit=0`, `limit=51`, `limit=2.5` | Gagal pencatatan 500 dengan saldo dan stok kembali (rollback); bersamaan `[201, 422 POIN_TIDAK_CUKUP]` tanpa saldo negatif; saldo yang sudah terpakai menghasilkan 422 `POIN_TIDAK_CUKUP` dari dalam transaksi tanpa perubahan stok; query salah 400 | 500 dengan saldo 100 dan stok 1 tetap; `[201, 422]` dengan saldo 0; 422 dengan stok 5 tetap dan tanpa baris penukaran; 400 untuk kelima query | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.21b. Ringkasan Cakupan C16
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `tukarPoin(pengguna, idReward)` |
+| Operasi yang diuji | `tukarPoin`, ditambah operasi implementasi `getRiwayatPenukaran` |
+| ID Algoritma yang tercakup | Algo-064 (memakai Algo-040, Algo-041, Algo-030, Algo-033, Algo-045) |
+| Coverage (wajib ≥ 70%) | 100% line, 100% branch, 100% function (`server/controllers/penukaran.ts`, dari `api-penukaran` dan `api-riwayat-penukaran`). Alat: Vitest Coverage V8, bukti pada BUKTI-53 |
+
 ## 4.3 Pengujian Integrasi
 
 Pengujian integrasi memeriksa interaksi antarkomponen yang melewati batas, yaitu *Controller* ke *Model*, aplikasi ke basis data, dan aplikasi ke sistem eksternal. Daftar antarmuka mengacu pada dokumen DPPL, dengan minimal satu test case untuk setiap antarmuka. Pengujian memakai komponen nyata, bukan *mock*. Apabila ada antarmuka tambahan yang belum didaftarkan pada dokumen DPPL, cantumkan juga.
@@ -668,20 +873,27 @@ Tabel 4.3.1. Daftar Antarmuka Antarkomponen
 
 | ID Antarmuka | Komponen Asal | Komponen Tujuan | Jenis Batas | Test Case |
 | :--- | :--- | :--- | :--- | :--- |
-| *I-01* | *KeranjangController* | *Keranjang (Model)* | *Controller - Model* | *INT-TC01, INT-TC02* |
-| *I-02* | *Pesanan (Model)* | *Database* | *Aplikasi - Basis data* | *INT-TC03* |
-| *I-03* | *PaymentGatewayAdapter* | *Payment Gateway (dummy)* | *Aplikasi - Sistem eksternal* | *INT-TC04, INT-TC05* |
-| *[I-XX]* | *[Komponen asal]* | *[Komponen tujuan]* | *[Jenis batas]* | *[ID test case]* |
-| *...* | *...* | *...* | *...* | *...* |
+| IF-01 | ManagerLaporan (C15) | Laporan (C02), Media (C03) | *Controller* - *Model* | INT-TC01 |
+| IF-02 | ValidatorLaporan (C05) | Laporan (C02), Lokasi (C06) | *Controller* - *Model* | INT-TC02 |
+| IF-03 | ValidatorLaporan (C05) | ManagerPoin (C11), Pengguna (C08), Lokasi (C06) | *Controller* - *Controller*/*Model* | INT-TC03 |
+| IF-04 | Penukaran (C16) | ManagerPoin (C11), Pengguna (C08), Reward (C09), Penukaran (C13) | *Controller* - *Model* | INT-TC04 |
+| IF-05 | Laporan (C02), Lokasi (C06) | PostgreSQL (kunci baris dan transaksi) | Aplikasi - Basis data | INT-TC05 |
+| IF-06 | Laporan (C02) | PostgreSQL (unique index parsial dan CHECK) | Aplikasi - Basis data | INT-TC06 |
+| IF-07 | Media (C03): controller media dan adapter S3 | RustFS (penyimpanan objek S3; Cloudflare R2 di produksi) | Aplikasi - Sistem eksternal | INT-TC07 |
+| IF-08 | Route handler dan `wajibLogin` (sesi cookie JWT) | ManagerPoin (C11) | *Route handler* - *Controller* | INT-TC08 |
 
 Tabel 4.3.2. Hasil Pengujian Integrasi
 
 | ID Pengujian | ID Antarmuka | Skenario | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| *INT-TC01* | *I-01* | *Normal: tambah item ke keranjang* | *Panggil `tambahItem()` melalui KeranjangController dengan produk valid* | *Item tersimpan pada Keranjang dan tampil pada daftar item* | *[Hasil aktual]* | *Pass/Fail* |
-| *INT-TC03* | *I-02* | *Normal: simpan pesanan* | *Buat pesanan, lalu baca ulang langsung dari basis data* | *Baris pesanan ada dengan nilai total dan status yang sama* | *[...]* | *Pass/Fail* |
-| *INT-TC05* | *I-03* | *Gagal: gateway mengembalikan status gagal* | *Kirim otorisasi dengan saldo dummy tidak cukup* | *Status pesanan tidak berubah menjadi "Lunas", pesan gagal diteruskan ke pengguna* | *[...]* | *Pass/Fail* |
-| *...* | *...* | *...* | *...* | *...* | *...* | *...* |
+| INT-TC01 | IF-01 | Normal: buat ReportIt dan tautkan media | Kirim `POST /api/laporan` berisi ReportIt valid dengan satu media milik pelapor, lalu baca baris `laporan` dan `media` langsung dari PostgreSQL | Respons 201 `{ idLaporan, status: "BELUM_DIPERIKSA" }`; baris laporan tersimpan dengan semua field ReportIt dan `media.laporan_id` terisi ID laporan baru dalam transaksi yang sama | Respons 201 sesuai kontrak; baris laporan dan tautan media sesuai | *Pass* |
+| INT-TC02 | IF-02 | Normal: setujui ReportIt membuat lokasi | Operator menyetujui ReportIt tanpa lokasi lain di sekitarnya, lalu baca tabel `lokasi`, `laporan`, dan `pengguna` | Satu transaksi: laporan `VALID` dengan `diverifikasi_oleh`/`diverifikasi_at`, lokasi baru TERCEMAR (poin 50, nama = teks lokasi, `laporan_asal_id`), `laporan.lokasi_id` terisi, saldo pelapor tetap | Laporan, lokasi, dan tautan tersimpan sesuai; saldo pelapor tetap 40 | *Pass* |
+| INT-TC03 | IF-03 | Normal: setujui CleanIt memberi poin | Operator menyetujui CleanIt pada lokasi berpoin 100 milik laporan pengguna lain, lalu baca lokasi, saldo, laporan, dan notifikasi pelapor | Lokasi `DIBERSIHKAN`, saldo pelapor +100 lewat ManagerPoin, laporan `VALID`, notifikasi memuat `poinDiberikan: 100`, CleanIt lain untuk lokasi itu ditolak otomatis | Lokasi `DIBERSIHKAN`, saldo 40 → 140, laporan `VALID`, notifikasi belum dibaca dengan poin 100; pada lokasi yang punya CleanIt lain menunggu, CleanIt itu menjadi `TIDAK_VALID` dengan alasan "Lokasi sudah dibersihkan" | *Pass* |
+| INT-TC04 | IF-04 | Normal dan gagal: penukaran poin | Tukar reward seharga 50 dengan saldo 120 dan stok 3; lalu, untuk saldo 100 dan reward seharga 100, transaksi lain memakai seluruh saldo dan menahan kunci baris pengguna saat penukaran sudah lolos pengecekan awal (dipastikan menunggu kunci) | Berhasil: saldo 70, stok 2, satu baris `penukaran` dengan voucher; gagal: 422 `POIN_TIDAK_CUKUP` dari dalam transaksi, stok tidak berkurang, dan tidak ada baris penukaran (seluruh transaksi dibatalkan) | Saldo 70, stok 2, satu baris penukaran; saat gagal 422, saldo 0 (dipakai transaksi lain), stok tetap 5, tanpa baris penukaran | *Pass* |
+| INT-TC05 | IF-05 | Gagal bersamaan: CleanIt dikirim saat persetujuan berjalan | Transaksi persetujuan CleanIt menahan kunci lokasi; pada saat itu pengguna lain mengirim CleanIt untuk lokasi yang sama lewat `POST /api/laporan` (dipastikan menunggu kunci), lalu persetujuan di-commit | Pengiriman CleanIt menunggu kunci `FOR SHARE`, lalu ditolak 409 `LOKASI_SUDAH_DIBERSIHKAN` dan tidak ada laporan yang tersimpan atau menggantung | 409 `LOKASI_SUDAH_DIBERSIHKAN`; tidak ada laporan milik pengguna tersebut di database | *Pass* |
+| INT-TC06 | IF-06 | Gagal bersamaan: dua CleanIt menunggu untuk lokasi yang sama | Pengguna yang sama mengirim dua CleanIt untuk satu lokasi secara bersamaan dengan media berbeda | Satu 201 dan satu 409 `CLEANIT_SUDAH_MENUNGGU` (dijaga pengecekan validator dan unique index parsial `laporan_cleanit_menunggu_uidx`); hanya satu laporan CleanIt dan satu media tertaut | Status `[201, 409]` dengan kode `CLEANIT_SUDAH_MENUNGGU`; satu laporan dan satu media tertaut | *Pass* |
+| INT-TC07 | IF-07 | Normal dan gagal: unggah media ke RustFS | Unggah foto PNG lewat `POST /api/media`, ambil kembali dari presigned URL, ubah tanda tangan URL, lalu unggah ulang file yang sama setelah tertaut ke laporan | Objek tersimpan di RustFS dalam bentuk ber-watermark, `media.sha256` = hash file asli; URL valid mengembalikan 200, URL dengan tanda tangan diubah ditolak 403; file identik ditolak 409 `MEDIA_SUDAH_DIGUNAKAN` sebelum diunggah | 201; objek diambil dengan 200 dan isinya berbeda dari file asli; hash asli tersimpan; URL diubah 403; unggah ulang 409 dengan tetap satu baris media | *Pass* |
+| INT-TC08 | IF-08 | Gagal akses: sesi dan role | Panggil `GET /api/poin/saldo` tanpa cookie, dengan sesi Operator, dengan sesi akun yang sudah dihapus, dan dengan sesi Masyarakat yang valid | Tanpa cookie 401 `UNAUTHORIZED`, Operator 403 `FORBIDDEN`, akun terhapus 401, Masyarakat valid 200 berisi saldo dari database | 401, 403, 401, dan 200 `{ saldoPoin: 150 }` | *Pass* |
 
 <br>
 
@@ -821,11 +1033,12 @@ Tabel 4.5. Hasil Pengujian KNF
 
 | ID Pengujian | ID KNF | Parameter | Target Terukur | Metode dan Alat | Hasil Aktual | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| *KNF01-TC01* | *KNF01* | *Reliability* | *Tidak ada data hilang/ganda saat jaringan putus di tengah transaksi* | *Simulasi putus koneksi saat bayar, lalu cek status di DB* | *[Hasil aktual]* | *Pass/Fail* |
-| *KNF02-TC01* | *KNF02* | *Security* | *Password tersimpan sebagai hash, bukan plain-text* | *Inspeksi tabel pengguna di DB* | *[...]* | *Pass/Fail* |
-| *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
+| KNF01-TC01 | KNF01 | Response time | Halaman Validasi Laporan (I-07) tampil ≤ 2 detik dengan ratusan laporan menunggu verifikasi | Data uji ditambahkan ke `soclean_dev`: 303 ReportIt dan 203 CleanIt `BELUM_DIPERIKSA` (di atas data seed). (1) Waktu respons API `GET /api/laporan?jenis=REPORTIT/CLEANIT&limit=6` diukur dengan `curl` 5 kali setelah satu permintaan pemanasan. (2) Halaman `/operator/laporan` dibuka sebagai Operator di Chrome DevTools (Network, *Disable cache*), satu kali pengukuran setelah pemanasan. Diukur pada server development (`next dev`), yang lebih lambat dari build produksi | API ReportIt rata-rata 0,041 s (maks 0,056 s), API CleanIt rata-rata 0,034 s (maks 0,038 s). Halaman: DOMContentLoaded 468 ms dan Load 1,38 s, ditambah waktu API daftar ≤ 0,056 s, sehingga daftar tampil ±1,44 s dengan badge "303 menunggu validasi". Daftar dipaginasi 6 kartu per halaman (FE-22) dengan jumlah total pada badge, bukan memuat seluruh laporan sekaligus | *Pass* |
+| KNF02-TC01 | KNF02 | Response time | Halaman Daftar Lokasi CleanIt (I-09) tampil ≤ 3 detik | Data uji ditambahkan ke `soclean_dev`: 1.005 lokasi `TERCEMAR`. (1) Waktu respons API `GET /api/lokasi?status=TERCEMAR` (seluruh lokasi, tanpa filter radius sesuai N11) diukur dengan `curl` 5 kali setelah pemanasan. (2) Halaman `/lokasi` dibuka sebagai Masyarakat di Chrome DevTools (Network, *Disable cache*), satu kali pengukuran setelah pemanasan, pada server development | API rata-rata 0,100 s (maks 0,197 s) untuk respons 233 KB berisi 1.005 lokasi. Halaman: DOMContentLoaded 1,09 s dan Load 1,86 s, ditambah waktu API ≤ 0,197 s, sehingga daftar tampil ±2,06 s dengan badge "1.005 lokasi menunggu" | *Pass* |
 | KNF03-TC01 | KNF03 | Portability | Semua halaman Masyarakat dan Operator dapat dibuka lewat browser tanpa instalasi tambahan pada (a) desktop 1920×1080 dan (b) mobile 360×800, tanpa scroll horizontal (`scrollWidth ≤ innerWidth`) | Chrome desktop 1920×1080 dan emulasi perangkat mobile 360×800 (Chrome DevTools Protocol, mode mobile dan sentuh). Setiap halaman dibuka setelah login sesuai peran, lalu `document.documentElement.scrollWidth` dibandingkan dengan `innerWidth` | 16 dari 16 halaman lolos di kedua ukuran (32 dari 32 pengukuran, `scrollWidth` = `innerWidth`): I-01, I-02, I-03, I-04, I-05, I-06, Riwayat Penukaran, I-09, Detail Lokasi, I-11, Form CleanIt, Profil Masyarakat, I-07, I-08, Profil Operator, dan halaman 404. I-10, I-12, dan I-13 berada di route yang sama dengan I-09 dan I-11 sehingga tidak diukur terpisah. Alur UC03, UC06, UC08, dan UC09 diselesaikan di ukuran tersebut (4.4) | *Pass* |
 | KNF04-TC01 | KNF04 | Reliability | Bila unggah foto/video bukti gagal menampilkan notifikasi kegagalan dan tidak ada laporan yang berubah menjadi terkirim | Uji manual dengan Chrome DevTools (Network: blokir `POST /api/media`. Amati notifikasi, network, dan tampilan ingin mengunggah) | Muncul toast error tidak bisa mengupload, network bagian post berstatus error karena di-block, button grayed out dan tidk bisa diklik, deskripsi bahwa tidak bisa mengupload | *Pass* |
+| KNF05-TC01 | KNF05 | Reliability | Bila terjadi kegagalan selama penukaran poin, seluruh transaksi dibatalkan: saldo dan stok tidak berubah dan tidak ada catatan penukaran | Test integrasi Vitest pada PostgreSQL `soclean_test` (`tests/api-penukaran.test.ts`): (1) kegagalan sistem disimulasikan dengan memaksa pencatatan penukaran gagal setelah saldo dan stok dikurangi; (2) kegagalan nyata di tengah transaksi: saldo dipakai transaksi lain setelah pengecekan awal; (3) dua penukaran bersamaan. Setelah setiap kasus, saldo, stok, dan tabel `penukaran` diperiksa langsung di database | (1) Respons 500 `INTERNAL_ERROR`; saldo tetap 100, stok tetap 1, tidak ada baris penukaran. (2) Respons 422 `POIN_TIDAK_CUKUP`; stok tetap 5, tidak ada baris penukaran. (3) Satu berhasil dan satu ditolak; saldo tidak pernah negatif dan hanya satu baris penukaran tercatat. Ketiga test lulus | *Pass* |
+| KNF06-TC01 | KNF06 | Availability | *Uptime* minimal 99% setiap bulan | Tidak dapat diukur di lingkungan uji: SoClean hanya dijalankan secara lokal dengan Docker Compose, dan *deploy* tidak termasuk deliverable Tugas 9. Pengukuran *uptime* bulanan membutuhkan aplikasi yang berjalan di server produksi selama satu bulan dengan pemantauan terus-menerus | Belum terverifikasi. Pendukung yang sudah ada: layanan `web` dan `db` memakai `restart: unless-stopped` agar dijalankan ulang otomatis bila berhenti, dan `db` memiliki *healthcheck*. Rencana: setelah *deploy*, pasang pemantau *uptime* eksternal yang memeriksa aplikasi setiap menit dan laporkan persentase ketersediaan per bulan | *Fail* (belum dapat diverifikasi) |
 | KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
@@ -863,6 +1076,25 @@ Tabel 4.6. Bukti Hasil Pengujian
 | Coverage C04 (BUKTI-43) | ![BUKTI-43a](assets/BUKTI-43-50-A.png)<br>![BUKTI-43b](assets/BUKTI-43-50-B.png) |
 | Coverage C12 (BUKTI-48) | ![BUKTI-48](assets/BUKTI-48.png) |
 | Coverage C14 (BUKTI-50) | ![BUKTI-50a](assets/BUKTI-43-50-A.png)<br>![BUKTI-50b](assets/BUKTI-43-50-B.png) |
+| C05-UT01 – C05-UT05 (BUKTI-06) | Keluaran Vitest pada PostgreSQL `soclean_test` (`api-daftar-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-tolak-laporan`): 4 file test, 46 test lulus, 0 gagal |
+| C06-UT01 – C06-UT05 (BUKTI-07) | Keluaran Vitest pada `soclean_test` (`model-lokasi`, `model-detail-laporan`, `kotak-pencarian`): 3 file test, 16 test lulus, 0 gagal |
+| C08-UT09 – C08-UT13 (BUKTI-11) | Keluaran Vitest pada `soclean_test` (`model-pengguna`, `api-notifikasi`): 2 file test, 17 test lulus, 0 gagal |
+| C09-UT01 – C09-UT03 (BUKTI-13) | Keluaran Vitest pada `soclean_test` (`model-reward`): 1 file test, 7 test lulus, 0 gagal |
+| C11-UT01 – C11-UT03 (BUKTI-15) | Keluaran Vitest pada `soclean_test` (`manager-poin`, `api-poin`, `api-reward`): 3 file test, 10 test lulus, 0 gagal |
+| C13-UT01 – C13-UT05 (BUKTI-17) | Keluaran Vitest pada `soclean_test` (`model-penukaran`, `api-riwayat-penukaran`): 2 file test, 13 test lulus, 0 gagal |
+| C15-UT06 – C15-UT08 (BUKTI-20) | Keluaran Vitest pada `soclean_test` (`api-daftar-laporan`, `verifikasi-ganda`, `api-lokasi`): 3 file test, 30 test lulus, 0 gagal |
+| C16-UT01 – C16-UT05 (BUKTI-21) | Keluaran Vitest pada `soclean_test` (`api-penukaran`, `api-riwayat-penukaran`): 2 file test, 23 test lulus, 0 gagal |
+| INT-TC01 – INT-TC08 (BUKTI-22) | Keluaran Vitest dengan PostgreSQL `soclean_test` dan RustFS nyata (`api-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-penukaran`, `integrasi-media-storage`, `api-poin`): 6 file test, 48 test lulus, 0 gagal, termasuk 3 test unggah media ke RustFS (INT-TC07) |
+| KNF01-TC01 (BUKTI-32) | ![BUKTI-32](assets/BUKTI-32.png) |
+| KNF02-TC01 (BUKTI-33) | ![BUKTI-33](assets/BUKTI-33.png) |
+| KNF05-TC01 (BUKTI-36) | Keluaran Vitest pada `soclean_test` (`api-penukaran`, filter test *rollback*): 3 test lulus, yaitu rollback saldo dan stok saat pencatatan penukaran gagal (500), saldo terpakai transaksi lain setelah pengecekan awal (422 `POIN_TIDAK_CUKUP`), dan dua penukaran bersamaan dengan saldo untuk satu |
+| KNF06-TC01 (BUKTI-37) | Belum ada bukti pengukuran karena *uptime* bulanan baru dapat diukur setelah *deploy* (lihat KNF06-TC01). Konfigurasi pendukung ada di `src/compose.yaml`: `restart: unless-stopped` pada layanan `web` dan `db`, serta *healthcheck* pada `db` |
+| Coverage C05 (BUKTI-44) | Vitest Coverage V8 pada `server/controllers/validator-laporan.ts` (46 test lulus): 94,2% statement, 88,88% branch, 100% function, 94,02% line. Baris tidak tercakup: 93, 117, 125, 199 |
+| Coverage C06 (BUKTI-45) | Vitest Coverage V8 pada `server/models/lokasi.ts` (35 test lulus): 97,72% statement, 92,1% branch, 100% function, 97,5% line. Baris tidak tercakup: 94 |
+| Coverage C08 BE-B (BUKTI-47) | Vitest Coverage V8 pada `server/models/pengguna.ts` (17 test lulus). Fungsi BE-B saja (7 fungsi): 95,24% statement (20/21), 95,45% branch (21/22), 100% function (7/7). Satu file: 96,29% statement, 96,87% branch, 96,15% line |
+| Coverage C13 (BUKTI-49) | Vitest Coverage V8 pada `server/models/penukaran.ts` (13 test lulus): 100% statement, branch, function, dan line |
+| Coverage C15 BE-B (BUKTI-52) | Vitest Coverage V8 pada `server/controllers/manager-laporan.ts` (47 test lulus). Fungsi BE-B saja (10 fungsi): 92,59% statement (50/54), 87,5% branch (28/32), 100% function (10/10). Fungsi BE-A pada file yang sama diukur di BUKTI-51 |
+| Coverage C16 (BUKTI-53) | Vitest Coverage V8 pada `server/controllers/penukaran.ts` (23 test lulus): 100% statement, branch, function, dan line |
 | *C02-UT01 - C02-UT05 unit test dan coverage* | ![BUKTI-02](assets/BUKTI-02.png) |
 | *C03-UT01 - C03-UT05 unit test dan coverage* | ![BUKTI-04](assets/BUKTI-04.png) |
 | *C08-UT04 - C08-UT-08 unit test dan coverage* | ![BUKTI-10](assets/BUKTI-10.png) |

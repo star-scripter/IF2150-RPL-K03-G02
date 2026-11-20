@@ -3,9 +3,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/penukaran/route";
 import { db } from "@/server/db";
 import { pengguna, penukaran, reward } from "@/server/db/schema";
+import * as PenggunaModel from "@/server/models/pengguna";
 import * as PenukaranModel from "@/server/models/penukaran";
 import type { Role } from "@/types/api";
-import { DATABASE_TEST_AKTIF, buatPengguna, buatReward, kosongkanDatabase } from "./helpers/db";
+import {
+  DATABASE_TEST_AKTIF,
+  buatPengguna,
+  buatReward,
+  kosongkanDatabase,
+  tungguAdaYangMenungguKunci,
+} from "./helpers/db";
 import { buatRequest, cookieSesi } from "./helpers/sesi";
 
 async function tukar(idPengguna: string | null, body: unknown, role: Role = "MASYARAKAT") {
@@ -139,6 +146,36 @@ describe.runIf(DATABASE_TEST_AKTIF)("POST /api/penukaran", () => {
     expect(await saldo(id)).toBe(0);
     expect(await stok(idReward)).toBe(4);
     expect(await db.select().from(penukaran)).toHaveLength(1);
+  });
+
+  it("saldo terpakai transaksi lain setelah pengecekan awal: 422 POIN_TIDAK_CUKUP dari dalam transaksi", async () => {
+    const { id } = await buatPengguna({ saldoPoin: 100 });
+    const { idReward } = await buatReward({ hargaPoin: 100, stok: 5 });
+    let lepas!: () => void;
+    const gerbang = new Promise<void>((r) => (lepas = r));
+    let terkunci!: () => void;
+    const sudahTerkunci = new Promise<void>((r) => (terkunci = r));
+
+    // Transaksi lain memakai seluruh saldo dan menahan kunci baris pengguna (belum commit).
+    const lain = db.transaction(async (tx) => {
+      await PenggunaModel.kurangiPoin(id, 100, tx);
+      terkunci();
+      await gerbang;
+    });
+    await sudahTerkunci;
+
+    // Pengecekan awal masih membaca saldo 100 (belum di-commit), lalu UPDATE bersyarat menunggu kunci.
+    const permintaan = tukar(id, { idReward });
+    await tungguAdaYangMenungguKunci();
+    lepas();
+    await lain;
+
+    const res = await permintaan;
+    expect(res.status).toBe(422);
+    expect((await res.json()).error.code).toBe("POIN_TIDAK_CUKUP");
+    expect(await saldo(id)).toBe(0);
+    expect(await stok(idReward)).toBe(5);
+    expect(await db.select().from(penukaran)).toHaveLength(0);
   });
 
   it("dua pengguna berebut stok terakhir: satu berhasil, yang kalah saldonya utuh", async () => {
