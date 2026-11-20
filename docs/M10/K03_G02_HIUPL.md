@@ -845,20 +845,27 @@ Tabel 4.3.1. Daftar Antarmuka Antarkomponen
 
 | ID Antarmuka | Komponen Asal | Komponen Tujuan | Jenis Batas | Test Case |
 | :--- | :--- | :--- | :--- | :--- |
-| *I-01* | *KeranjangController* | *Keranjang (Model)* | *Controller - Model* | *INT-TC01, INT-TC02* |
-| *I-02* | *Pesanan (Model)* | *Database* | *Aplikasi - Basis data* | *INT-TC03* |
-| *I-03* | *PaymentGatewayAdapter* | *Payment Gateway (dummy)* | *Aplikasi - Sistem eksternal* | *INT-TC04, INT-TC05* |
-| *[I-XX]* | *[Komponen asal]* | *[Komponen tujuan]* | *[Jenis batas]* | *[ID test case]* |
-| *...* | *...* | *...* | *...* | *...* |
+| IF-01 | ManagerLaporan (C15) | Laporan (C02), Media (C03) | *Controller* - *Model* | INT-TC01 |
+| IF-02 | ValidatorLaporan (C05) | Laporan (C02), Lokasi (C06) | *Controller* - *Model* | INT-TC02 |
+| IF-03 | ValidatorLaporan (C05) | ManagerPoin (C11), Pengguna (C08), Lokasi (C06) | *Controller* - *Controller*/*Model* | INT-TC03 |
+| IF-04 | Penukaran (C16) | ManagerPoin (C11), Pengguna (C08), Reward (C09), Penukaran (C13) | *Controller* - *Model* | INT-TC04 |
+| IF-05 | Laporan (C02), Lokasi (C06) | PostgreSQL (kunci baris dan transaksi) | Aplikasi - Basis data | INT-TC05 |
+| IF-06 | Laporan (C02) | PostgreSQL (unique index parsial dan CHECK) | Aplikasi - Basis data | INT-TC06 |
+| IF-07 | Media (C03): controller media dan adapter S3 | RustFS (penyimpanan objek S3; Cloudflare R2 di produksi) | Aplikasi - Sistem eksternal | INT-TC07 |
+| IF-08 | Route handler dan `wajibLogin` (sesi cookie JWT) | ManagerPoin (C11) | *Route handler* - *Controller* | INT-TC08 |
 
 Tabel 4.3.2. Hasil Pengujian Integrasi
 
 | ID Pengujian | ID Antarmuka | Skenario | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| *INT-TC01* | *I-01* | *Normal: tambah item ke keranjang* | *Panggil `tambahItem()` melalui KeranjangController dengan produk valid* | *Item tersimpan pada Keranjang dan tampil pada daftar item* | *[Hasil aktual]* | *Pass/Fail* |
-| *INT-TC03* | *I-02* | *Normal: simpan pesanan* | *Buat pesanan, lalu baca ulang langsung dari basis data* | *Baris pesanan ada dengan nilai total dan status yang sama* | *[...]* | *Pass/Fail* |
-| *INT-TC05* | *I-03* | *Gagal: gateway mengembalikan status gagal* | *Kirim otorisasi dengan saldo dummy tidak cukup* | *Status pesanan tidak berubah menjadi "Lunas", pesan gagal diteruskan ke pengguna* | *[...]* | *Pass/Fail* |
-| *...* | *...* | *...* | *...* | *...* | *...* | *...* |
+| INT-TC01 | IF-01 | Normal: buat ReportIt dan tautkan media | Kirim `POST /api/laporan` berisi ReportIt valid dengan satu media milik pelapor, lalu baca baris `laporan` dan `media` langsung dari PostgreSQL | Respons 201 `{ idLaporan, status: "BELUM_DIPERIKSA" }`; baris laporan tersimpan dengan semua field ReportIt dan `media.laporan_id` terisi ID laporan baru dalam transaksi yang sama | Respons 201 sesuai kontrak; baris laporan dan tautan media sesuai | *Pass* |
+| INT-TC02 | IF-02 | Normal: setujui ReportIt membuat lokasi | Operator menyetujui ReportIt tanpa lokasi lain di sekitarnya, lalu baca tabel `lokasi`, `laporan`, dan `pengguna` | Satu transaksi: laporan `VALID` dengan `diverifikasi_oleh`/`diverifikasi_at`, lokasi baru TERCEMAR (poin 50, nama = teks lokasi, `laporan_asal_id`), `laporan.lokasi_id` terisi, saldo pelapor tetap | Laporan, lokasi, dan tautan tersimpan sesuai; saldo pelapor tetap 40 | *Pass* |
+| INT-TC03 | IF-03 | Normal: setujui CleanIt memberi poin | Operator menyetujui CleanIt pada lokasi berpoin 100 milik laporan pengguna lain, lalu baca lokasi, saldo, laporan, dan notifikasi pelapor | Lokasi `DIBERSIHKAN`, saldo pelapor +100 lewat ManagerPoin, laporan `VALID`, notifikasi memuat `poinDiberikan: 100`, CleanIt lain untuk lokasi itu ditolak otomatis | Lokasi `DIBERSIHKAN`, saldo 40 → 140, laporan `VALID`, notifikasi belum dibaca dengan poin 100; pada lokasi yang punya CleanIt lain menunggu, CleanIt itu menjadi `TIDAK_VALID` dengan alasan "Lokasi sudah dibersihkan" | *Pass* |
+| INT-TC04 | IF-04 | Normal dan gagal: penukaran poin | Tukar reward seharga 50 dengan saldo 120 dan stok 3; lalu, untuk saldo 100 dan reward seharga 100, transaksi lain memakai seluruh saldo dan menahan kunci baris pengguna saat penukaran sudah lolos pengecekan awal (dipastikan menunggu kunci) | Berhasil: saldo 70, stok 2, satu baris `penukaran` dengan voucher; gagal: 422 `POIN_TIDAK_CUKUP` dari dalam transaksi, stok tidak berkurang, dan tidak ada baris penukaran (seluruh transaksi dibatalkan) | Saldo 70, stok 2, satu baris penukaran; saat gagal 422, saldo 0 (dipakai transaksi lain), stok tetap 5, tanpa baris penukaran | *Pass* |
+| INT-TC05 | IF-05 | Gagal bersamaan: CleanIt dikirim saat persetujuan berjalan | Transaksi persetujuan CleanIt menahan kunci lokasi; pada saat itu pengguna lain mengirim CleanIt untuk lokasi yang sama lewat `POST /api/laporan` (dipastikan menunggu kunci), lalu persetujuan di-commit | Pengiriman CleanIt menunggu kunci `FOR SHARE`, lalu ditolak 409 `LOKASI_SUDAH_DIBERSIHKAN` dan tidak ada laporan yang tersimpan atau menggantung | 409 `LOKASI_SUDAH_DIBERSIHKAN`; tidak ada laporan milik pengguna tersebut di database | *Pass* |
+| INT-TC06 | IF-06 | Gagal bersamaan: dua CleanIt menunggu untuk lokasi yang sama | Pengguna yang sama mengirim dua CleanIt untuk satu lokasi secara bersamaan dengan media berbeda | Satu 201 dan satu 409 `CLEANIT_SUDAH_MENUNGGU` (dijaga pengecekan validator dan unique index parsial `laporan_cleanit_menunggu_uidx`); hanya satu laporan CleanIt dan satu media tertaut | Status `[201, 409]` dengan kode `CLEANIT_SUDAH_MENUNGGU`; satu laporan dan satu media tertaut | *Pass* |
+| INT-TC07 | IF-07 | Normal dan gagal: unggah media ke RustFS | Unggah foto PNG lewat `POST /api/media`, ambil kembali dari presigned URL, ubah tanda tangan URL, lalu unggah ulang file yang sama setelah tertaut ke laporan | Objek tersimpan di RustFS dalam bentuk ber-watermark, `media.sha256` = hash file asli; URL valid mengembalikan 200, URL dengan tanda tangan diubah ditolak 403; file identik ditolak 409 `MEDIA_SUDAH_DIGUNAKAN` sebelum diunggah | 201; objek diambil dengan 200 dan isinya berbeda dari file asli; hash asli tersimpan; URL diubah 403; unggah ulang 409 dengan tetap satu baris media | *Pass* |
+| INT-TC08 | IF-08 | Gagal akses: sesi dan role | Panggil `GET /api/poin/saldo` tanpa cookie, dengan sesi Operator, dengan sesi akun yang sudah dihapus, dan dengan sesi Masyarakat yang valid | Tanpa cookie 401 `UNAUTHORIZED`, Operator 403 `FORBIDDEN`, akun terhapus 401, Masyarakat valid 200 berisi saldo dari database | 401, 403, 401, dan 200 `{ saldoPoin: 150 }` | *Pass* |
 
 <br>
 
