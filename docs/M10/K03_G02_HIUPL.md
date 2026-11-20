@@ -764,8 +764,8 @@ Tabel 4.5. Hasil Pengujian KNF
 | *KNF02-TC01* | *KNF02* | *Security* | *Password tersimpan sebagai hash, bukan plain-text* | *Inspeksi tabel pengguna di DB* | *[...]* | *Pass/Fail* |
 | *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
 | KNF03-TC01 | KNF03 | Portability | Semua halaman Masyarakat dan Operator dapat dibuka lewat browser tanpa instalasi tambahan pada (a) desktop 1920×1080 dan (b) mobile 360×800, tanpa scroll horizontal (`scrollWidth ≤ innerWidth`) | Chrome desktop 1920×1080 dan emulasi perangkat mobile 360×800 (Chrome DevTools Protocol, mode mobile dan sentuh). Setiap halaman dibuka setelah login sesuai peran, lalu `document.documentElement.scrollWidth` dibandingkan dengan `innerWidth` | 16 dari 16 halaman lolos di kedua ukuran (32 dari 32 pengukuran, `scrollWidth` = `innerWidth`): I-01, I-02, I-03, I-04, I-05, I-06, Riwayat Penukaran, I-09, Detail Lokasi, I-11, Form CleanIt, Profil Masyarakat, I-07, I-08, Profil Operator, dan halaman 404. I-10, I-12, dan I-13 berada di route yang sama dengan I-09 dan I-11 sehingga tidak diukur terpisah. Alur UC03, UC06, UC08, dan UC09 diselesaikan di ukuran tersebut (4.4) | *Pass* |
+| KNF04-TC01 | KNF04 | Reliability | Bila unggah foto/video bukti gagal menampilkan notifikasi kegagalan dan tidak ada laporan yang berubah menjadi terkirim | Uji manual dengan Chrome DevTools (Network: blokir `POST /api/media`. Amati notifikasi, network, dan tampilan ingin mengunggah) | Muncul toast error tidak bisa mengupload, network bagian post berstatus error karena di-block, button grayed out dan tidk bisa diklik, deskripsi bahwa tidak bisa mengupload | *Pass* |
 | KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
-| KNF04-TC01 | KNF04 | Reliability | Bila unggah foto/video bukti gagal, 100% percobaan (3/3 per jenis berkas) menampilkan notifikasi kegagalan dan tidak ada laporan yang berubah menjadi terkirim | Uji manual dengan Chrome DevTools (Network: blokir `POST /api/media` dan preset Offline sebelum memilih berkas, lalu uji foto dan video). Amati notifikasi, panel Network, dan status draf, tambahan bukti otomatis `tests/media-upload-client.test.ts` (`onerror`/`ontimeout` return kode `JARINGAN`) dan rollback `tests/api-laporan.test.ts` | Belum diuji | - |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
 <br>
@@ -801,7 +801,7 @@ Tabel 4.6. Bukti Hasil Pengujian
 | *UC01-TC01* | *[Sisipkan tangkapan layar UC01-TC01 sesuai prosedur pengujian]* |
 | *UC01-TC02* | *[Sisipkan tangkapan layar UC01-TC02 sesuai prosedur pengujian]* |
 | *KNF01-TC01* | *[Sisipkan bukti pengukuran parameter KNF01-TC01]* |
-| *KNF04-TC01* |  |
+| *KNF04-TC01* | ![BUKTI-35](assets/BUKTI-35.png) |
 | *...* | *...* |
 
 <br>
