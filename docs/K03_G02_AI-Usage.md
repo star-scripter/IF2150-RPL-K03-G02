@@ -114,6 +114,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Claude Code | Menyusun draf isian HIUPL bagian FE-C sesuai dengan format yang ditetapkan | "Coba buat langkah-langkah pengujian FE-C sesuai format yang sudah ada di main…" | Unit test dan coverage dijalankan sendiri dan screenshot buktinya diambil sendiri; commit dan push dijalankan sendiri |
 | Codex | Membuat format pengisian HIUPL Bab 4 untuk FE-B sesuai dengan format yang sudah ada sebelumnya, serta merapikan laporan | "Buatkan urutan pengujian FE-B dengan menyesuaikan branch main." | Test di run manual; Operasi Git dilakukan manual; Screenshot diambil sendiri |
 | OpenCode | Testing ulang, penyesuaian coverage, dan list apa saja yang ditest | Tabel pengujian pada C-XX, cek coverage jika kurang | Unit test dan coverage dijalankan sendiri dan screenshot buktinya diambil sendiri; commit dan push dijalankan sendiri |
+| Claude Code | (BE-B, Dhafin) Menyusun draf isian HIUPL Bab 4 bagian BE-B (4.1, 4.2, 4.3, 4.5, 4.6), menambah test, dan mengukur coverage | "Tolong buatkan test coverage untuk class ..." | Isi tabel direvisi sendiri; test dan coverage dijalankan ulang di Docker; pengukuran KNF01/KNF02 dilakukan sendiri di browser |
 
 ### Pernyataan Integritas dan Persetujuan
 

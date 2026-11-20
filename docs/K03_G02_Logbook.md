@@ -215,3 +215,4 @@
 | 20-11-2026 | Justin | Mengisi HIUPL bagian FE-B | 1 jam 30 menit | Done | - |
 | 19-11-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan HIUPL bagian BE-B: model laporan, media, managerlaporan some, knf dikit, pengguna some | 2 jam | Done | - |
 | 20-11-2026 | M. Aqsha Bagus R.I.B. | Mengerjakan HIUPL bagian BE-B: model laporan, media, managerlaporan some, knf dikit, pengguna some | 7 jam | Done | - |
+| 20-11-2026 | Muhammad Dhafin Al Khairy | Mengerjakan HIUPL bagian BE-B | 4 jam | Done | - |
