@@ -50,12 +50,21 @@ Dipersiapkan oleh:
     - [4.2.1 Kelas \[Nama Kelas 1\]](#421-kelas-nama-kelas-1)
     - [4.2.2 Kelas Laporan](#422-kelas-laporan)
     - [4.2.3 Kelas Media](#423-kelas-media)
+    - [4.2.5 C04 DaftarLaporan](#425-c04-daftarlaporan)
     - [4.2.9 C08 Pengguna](#429-c08-pengguna)
+    - [4.2.12 C08 Pengguna – Profil](#4212-c08-pengguna--profil)
+    - [4.2.14 C10 DaftarReward](#4214-c10-daftarreward)
+    - [4.2.16 C12 HalamanPenukaran](#4216-c12-halamanpenukaran)
+    - [4.2.18 C14 LaporanView](#4218-c14-laporanview)
   - [4.3 Pengujian Integrasi](#43-pengujian-integrasi)
   - [4.4 Pengujian Use Case](#44-pengujian-use-case)
     - [4.4.1 Use Case \[Nama Use Case 1\]](#441-use-case-nama-use-case-1)
     - [4.4.2 Use Case \[Nama Use Case 2\]](#442-use-case-nama-use-case-2)
+    - [4.4.3 UC03 Memverifikasi Laporan ReportIt](#443-uc03-memverifikasi-laporan-reportit)
+    - [4.4.6 UC06 Memverifikasi Laporan Pembersihan](#446-uc06-memverifikasi-laporan-pembersihan)
     - [4.4.7 UC07 Melihat Saldo Poin](#447-uc07-melihat-saldo-poin)
+    - [4.4.8 UC08 Melihat Reward yang Tersedia](#448-uc08-melihat-reward-yang-tersedia)
+    - [4.4.9 UC09 Menukarkan Poin dengan Reward](#449-uc09-menukarkan-poin-dengan-reward)
   - [4.5 Pengujian Kebutuhan Non-Fungsional (KNF)](#45-pengujian-kebutuhan-non-fungsional-knf)
   - [4.6 Tangkapan Layar dan Bukti Hasil Pengujian](#46-tangkapan-layar-dan-bukti-hasil-pengujian)
 - [BAB 5: Traceability](#bab-5-traceability)
@@ -243,25 +252,58 @@ Tabel 3.1. Lingkungan Implementasi
 
 Daftar modul/kelas yang **TELAH** diimplementasikan. Gunakan nama dan ID kelas yang sama dengan DPPL, dan konsisten dengan Tabel B.5 pada dokumen Implementasi (Tugas 9).
 
+Seluruh path relatif terhadap `src/so-clean/`. SoClean adalah aplikasi web Next.js, jadi tidak ada file executable per modul: semua file TypeScript dikompilasi `next build` menjadi bundel di folder `.next/` lalu dijalankan sebagai satu server (`next start` atau container `web`). Karena itu kolom Nama File Executable diisi `-`.
+
 Tabel 3.2. Implementasi Modul
 
 | No | ID Kelas | Nama Modul/Kelas | Nama File Fisik | Nama File Executable |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[C01]* | *[Nama modul/kelas]* | *[path/ke/file]* | *[Nama file executable, atau - jika tidak ada]* |
-| 2 | *[C02]* | *[Nama modul/kelas]* | *[path/ke/file]* | *[...]* |
-| ... | *...* | *...* | *...* | *...* |
+| 1 | C01 | FormLaporan | `app/(pages)/(laporan)/reportit/page.tsx`<br>`app/(pages)/(laporan)/cleanit/[idLokasi]/page.tsx`<br>`components/laporan/FormLaporan.tsx`<br>`components/laporan/FormLaporanProvider.tsx`<br>`components/laporan/PengirimanLaporanProvider.tsx`<br>`lib/form-laporan.ts`<br>`lib/kirim-laporan.ts` | - |
+| 2 | C02 | Laporan | `server/db/schema/laporan.ts`<br>`server/models/laporan.ts` | - |
+| 3 | C03 | Media | `server/db/schema/media.ts`<br>`server/models/media.ts`<br>`server/controllers/media.ts`<br>`server/media/processing.ts`<br>`server/storage/s3.ts`<br>`app/api/media/route.ts` | - |
+| 4 | C04 | DaftarLaporan | `app/(pages)/operator/laporan/page.tsx`<br>`components/DaftarLaporan.tsx`<br>`lib/laporan.ts` | - |
+| 5 | C05 | ValidatorLaporan | `server/controllers/validator-laporan.ts`<br>`app/api/laporan/[id]/route.ts`<br>`app/api/laporan/[id]/setujui/route.ts`<br>`app/api/laporan/[id]/tolak/route.ts` | - |
+| 6 | C06 | Lokasi | `server/db/schema/lokasi.ts`<br>`server/models/lokasi.ts` | - |
+| 7 | C07 | DaftarLokasi | `app/(pages)/(masyarakat)/(nav)/lokasi/page.tsx`<br>`components/lokasi/DaftarLokasi.tsx`<br>`components/lokasi/KartuLokasi.tsx`<br>`components/lokasi/LokasiKosong.tsx`<br>`lib/lokasi.ts` | - |
+| 8 | C08 | Pengguna | `server/db/schema/pengguna.ts`<br>`server/models/pengguna.ts`<br>`server/auth/` (`account.ts`, `password.ts`, `session-token.ts`, `session-cookie.ts`, `guard.ts`)<br>`server/controllers/auth.ts`<br>`app/api/auth/{login,register,logout}/route.ts`<br>`app/api/me/route.ts`<br>`components/ProfilMasyarakat.tsx`<br>`components/ProfilOperator.tsx`<br>`lib/profil.ts` | - |
+| 9 | C09 | Reward | `server/db/schema/reward.ts`<br>`server/models/reward.ts` | - |
+| 10 | C10 | DaftarReward | `components/DaftarReward.tsx`<br>`lib/reward.ts` | - |
+| 11 | C11 | ManagerPoin | `server/controllers/manager-poin.ts`<br>`app/api/poin/saldo/route.ts`<br>`app/api/reward/route.ts` | - |
+| 12 | C12 | HalamanPenukaran | `app/(pages)/(masyarakat)/(nav)/hadiah/page.tsx`<br>`app/(pages)/(masyarakat)/hadiah/berhasil/page.tsx`<br>`app/(pages)/(masyarakat)/(nav)/hadiah/riwayat/page.tsx`<br>`components/HalamanPenukaran.tsx`<br>`components/KartuSaldo.tsx`<br>`components/KonfirmasiPenukaran.tsx`<br>`components/PenukaranBerhasil.tsx`<br>`components/KodeVoucher.tsx`<br>`components/RiwayatPenukaran.tsx`<br>`lib/penukaran.ts` | - |
+| 13 | C13 | Penukaran (Model) | `server/db/schema/penukaran.ts`<br>`server/models/penukaran.ts` | - |
+| 14 | C14 | LaporanView | `components/LaporanView.tsx`<br>`lib/laporan.ts`<br>`app/(pages)/(masyarakat)/(nav)/lokasi/[idLokasi]/page.tsx`<br>`components/lokasi/DetailLokasi.tsx`<br>`components/lokasi/MediaLokasi.tsx`<br>`components/lokasi/KonfirmasiBersihkan.tsx`<br>`lib/detail-lokasi.ts` | - |
+| 15 | C15 | ManagerLaporan | `server/controllers/manager-laporan.ts`<br>`app/api/laporan/route.ts`<br>`app/api/lokasi/route.ts`<br>`app/api/lokasi/[id]/route.ts`<br>`app/api/notifikasi/route.ts`<br>`app/api/notifikasi/dibaca/route.ts` | - |
+| 16 | C16 | Penukaran (Controller) | `server/controllers/penukaran.ts`<br>`app/api/penukaran/route.ts` | - |
 
 ## 3.3 Implementasi Antarmuka
 
 Daftar antarmuka yang telah diimplementasikan. Gunakan ID dan nama layar yang sama dengan ID dan nama layar pada tugas DPPL.
 
+Path relatif terhadap `src/so-clean/`. Kolom Nama File Executable diisi `-` dengan alasan yang sama seperti Tabel 3.2. Antarmuka tanpa route sendiri (I-05, I-08, I-10, I-12, I-13) ditampilkan di dalam route induknya, yang dicantumkan pada baris tersebut.
+
 Tabel 3.3. Implementasi Antarmuka
 
 | No | ID Antarmuka | Nama Antarmuka | Nama File Fisik | Nama File Executable |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | *[I-01]* | *[Nama layar]* | *[path/ke/file]* | *[Nama file executable, atau - jika tidak ada]* |
-| 2 | *[I-02]* | *[Nama layar]* | *[path/ke/file]* | *[...]* |
-| ... | *...* | *...* | *...* | *...* |
+| 1 | I-01 | Login | `app/(pages)/(auth)/login/page.tsx`<br>`components/FormLogin.tsx` | - |
+| 2 | I-02 | Register | `app/(pages)/(auth)/register/page.tsx`<br>`components/FormRegister.tsx` | - |
+| 3 | I-03 | Beranda | `app/(pages)/(masyarakat)/(nav)/beranda/page.tsx`<br>`components/Beranda.tsx` | - |
+| 4 | I-04 | Hadiah | `app/(pages)/(masyarakat)/(nav)/hadiah/page.tsx`<br>`components/HalamanPenukaran.tsx`<br>`components/KartuSaldo.tsx`<br>`components/DaftarReward.tsx` | - |
+| 5 | I-05 | Konfirmasi Penukaran | `components/KonfirmasiPenukaran.tsx` (bottom sheet di `/hadiah`) | - |
+| 6 | I-06 | Penukaran Berhasil | `app/(pages)/(masyarakat)/hadiah/berhasil/page.tsx`<br>`components/PenukaranBerhasil.tsx`<br>`components/KodeVoucher.tsx` | - |
+| 7 | I-07 | Daftar Validasi Laporan | `app/(pages)/operator/laporan/page.tsx`<br>`components/DaftarLaporan.tsx` | - |
+| 8 | I-08 | Detail Laporan | `components/LaporanView.tsx` (modal di `/operator/laporan`) | - |
+| 9 | I-09 | Daftar Lokasi | `app/(pages)/(masyarakat)/(nav)/lokasi/page.tsx`<br>`components/lokasi/DaftarLokasi.tsx`<br>`components/lokasi/KartuLokasi.tsx` | - |
+| 10 | I-10 | Lokasi Kosong | `components/lokasi/LokasiKosong.tsx` (state kosong di `/lokasi`) | - |
+| 11 | I-11 | FormLaporan — Informasi Dasar | `app/(pages)/(laporan)/reportit/page.tsx`<br>`components/laporan/FormLaporan.tsx`<br>`components/laporan/informasi-dasar/FormReportIt.tsx`<br>`components/laporan/informasi-dasar/InformasiDasarReportIt.tsx`<br>`components/laporan/informasi-dasar/PilihLokasiLaporan.tsx` | - |
+| 12 | I-12 | FormLaporan — Bukti Media | `components/laporan/BuktiMedia.tsx` (langkah 2 form laporan) | - |
+| 13 | I-13 | FormLaporan — Tinjau & Kirim | `components/laporan/TinjauLaporan.tsx`<br>`components/laporan/KirimLaporan.tsx` (langkah 3 form laporan) | - |
+| 14 | Tambahan/N2 | Form CleanIt | `app/(pages)/(laporan)/cleanit/[idLokasi]/page.tsx`<br>`components/laporan/cleanit/FormCleanIt.tsx`<br>`components/laporan/cleanit/InformasiDasarCleanIt.tsx` | - |
+| 15 | Tambahan/N13 | Profil Masyarakat | `app/(pages)/(masyarakat)/(nav)/profil/page.tsx`<br>`components/ProfilMasyarakat.tsx` | - |
+| 16 | Tambahan/N13 | Profil Operator | `app/(pages)/operator/profil/page.tsx`<br>`components/ProfilOperator.tsx` | - |
+| 17 | Tambahan/N13 | Riwayat Penukaran | `app/(pages)/(masyarakat)/(nav)/hadiah/riwayat/page.tsx`<br>`components/RiwayatPenukaran.tsx` | - |
+| 18 | Tambahan/UC04 | Detail Lokasi | `app/(pages)/(masyarakat)/(nav)/lokasi/[idLokasi]/page.tsx`<br>`components/lokasi/DetailLokasi.tsx`<br>`components/lokasi/KonfirmasiBersihkan.tsx` | - |
+| 19 | Tambahan/FE-25 | Halaman 404 dan Error | `app/not-found.tsx`<br>`app/error.tsx`<br>`app/global-error.tsx`<br>`components/HalamanStatus.tsx` | - |
 
 ## 3.4 File Lain
 
@@ -398,6 +440,34 @@ Tabel 4.2.3b. Ringkasan Cakupan Kelas [C03]
 
 <br>
 
+### 4.2.5 C04 DaftarLaporan
+
+**ID Kelas:** C04  
+**Nama Kelas:** DaftarLaporan  
+**Tingkat:** Mendalam  
+
+Note: Yang diuji unit adalah fungsi murni di `lib/laporan.ts` yang dipakai `components/DaftarLaporan.tsx` (I-07), melalui `tests/laporan.test.ts`. Komponen `.tsx` tidak diuji unit karena Vitest berjalan di environment `node` tanpa DOM; tampilannya diverifikasi lewat UC03 dan UC06. Operasi `daftar_laporan(laporan)` tidak diimplementasikan di View karena INSERT laporan dilakukan Model lewat Controller (B.5 Tugas 9, catatan N16), sehingga diuji pada C02.
+
+Tabel 4.2.5. Hasil Pengujian Unit C04
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C04-UT01 | `pilih_menu_verifikasi()` / `buka_laporan_masuk()` → `bacaFilterValidasi(params: BacaParam): FilterValidasi` | Normal | Query `jenis=cleanit&sort=terlama&page=3` | `{ jenis: "CLEANIT", sort: "terlama", page: 3 }` | Mengembalikan `{ jenis: "CLEANIT", sort: "terlama", page: 3 }` | *Pass* |
+| C04-UT02 | `bacaFilterValidasi(params: BacaParam): FilterValidasi` | Batas | `page=1000000` (batas atas BE-22), `page=1000001`, dan `page=0` | `1000000` diterima; `1000001` dan `0` dibaca sebagai halaman 1 | `page` = 1.000.000 untuk masukan pertama; 1 untuk dua masukan lainnya | *Pass* |
+| C04-UT03 | `bacaFilterValidasi(params: BacaParam): FilterValidasi` | Negatif | Query yang diketik manual: `jenis=CLEANIT&sort=acak`, serta `page` = `-1`, `abc`, `1.5`, `2e3`, dan kosong | Jatuh ke default `{ jenis: "REPORTIT", sort: "terbaru", page: 1 }`, tidak error | Semua masukan menghasilkan nilai default | *Pass* |
+| C04-UT04 | `tampilkan_daftar(list)` → `formatIdLaporan(idLaporan: number): string` dan `formatWaktuKirim(iso: string, sekarang: number): string` | Normal | ID 248; laporan yang dikirim 15 menit dan 8 hari sebelum `sekarang` | `"RPT-0248"`, `"15 menit lalu"`, dan tanggal WIB `"29 Okt 2026"` | `"RPT-0248"`, `"15 menit lalu"`, dan `"29 Okt 2026"` | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.5b. Ringkasan Cakupan C04
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `daftar_laporan(laporan)`, `pilih_menu_verifikasi()`, `pilih_laporan(idLaporan)`, `tampilkan_daftar(list)`, `buka_laporan_masuk()` |
+| Operasi yang diuji | `pilih_menu_verifikasi()` dan `buka_laporan_masuk()` (tab, urutan, dan halaman dari URL: `bacaFilterValidasi`, `urlValidasi`), `tampilkan_daftar(list)` (`formatIdLaporan`, `formatWaktuKirim`). `pilih_laporan(idLaporan)` hanya membuka modal I-08 dan diverifikasi pada UC03-TC01 dan UC06-TC01. `daftar_laporan(laporan)` diuji pada C02 |
+| ID Algoritma yang tercakup | Algo-002 (`pilih_menu_verifikasi`), Algo-003 (`tampilkan_daftar`). Algo-001 dipindah ke C02/C15 |
+| Coverage (wajib ≥ 70%) | 98,27% lines (57/58) dan 96,55% branch (56/58) pada `lib/laporan.ts`, 93,33% fungsi (14/15). Satu-satunya fungsi yang tidak tereksekusi adalah `urlPeta` (tautan OpenStreetMap di I-08). File ini dipakai bersama C04 dan C14. Alat: Vitest Coverage V8, bukti pada BUKTI-43 |
+
 ### 4.2.9 C08 Pengguna
 
 **ID Kelas:** C08  
@@ -414,7 +484,97 @@ Tabel 4.2.9. Hasil Pengujian Unit C08 (FE-A)
 | C08-UT02 | `validasiRegister(isian: IsianRegister): GalatRegister \| null` | Batas | Nama dan email valid; password 7 karakter (`1234567`), 72 karakter, dan 73 karakter | 7 karakter ditolak ("Password minimal 8 karakter."); 72 karakter diterima; 73 karakter ditolak ("Password maksimal 72 karakter.") | Sesuai harapan untuk ketiga masukan | *Pass* |
 | C08-UT03 | `validasiLogin(isian: IsianLogin): GalatLogin \| null` | Negatif | Email `warga@` (format salah), password `x` | Galat pada field email: "Format email tidak valid." | Galat "Format email tidak valid." muncul | *Pass* |
 
+### 4.2.12 C08 Pengguna – Profil
 
+**ID Kelas:** C08  
+**Nama Kelas:** Pengguna – Profil  
+**Tingkat:** Sedang  
+
+Note: Bagian ini menguji sisi tampilan C08 milik halaman Profil (`components/ProfilMasyarakat.tsx` dan `components/ProfilOperator.tsx`) melalui fungsi murni di `lib/profil.ts` (`tests/profil.test.ts`). Operasi `notify(msg)` diwujudkan di View sebagai teks notifikasi yang disusun dari data `GET /api/notifikasi` (B.1 no. 22, N8).
+
+Tabel 4.2.12. Hasil Pengujian Unit C08 (FE-C)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT14 | `notify(msg)` → `pesanNotifikasi(n: Notifikasi): string` | Normal | Notifikasi CleanIt `VALID` dengan `poinDiberikan: 200` | Pesan memuat "disetujui" dan "200 poin" | Pesan "Bukti pembersihan Anda disetujui. Anda mendapat 200 poin." | *Pass* |
+| C08-UT15 | `notify(msg)` → `alasanNotifikasi(n: Notifikasi): string \| null` | Batas | Notifikasi ReportIt `TIDAK_VALID` dengan `alasanPenolakan` `null` dan `"   "` (hanya spasi) | `null`, sehingga kotak alasan tidak ditampilkan | Mengembalikan `null` untuk kedua masukan | *Pass* |
+| C08-UT16 | `notify(msg)` → `pesanNotifikasi(n: Notifikasi): string` | Negatif | Notifikasi CleanIt `VALID` tanpa data poin (`poinDiberikan: null`) | Pesan tidak memuat "null", "undefined", maupun "poin" | Pesan "Bukti pembersihan Anda disetujui." | *Pass* |
+
+### 4.2.14 C10 DaftarReward
+
+**ID Kelas:** C10  
+**Nama Kelas:** DaftarReward  
+**Tingkat:** Sedang  
+
+Note: `tampilkanDaftarReward(daftar)` diwujudkan oleh `components/DaftarReward.tsx`. Logika yang diuji adalah `statusTombolReward` di `lib/reward.ts` (`tests/reward.test.ts`), yang menentukan tombol pada tiap kartu reward.
+
+Tabel 4.2.14. Hasil Pengujian Unit C10
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C10-UT01 | `tampilkanDaftarReward(daftar)` → `statusTombolReward(reward: Pick<Reward, "hargaPoin" \| "stok">, saldoPoin: number): StatusTombolReward` | Normal | Reward harga 50, stok 3; saldo 120 | `{ status: "TUKAR" }` | `{ status: "TUKAR" }` | *Pass* |
+| C10-UT02 | `statusTombolReward(reward: Pick<Reward, "hargaPoin" \| "stok">, saldoPoin: number): StatusTombolReward` | Batas | Reward harga 100, stok 1; saldo tepat 100 | `{ status: "TUKAR" }` | `{ status: "TUKAR" }` | *Pass* |
+| C10-UT03 | `statusTombolReward(reward: Pick<Reward, "hargaPoin" \| "stok">, saldoPoin: number): StatusTombolReward` | Negatif | (a) Reward harga 200, stok 5; saldo 120.<br>(b) Reward harga 50, stok 0; saldo 500 | (a) `{ status: "KURANG", selisih: 80 }`; (b) `{ status: "HABIS" }` | (a) `{ status: "KURANG", selisih: 80 }`; (b) `{ status: "HABIS" }` | *Pass* |
+
+### 4.2.16 C12 HalamanPenukaran
+
+**ID Kelas:** C12  
+**Nama Kelas:** HalamanPenukaran  
+**Tingkat:** Mendalam  
+
+Note: C12 diwujudkan oleh `components/HalamanPenukaran.tsx` (I-04), `KonfirmasiPenukaran.tsx` (I-05), `PenukaranBerhasil.tsx` (I-06), dan `RiwayatPenukaran.tsx`. Yang diuji unit adalah fungsi murni di `lib/penukaran.ts` (`tests/penukaran.test.ts`). `pilihReward(idReward)` diwujudkan sebagai konfirmasi di I-05 lalu `POST /api/penukaran`; hasil yang berhasil disimpan di `sessionStorage` dan dibaca I-06, sedangkan kegagalan ditangani menurut kode error (B.1 no. 26, N12).
+
+Tabel 4.2.16. Hasil Pengujian Unit C12
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C12-UT01 | `pilihReward(idReward)` (berhasil) → `uraiHasilPenukaran(mentah: string \| null): TukarPoinResponse \| null` | Normal | JSON hasil `POST /api/penukaran` yang valid: `idPenukaran` UUID, `namaReward` "Stiker SoClean", `kodeVoucher` "SC-7KQM-X4TD", `poinDipakai` 20, `sisaPoin` 47, `waktuPenukaran` ISO | Objek `TukarPoinResponse` yang sama dengan masukan | Objek identik dengan masukan | *Pass* |
+| C12-UT02 | Riwayat penukaran (N13) → `bacaHalaman(param: string \| null): number` | Batas | `?page=` bernilai `"1"`, `"1000000"`, `"1000001"`, dan `"0"` | `1` → 1; `1000000` → 1.000.000; `1000001` dan `0` → 1 | Sesuai harapan untuk keempat masukan | *Pass* |
+| C12-UT03 | `pilihReward(idReward)` (gagal) → `tindakanGagalTukar(code: KodeErrorKlien): TindakanGagalTukar` | Negatif | Kode error `POIN_TIDAK_CUKUP`, `STOK_HABIS`, dan `NOT_FOUND` | `{ tutup: true, muatUlang: true }`: sheet I-05 ditutup, saldo dan daftar reward dimuat ulang | `{ tutup: true, muatUlang: true }` untuk ketiga kode | *Pass* |
+| C12-UT04 | `tampilkanNotifikasi(pesan)` (I-06) → `formatWaktuPenukaran(iso: string): string` dan `formatIdPenukaran(id: string): string` | Normal | Waktu `2026-10-28T03:24:00Z`; ID `3f2a9c1e-7b4d-4e2a-9c1e-3f2a9c1e7b4d` | `"28 Okt 2026, 10.24"` (WIB) dan `"3F2A9C1E"` | `"28 Okt 2026, 10.24"` dan `"3F2A9C1E"` | *Pass* |
+| C12-UT05 | `uraiHasilPenukaran(mentah: string \| null): TukarPoinResponse \| null` | Negatif | Isi `sessionStorage` yang hilang atau diubah pengguna: `null`, `"{rusak"`, `"42"`, `kodeVoucher` hilang, `sisaPoin` bertipe string, dan `waktuPenukaran` "kemarin" | `null` untuk semua masukan, sehingga I-06 menampilkan state "data tidak ditemukan" | `null` untuk keenam masukan | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.16b. Ringkasan Cakupan C12
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `tampilkanSaldo(saldo)`, `pilihReward(idReward)`, `tampilkanNotifikasi(pesan)` |
+| Operasi yang diuji | `pilihReward(idReward)` (berhasil dan gagal: `uraiHasilPenukaran`, `tindakanGagalTukar`), `tampilkanNotifikasi(pesan)` (format I-06: `formatWaktuPenukaran`, `formatIdPenukaran`), riwayat penukaran N13 (`bacaHalaman`). `tampilkanSaldo(saldo)` hanya menampilkan angka dari `GET /api/poin/saldo` di `KartuSaldo` tanpa logika, sehingga diverifikasi pada UC08-TC01 dan UC09-TC01 |
+| ID Algoritma yang tercakup | Algo-002 (`pilihReward`); Algo-001 dan Algo-003 berupa tampilan saja, diverifikasi lewat UC09 |
+| Coverage (wajib ≥ 70%) | 100% lines (20/20), 100% branch (31/31), dan 100% fungsi (5/5) pada `lib/penukaran.ts`. Alat: Vitest Coverage V8, bukti pada BUKTI-48 |
+
+### 4.2.18 C14 LaporanView
+
+**ID Kelas:** C14  
+**Nama Kelas:** LaporanView  
+**Tingkat:** Mendalam  
+
+Note: Bagian ini mencakup operasi Operator pada `components/LaporanView.tsx` (modal I-08, UC03 dan UC06) melalui fungsi murni di `lib/laporan.ts` (`tests/laporan.test.ts`). Operasi Masyarakat (`tampilkan_lokasi`, `konfirmasi_bersihkan`, `tampilkan_konfirmasi`) diimplementasikan FE-B di `components/lokasi/` dan `lib/detail-lokasi.ts`, dan tidak termasuk C14-UT01 sampai C14-UT05.
+
+Tabel 4.2.18. Hasil Pengujian Unit C14
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C14-UT01 | `setujui(idLaporan)` → `bodySetujui(detail, isian)` dan `cekIsianSetujui(detail, isian)` | Normal | ReportIt tanpa lokasi terdekat; isian poin 100, nama lokasi `"  Jembatan Cikapundung  "` | Body `{ poin: 100, namaLokasi: "Jembatan Cikapundung" }`; tidak ada pesan isian | Body sesuai harapan; `cekIsianSetujui` mengembalikan `{}` | *Pass* |
+| C14-UT02 | `cekIsianSetujui(detail, isian)` | Batas | Nama lokasi 255 karakter dan 256 karakter (`varchar(255)`, K9) | 255 karakter lolos (`{}`); 256 karakter menghasilkan pesan pada `namaLokasi` | 255 → `{}`; 256 → `{ namaLokasi: "Nama lokasi maksimal 255 karakter." }` | *Pass* |
+| C14-UT03 | `tolak(idLaporan)` → `cekAlasanTolak(jenis, alasan)` dan `bodyTolak(alasan)` | Negatif | Tolak CleanIt dengan alasan `" "`; tolak ReportIt dengan alasan kosong | CleanIt: pesan "Alasan penolakan wajib diisi untuk CleanIt."; ReportIt: lolos dengan body `{}` | Sesuai harapan untuk kedua jenis | *Pass* |
+| C14-UT04 | `tampilkan_laporan(data)` → `formatWaktuLengkap(iso)`; `notify(msg)` setelah setujui → `pesanSetujui(detail, respons)` | Normal | Waktu `2023-10-14T03:45:00Z`; respons setujui CleanIt `poinDiberikan: 100` dengan pelapor "Dapin Tampan" | `"14 Oktober 2023, 10.45 WIB"` dan `"Laporan disetujui. 100 poin diberikan kepada Dapin Tampan."` | Kedua string sesuai harapan | *Pass* |
+| C14-UT05 | `notify(msg)` setelah gagal → `tindakanGagalVerifikasi(code)` | Negatif | Kode error dari setujui/tolak: `SUDAH_DIVERIFIKASI`, `LOKASI_SUDAH_DIBERSIHKAN`, `NOT_FOUND`, `FORMAT_TIDAK_VALID`, `DATA_TIDAK_LENGKAP`, `INTERNAL_ERROR`, `JARINGAN`, dan `FORBIDDEN` | Tiga kode pertama → `"selesai"` (tombol Setujui/Tolak dinonaktifkan, Algo-004); kode isian → `"isian"`; lainnya → `"ulang"` | Setiap kode menghasilkan tindakan sesuai harapan | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.18b. Ringkasan Cakupan C14
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `tampilkan_laporan(data)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `notify(msg)`, `tampilkan_lokasi(detail)`, `konfirmasi_bersihkan()`, `tampilkan_konfirmasi(msg)` |
+| Operasi yang diuji | Bagian Operator: `tampilkan_laporan(data)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `notify(msg)`. Fungsi format I-08 lain (`formatWaktuUnggah`, `formatJarak`, `formatKoordinat`) juga diuji di `tests/laporan.test.ts`. Bagian Masyarakat (`tampilkan_lokasi`, `konfirmasi_bersihkan`, `tampilkan_konfirmasi`) diimplementasikan FE-B |
+| ID Algoritma yang tercakup | Algo-001, Algo-002, Algo-003, Algo-004 |
+| Coverage (wajib ≥ 70%) | 98,27% lines (57/58) dan 96,55% branch (56/58) pada `lib/laporan.ts`, 93,33% fungsi (14/15). Satu-satunya fungsi yang tidak tereksekusi adalah `urlPeta` (tautan OpenStreetMap di I-08). File ini dipakai bersama C04 dan C14. Alat: Vitest Coverage V8, bukti pada BUKTI-50 |
+
+<br>
 
 ## 4.3 Pengujian Integrasi
 
@@ -463,6 +623,34 @@ Tabel 4.4.1. Hasil Pengujian Use Case [UC01]
 *[Lanjutkan untuk seluruh use case dengan pola yang sama, hingga 4.4.N.]*
 
 
+### 4.4.3 UC03 Memverifikasi Laporan ReportIt
+
+**ID Use Case:** UC03  
+**Nama Use Case:** Memverifikasi Laporan ReportIt
+
+Note: Data uji berasal dari seed (`docker compose exec web npm run db:seed` dijalankan sebelum pengujian). Laporan yang dipakai adalah laporan ReportIt seed yang berstatus menunggu.
+
+Tabel 4.4.3. Hasil Pengujian UC03
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC03-TC01 | KF05 | Normal | 1. Login sebagai Operator.<br>2. Pada I-07, pastikan tab ReportIt aktif.<br>3. Klik kartu laporan "Sampah plastik mengapung di Pantai Ancol timur".<br>4. Periksa detail di I-08.<br>5. Pilih poin, isi nama lokasi, klik "Setujui".<br>6. Login sebagai Masyarakat dan buka menu Lokasi (I-09). | Email: `operator@soclean.test`<br>Password: `soclean123`<br>Poin: 100<br>Nama lokasi: "Pantai Ancol Timur" | Setelah login, Operator langsung diarahkan ke I-07 berisi laporan menunggu. I-08 menampilkan judul, lokasi, koordinat, waktu WIB, sumber, jenis sampah, dan foto bukti beserta tombol Setujui/Tolak. Setelah disetujui muncul pesan "Laporan disetujui. Lokasi baru ditambahkan ke daftar CleanIt.", tombol dinonaktifkan, dan laporan hilang dari daftar menunggu. "Pantai Ancol Timur" (100 poin) tampil di I-09 | Setelah login, Operator langsung diarahkan ke I-07 yang berisi 3 laporan ReportIt menunggu. I-08 menampilkan judul, lokasi, koordinat, waktu WIB, sumber, jenis sampah, pelapor, dan 2 foto bukti beserta tombol Setujui/Tolak. Setelah disetujui muncul pesan "Laporan disetujui. Lokasi baru ditambahkan ke daftar CleanIt.", tombol Setujui/Tolak nonaktif, dan daftar menunggu menjadi 2. "Pantai Ancol Timur" (+100 poin) tampil di I-09, sesuai hasil yang diharapkan | *Pass* |
+| UC03-TC02 | KF05 | Alternatif 1: Laporan tidak valid | 1. Login sebagai Operator.<br>2. Pada I-07 tab ReportIt, klik kartu "Ban bekas dan plastik di tepi Cikapundung".<br>3. Klik "Tolak", isi alasan, lalu konfirmasi.<br>4. Login sebagai pelapor, buka Profil lalu menu Lokasi. | Email Operator: `operator@soclean.test`<br>Email pelapor: `budi@soclean.test`<br>Password: `soclean123`<br>Alasan: "Foto tidak menunjukkan area perairan" | Muncul pesan "Laporan ditolak. Pelapor akan menerima notifikasi."; laporan hilang dari daftar menunggu. Profil pelapor menampilkan notifikasi "Laporan Anda ditolak Operator." beserta alasannya. Lokasi tersebut tidak muncul di I-09 | Muncul pesan "Laporan ditolak. Pelapor akan menerima notifikasi." dan daftar menunggu menjadi 1. Profil Budi menampilkan notifikasi "Laporan Anda ditolak Operator." dengan alasan "Foto tidak menunjukkan area perairan". Lokasi tersebut tidak muncul di I-09, sesuai hasil yang diharapkan | *Pass* |
+
+### 4.4.6 UC06 Memverifikasi Laporan Pembersihan
+
+**ID Use Case:** UC06  
+**Nama Use Case:** Memverifikasi Laporan Pembersihan
+
+Note: Data uji berasal dari seed. UC06-TC01 memakai laporan CleanIt milik Budi pada lokasi "Bibir Pantai Ancol Barat" (50 poin), sedangkan UC06-TC02 memakai laporan CleanIt Andi yang membersihkan sendiri lokasi yang ia laporkan.
+
+Tabel 4.4.6. Hasil Pengujian UC06
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC06-TC01 | KF09, KF10, KF11 | Normal | 1. Login sebagai Masyarakat (Budi), catat saldo poin di Beranda, lalu logout.<br>2. Login sebagai Operator, buka tab CleanIt di I-07.<br>3. Klik kartu "Pembersihan Bibir Pantai Ancol Barat".<br>4. Periksa galeri Sebelum/Sesudah di I-08, klik "Setujui".<br>5. Login kembali sebagai Budi, buka Beranda dan Profil. | Email Operator: `operator@soclean.test`<br>Email Masyarakat: `budi@soclean.test`<br>Password: `soclean123` | I-07 tab CleanIt menampilkan daftar laporan pembersihan menunggu. I-08 menampilkan galeri Sebelum (laporan asal) dan Sesudah. Setelah disetujui muncul pesan "Laporan disetujui. 50 poin diberikan kepada Budi Santoso."; laporan hilang dari daftar. Saldo Budi bertambah 50 dan Profil menampilkan notifikasi "Bukti pembersihan Anda disetujui. Anda mendapat 50 poin." | I-07 tab CleanIt menampilkan 3 laporan pembersihan menunggu. I-08 menampilkan galeri Sebelum (dari RPT-0003) dan Sesudah. Setelah disetujui muncul pesan "Laporan disetujui. 50 poin diberikan kepada Budi Santoso." dan laporan hilang dari daftar (CleanIt lain untuk lokasi yang sama ikut ditolak otomatis). Saldo Budi naik dari 100 menjadi 150 dan Profil menampilkan notifikasi "Bukti pembersihan Anda disetujui. Anda mendapat 50 poin.", sesuai hasil yang diharapkan | *Pass* |
+| UC06-TC02 | KF09 | Alternatif 1: Bukti tidak sah | 1. Login sebagai Operator, buka tab CleanIt di I-07.<br>2. Klik kartu "Pembersihan Pantai Barat Pangandaran" (tanda Pelapor = Relawan).<br>3. Klik "Tolak" tanpa alasan, lalu isi alasan dan konfirmasi.<br>4. Login sebagai Masyarakat (Andi), buka Profil. | Email Operator: `operator@soclean.test`<br>Email Masyarakat: `andi@soclean.test`<br>Password: `soclean123`<br>Alasan: kosong, lalu "Foto sesudah tidak di lokasi yang sama" | Penolakan tanpa alasan dicegah dengan pesan "Alasan penolakan wajib diisi untuk CleanIt.". Setelah alasan diisi muncul pesan "Laporan ditolak. Pelapor akan menerima notifikasi."; saldo Andi tidak bertambah. Profil Andi menampilkan notifikasi "Bukti pembersihan Anda ditolak Operator." beserta alasannya | I-08 menampilkan tanda "Pelapor = Relawan". Penolakan tanpa alasan dicegah dengan pesan "Alasan penolakan wajib diisi untuk CleanIt.". Setelah alasan diisi muncul pesan "Laporan ditolak. Pelapor akan menerima notifikasi.". Saldo Andi tetap 0 dan Profil Andi menampilkan notifikasi "Bukti pembersihan Anda ditolak Operator." beserta alasannya, sesuai hasil yang diharapkan | *Pass* |
+
 ### 4.4.7 UC07 Melihat Saldo Poin
 
 **ID Use Case:** UC07  
@@ -477,6 +665,34 @@ Tabel 4.4.7. Hasil Pengujian UC07
 | UC07-TC01 | KF11, KF12 | Normal | 1. Buka halaman Login.<br>2. Login sebagai Masyarakat.<br>3. Lihat kartu "Poin Anda" di Beranda. | Email: `budi@soclean.test`<br>Password: `soclean123` | Beranda menampilkan saldo poin pengguna, yaitu 100 | Beranda menampilkan sapaan "Budi Santoso" dan kartu "Poin Anda" berisi 100, sesuai hasil yang diharapkan | *Pass* |
 | UC07-TC02 | KF11, KF12 | Alternatif: saldo poin 0 | 1. Buka halaman Login.<br>2. Login sebagai Masyarakat yang belum punya poin.<br>3. Lihat kartu "Poin Anda" di Beranda. | Email: `andi@soclean.test`<br>Password: `soclean123` | Beranda menampilkan saldo "0" tanpa pesan error | Beranda menampilkan sapaan "Andi Pratama" dan kartu "Poin Anda" berisi 0 tanpa pesan error, sesuai hasil yang diharapkan | *Pass* |
 
+### 4.4.8 UC08 Melihat Reward yang Tersedia
+
+**ID Use Case:** UC08  
+**Nama Use Case:** Melihat Reward yang Tersedia
+
+Note: Pada SKPL, tidak ada skenario alternatif untuk UC08, sehingga UC08-TC02 menguji kondisi reward dengan stok 0 (reward seed "Tote Bag Daur Ulang").
+
+Tabel 4.4.8. Hasil Pengujian UC08
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC08-TC01 | KF12 | Normal | 1. Buka halaman Login.<br>2. Login sebagai Masyarakat.<br>3. Klik menu "Hadiah" pada navigasi. | Email: `budi@soclean.test`<br>Password: `soclean123` | I-04 menampilkan kartu saldo poin dan lima reward seed (nama, jenis, harga poin), dengan reward ber-stok diurutkan lebih dulu. Tombol "Tukar" muncul pada reward yang harganya ≤ saldo | I-04 menampilkan kartu saldo (150) dan lima reward seed lengkap dengan jenis, stok, dan harga poin. Reward ber-stok berada di atas. Tombol "Tukar" muncul pada Voucher Kopi Rp25.000 (50 poin) dan Tumbler SoClean (100 poin); reward 200 poin menampilkan "Kurang 50", sesuai hasil yang diharapkan | *Pass* |
+| UC08-TC02 | KF12 | Alternatif: reward habis | 1. Buka halaman Login.<br>2. Login sebagai Masyarakat.<br>3. Buka I-04 dan cari "Tote Bag Daur Ulang". | Email: `budi@soclean.test`<br>Password: `soclean123` | Reward tetap tampil di urutan bawah dengan tombol "Habis" yang tidak bisa diklik (B.1 no. 18) | "Tote Bag Daur Ulang" tampil paling bawah dengan keterangan "Stok habis" dan tombol "Habis" yang nonaktif; mengekliknya tidak membuka I-05, sesuai hasil yang diharapkan | *Pass* |
+
+### 4.4.9 UC09 Menukarkan Poin dengan Reward
+
+**ID Use Case:** UC09  
+**Nama Use Case:** Menukarkan Poin dengan Reward
+
+Note: Data uji berasal dari seed. Andi dipakai pada UC09-TC02 karena saldo poinnya 0.
+
+Tabel 4.4.9. Hasil Pengujian UC09
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC09-TC01 | KF13, KF11 | Normal | 1. Login sebagai Masyarakat, buka I-04, catat saldo.<br>2. Klik "Tukar" pada "Voucher Kopi Rp25.000".<br>3. Periksa sisa poin di I-05, klik "Tukarkan".<br>4. Di I-06, klik salin kode voucher.<br>5. Kembali ke Hadiah lalu buka Riwayat Penukaran. | Email: `budi@soclean.test`<br>Password: `soclean123`<br>Reward: "Voucher Kopi Rp25.000" (50 poin) | I-05 menampilkan reward, harga, dan sisa poin (saldo − 50). Setelah konfirmasi, I-06 menampilkan kode voucher `SC-XXXX-XXXX`, poin dipakai 50, sisa poin, dan waktu WIB; salin memunculkan "Kode voucher disalin". Saldo di I-04 berkurang 50, stok voucher berkurang 1, dan penukaran tercatat paling atas di Riwayat | I-05 menampilkan Voucher Kopi Rp25.000, Poin Anda 150, harga −50, dan sisa poin 100. Setelah "Tukarkan", I-06 menampilkan kode voucher `SC-E9YA-6R2D`, ID penukaran, waktu 20 Nov 2026 16.02 WIB, poin dipakai 50, dan sisa poin 100; tombol salin memunculkan "Kode voucher disalin". Saldo di I-04 menjadi 100, stok voucher turun dari 19 menjadi 18, dan penukaran tercatat paling atas di Riwayat Penukaran, sesuai hasil yang diharapkan | *Pass* |
+| UC09-TC02 | KF13 | Alternatif 1: Poin tidak cukup | 1. Login sebagai Masyarakat dengan saldo 0.<br>2. Buka I-04, klik tombol "Kurang 50" pada "Voucher Kopi Rp25.000". | Email: `andi@soclean.test`<br>Password: `soclean123`<br>Reward: "Voucher Kopi Rp25.000" (50 poin) | Tombol menampilkan selisih poin ("Kurang 50") dan klik memunculkan notifikasi "Poin tidak cukup"; I-05 tidak terbuka, saldo dan stok tidak berubah | Semua reward menampilkan tombol selisih ("Kurang 50", "Kurang 100", "Kurang 200"). Klik "Kurang 50" memunculkan notifikasi "Poin tidak cukup"; I-05 tidak terbuka, saldo tetap 0, dan stok voucher tetap 18, sesuai hasil yang diharapkan | *Pass* |
+
 <br>
 
 ## 4.5 Pengujian Kebutuhan Non-Fungsional (KNF)
@@ -490,6 +706,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | *KNF01-TC01* | *KNF01* | *Reliability* | *Tidak ada data hilang/ganda saat jaringan putus di tengah transaksi* | *Simulasi putus koneksi saat bayar, lalu cek status di DB* | *[Hasil aktual]* | *Pass/Fail* |
 | *KNF02-TC01* | *KNF02* | *Security* | *Password tersimpan sebagai hash, bukan plain-text* | *Inspeksi tabel pengguna di DB* | *[...]* | *Pass/Fail* |
 | *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
+| KNF03-TC01 | KNF03 | Portability | Semua halaman Masyarakat dan Operator dapat dibuka lewat browser tanpa instalasi tambahan pada (a) desktop 1920×1080 dan (b) mobile 360×800, tanpa scroll horizontal (`scrollWidth ≤ innerWidth`) | Chrome desktop 1920×1080 dan emulasi perangkat mobile 360×800 (Chrome DevTools Protocol, mode mobile dan sentuh). Setiap halaman dibuka setelah login sesuai peran, lalu `document.documentElement.scrollWidth` dibandingkan dengan `innerWidth` | 16 dari 16 halaman lolos di kedua ukuran (32 dari 32 pengukuran, `scrollWidth` = `innerWidth`): I-01, I-02, I-03, I-04, I-05, I-06, Riwayat Penukaran, I-09, Detail Lokasi, I-11, Form CleanIt, Profil Masyarakat, I-07, I-08, Profil Operator, dan halaman 404. I-10, I-12, dan I-13 berada di route yang sama dengan I-09 dan I-11 sehingga tidak diukur terpisah. Alur UC03, UC06, UC08, dan UC09 diselesaikan di ukuran tersebut (4.4) | *Pass* |
 | KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
@@ -506,6 +723,19 @@ Tabel 4.6. Bukti Hasil Pengujian
 | C08-UT01 – C08-UT03 (BUKTI-09) | ![BUKTI-09](assets/BUKTI-09.png) |
 | UC07-TC01 – UC07-TC02 (BUKTI-29) | ![BUKTI-29a](assets/BUKTI-29a.jpeg)<br>![BUKTI-29b](assets/BUKTI-29b.jpeg) |
 | KNF07-TC01 (BUKTI-38) | ![BUKTI-38a](assets/BUKTI-38a.png)<br>![BUKTI-38b](assets/BUKTI-38b.png)<br>![BUKTI-38c](assets/BUKTI-38c.png)<br>![BUKTI-38d](assets/BUKTI-38d.png) |
+| C04-UT01 – C04-UT04 (BUKTI-05) | ![BUKTI-05](assets/BUKTI-05-18.png) |
+| C08-UT14 – C08-UT16 (BUKTI-12) | ![BUKTI-12](assets/BUKTI-12.png) |
+| C10-UT01 – C10-UT03 (BUKTI-14) | ![BUKTI-14](assets/BUKTI-14.png) |
+| C12-UT01 – C12-UT05 (BUKTI-16) | ![BUKTI-16](assets/BUKTI-16.png) |
+| C14-UT01 – C14-UT05 (BUKTI-18) | ![BUKTI-18](assets/BUKTI-05-18.png) |
+| UC03-TC01 – UC03-TC02 (BUKTI-25) | ![BUKTI-25a](assets/BUKTI-25a.png)<br>![BUKTI-25b](assets/BUKTI-25b.png)<br>![BUKTI-25c](assets/BUKTI-25c.png)<br>![BUKTI-25d](assets/BUKTI-25d.png)<br>![BUKTI-25e](assets/BUKTI-25e.png)<br>![BUKTI-25f](assets/BUKTI-25f.png)<br>![BUKTI-25g](assets/BUKTI-25g.png)<br>![BUKTI-25h](assets/BUKTI-25h.png) |
+| UC06-TC01 – UC06-TC02 (BUKTI-28) | ![BUKTI-28a](assets/BUKTI-28a.png)<br>![BUKTI-28b](assets/BUKTI-28b.png)<br>![BUKTI-28c](assets/BUKTI-28c.png)<br>![BUKTI-28d](assets/BUKTI-28d.png)<br>![BUKTI-28e](assets/BUKTI-28e.png)<br>![BUKTI-28f](assets/BUKTI-28f.png)<br>![BUKTI-28g](assets/BUKTI-28g.png)<br>![BUKTI-28h](assets/BUKTI-28h.png) |
+| UC08-TC01 – UC08-TC02 (BUKTI-30) | ![BUKTI-30a](assets/BUKTI-30a.png)<br>![BUKTI-30b](assets/BUKTI-30b.png)<br>![BUKTI-30c](assets/BUKTI-30c.png) |
+| UC09-TC01 – UC09-TC02 (BUKTI-31) | ![BUKTI-31a](assets/BUKTI-31a.png)<br>![BUKTI-31b](assets/BUKTI-31b.png)<br>![BUKTI-31c](assets/BUKTI-31c.png)<br>![BUKTI-31d](assets/BUKTI-31d.png)<br>![BUKTI-31e](assets/BUKTI-31e.png) |
+| KNF03-TC01 (BUKTI-34) | ![BUKTI-34a](assets/BUKTI-34a.png)<br>![BUKTI-34b](assets/BUKTI-34b.png)<br>![BUKTI-34c](assets/BUKTI-34c.png)<br>![BUKTI-34d](assets/BUKTI-34d.png) |
+| Coverage C04 (BUKTI-43) | ![BUKTI-43a](assets/BUKTI-43-50-A.png)<br>![BUKTI-43b](assets/BUKTI-43-50-B.png) |
+| Coverage C12 (BUKTI-48) | ![BUKTI-48](assets/BUKTI-48.png) |
+| Coverage C14 (BUKTI-50) | ![BUKTI-50a](assets/BUKTI-43-50-A.png)<br>![BUKTI-50b](assets/BUKTI-43-50-B.png) |
 | *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
 | *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
 | *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |
