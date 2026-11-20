@@ -490,6 +490,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | *KNF01-TC01* | *KNF01* | *Reliability* | *Tidak ada data hilang/ganda saat jaringan putus di tengah transaksi* | *Simulasi putus koneksi saat bayar, lalu cek status di DB* | *[Hasil aktual]* | *Pass/Fail* |
 | *KNF02-TC01* | *KNF02* | *Security* | *Password tersimpan sebagai hash, bukan plain-text* | *Inspeksi tabel pengguna di DB* | *[...]* | *Pass/Fail* |
 | *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
+| KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
 <br>
@@ -504,6 +505,7 @@ Tabel 4.6. Bukti Hasil Pengujian
 | :--- | :--- |
 | C08-UT01 – C08-UT03 (BUKTI-09) | ![BUKTI-09](assets/BUKTI-09.png) |
 | UC07-TC01 – UC07-TC02 (BUKTI-29) | ![BUKTI-29a](assets/BUKTI-29a.jpeg)<br>![BUKTI-29b](assets/BUKTI-29b.jpeg) |
+| KNF07-TC01 (BUKTI-38) | ![BUKTI-38a](assets/BUKTI-38a.png)<br>![BUKTI-38b](assets/BUKTI-38b.png)<br>![BUKTI-38c](assets/BUKTI-38c.png)<br>![BUKTI-38d](assets/BUKTI-38d.png) |
 | *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
 | *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
 | *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |
