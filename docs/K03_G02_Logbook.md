@@ -211,3 +211,4 @@
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
 | 20-11-2026 | Jovan Nathanael | Mengisi HIUPL Bab 4 bagian FE-A: unit test C08 (UI auth/Beranda), use case UC07, KNF07 (draf offline), dan bukti BUKTI-09/29/38 | 1 jam | Done | Build Docker gagal karena masalah DNS registry |
+| 20-11-2026 | Faishal Ahmad Nurdin | Mengisi HIUPL bagian FE-C: 3.2, 3.3, 4.2, 4.4, 4.5, 4.6 (05, 12, 14, 16, 18, 25, 28, 30, 31, 34, 43, 48, 50) | 2 jam | Done | - |
