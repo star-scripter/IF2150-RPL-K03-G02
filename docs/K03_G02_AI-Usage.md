@@ -111,6 +111,7 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
 | :------ | :---------------- | :------------------ | :---------------------------- |
 | Claude Code | Menyusun langkah pengisian HIUPL Bab 4 bagian FE-A dan draf isian tabel C08, UC07, KNF07 | "Buatkan langkah-langkah superkomprehensif untuk bagian FE-A..." | Test dijalankan ulang sendiri; pengujian manual UC07 dan KNF07 serta screenshot dilakukan sendiri; isian tabel disesuaikan dengan hasil aktual |
+| Claude Code | Menyusun draf isian HIUPL bagian FE-C sesuai dengan format yang ditetapkan | "Coba buat langkah-langkah pengujian FE-C sesuai format yang sudah ada di main…" | Unit test dan coverage dijalankan sendiri dan screenshot buktinya diambil sendiri; commit dan push dijalankan sendiri |
 
 ### Pernyataan Integritas dan Persetujuan
 
