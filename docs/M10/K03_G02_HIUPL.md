@@ -516,9 +516,8 @@ Tabel 4.2.9. Hasil Pengujian Unit C08 (FE-A)
 **ID Kelas:** C08
 **Nama Kelas:** Pengguna (Auth BE)
 **Tingkat:** Mendalam
-**Pemilik:** BE-A
 
-Note: Operasi C08 pada DPPL yang berkaitan dengan saldo poin (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`) dan `notify` diuji pada 4.2.11 (BE-B). Bagian ini menguji operasi auth dan sesi yang ditambahkan pada implementasi (BE-05): pencarian akun login, pembuatan akun Masyarakat, pembacaan profil, aturan akun, serta token/cookie/guard sesi.`cariUntukLogin`, `buatMasyarakat`, dan `getMe` hanya memakai normal/negatif karena masukannya berupa email atau ID (UUID) tanpa rentang nilai, sehingga tidak ada nilai batas yang menguji aturan berbeda.
+Note: Operasi C08 pada DPPL yang berkaitan dengan saldo poin (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`) dan `notify` diuji pada 4.2.11 (BE-B). Bagian ini menguji operasi auth dan sesi yang ditambahkan pada implementasi (BE-05): pencarian akun login, pembuatan akun Masyarakat, pembacaan profil, aturan akun, serta token/cookie/guard sesi. `cariUntukLogin`, `buatMasyarakat`, dan `getMe` hanya memakai normal/negatif karena masukannya berupa email atau ID (UUID) tanpa rentang nilai, sehingga tidak ada nilai batas yang menguji aturan berbeda. Batas panjang nama/email/password divalidasi `registerSchema` dan diuji pada C08-UT07, sedangkan batas sesi 7 hari diuji pada C08-UT08.
 
 Tabel 4.2.10. Hasil Pengujian Unit C08 (BE-A)
 
@@ -538,8 +537,8 @@ Tabel 4.2.10b. Ringkasan Cakupan C08 (BE-A)
 | :--- | :--- |
 | Daftar operasi public pada DPPL | `tambah_poin(idPengguna, jumlahPoin)`, `notify(msg)`, `getSaldoPoin()`, `cukupPoin(harga)`, `kurangiPoin(jumlah)`, `cariUntukLogin`, `buatMasyarakat`, `getMe`, serta helper `server/auth/*` |
 | Operasi yang diuji | `cariUntukLogin`, `buatMasyarakat`, `getMe`, `normalisasiEmail`, `normalisasiNama`, `registerSchema`, `loginSchema`, `hashPassword`, `verifyPassword`, `signSessionToken`, `verifySessionToken`, `sessionCookieOptions`, `setSessionCookie`, `getSessionCookie`, `deleteSessionCookie`, `requireRoleCookie`, `wajibLogin` |
-| ID Algoritma yang tercakup |  Algo-002 dan Algo-004 |
-| Coverage (wajib ≥ 70%) | `server/auth/*`: 96,72% line, 96,87% branch. `server/models/pengguna.ts`: 73,07% line. |
+| ID Algoritma yang tercakup | Aturan akun N7 dan aturan sesi 7 hari. Algo-002 dan Algo-004 (saldo poin) dicakup pada 4.2.11 BE-B |
+| Coverage (wajib ≥ 70%) | `server/auth/*`: 96,72% baris dan 96,87% cabang. Operasi auth pada `server/models/pengguna.ts` diuji DB-backed, tetapi angka berkasnya tidak dipakai untuk BE-A karena berkas yang sama memuat operasi saldo/notifikasi milik BE-B. Untuk kelas C08 utuh bersama BE-B: 96,55% baris, 96,87% cabang, 100% fungsi. |
 ### 4.2.12 C08 Pengguna (Profil)
 
 **ID Kelas:** C08  
@@ -631,6 +630,35 @@ Tabel 4.2.18b. Ringkasan Cakupan C14
 | Coverage (wajib ≥ 70%) | 98,27% lines (57/58) dan 96,55% branch (56/58) pada `lib/laporan.ts`, 93,33% fungsi (14/15). Satu-satunya fungsi yang tidak tereksekusi adalah `urlPeta` (tautan OpenStreetMap di I-08). File ini dipakai bersama C04 dan C14. Alat: Vitest Coverage V8, bukti pada BUKTI-50 |
 
 <br>
+
+### 4.2.19 C15 ManagerLaporan (validasi/POST)
+
+**ID Kelas:** C15
+**Nama Kelas:** ManagerLaporan (validasi/POST)
+**Tingkat:** Mendalam
+
+Note: Bagian ini menguji operasi validasi dan pembuatan laporan (`is_terisi`, `is_format_valid`, `cek_laporan`, `buat_laporan`). Operasi query/verifikasi (`get_all_laporan_unverified`, `get_daftar_lokasi`, `get_detail_lokasi`, `ubah_status`, `petakan_lokasi`, notifikasi) diuji terpisah pada bagian BE-B C15. C15-UT04 dan C15-UT05 memakai route handler nyata dengan PostgreSQL test dan bukan mock. Tipe kasus menurut operasi dan belum tentu diulang 3 kali. `is_terisi`, `is_format_valid`, dan `cek_laporan` diuji normal di C15-UT01, batas di C15-UT02, dan negatif di C15-UT03. `buat_laporan` diuji normal dan batas di C15-UT04 (satu dan tiga media, yaitu batas maksimum), sedangkan jalur media bermasalah, CleanIt bermasalah, dan rollback penautan ada di C15-UT05. Batas validasi tidak diulang di level endpoint karena sudah diuji langsung pada fungsi validasi.
+
+Tabel 4.2.19. Hasil Pengujian Unit C15 (BE-A)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C15-UT01 | `is_terisi(input): boolean`, `is_format_valid(input, sekarang): boolean`, `cek_laporan(input, idPengguna, tx, sekarang): Promise<LaporanTervalidasi>` | Normal | Input ReportIt lengkap dengan judul/lokasi berspasi dan media milik pengguna; periksa kelengkapan dan format, lalu panggil `cek_laporan` | `is_terisi` dan `is_format_valid` bernilai `true`, `cek_laporan` mengembalikan data tervalidasi dengan teks ter-trim, `idPengguna`, dan `waktu` bertipe `Date` | `is_terisi` dan `is_format_valid` bernilai `true`, `cek_laporan` mengembalikan data tervalidasi dengan teks ter-trim, `idPengguna`, dan `waktu` bertipe `Date` | *Pass* |
+| C15-UT02 | `is_format_valid(input, sekarang): boolean` dan `cek_laporan(...)` pada nilai batas | Batas | Judul 80 dan 81 karakter, waktu tepat sekarang dan satu detik di masa depan, menggunakan 3 dan 4 ID media, koordinat +-90 s.d. +-180 dan 91−181, alamat 256 karakter | Nilai tepat batas diterima. Nilai di luar batas ditolak `FORMAT_TIDAK_VALID` | Nilai tepat batas diterima. Nilai di luar batas ditolak `FORMAT_TIDAK_VALID` | *Pass* |
+| C15-UT03 | `cek_laporan(input, idPengguna, tx, sekarang)` | Negatif | Field wajib kosong (`idMedia: []`, lokasi berisi spasi), tipe salah (`latitude` string, `jenis` tidak dikenal), waktu di masa depan, koordinat di luar wilayah | Field kosong menghasilkan error `DATA_TIDAK_LENGKAP`, format/tipe salah dan waktu masa depan menghasilkan error `FORMAT_TIDAK_VALID`, koordinat luar wilayah menghasilkan error `DI_LUAR_WILAYAH` 422 | Kode, status, dan `fields` sesuai untuk setiap masukan (`validasi-laporan.test.ts`) | *Pass* |
+| C15-UT04 | `buat_laporan(request, sesi): Promise<Response>` (POST `/api/laporan`) | Normal/batas | Buat ReportIt dengan satu media dan tiga media (batas maksimum), serta CleanIt dengan satu media lalu periksa baris laporan dan `media.laporan_id` di PostgreSQL | Kode `201` dengan luaran `{ idLaporan, status: "BELUM_DIPERIKSA" }`. Laporan tersimpan dan seluruh media, termasuk tiga media sekaligus, tertaut ke laporan baru | Kode `201` dengan luaran `{ idLaporan, status: "BELUM_DIPERIKSA" }`. Laporan tersimpan dan seluruh media, termasuk tiga media sekaligus, tertaut ke laporan baru | *Pass* |
+| C15-UT05 | `cek_laporan(...)` dan `buat_laporan(...)` untuk jalur gagal | Negatif | Media tidak ada, milik pengguna lain, sudah tertaut, atau hash dipakai laporan aktif. CleanIt pada lokasi tidak ada, sudah dibersihkan, atau sudah punya CleanIt menunggu. Penautan media diatur agar mengembalikan 0 baris | Media bermasalah menghasilkan error `FORMAT_TIDAK_VALID`/`MEDIA_SUDAH_DIGUNAKAN`, CleanIt bermasalah menghasilkan `NOT_FOUND`/`LOKASI_SUDAH_DIBERSIHKAN`/`CLEANIT_SUDAH_MENUNGGU`, penautan gagal menggagalkan transaksi tanpa menyisakan laporan | Media bermasalah menghasilkan error `FORMAT_TIDAK_VALID`/`MEDIA_SUDAH_DIGUNAKAN`, CleanIt bermasalah menghasilkan `NOT_FOUND`/`LOKASI_SUDAH_DIBERSIHKAN`/`CLEANIT_SUDAH_MENUNGGU`, penautan gagal menggagalkan transaksi tanpa menyisakan laporan | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.19b. Ringkasan Cakupan C15 (BE-A)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `cek_laporan(lokasi, waktu, idMedia, sumber)`, `is_terisi(lokasi, waktu, idMedia, sumber)`, `is_format_valid(lokasi, waktu, idMedia, sumber)`, `get_daftar_lokasi()`, `get_detail_lokasi(idLokasi)`, `get_all_laporan_unverified()`, `get_data(idLaporan)`, `ubah_status(idLaporan, status)`, `simpan_alasan_penolakan(idLaporan, alasan)`, `petakan_lokasi(idLaporan)`; implementasi menambahkan `buat_laporan` untuk POST `/api/laporan` |
+| Operasi yang diuji (BE-A) | `is_terisi`, `is_format_valid`, `cek_laporan`, `buat_laporan` |
+| ID Algoritma yang tercakup | Algo-053, Algo-054, Algo-055 |
+| Coverage (wajib ≥ 70%) | Test BE-A saja: 55,83% line dan 62.22% branch, sisanya ada di bagian pengujian ManagerLaporan 4.2.20 untuk bagian query dan verifikasi. Gabungan dengan 4.2.20 menghasilkan 96,66% line, 93,33% branch |
 
 ## 4.3 Pengujian Integrasi
 
@@ -798,6 +826,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
 | KNF03-TC01 | KNF03 | Portability | Semua halaman Masyarakat dan Operator dapat dibuka lewat browser tanpa instalasi tambahan pada (a) desktop 1920×1080 dan (b) mobile 360×800, tanpa scroll horizontal (`scrollWidth ≤ innerWidth`) | Chrome desktop 1920×1080 dan emulasi perangkat mobile 360×800 (Chrome DevTools Protocol, mode mobile dan sentuh). Setiap halaman dibuka setelah login sesuai peran, lalu `document.documentElement.scrollWidth` dibandingkan dengan `innerWidth` | 16 dari 16 halaman lolos di kedua ukuran (32 dari 32 pengukuran, `scrollWidth` = `innerWidth`): I-01, I-02, I-03, I-04, I-05, I-06, Riwayat Penukaran, I-09, Detail Lokasi, I-11, Form CleanIt, Profil Masyarakat, I-07, I-08, Profil Operator, dan halaman 404. I-10, I-12, dan I-13 berada di route yang sama dengan I-09 dan I-11 sehingga tidak diukur terpisah. Alur UC03, UC06, UC08, dan UC09 diselesaikan di ukuran tersebut (4.4) | *Pass* |
 | KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
+| KNF04-TC01 | KNF04 | Reliability | Bila unggah foto/video bukti gagal, 100% percobaan (3/3 per jenis berkas) menampilkan notifikasi kegagalan dan tidak ada laporan yang berubah menjadi terkirim | Uji manual dengan Chrome DevTools (Network: blokir `POST /api/media` dan preset Offline sebelum memilih berkas, lalu uji foto dan video). Amati notifikasi, panel Network, dan status draf, tambahan bukti otomatis `tests/media-upload-client.test.ts` (`onerror`/`ontimeout` return kode `JARINGAN`) dan rollback `tests/api-laporan.test.ts` | Belum diuji | - |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
 <br>
@@ -834,10 +863,14 @@ Tabel 4.6. Bukti Hasil Pengujian
 | Coverage C04 (BUKTI-43) | ![BUKTI-43a](assets/BUKTI-43-50-A.png)<br>![BUKTI-43b](assets/BUKTI-43-50-B.png) |
 | Coverage C12 (BUKTI-48) | ![BUKTI-48](assets/BUKTI-48.png) |
 | Coverage C14 (BUKTI-50) | ![BUKTI-50a](assets/BUKTI-43-50-A.png)<br>![BUKTI-50b](assets/BUKTI-43-50-B.png) |
-| *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
-| *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
-| *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |
+| *C02-UT01 - C02-UT05 unit test dan coverage* | ![BUKTI-02](assets/BUKTI-02.png) |
+| *C03-UT01 - C03-UT05 unit test dan coverage* | ![BUKTI-04](assets/BUKTI-04.png) |
+| *C08-UT04 - C08-UT-08 unit test dan coverage* | ![BUKTI-10](assets/BUKTI-10.png) |
+| *C15-UT01 - C15-UT-05 unit test dan coverage* | ![BUKTI-19-A](assets/BUKTI-19-A.png)<br>![BUKTI-19-B](assets/BUKTI-19-B.png) |
+| *UC01-TC01* | *[Sisipkan tangkapan layar UC01-TC01 sesuai prosedur pengujian]* |
+| *UC01-TC02* | *[Sisipkan tangkapan layar UC01-TC02 sesuai prosedur pengujian]* |
 | *KNF01-TC01* | *[Sisipkan bukti pengukuran parameter KNF01-TC01]* |
+| *KNF04-TC01* |  |
 | *...* | *...* |
 
 <br>

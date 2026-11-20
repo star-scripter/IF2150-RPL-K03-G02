@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, eq, inArray } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/laporan/route";
 import { db } from "@/server/db";
@@ -120,6 +120,23 @@ describe.runIf(DATABASE_TEST_AKTIF)("POST /api/laporan", () => {
     });
     const [mediaTertaut] = await db.select().from(media).where(eq(media.id, bukti.idMedia));
     expect(mediaTertaut.laporanId).toBe(data.idLaporan);
+  });
+
+  it("membuat ReportIt dengan tiga media tepat pada batas maksimum", async () => {
+    const bukti = await Promise.all([
+      buatMedia({ idPengguna, laporanId: null }),
+      buatMedia({ idPengguna, laporanId: null }),
+      buatMedia({ idPengguna, laporanId: null }),
+    ]);
+    const idMedia = bukti.map(({ idMedia: id }) => id);
+
+    const response = await kirim(reportIt(idMedia));
+    expect(response.status).toBe(201);
+    const { data } = await response.json();
+
+    const rows = await db.select().from(media).where(inArray(media.id, idMedia));
+    expect(rows).toHaveLength(3);
+    expect(rows.every((row) => row.laporanId === data.idLaporan)).toBe(true);
   });
 
   it("membuat CleanIt, mengabaikan field ReportIt, dan menautkan media atomik", async () => {
