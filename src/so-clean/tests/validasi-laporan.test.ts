@@ -107,6 +107,18 @@ describe.runIf(DATABASE_TEST_AKTIF)("validasi laporan (BE-10)", () => {
     ).rejects.toMatchObject({ code: "DI_LUAR_WILAYAH", status: 422 });
   });
 
+  it("menerima nilai tepat pada batas judul 80 karakter dan tiga media", async () => {
+    const ids = await Promise.all([
+      buatMediaDenganHash(idPengguna, "1".repeat(64)),
+      buatMediaDenganHash(idPengguna, "2".repeat(64)),
+      buatMediaDenganHash(idPengguna, "3".repeat(64)),
+    ]);
+
+    await expect(
+      cek_laporan(inputReportIt({ judul: "x".repeat(80), idMedia: ids }), idPengguna, db, SEKARANG),
+    ).resolves.toMatchObject({ judul: "x".repeat(80), idMedia: ids });
+  });
+
   it("menerima ReportIt valid dan membersihkan teks judul/lokasi", async () => {
     const idMedia = await buatMediaDenganHash(idPengguna, "a".repeat(64));
     const result = await cek_laporan(
