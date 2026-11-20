@@ -48,11 +48,14 @@ Dipersiapkan oleh:
   - [4.1 Strategi dan Kedalaman Pengujian Kelas](#41-strategi-dan-kedalaman-pengujian-kelas)
   - [4.2 Pengujian Unit Kelas](#42-pengujian-unit-kelas)
     - [4.2.1 Kelas \[Nama Kelas 1\]](#421-kelas-nama-kelas-1)
-    - [4.2.2 Kelas \[Nama Kelas 2\]](#422-kelas-nama-kelas-2)
+    - [4.2.2 Kelas Laporan](#422-kelas-laporan)
+    - [4.2.3 Kelas Media](#423-kelas-media)
+    - [4.2.9 C08 Pengguna](#429-c08-pengguna)
   - [4.3 Pengujian Integrasi](#43-pengujian-integrasi)
   - [4.4 Pengujian Use Case](#44-pengujian-use-case)
     - [4.4.1 Use Case \[Nama Use Case 1\]](#441-use-case-nama-use-case-1)
     - [4.4.2 Use Case \[Nama Use Case 2\]](#442-use-case-nama-use-case-2)
+    - [4.4.7 UC07 Melihat Saldo Poin](#447-uc07-melihat-saldo-poin)
   - [4.5 Pengujian Kebutuhan Non-Fungsional (KNF)](#45-pengujian-kebutuhan-non-fungsional-knf)
   - [4.6 Tangkapan Layar dan Bukti Hasil Pengujian](#46-tangkapan-layar-dan-bukti-hasil-pengujian)
 - [BAB 5: Traceability](#bab-5-traceability)
@@ -395,6 +398,24 @@ Tabel 4.2.3b. Ringkasan Cakupan Kelas [C03]
 
 <br>
 
+### 4.2.9 C08 Pengguna
+
+**ID Kelas:** C08  
+**Nama Kelas:** Pengguna – UI auth/Beranda  
+**Tingkat:** Sedang  
+
+Note: Operasi C08 pada DPPL (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`, `notify`) berada di sisi server dan diuji pada bagian backend. Bagian ini menguji sisi tampilan C08 sesuai Tabel B.5 dokumen Implementasi: data Beranda (atribut `nama` dan `saldoPoin`) serta validasi Login/Register, yang merupakan tambahan di luar DPPL (B.1 no. 21). 
+
+Tabel 4.2.9. Hasil Pengujian Unit C08 (FE-A)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT01 | `authApi.me(): Promise<MeResponse>` dan `formatPoin(poin: number): string` (data Beranda) | Normal | Login ke mock API sebagai `masyarakat@soclean.test`, lalu ambil data pengguna lewat `authApi.me()` dan format saldonya dengan `formatPoin()` | Nama "Dapin Tampan" dan saldo "67" siap ditampilkan di Beranda | Nama "Dapin Tampan" dan saldo "67" | *Pass* |
+| C08-UT02 | `validasiRegister(isian: IsianRegister): GalatRegister \| null` | Batas | Nama dan email valid; password 7 karakter (`1234567`), 72 karakter, dan 73 karakter | 7 karakter ditolak ("Password minimal 8 karakter."); 72 karakter diterima; 73 karakter ditolak ("Password maksimal 72 karakter.") | Sesuai harapan untuk ketiga masukan | *Pass* |
+| C08-UT03 | `validasiLogin(isian: IsianLogin): GalatLogin \| null` | Negatif | Email `warga@` (format salah), password `x` | Galat pada field email: "Format email tidak valid." | Galat "Format email tidak valid." muncul | *Pass* |
+
+
+
 ## 4.3 Pengujian Integrasi
 
 Pengujian integrasi memeriksa interaksi antarkomponen yang melewati batas, yaitu *Controller* ke *Model*, aplikasi ke basis data, dan aplikasi ke sistem eksternal. Daftar antarmuka mengacu pada dokumen DPPL, dengan minimal satu test case untuk setiap antarmuka. Pengujian memakai komponen nyata, bukan *mock*. Apabila ada antarmuka tambahan yang belum didaftarkan pada dokumen DPPL, cantumkan juga.
@@ -441,6 +462,21 @@ Tabel 4.4.1. Hasil Pengujian Use Case [UC01]
 
 *[Lanjutkan untuk seluruh use case dengan pola yang sama, hingga 4.4.N.]*
 
+
+### 4.4.7 UC07 Melihat Saldo Poin
+
+**ID Use Case:** UC07  
+**Nama Use Case:** Melihat Saldo Poin
+
+Note: Pada SKPL, tidak ada skenario alternatif untuk UC07, sehingga UC07-TC02 menguji kondisi batas saldo poin 0.
+
+Tabel 4.4.7. Hasil Pengujian UC07
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC07-TC01 | KF11, KF12 | Normal | 1. Buka halaman Login.<br>2. Login sebagai Masyarakat.<br>3. Lihat kartu "Poin Anda" di Beranda. | Email: `budi@soclean.test`<br>Password: `soclean123` | Beranda menampilkan saldo poin pengguna, yaitu 100 | Beranda menampilkan sapaan "Budi Santoso" dan kartu "Poin Anda" berisi 100, sesuai hasil yang diharapkan | *Pass* |
+| UC07-TC02 | KF11, KF12 | Alternatif: saldo poin 0 | 1. Buka halaman Login.<br>2. Login sebagai Masyarakat yang belum punya poin.<br>3. Lihat kartu "Poin Anda" di Beranda. | Email: `andi@soclean.test`<br>Password: `soclean123` | Beranda menampilkan saldo "0" tanpa pesan error | Beranda menampilkan sapaan "Andi Pratama" dan kartu "Poin Anda" berisi 0 tanpa pesan error, sesuai hasil yang diharapkan | *Pass* |
+
 <br>
 
 ## 4.5 Pengujian Kebutuhan Non-Fungsional (KNF)
@@ -454,6 +490,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | *KNF01-TC01* | *KNF01* | *Reliability* | *Tidak ada data hilang/ganda saat jaringan putus di tengah transaksi* | *Simulasi putus koneksi saat bayar, lalu cek status di DB* | *[Hasil aktual]* | *Pass/Fail* |
 | *KNF02-TC01* | *KNF02* | *Security* | *Password tersimpan sebagai hash, bukan plain-text* | *Inspeksi tabel pengguna di DB* | *[...]* | *Pass/Fail* |
 | *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
+| KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
 <br>
@@ -466,6 +503,9 @@ Tabel 4.6. Bukti Hasil Pengujian
 
 | ID Pengujian | Bukti Hasil Pengujian |
 | :--- | :--- |
+| C08-UT01 – C08-UT03 (BUKTI-09) | ![BUKTI-09](assets/BUKTI-09.png) |
+| UC07-TC01 – UC07-TC02 (BUKTI-29) | ![BUKTI-29a](assets/BUKTI-29a.jpeg)<br>![BUKTI-29b](assets/BUKTI-29b.jpeg) |
+| KNF07-TC01 (BUKTI-38) | ![BUKTI-38a](assets/BUKTI-38a.png)<br>![BUKTI-38b](assets/BUKTI-38b.png)<br>![BUKTI-38c](assets/BUKTI-38c.png)<br>![BUKTI-38d](assets/BUKTI-38d.png) |
 | *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
 | *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
 | *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |

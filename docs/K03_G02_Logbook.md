@@ -35,6 +35,7 @@
     - [Milestone 7](#milestone-7)
     - [Milestone 8](#milestone-8)
     - [Milestone 9](#milestone-9)
+    - [Milestone 10](#milestone-10)
 
 ---
 
@@ -168,7 +169,7 @@
 
 ### Milestone 9
 
-**Periode:** 10/28/2026 - 11/11/2026
+**Periode:** 10/28/2026 - 11/13/2026
 
 | Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
 | :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
@@ -202,3 +203,11 @@
 | 13-11-2026 | Justin William | FE-17: Mengimplementasikan form bukti pembersihan CleanIt dengan pemeriksaan lokasi, validasi waktu, unggah media, dan pengiriman laporan. | 2.5 jam | Done | - |
 | 13-11-2026 | Jovan Nathanael | Mengisi bagian FE-A laporan implementasi (B.1, B.3, B.4, B.5), AI-Usage, dan logbook | 1,5 jam | Done | - |
 | 13-11-2026 | Faishal Ahmad Nurdin | FE-25: tampilan responsif 360 px dan desktop, komponen error/empty state bersama, halaman 404 dan error | 1 jam | Done | Tipe route Next usang membuat tsc gagal sampai `next typegen` dijalankan |
+
+### Milestone 10
+
+**Periode:** 11/13/2026 - 11/20/2026
+
+| Tanggal      | Nama Anggota | Deskripsi Pekerjaan               | Durasi (Jam) | Status                | Kendala / _Blocker_                                          |
+| :----------- | :----------- | :-------------------------------- | :----------- | :-------------------- | :----------------------------------------------------------- |
+| 20-11-2026 | Jovan Nathanael | Mengisi HIUPL Bab 4 bagian FE-A: unit test C08 (UI auth/Beranda), use case UC07, KNF07 (draf offline), dan bukti BUKTI-09/29/38 | 1 jam | Done | Build Docker gagal karena masalah DNS registry |
