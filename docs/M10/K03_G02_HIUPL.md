@@ -506,7 +506,7 @@ Tabel 4.2.6b. Ringkasan Cakupan C05
 | Daftar operasi public pada DPPL | `get_laporan_unverified()`, `get_detail(idLaporan)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `tolak(idLaporan, alasan)`, `tampilkan_konfirmasi()` |
 | Operasi yang diuji | `get_detail`, `setujui` (termasuk `setujui_cleanit`), `tolak`. `get_laporan_unverified` diwujudkan sebagai `get_all_laporan_unverified` pada ManagerLaporan dan diuji pada 4.2.20; `tampilkan_konfirmasi` diwujudkan sebagai respons JSON yang diperiksa pada setiap kasus dan ditampilkan oleh LaporanView (C14) |
 | ID Algoritma yang tercakup | Algo-015, Algo-016 |
-| Coverage (wajib ≥ 70%) | 94,02% line, 88,88% branch, 94,2% statement, 100% function (`validator-laporan.ts`, dari `api-daftar-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-tolak-laporan`). Baris yang tidak tercakup hanya `throw` defensif: keadaan yang dicegah constraint database (pelapor atau lokasi CleanIt tidak ada) dan pemanggilan internal yang salah (`setujui_cleanit` untuk laporan non-CleanIt) |
+| Coverage (wajib ≥ 70%) | 94,02% line, 88,88% branch, 94,2% statement, 100% function (`validator-laporan.ts`, dari `api-daftar-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-tolak-laporan`). Baris yang tidak tercakup hanya `throw` defensif: keadaan yang dicegah constraint database (pelapor atau lokasi CleanIt tidak ada) dan pemanggilan internal yang salah (`setujui_cleanit` untuk laporan non-CleanIt). Alat: Vitest Coverage V8, bukti pada BUKTI-44 |
 
 ### 4.2.7 C06 Lokasi
 
@@ -535,7 +535,7 @@ Tabel 4.2.7b. Ringkasan Cakupan C06
 | Daftar operasi public pada DPPL | `simpan_lokasi(koordinat)`, `get_all_lokasi_valid()`, `get_lokasi(idLokasi)` |
 | Operasi yang diuji | `simpan_lokasi`, `get_all_lokasi_valid`, `get_lokasi`, ditambah operasi implementasi `cariTerdekatTercemar` (pengganti Q-001), `kotakPencarian`, `kunciPemetaanLokasi`, `tandaiDibersihkan`, `getRingkasanByIds`, `getPelaporAsal` |
 | ID Algoritma yang tercakup | Algo-017 (berubah bentuk: cek duplikat radius 50 m), Algo-018, Algo-019 |
-| Coverage (wajib ≥ 70%) | 97,5% line, 92,1% branch, 97,72% statement, 100% function (`server/models/lokasi.ts`, dari `model-lokasi`, `model-detail-laporan`, `kotak-pencarian`, `api-setujui-reportit`, `api-setujui-cleanit`). Baris yang tidak tercakup hanya `throw` defensif untuk laporan asal tanpa sumber, yang dicegah CHECK `laporan_field_per_jenis_check` |
+| Coverage (wajib ≥ 70%) | 97,5% line, 92,1% branch, 97,72% statement, 100% function (`server/models/lokasi.ts`, dari `model-lokasi`, `model-detail-laporan`, `kotak-pencarian`, `api-setujui-reportit`, `api-setujui-cleanit`). Baris yang tidak tercakup hanya `throw` defensif untuk laporan asal tanpa sumber, yang dicegah CHECK `laporan_field_per_jenis_check`. Alat: Vitest Coverage V8, bukti pada BUKTI-45 |
 
 ### 4.2.9 C08 Pengguna (Auth FE)
 
@@ -608,7 +608,7 @@ Tabel 4.2.11b. Ringkasan Cakupan C08 (BE-B)
 | Daftar operasi public pada DPPL | `getSaldoPoin()`, `cukupPoin(harga)`, `kurangiPoin(jumlah)`, `tambah_poin(jumlahPoin)`, `notify(msg)` |
 | Operasi yang diuji | `getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`, `getNotifikasi` dan `tandaiNotifikasiDibaca` (pengganti `notify`) |
 | ID Algoritma yang tercakup | Algo-024, Algo-025, Algo-026, Algo-027, Algo-028 (berubah bentuk: notifikasi diturunkan dari laporan) |
-| Coverage (wajib ≥ 70%) | Fungsi BE-B pada `server/models/pengguna.ts` saja: 95,24% statement, 95,45% branch, 100% function (dari `model-pengguna` dan `api-notifikasi`). Satu-satunya cabang yang tidak tercakup adalah `throw` defensif untuk laporan terverifikasi tanpa `diverifikasi_at`, yang dicegah CHECK `laporan_verifikasi_check`. Satu file penuh bersama test BE-A: 96,15% line, 96,87% branch |
+| Coverage (wajib ≥ 70%) | Fungsi BE-B pada `server/models/pengguna.ts` saja: 95,24% statement, 95,45% branch, 100% function (dari `model-pengguna` dan `api-notifikasi`). Satu-satunya cabang yang tidak tercakup adalah `throw` defensif untuk laporan terverifikasi tanpa `diverifikasi_at`, yang dicegah CHECK `laporan_verifikasi_check`. Satu file penuh bersama test BE-A: 96,15% line, 96,87% branch. Alat: Vitest Coverage V8, bukti pada BUKTI-47 |
 
 ### 4.2.12 C08 Pengguna (Profil)
 
@@ -730,7 +730,7 @@ Tabel 4.2.17b. Ringkasan Cakupan C13
 | Daftar operasi public pada DPPL | `buatPenukaran(pengguna, reward)` |
 | Operasi yang diuji | `buatPenukaran`, ditambah operasi implementasi `buatKodeVoucher` dan `getRiwayat` |
 | ID Algoritma yang tercakup | Algo-045 |
-| Coverage (wajib ≥ 70%) | 100% line, 100% branch, 100% function (`server/models/penukaran.ts`, dari `model-penukaran` dan `api-riwayat-penukaran`) |
+| Coverage (wajib ≥ 70%) | 100% line, 100% branch, 100% function (`server/models/penukaran.ts`, dari `model-penukaran` dan `api-riwayat-penukaran`). Alat: Vitest Coverage V8, bukti pada BUKTI-49 |
 
 ### 4.2.18 C14 LaporanView
 
@@ -835,7 +835,7 @@ Tabel 4.2.21b. Ringkasan Cakupan C16
 | Daftar operasi public pada DPPL | `tukarPoin(pengguna, idReward)` |
 | Operasi yang diuji | `tukarPoin`, ditambah operasi implementasi `getRiwayatPenukaran` |
 | ID Algoritma yang tercakup | Algo-064 (memakai Algo-040, Algo-041, Algo-030, Algo-033, Algo-045) |
-| Coverage (wajib ≥ 70%) | 100% line, 100% branch, 100% function (`server/controllers/penukaran.ts`, dari `api-penukaran` dan `api-riwayat-penukaran`) |
+| Coverage (wajib ≥ 70%) | 100% line, 100% branch, 100% function (`server/controllers/penukaran.ts`, dari `api-penukaran` dan `api-riwayat-penukaran`). Alat: Vitest Coverage V8, bukti pada BUKTI-53 |
 
 ## 4.3 Pengujian Integrasi
 
@@ -1005,6 +1005,25 @@ Tabel 4.6. Bukti Hasil Pengujian
 | Coverage C04 (BUKTI-43) | ![BUKTI-43a](assets/BUKTI-43-50-A.png)<br>![BUKTI-43b](assets/BUKTI-43-50-B.png) |
 | Coverage C12 (BUKTI-48) | ![BUKTI-48](assets/BUKTI-48.png) |
 | Coverage C14 (BUKTI-50) | ![BUKTI-50a](assets/BUKTI-43-50-A.png)<br>![BUKTI-50b](assets/BUKTI-43-50-B.png) |
+| C05-UT01 – C05-UT05 (BUKTI-06) | Keluaran Vitest pada PostgreSQL `soclean_test` (`api-daftar-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-tolak-laporan`): 4 file test, 46 test lulus, 0 gagal |
+| C06-UT01 – C06-UT05 (BUKTI-07) | Keluaran Vitest pada `soclean_test` (`model-lokasi`, `model-detail-laporan`, `kotak-pencarian`): 3 file test, 16 test lulus, 0 gagal |
+| C08-UT09 – C08-UT13 (BUKTI-11) | Keluaran Vitest pada `soclean_test` (`model-pengguna`, `api-notifikasi`): 2 file test, 17 test lulus, 0 gagal |
+| C09-UT01 – C09-UT03 (BUKTI-13) | Keluaran Vitest pada `soclean_test` (`model-reward`): 1 file test, 7 test lulus, 0 gagal |
+| C11-UT01 – C11-UT03 (BUKTI-15) | Keluaran Vitest pada `soclean_test` (`manager-poin`, `api-poin`, `api-reward`): 3 file test, 10 test lulus, 0 gagal |
+| C13-UT01 – C13-UT05 (BUKTI-17) | Keluaran Vitest pada `soclean_test` (`model-penukaran`, `api-riwayat-penukaran`): 2 file test, 13 test lulus, 0 gagal |
+| C15-UT06 – C15-UT08 (BUKTI-20) | Keluaran Vitest pada `soclean_test` (`api-daftar-laporan`, `verifikasi-ganda`, `api-lokasi`): 3 file test, 30 test lulus, 0 gagal |
+| C16-UT01 – C16-UT05 (BUKTI-21) | Keluaran Vitest pada `soclean_test` (`api-penukaran`, `api-riwayat-penukaran`): 2 file test, 23 test lulus, 0 gagal |
+| INT-TC01 – INT-TC08 (BUKTI-22) | Keluaran Vitest dengan PostgreSQL `soclean_test` dan RustFS nyata (`api-laporan`, `api-setujui-reportit`, `api-setujui-cleanit`, `api-penukaran`, `integrasi-media-storage`, `api-poin`): 6 file test, 48 test lulus, 0 gagal, termasuk 3 test unggah media ke RustFS (INT-TC07) |
+| KNF01-TC01 (BUKTI-32) | ![BUKTI-32](assets/BUKTI-32.png) |
+| KNF02-TC01 (BUKTI-33) | ![BUKTI-33](assets/BUKTI-33.png) |
+| KNF05-TC01 (BUKTI-36) | Keluaran Vitest pada `soclean_test` (`api-penukaran`, filter test *rollback*): 3 test lulus, yaitu rollback saldo dan stok saat pencatatan penukaran gagal (500), saldo terpakai transaksi lain setelah pengecekan awal (422 `POIN_TIDAK_CUKUP`), dan dua penukaran bersamaan dengan saldo untuk satu |
+| KNF06-TC01 (BUKTI-37) | Belum ada bukti pengukuran karena *uptime* bulanan baru dapat diukur setelah *deploy* (lihat KNF06-TC01). Konfigurasi pendukung ada di `src/compose.yaml`: `restart: unless-stopped` pada layanan `web` dan `db`, serta *healthcheck* pada `db` |
+| Coverage C05 (BUKTI-44) | Vitest Coverage V8 pada `server/controllers/validator-laporan.ts` (46 test lulus): 94,2% statement, 88,88% branch, 100% function, 94,02% line. Baris tidak tercakup: 93, 117, 125, 199 |
+| Coverage C06 (BUKTI-45) | Vitest Coverage V8 pada `server/models/lokasi.ts` (35 test lulus): 97,72% statement, 92,1% branch, 100% function, 97,5% line. Baris tidak tercakup: 94 |
+| Coverage C08 BE-B (BUKTI-47) | Vitest Coverage V8 pada `server/models/pengguna.ts` (17 test lulus). Fungsi BE-B saja (7 fungsi): 95,24% statement (20/21), 95,45% branch (21/22), 100% function (7/7). Satu file: 96,29% statement, 96,87% branch, 96,15% line |
+| Coverage C13 (BUKTI-49) | Vitest Coverage V8 pada `server/models/penukaran.ts` (13 test lulus): 100% statement, branch, function, dan line |
+| Coverage C15 BE-B (BUKTI-52) | Vitest Coverage V8 pada `server/controllers/manager-laporan.ts` (47 test lulus). Fungsi BE-B saja (10 fungsi): 92,59% statement (50/54), 87,5% branch (28/32), 100% function (10/10). Fungsi BE-A pada file yang sama diukur di BUKTI-51 |
+| Coverage C16 (BUKTI-53) | Vitest Coverage V8 pada `server/controllers/penukaran.ts` (23 test lulus): 100% statement, branch, function, dan line |
 | *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
 | *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
 | *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |
