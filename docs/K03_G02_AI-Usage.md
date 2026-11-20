@@ -106,6 +106,12 @@ Silakan catat penggunaan AI yang berdampak signifikan pada pengerjaan tugas (mis
 | Claude Code | (FE-C, Faishal) Menyusun teks Issue dan PR sesuai template kontrak v0.8 beserta langkah pengambilan bukti. | "Sekarang buat format PR berdasarkan contoh yang sudah dibuat beserta langkah pengambilan bukti…" | Teks diedit; screenshot diambil dan diunggah sendiri; commit dan push dijalankan sendiri |
 | Claude Code | (BE-B, Dhafin) Implementasi tugas BE-B | "Implementasi BE-xx sesuai dengan ketentuan"  | Testing ulang, cross-review untuk PR |
 
+### Milestone 10
+
+| Tool AI | Tujuan Penggunaan | Contoh Prompt Utama | Modifikasi & Validasi Manusia |  
+| :------ | :---------------- | :------------------ | :---------------------------- |
+| Claude Code | Menyusun langkah pengisian HIUPL Bab 4 bagian FE-A dan draf isian tabel C08, UC07, KNF07 | "Buatkan langkah-langkah superkomprehensif untuk bagian FE-A..." | Test dijalankan ulang sendiri; pengujian manual UC07 dan KNF07 serta screenshot dilakukan sendiri; isian tabel disesuaikan dengan hasil aktual |
+
 ### Pernyataan Integritas dan Persetujuan
 
 Kami yang bertanda tangan di bawah ini menyatakan bahwa seluruh log penggunaan AI di atas adalah benar. Kami telah memvalidasi seluruh hasil AI dan bertanggung jawab penuh atas orisinalitas, keamanan, dan kebenaran hasil akhir dari tugas ini.
