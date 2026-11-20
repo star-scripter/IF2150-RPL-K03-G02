@@ -71,15 +71,18 @@ export function normalizeApiError(error: unknown): ApiError {
 
   // The partial unique index is the final guard against concurrent CleanIt requests.
   // Map only this named constraint; unrelated database errors remain opaque INTERNAL_ERRORs.
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    error.code === "23505" &&
-    "constraint" in error &&
-    error.constraint === "laporan_cleanit_menunggu_uidx"
-  ) {
-    return new ApiError("CLEANIT_SUDAH_MENUNGGU", "Anda masih memiliki CleanIt yang menunggu untuk lokasi ini.");
+  // Drizzle wraps driver errors in `DrizzleQueryError.cause`, so inspect the cause chain.
+  let penyebab: unknown = error;
+  for (let kedalaman = 0; kedalaman < 4 && typeof penyebab === "object" && penyebab !== null; kedalaman++) {
+    if (
+      "code" in penyebab &&
+      penyebab.code === "23505" &&
+      "constraint" in penyebab &&
+      penyebab.constraint === "laporan_cleanit_menunggu_uidx"
+    ) {
+      return new ApiError("CLEANIT_SUDAH_MENUNGGU", "Anda masih memiliki CleanIt yang menunggu untuk lokasi ini.");
+    }
+    penyebab = "cause" in penyebab ? penyebab.cause : undefined;
   }
 
   if (error instanceof ZodError) {
