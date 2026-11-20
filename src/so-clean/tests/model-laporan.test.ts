@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { db } from "@/server/db";
 import { laporan } from "@/server/db/schema";
 import {
+  adaCleanItMenunggu,
   buatLaporan as buatLaporanModel,
   getDaftarLaporan,
   getLaporanById,
@@ -145,6 +146,68 @@ describe.runIf(DATABASE_TEST_AKTIF)("model Laporan (C02)", () => {
     const cleanIt = await getDaftarLaporan({ jenis: "CLEANIT", page: 1, limit: 10 });
     expect(cleanIt.data.map(({ jenis }) => jenis)).toEqual(["CLEANIT"]);
     expect(cleanIt.total).toBe(1);
+  });
+
+  it("mengembalikan hasil kosong jika filter tidak cocok atau halaman melewati hasil terakhir", async () => {
+    await expect(getDaftarLaporan({ page: 1, limit: 6 })).resolves.toEqual({ data: [], total: 0 });
+
+    const satuReportIt = await buatLaporanModel({
+      jenis: "REPORTIT",
+      idPengguna,
+      judul: "Sampah di tepi jalan",
+      waktu: new Date("2026-11-07T10:00:00.000Z"),
+      lokasi: "Jl. Uji No. 4",
+      latitude: -6.12,
+      longitude: 106.83,
+      sumber: "INFO_WARGA",
+      jenisSampah: "PLASTIK",
+    });
+
+    await expect(
+      getDaftarLaporan({ jenis: "CLEANIT", page: 1, limit: 6 }),
+    ).resolves.toEqual({ data: [], total: 0 });
+
+    const setelahHalamanTerakhir = await getDaftarLaporan({
+      jenis: "REPORTIT",
+      status: "BELUM_DIPERIKSA",
+      sort: "terbaru",
+      page: 2,
+      limit: 1,
+    });
+    expect(setelahHalamanTerakhir).toEqual({ data: [], total: 1 });
+    expect(await getLaporanById(satuReportIt.idLaporan)).not.toBeNull();
+  });
+
+  it("mendeteksi CleanIt menunggu hanya untuk pengguna dan lokasi yang sama", async () => {
+    const { idLokasi } = await buatLokasi({ pelapor: idPengguna, operator: idOperator });
+    const { idLokasi: idLokasiLain } = await buatLokasi({
+      pelapor: idPengguna,
+      operator: idOperator,
+      nama: "Lokasi lain",
+    });
+    const penggunaLain = await buatPengguna();
+
+    await expect(adaCleanItMenunggu(idPengguna, idLokasi)).resolves.toBe(false);
+
+    const cleanIt = await buatLaporanModel({
+      jenis: "CLEANIT",
+      idPengguna,
+      judul: "Pembersihan menunggu",
+      waktu: new Date("2026-11-08T10:00:00.000Z"),
+      lokasiId: idLokasi,
+    });
+
+    await expect(adaCleanItMenunggu(idPengguna, idLokasi)).resolves.toBe(true);
+    await expect(adaCleanItMenunggu(penggunaLain.id, idLokasi)).resolves.toBe(false);
+    await expect(adaCleanItMenunggu(idPengguna, idLokasiLain)).resolves.toBe(false);
+    await expect(adaCleanItMenunggu(idPengguna, 999999)).resolves.toBe(false);
+
+    await ubah_status(cleanIt.idLaporan, {
+      status: "VALID",
+      diverifikasiOleh: idOperator,
+      diverifikasiAt: new Date("2026-11-08T11:00:00.000Z"),
+    });
+    await expect(adaCleanItMenunggu(idPengguna, idLokasi)).resolves.toBe(false);
   });
 
   it("mengubah status dan menyimpan alasan penolakan melalui tx", async () => {

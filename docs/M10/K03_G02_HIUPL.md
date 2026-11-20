@@ -63,8 +63,8 @@ Dipersiapkan oleh:
 
 | Revisi | Deskripsi |
 | :--- | :--- |
-| *A* | *Deskripsikan perubahan yang dilakukan dari dokumen sebelumnya pada dokumen ini. Jika tidak terdapat perubahan, harap kosongkan tabel.* |
-| *B* |  |
+| *A* | Penyesuaian ID algoritma pada DPPL2 |
+| *B* | Update tests dari implementasi |
 | *C* |  |
 | ... |  |
 
@@ -268,8 +268,14 @@ Tabel 3.4. File Lain
 
 | No | Nama File | Keterangan |
 | :--- | :--- | :--- |
-| 1 | *[Nama file]* | *[Fungsi file]* |
-| ... | *...* | *...* |
+| 1 | Dockerfile dan konfigurasinya (`.env.example`, `compose.yaml`, `compose.override.yaml`, `.dockerignore`) | Kontainerisasi web, PostgreSQL, dan RustFS dengan Docker (`Dockerfile` biasa untuk production, `Dockerfile.dev` untuk development), termasuk konfigurasi Docker Compose serta contoh environment variables |
+| 2 | File-file konfigurasi (`tsconfig.json`, `vitest.config.mjs`, `next.config.ts`, `eslint.config.mjs`) | Konfigurasi NextJS, Typescript, Vitest, dan Linter |
+| 3 | Dependensi (`package.json`, `package-lock.json`) | Dependensi NextJS |
+| 4 | File-file pengujian (`tests/helpers`, misal `tests/helpers/akses.test.ts`)| Unit testing |
+| 5 | File-file helper ( di `lib/`, misal `lib/api/client.ts`) | Dipakai sebagai fungsi-fungsi yang dipakai bersama. Bisa saja mengacu ke tipe yang terdefinisi sebagai implementasi utama, namun by itself bukan merupakan implementasi utama. |
+| 6 | File-file komponen React ( di `components/`, misal `components/Beranda.tsx`) | Sebagai reusable components di front-end |
+| 7 | File-file routing NextJS di (`app/`, misal `app/(pages)/(auth)/login/page.tsx`) | By default, routing NextJS adalah di app yang ditandai seperti page.tsx dalam directory tertentu di dalam app |
+| 7 | File-file database di (`server/db/`, termasuk file sql seperti `0000_init.sql`, schema-nya, dan profiling) | Database, migrasi, Drizzle, seed data, profiling |
 
 <br>
 
@@ -327,9 +333,65 @@ Tabel 4.2.1b. Ringkasan Cakupan Kelas [C02]
 | ID Algoritma yang tercakup | *[Algo-001, ...]* |
 | Coverage (wajib ≥ 70%) | *[% baris / % cabang, alat dan bukti pada 4.6]* |
 
-### 4.2.2 Kelas [Nama Kelas 2]
+### 4.2.2 Kelas Laporan
 
-*[Ulangi pola 4.2.1 untuk setiap kelas bertingkat Mendalam atau Sedang.]*
+**ID Kelas:** *[C02]*  
+**Nama Kelas:** *[Laporan]*  
+**Tingkat:** *[Mendalam]*
+
+Tabel 4.2.1. Hasil Pengujian Unit Kelas [C02]
+
+Note: `buatLaporan(...)` tidak punya kasus batas dan negatif. Validasi dilakukan sepenuhnya pada ManagerLaporan. Kasus batas `getLaporanById(...)` juga sudah cukup direpresentasikan melalui jalur normal pada satu laporan dan ID laporan yang belum ada. Untuk `simpan_alasan_penolakan(...)`, batas panjang alasan divalidasi di ValidatorLaporan. Untuk `ubah_status_verifikasi` tidak ada kasus batas.
+
+Coverage fungsi hanya di atas 70% jika mengacu juga pada file pada testing integrasi. Hal ini karena fungsi-fungsi pada model laporan banyak pula digunakan pada file testing di luar testing kelas. Lebih lanjut akan diuraikan pada bagian tersebut.
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| *C02-UT01* | *`buatLaporan(input: LaporanBaru, tx: Eksekutor = db): Promise<LaporanTersimpan>` dan `getLaporanById(id: number)`* | Normal/negatif | Laporan, baik CleanIt maupun ReportIt diinisialisasi dengan operasi bersangkutan, lalu dicek keberadaannya melalui `getLaporanById`. Juga melakukan pengujian untuk id laporan yang belum pernah ada seperti 99999 | Laporan dengan ID yang sama dengan ID laporan yang baru dibuat adalah laporan yang sama. Untuk id tidak valid, NULL. | Laporan dengan ID yang sama dengan ID laporan yang baru dibuat adalah laporan yang sama. Id tidak valid NULL | *Pass* |
+| *C02-UT02* | *`getDaftarLaporan(filter: FilterDaftarLaporan, tx: Eksekutor = db,): Promise<{ data: LaporanTersimpan[]; total: number }>`* | Normal/batas | Beberapa laporan sudah diinisialisasi, lalu ambil daftar laporan dengan filter jenis/status, lalu uji paginasi, limit, dan sorting berdasarkan `createdAt` | Data yang muncul sesuai filter, sorting berdasarkan `createdAt`, `total` sesuai dengan jumlah elemen yang muncul dengan at most `limit`, tapi jika elemen di bawah `limit` maka sesuai jumlah elemennya | Data yang muncul sesuai filter, sorting berdasarkan `createdAt`, `total` sesuai dengan jumlah elemen yang muncul dengan at most `limit`, tapi jika elemen di bawah `limit` maka sesuai jumlah elemennya | *Pass* |
+| *C02-UT03* | *`getDaftarLaporan(filter: FilterDaftarLaporan, tx: Eksekutor = db,): Promise<{ data: LaporanTersimpan[]; total: number }>`* | Negatif/batas | Sebuah laporan ReportIt yang diinisialisasi, lalu difilter dengan filter yang tidak sesuai. Dilakukan juga pengecekan halaman melewati hasil terakhir | Daftar laporan menunjukkan list kosong | Daftar laporan menunjukkan list kosong | *Pass* |
+| *C02-UT04* | `ubah_status(idLaporan: number, perubahan: PerubahanStatusLaporan, tx: Eksekutor = db,)` dan `simpan_alasan_penolakan(idLaporan: number, alasanPenolakan: string, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`| Normal/negatif | Ubah status laporan dan menyimpan alasan | Status laporan, alasan penolakan, metadata verifikasi berubah disesuaikan dan disimpan, untuk ID yang tidak ada menghasilkan NULL | Status laporan, alasan penolakan, metadata verifikasi berubah disesuaikan dan disimpan, untuk ID yang tidak ada menghasilkan NULL | *Pass* |
+| *C02-UT05* | `adaCleanItMenunggu(idPengguna: string,lokasiId: number,tx: Pick<Db, "select"> = db,): Promise<boolean>` | Normal/negatif | Laporan CleanIt dengan status belum diperiksa pada lokasi tertentu | Kalau pengguna dan lokasi sesuai, true. False jika pengguna/lokasi berbeda, tidak ada yang menunggu, atau sudah diverifikasi | Kalau pengguna dan lokasi sesuai, true. False jika pengguna/lokasi berbeda, tidak ada yang menunggu, atau sudah diverifikasi | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.1b. Ringkasan Cakupan Kelas [C02]
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `buatLaporan(input: LaporanBaru, tx: Eksekutor = db): Promise<LaporanTersimpan>`, `getDaftarLaporan(filter: FilterDaftarLaporan, tx: Eksekutor = db,): Promise<{ data: LaporanTersimpan[]; total: number }>`, `ubah_status(idLaporan: number, perubahan: PerubahanStatusLaporan, tx: Eksekutor = db,)`, `simpan_alasan_penolakan(idLaporan: number, alasanPenolakan: string, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`, `adaCleanItMenunggu(idPengguna: string,lokasiId: number,tx: Pick<Db, "select"> = db,): Promise<boolean>`, sisanya diuji pada integration testing, yaitu `hitungBersihkanSendiri30Hari(idPengguna: string, kecualiIdLaporan: number, tx: Pick<Db, "select"> = db,): Promise<number>`, `ubah_status_verifikasi(idLaporan: number, keputusan: KeputusanVerifikasi, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`, `tolakCleanItMenungguLain(idLokasi: number kecualiIdLaporan: number, diverifikasiOleh: string, tx: Pick<Db, "update"> = db,): Promise<number[]>`|
+| Operasi yang diuji | `buatLaporan(input: LaporanBaru, tx: Eksekutor = db): Promise<LaporanTersimpan>`, `getDaftarLaporan(filter: FilterDaftarLaporan, tx: Eksekutor = db,): Promise<{ data: LaporanTersimpan[]; total: number }>`, `ubah_status(idLaporan: number, perubahan: PerubahanStatusLaporan, tx: Eksekutor = db,)`, `simpan_alasan_penolakan(idLaporan: number, alasanPenolakan: string, tx: Eksekutor = db,): Promise<LaporanTersimpan \| null>`, `adaCleanItMenunggu(idPengguna: string,lokasiId: number,tx: Pick<Db, "select"> = db,): Promise<boolean>` |
+| ID Algoritma yang tercakup | Algo-005, Algo-006 (berubah bentuk), Algo-007 (berubah bentuk), Algo-008, Algo-009 |
+| Coverage (wajib ≥ 70%) | 73.33% branch dan 74.19% lines (hanya mengacu pada `model-laporan.test.ts`), 100% (model-detail-laporan.test.ts, verifikasi-ganda.test.ts, validasi-laporan.test.ts, api-setujui-reportit.test.ts, tests/api-setujui-cleanit.test.ts ) |
+
+### 4.2.3 Kelas Media
+
+**ID Kelas:** *[C03]*
+**Nama Kelas:** *[Media]*
+**Tingkat:** *[Mendalam]*
+
+Note: hanya melaporkan operasi pada `server/models/media.ts`. Pengujian controller upload, pemrosesan gambar/video, dan adapter object storage tidak dihitung sebagai coverage Model Media.
+
+Tabel 4.2.3. Hasil Pengujian Unit Kelas [C03]
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| *C03-UT01* | `sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean>` | Normal/negatif | Periksa hash yang tertaut ke laporan `VALID`, laporan `TIDAK_VALID`, media belum tertaut, dan hash yang tidak ada | True hanya untuk hash media pada laporan yang tidak ditolak, sisanya false | True hanya untuk hash media pada laporan yang tidak ditolak, sisanya false | *Pass* |
+| *C03-UT02* | `buatMedia(input: MediaBaru): Promise<number>` | Normal | Simpan metadata media berisi pengguna, storage key, tipe, ukuran, hash, dan waktu unggah | Baris media tersimpan dengan nilai sesuai input dan `laporan_id` NULL | Baris media tersimpan dengan nilai sesuai input dan `laporan_id` NULL| *Pass* |
+| *C03-UT03* | `getUntukLaporan(idMedia: number[], idPengguna: string, tx: Eksekutor = db,): Promise<MediaUntukLaporan[]>` | Normal/negatif | Ambil ID media milik pengguna, ID media milik pengguna lain, ID yang tidak ada, panggil juga dengan daftar ID kosong | Media milik pengguna dikembalikan, daftar kosong menghasilkan `[]` | Media milik pengguna dikembalikan, daftar kosong menghasilkan `[]` | *Pass* |
+| *C03-UT04* | `tautkanKeLaporan(idMedia: number[], idPengguna: string, idLaporan: number,: Pick<Db, "update"> = db,): Promise<number>` | Normal/negatif | Tautkan media belum terpakai milik pengguna, sertakan juga media pengguna lain, media yang sudah tertaut, ID tidak ada, dan daftar kosong | Hanya media belum tertaut milik pengguna yang berubah dengan nilai kembalian adalah jumlah baris yang berubah, daftar kosong menghasilkan `0` | Hanya media belum tertaut milik pengguna yang berubah dengan nilai kembalian adalah jumlah baris yang berubah, daftar kosong menghasilkan `0` | *Pass* |
+| *C03-UT05* | `getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]>` | Normal/negatif | Buat dua media pada satu laporan dan satu media tanpa tautan, lalu ambil media berdasarkan ID laporan | Hanya media pada laporan tersebut yang dikembalikan dalam urutan ID unggah | Hanya media pada laporan tersebut yang dikembalikan dalam urutan ID unggah | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.3b. Ringkasan Cakupan Kelas [C03]
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Operasi pada Model Media yang diuji | `sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean>`, `buatMedia(input: MediaBaru): Promise<number>`, `getUntukLaporan(idMedia: number[], idPengguna: string, tx: Eksekutor = db,): Promise<MediaUntukLaporan[]>`, `tautkanKeLaporan(idMedia: number[], idPengguna: string, idLaporan: number,: Pick<Db, "update"> = db,): Promise<number>`, `getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]>` |
+| Operasi yang diuji | `sudahDipakai(sha256: string, tx: Eksekutor = db): Promise<boolean>`, `buatMedia(input: MediaBaru): Promise<number>`, `getUntukLaporan(idMedia: number[], idPengguna: string, tx: Eksekutor = db,): Promise<MediaUntukLaporan[]>`, `tautkanKeLaporan(idMedia: number[], idPengguna: string, idLaporan: number,: Pick<Db, "update"> = db,): Promise<number>`, `getByLaporan(idLaporan: number, tx: Eksekutor = db): Promise<MediaTersimpan[]>` |
+| ID Algoritma yang tercakup | Algo-010 |
+| Coverage (wajib ≥ 70%) | 100% |
 
 <br>
 
