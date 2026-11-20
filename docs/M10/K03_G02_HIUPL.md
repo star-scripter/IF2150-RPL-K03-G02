@@ -490,7 +490,7 @@ Tabel 4.2.9. Hasil Pengujian Unit C08 (FE-A)
 **Nama Kelas:** Pengguna (Auth BE)
 **Tingkat:** Mendalam
 
-Note: Operasi C08 pada DPPL yang berkaitan dengan saldo poin (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`) dan `notify` diuji pada 4.2.11 (BE-B). Bagian ini menguji operasi auth dan sesi yang ditambahkan pada implementasi (BE-05): pencarian akun login, pembuatan akun Masyarakat, pembacaan profil, aturan akun, serta token/cookie/guard sesi.`cariUntukLogin`, `buatMasyarakat`, dan `getMe` hanya memakai normal/negatif karena masukannya berupa email atau ID (UUID) tanpa rentang nilai, sehingga tidak ada nilai batas yang menguji aturan berbeda.
+Note: Operasi C08 pada DPPL yang berkaitan dengan saldo poin (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`) dan `notify` diuji pada 4.2.11 (BE-B). Bagian ini menguji operasi auth dan sesi yang ditambahkan pada implementasi (BE-05): pencarian akun login, pembuatan akun Masyarakat, pembacaan profil, aturan akun, serta token/cookie/guard sesi. `cariUntukLogin`, `buatMasyarakat`, dan `getMe` hanya memakai normal/negatif karena masukannya berupa email atau ID (UUID) tanpa rentang nilai, sehingga tidak ada nilai batas yang menguji aturan berbeda. Batas panjang nama/email/password divalidasi `registerSchema` dan diuji pada C08-UT07, sedangkan batas sesi 7 hari diuji pada C08-UT08.
 
 Tabel 4.2.10. Hasil Pengujian Unit C08 (BE-A)
 
@@ -510,8 +510,8 @@ Tabel 4.2.10b. Ringkasan Cakupan C08 (BE-A)
 | :--- | :--- |
 | Daftar operasi public pada DPPL | `tambah_poin(idPengguna, jumlahPoin)`, `notify(msg)`, `getSaldoPoin()`, `cukupPoin(harga)`, `kurangiPoin(jumlah)`, `cariUntukLogin`, `buatMasyarakat`, `getMe`, serta helper `server/auth/*` |
 | Operasi yang diuji | `cariUntukLogin`, `buatMasyarakat`, `getMe`, `normalisasiEmail`, `normalisasiNama`, `registerSchema`, `loginSchema`, `hashPassword`, `verifyPassword`, `signSessionToken`, `verifySessionToken`, `sessionCookieOptions`, `setSessionCookie`, `getSessionCookie`, `deleteSessionCookie`, `requireRoleCookie`, `wajibLogin` |
-| ID Algoritma yang tercakup |  Algo-002 dan Algo-004 |
-| Coverage (wajib ≥ 70%) | `server/auth/*`: 96,72% line, 96,87% branch. `server/models/pengguna.ts`: 73,07% line. |
+| ID Algoritma yang tercakup | Aturan akun N7 dan aturan sesi 7 hari. Algo-002 dan Algo-004 (saldo poin) dicakup pada 4.2.11 BE-B |
+| Coverage (wajib ≥ 70%) | `server/auth/*`: 96,72% baris dan 96,87% cabang. Operasi auth pada `server/models/pengguna.ts` diuji DB-backed, tetapi angka berkasnya tidak dipakai untuk BE-A karena berkas yang sama memuat operasi saldo/notifikasi milik BE-B. Untuk kelas C08 utuh bersama BE-B: 96,55% baris, 96,87% cabang, 100% fungsi. |
 ### 4.2.12 C08 Pengguna (Profil)
 
 **ID Kelas:** C08  
@@ -631,7 +631,7 @@ Tabel 4.2.19b. Ringkasan Cakupan C15 (BE-A)
 | Daftar operasi public pada DPPL | `cek_laporan(lokasi, waktu, idMedia, sumber)`, `is_terisi(lokasi, waktu, idMedia, sumber)`, `is_format_valid(lokasi, waktu, idMedia, sumber)`, `get_daftar_lokasi()`, `get_detail_lokasi(idLokasi)`, `get_all_laporan_unverified()`, `get_data(idLaporan)`, `ubah_status(idLaporan, status)`, `simpan_alasan_penolakan(idLaporan, alasan)`, `petakan_lokasi(idLaporan)`; implementasi menambahkan `buat_laporan` untuk POST `/api/laporan` |
 | Operasi yang diuji (BE-A) | `is_terisi`, `is_format_valid`, `cek_laporan`, `buat_laporan` |
 | ID Algoritma yang tercakup | Algo-053, Algo-054, Algo-055 |
-| Coverage (wajib ≥ 70%) | Test BE-A saja: 55,83% line, sisanya ada di bagian pengujian ManagerLaporan 4.2.20 untuk bagian query dan verifikasi. Gabungan dengan 4.2.20 menghasilkan 96,66% line, 93,33% branch |
+| Coverage (wajib ≥ 70%) | Test BE-A saja: 55,83% line dan 62.22% branch, sisanya ada di bagian pengujian ManagerLaporan 4.2.20 untuk bagian query dan verifikasi. Gabungan dengan 4.2.20 menghasilkan 96,66% line, 93,33% branch |
 
 ## 4.3 Pengujian Integrasi
 
@@ -765,6 +765,7 @@ Tabel 4.5. Hasil Pengujian KNF
 | *KNFXX-TC01* | *KNFXX* | *Response time* | *Halaman tampil ≤ 4 detik* | *Chrome DevTools, 5 kali ukur, ambil rata-rata* | *[Rata-rata ... detik, maks ... detik]* | *Pass/Fail* |
 | KNF03-TC01 | KNF03 | Portability | Semua halaman Masyarakat dan Operator dapat dibuka lewat browser tanpa instalasi tambahan pada (a) desktop 1920×1080 dan (b) mobile 360×800, tanpa scroll horizontal (`scrollWidth ≤ innerWidth`) | Chrome desktop 1920×1080 dan emulasi perangkat mobile 360×800 (Chrome DevTools Protocol, mode mobile dan sentuh). Setiap halaman dibuka setelah login sesuai peran, lalu `document.documentElement.scrollWidth` dibandingkan dengan `innerWidth` | 16 dari 16 halaman lolos di kedua ukuran (32 dari 32 pengukuran, `scrollWidth` = `innerWidth`): I-01, I-02, I-03, I-04, I-05, I-06, Riwayat Penukaran, I-09, Detail Lokasi, I-11, Form CleanIt, Profil Masyarakat, I-07, I-08, Profil Operator, dan halaman 404. I-10, I-12, dan I-13 berada di route yang sama dengan I-09 dan I-11 sehingga tidak diukur terpisah. Alur UC03, UC06, UC08, dan UC09 diselesaikan di ukuran tersebut (4.4) | *Pass* |
 | KNF07-TC01 | KNF07 | Reliability | Saat perangkat offline, 100% isian teks form ReportIt tersimpan di perangkat (localStorage) dan pulih utuh ketika form dibuka kembali. Berkas media tidak termasuk; pengguna diminta memilih ulang media. | Uji manual dengan Chrome DevTools (Network: Offline; Application: Local Storage), ditambah unit test `tests/draf-laporan.test.ts` (Vitest) | Banner offline muncul saat koneksi diputus; perubahan judul saat offline tersimpan di kunci `soclean:draf-laporan:reportit`; setelah tab ditutup dan dibuka kembali, 5 dari 5 field teks (judul, alamat, waktu kejadian, sumber, jenis sampah) pulih utuh dengan banner "Isian dari draf sebelumnya sudah dipulihkan"; 13/13 unit test draf lulus | *Pass* |
+| KNF04-TC01 | KNF04 | Reliability | Bila unggah foto/video bukti gagal, 100% percobaan (3/3 per jenis berkas) menampilkan notifikasi kegagalan dan tidak ada laporan yang berubah menjadi terkirim | Uji manual dengan Chrome DevTools (Network: blokir `POST /api/media` dan preset Offline sebelum memilih berkas, lalu uji foto dan video). Amati notifikasi, panel Network, dan status draf, tambahan bukti otomatis `tests/media-upload-client.test.ts` (`onerror`/`ontimeout` return kode `JARINGAN`) dan rollback `tests/api-laporan.test.ts` | Belum diuji | - |
 | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
 
 <br>
@@ -793,12 +794,14 @@ Tabel 4.6. Bukti Hasil Pengujian
 | Coverage C04 (BUKTI-43) | ![BUKTI-43a](assets/BUKTI-43-50-A.png)<br>![BUKTI-43b](assets/BUKTI-43-50-B.png) |
 | Coverage C12 (BUKTI-48) | ![BUKTI-48](assets/BUKTI-48.png) |
 | Coverage C14 (BUKTI-50) | ![BUKTI-50a](assets/BUKTI-43-50-A.png)<br>![BUKTI-50b](assets/BUKTI-43-50-B.png) |
-| *C02-UT01 – C02-UT08* | *[Sisipkan hasil keluaran unit test]* |
-| *C02 (coverage)* | *[Sisipkan laporan coverage kelas C02]* |
-| *INT-TC01* | *[Sisipkan bukti pengujian integrasi]* |
+| *C02-UT01 - C02-UT05 unit test dan coverage* | ![BUKTI-02](assets/BUKTI-02.png) |
+| *C03-UT01 - C03-UT05 unit test dan coverage* | ![BUKTI-04](assets/BUKTI-04.png) |
+| *C08-UT04 - C08-UT-08 unit test dan coverage* | ![BUKTI-10](assets/BUKTI-10.png) |
+| *C15-UT01 - C15-UT-05 unit test dan coverage* | ![BUKTI-19-A](assets/BUKTI-19-A.png)<br>![BUKTI-19-B](assets/BUKTI-19-B.png) |
 | *UC01-TC01* | *[Sisipkan tangkapan layar UC01-TC01 sesuai prosedur pengujian]* |
 | *UC01-TC02* | *[Sisipkan tangkapan layar UC01-TC02 sesuai prosedur pengujian]* |
 | *KNF01-TC01* | *[Sisipkan bukti pengukuran parameter KNF01-TC01]* |
+| *KNF04-TC01* |  |
 | *...* | *...* |
 
 <br>
