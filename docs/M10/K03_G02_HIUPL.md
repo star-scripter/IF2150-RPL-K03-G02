@@ -401,7 +401,7 @@ Tabel 4.2.3b. Ringkasan Cakupan Kelas [C03]
 ### 4.2.9 C08 Pengguna
 
 **ID Kelas:** C08  
-**Nama Kelas:** Pengguna – UI auth/Beranda  
+**Nama Kelas:** Pengguna, UI auth/Beranda
 **Tingkat:** Sedang  
 
 Note: Operasi C08 pada DPPL (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`, `notify`) berada di sisi server dan diuji pada bagian backend. Bagian ini menguji sisi tampilan C08 sesuai Tabel B.5 dokumen Implementasi: data Beranda (atribut `nama` dan `saldoPoin`) serta validasi Login/Register, yang merupakan tambahan di luar DPPL (B.1 no. 21). 
@@ -414,7 +414,35 @@ Tabel 4.2.9. Hasil Pengujian Unit C08 (FE-A)
 | C08-UT02 | `validasiRegister(isian: IsianRegister): GalatRegister \| null` | Batas | Nama dan email valid; password 7 karakter (`1234567`), 72 karakter, dan 73 karakter | 7 karakter ditolak ("Password minimal 8 karakter."); 72 karakter diterima; 73 karakter ditolak ("Password maksimal 72 karakter.") | Sesuai harapan untuk ketiga masukan | *Pass* |
 | C08-UT03 | `validasiLogin(isian: IsianLogin): GalatLogin \| null` | Negatif | Email `warga@` (format salah), password `x` | Galat pada field email: "Format email tidak valid." | Galat "Format email tidak valid." muncul | *Pass* |
 
+### 4.2.10 C08 Pengguna — BE-A
 
+**ID Kelas:** C08
+**Nama Kelas:** Pengguna, auth/session backend
+**Tingkat:** Mendalam
+**Pemilik:** BE-A
+
+Note: Operasi C08 pada DPPL yang berkaitan dengan saldo poin (`getSaldoPoin`, `cukupPoin`, `kurangiPoin`, `tambah_poin`) dan `notify` diuji pada 4.2.11 (BE-B). Bagian ini menguji operasi auth dan sesi yang ditambahkan pada implementasi (BE-05): pencarian akun login, pembuatan akun Masyarakat, pembacaan profil, aturan akun, serta token/cookie/guard sesi.`cariUntukLogin`, `buatMasyarakat`, dan `getMe` hanya memakai normal/negatif karena masukannya berupa email atau ID (UUID) tanpa rentang nilai, sehingga tidak ada nilai batas yang menguji aturan berbeda.
+
+Tabel 4.2.10. Hasil Pengujian Unit C08 (BE-A)
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C08-UT04 | `cariUntukLogin(email: string): Promise<PenggunaUntukLogin \| null>` | Normal/negatif | Cari akun dengan email yang ditulis berbeda kapital dan spasinya; lalu cari email yang belum terdaftar | Email dinormalisasi sebelum pencarian, data akun beserta `passwordHash` kembali, email tidak ada menghasilkan `null` | Email dinormalisasi sebelum pencarian, data akun beserta `passwordHash` kembali, email tidak ada menghasilkan `null` | *Pass* |
+| C08-UT05 | `buatMasyarakat(input): Promise<Pengguna \| null>` | Normal/negatif | Daftarkan akun dengan nama/email berspasi, lalu daftarkan lagi dengan email yang sama dalam kapital berbeda | Nama dan email tersimpan ternormalisasi, role selalu `MASYARAKAT`, email duplikat menghasilkan `null` dan tidak menimpa akun lama | Nama dan email tersimpan ternormalisasi, role selalu `MASYARAKAT`, email duplikat menghasilkan `null` dan tidak menimpa akun lama | *Pass* |
+| C08-UT06 | `getMe(idPengguna: string): Promise<PenggunaMe \| null>` | Normal/negatif | Ubah saldo pengguna langsung di database, lalu baca profil lewat `getMe`. Panggil juga dengan ID yang tidak ada | Profil terbaru dari database dikembalikan, termasuk saldo terbaru, ID tidak ada menghasilkan `null` | Profil terbaru dari database dikembalikan, termasuk saldo terbaru, ID tidak ada menghasilkan `null` | *Pass* |
+| C08-UT07 | `normalisasiEmail`, `normalisasiNama`, `registerSchema`, `loginSchema`, `hashPassword`, `verifyPassword` | Normal/batas/negatif | Uji normalisasi nama/email, batas nama 1-100 dan password 8-72 karakter (nilai tepat batas dan satu di luarnya), password sama dengan email, hash bcrypt cost 12, serta verifikasi password benar/salah | Normalisasi konsisten, nama 1 dan 100 serta password 8 dan 72 diterima sedangkan nama 101 dan password 7/73 ditolak, password sama dengan email ditolak, hash berformat bcrypt cost 12 dan hanya password benar yang lolos verifikasi | Normalisasi konsisten, nama 1 dan 100 serta password 8 dan 72 diterima sedangkan nama 101 dan password 7/73 ditolak, password sama dengan email ditolak, hash berformat bcrypt cost 12 dan hanya password benar yang lolos verifikasi | *Pass* |
+| C08-UT08 | `signSessionToken`, `verifySessionToken`, `sessionCookieOptions`, `setSessionCookie`, `getSessionCookie`, `deleteSessionCookie`, `requireRoleCookie`, `wajibLogin` | Normal/batas/negatif | Tanda tangani dan verifikasi token, uji validitas sesaat sebelum dan tepat pada batas 7 hari, uji token dengan secret berbeda, role tidak valid, set/read/delete cookie, guard tanpa cookie, token palsu, dan role salah | Token valid berisi klaim sesi, masih diterima sesaat sebelum 7 hari dan kedaluwarsa tepat pada batas; token/role tidak valid ditolak, cookie `httpOnly` 7 hari di-set, dibaca, dan dihapus; guard mengembalikan `UNAUTHORIZED`/`FORBIDDEN` sesuai kondisi | Token valid berisi klaim sesi, masih diterima sesaat sebelum 7 hari dan kedaluwarsa tepat pada batas; token/role tidak valid ditolak, cookie `httpOnly` 7 hari di-set, dibaca, dan dihapus; guard mengembalikan `UNAUTHORIZED`/`FORBIDDEN` sesuai kondisi | *Pass* |
+
+Khusus kelas **Mendalam**:
+
+Tabel 4.2.10b. Ringkasan Cakupan C08 (BE-A)
+
+| Informasi | Keterangan |
+| :--- | :--- |
+| Daftar operasi public pada DPPL | `tambah_poin(idPengguna, jumlahPoin)`, `notify(msg)`, `getSaldoPoin()`, `cukupPoin(harga)`, `kurangiPoin(jumlah)`, `cariUntukLogin`, `buatMasyarakat`, `getMe`, serta helper `server/auth/*` |
+| Operasi yang diuji | `cariUntukLogin`, `buatMasyarakat`, `getMe`, `normalisasiEmail`, `normalisasiNama`, `registerSchema`, `loginSchema`, `hashPassword`, `verifyPassword`, `signSessionToken`, `verifySessionToken`, `sessionCookieOptions`, `setSessionCookie`, `getSessionCookie`, `deleteSessionCookie`, `requireRoleCookie`, `wajibLogin` |
+| ID Algoritma yang tercakup |  Algo-002 dan Algo-004 |
+| Coverage (wajib ≥ 70%) | `server/auth/*`: 96,72% line, 96,87% branch. `server/models/pengguna.ts`: 73,07% line. |
 
 ## 4.3 Pengujian Integrasi
 
