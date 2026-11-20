@@ -293,11 +293,22 @@ Tabel 4.1.1. Identifikasi Tingkat Pengujian Kelas
 
 | ID Kelas | Nama Kelas | Tingkat | Alasan | Test Case Terkait |
 | :--- | :--- | :--- | :--- | :--- |
-| *C02* | *Pesanan* | *Mendalam* | *Memuat `hitungTotal()` dan transisi status pembayaran* | *C02-UT01 s.d. C02-UT08* |
-| *C03* | *Keranjang* | *Sedang* | *Delegasi sederhana ke Produk dan Pesanan* | *C03-UT01 s.d. C03-UT03, INT-TC02* |
-| *C01* | *Pelanggan* | *Tidak perlu* | *Hanya menyimpan data akun, tanpa logika* | *-* |
-| *[CXX]* | *[Nama kelas]* | *[Mendalam/Sedang/Tidak perlu]* | *[Alasan penentuan tingkat pengujian]* | *[ID test case atau -]* |
-| *...* | *...* | *...* | *...* | *...* |
+| C01 | *FormLaporan* | Mendalam | Memuat validasi masukan sisi klien (field wajib dan validasi seperti waktu dan koordinat), validasi berkas media (tipe, ukuran, jumlah, kuota penyimpanan), antrean unggah saat offline, draf lokal, serta penyusunan payload dan pemetaan error pengiriman | C01-UT01 s.d. C01-UT08 |
+| C02 | *Laporan* | Mendalam | Menyimpan dan membaca laporan dengan aturan per jenis (ReportIt/CleanIt), filter dan paginasi daftar, perubahan status bersyarat (hanya dari `BELUM_DIPERIKSA`), penolakan otomatis CleanIt lain, dan perhitungan CleanIt 30 hari | C02-UT01 s.d. C02-UT09 |
+| C03 | *Media* | Mendalam | Memeriksa penggunaan ulang hash SHA-256, kepemilikan media, penautan media ke laporan secara bersyarat, serta pemrosesan watermark dan penyimpanan ke S3 | C03-UT01 s.d. C03-UT06 |
+| C04 | *DaftarLaporan* | Mendalam | Mengelola filter jenis, urutan, dan halaman yang tersimpan di URL, format ID `RPT-xxxx` dan waktu, serta state loading, kosong, dan gagal pada daftar validasi | C04-UT01 s.d. C04-UT04 |
+| C05 | *ValidatorLaporan* | Mendalam | Memuat aturan verifikasi: setujui ReportIt dengan penggabungan lokasi radius 50 m, setujui CleanIt dengan pemberian poin dan penolakan otomatis, tolak dengan alasan wajib untuk CleanIt, pencegahan verifikasi ganda, dan validasi masukan Operator | C05-UT01 s.d. C05-UT05 |
+| C06 | *Lokasi* | Mendalam | Memuat perhitungan jarak haversine dan prefilter kotak untuk radius 50 m, perubahan status `TERCEMAR` → `DIBERSIHKAN` secara bersyarat, serta pembuatan dan pembacaan lokasi beserta laporan asalnya | C06-UT01 s.d. C06-UT05 |
+| C07 | *DaftarLokasi* | Sedang | Menampilkan daftar lokasi dan menghitung jarak dari posisi pengguna untuk urutan Terdekat. Logika utamanya hanya pengurutan dan validasi respons, sedangkan data diambil dari API | C07-UT01 s.d. C07-UT03 |
+| C08 | *Pengguna* | Mendalam | Memuat aturan akun dan autentikasi (normalisasi email, hash password, sesi JWT), perubahan saldo poin bersyarat agar tidak negatif, serta pemberian notifikasi dari laporan terverifikasi | C08-UT01 s.d. C08-UT16 |
+| C09 | *Reward* | Sedang | Membaca katalog reward dengan urutan stok tersedia lalu harga, mencari reward, dan mengurangi stok secara bersyarat. Logikanya sederhana dan transaksi penukarannya diuji di C16 | C09-UT01 s.d. C09-UT03 |
+| C10 | *DaftarReward* | Sedang | Menampilkan katalog reward dan menentukan status tombol (Tukar, Kurang, Habis) dari saldo dan stok sehingga tidak mengubah data | C10-UT01 s.d. C10-UT03 |
+| C11 | *ManagerPoin* | Sedang | Mengoordinasikan pembacaan saldo dan reward serta meneruskan pengecekan, pengurangan, dan penambahan poin ke model Pengguna dan Reward | C11-UT01 s.d. C11-UT03 |
+| C12 | *HalamanPenukaran* | Mendalam | Mengatur alur konfirmasi penukaran, pratinjau sisa poin, pencegahan klik ganda, pemetaan error (`POIN_TIDAK_CUKUP`, `STOK_HABIS`), serta tampilan hasil dan riwayat penukaran | C12-UT01 s.d. C12-UT05 |
+| C13 | *Penukaran (Model)* | Mendalam | Membuat kode voucher unik `SC-XXXX-XXXX` dengan percobaan ulang saat bentrok, menyimpan transaksi penukaran, dan membaca riwayat dengan paginasi | C13-UT01 s.d. C13-UT05 |
+| C14 | *LaporanView* | Mendalam | Menyusun body setujui/tolak sesuai jenis laporan dan penggabungan lokasi, memvalidasi isian Operator, menampilkan galeri Sebelum/Sesudah, dan menangani hasil serta error verifikasi | C14-UT01 s.d. C14-UT05 |
+| C15 | *ManagerLaporan* | Mendalam | Memuat validasi laporan (`is_terisi`, `is_format_valid`, `cek_laporan`), pembuatan laporan dan penautan media dalam transaksi, serta query daftar laporan, pemetaan lokasi, dan perubahan status untuk verifikasi | C15-UT01 s.d. C15-UT08 |
+| C16 | *Penukaran (Controller)* | Mendalam | Menjalankan transaksi penukaran: validasi masukan, pengecekan reward, stok, dan saldo, lalu pengurangan saldo, pengurangan stok, dan pencatatan penukaran dalam satu transaksi dengan rollback | C16-UT01 s.d. C16-UT05 |
 
 ## 4.2 Pengujian Unit Kelas
 
