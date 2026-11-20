@@ -47,10 +47,11 @@ Dipersiapkan oleh:
 - [BAB 4: Hasil Pengujian](#bab-4-hasil-pengujian)
   - [4.1 Strategi dan Kedalaman Pengujian Kelas](#41-strategi-dan-kedalaman-pengujian-kelas)
   - [4.2 Pengujian Unit Kelas](#42-pengujian-unit-kelas)
-    - [4.2.1 Kelas \[Nama Kelas 1\]](#421-kelas-nama-kelas-1)
+    - [4.2.1 C01 FormLaporan](#421-c01-formlaporan)
     - [4.2.2 Kelas Laporan](#422-kelas-laporan)
     - [4.2.3 Kelas Media](#423-kelas-media)
     - [4.2.5 C04 DaftarLaporan](#425-c04-daftarlaporan)
+    - [4.2.8 C07 DaftarLokasi](#428-c07-daftarlokasi)
     - [4.2.9 C08 Pengguna](#429-c08-pengguna)
     - [4.2.12 C08 Pengguna – Profil](#4212-c08-pengguna--profil)
     - [4.2.14 C10 DaftarReward](#4214-c10-daftarreward)
@@ -58,9 +59,11 @@ Dipersiapkan oleh:
     - [4.2.18 C14 LaporanView](#4218-c14-laporanview)
   - [4.3 Pengujian Integrasi](#43-pengujian-integrasi)
   - [4.4 Pengujian Use Case](#44-pengujian-use-case)
-    - [4.4.1 Use Case \[Nama Use Case 1\]](#441-use-case-nama-use-case-1)
-    - [4.4.2 Use Case \[Nama Use Case 2\]](#442-use-case-nama-use-case-2)
+    - [4.4.1 UC01 Membuat Laporan Pencemaran](#441-uc01-membuat-laporan-pencemaran)
+    - [4.4.2 UC02 Mengambil Bukti Foto/Video](#442-uc02-mengambil-bukti-fotovideo)
     - [4.4.3 UC03 Memverifikasi Laporan ReportIt](#443-uc03-memverifikasi-laporan-reportit)
+    - [4.4.4 UC04 Melihat Daftar Lokasi Pencemaran](#444-uc04-melihat-daftar-lokasi-pencemaran)
+    - [4.4.5 UC05 Mengirimkan Bukti Pembersihan](#445-uc05-mengirimkan-bukti-pembersihan)
     - [4.4.6 UC06 Memverifikasi Laporan Pembersihan](#446-uc06-memverifikasi-laporan-pembersihan)
     - [4.4.7 UC07 Melihat Saldo Poin](#447-uc07-melihat-saldo-poin)
     - [4.4.8 UC08 Melihat Reward yang Tersedia](#448-uc08-melihat-reward-yang-tersedia)
@@ -352,31 +355,37 @@ Cara menjalankan unit test: *[tuliskan perintah, mis. `pytest src/tests/`]*.
 
 Lokasi file test: *[path, mis. `src/tests/`]*.
 
-### 4.2.1 Kelas [Nama Kelas 1]
+### 4.2.1 C01 FormLaporan
 
-**ID Kelas:** *[C02]*  
-**Nama Kelas:** *[Pesanan]*  
-**Tingkat:** *[Mendalam]*
+**ID Kelas:** C01  
+**Nama Kelas:** FormLaporan  
+**Tingkat:** Mendalam  
 
-Tabel 4.2.1. Hasil Pengujian Unit Kelas [C02]
+Pengujian mengikuti pemecahan C01 di [Tugas 9 B.5](../M9/K03_G02_Implementasi.md#b5-traceability-kelas-perancangan-ke-implementasi). `FormLaporanProvider` memakai reducer untuk menyimpan isian dan bukti pada I-11–I-13. `FormReportIt` dan `FormCleanIt` memasang validasi informasi dasar sesuai jenis laporan. `UnggahMediaProvider` mengelola antrean dari I-12 dan `PengirimanLaporanProvider` memakai helper payload serta pemetaan error pada I-13.
+
+Tabel 4.2.1. Hasil Pengujian Unit C01
 
 | ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| *C02-UT01* | *`hitungTotal(): Decimal`* | *Normal* | *Pesanan berisi 2 item: 10.000 x 2 dan 5.000 x 1* | *Total = 25.000* | *[Hasil aktual]* | *Pass/Fail* |
-| *C02-UT02* | *`hitungTotal(): Decimal`* | *Batas* | *Pesanan berisi tepat 1 item dengan jumlah 1* | *Total = harga item tersebut* | *[...]* | *Pass/Fail* |
-| *C02-UT03* | *`hitungTotal(): Decimal`* | *Negatif* | *Pesanan tanpa item* | *Total = 0 atau melempar kesalahan sesuai rancangan* | *[...]* | *Pass/Fail* |
-| *...* | *...* | *...* | *...* | *...* | *...* | *...* |
+| C01-UT01 | State `buka_reportit()` dan perpindahan langkah → `buatStateFormLaporan()`, `reducerFormLaporan()` | Normal | Buat state ReportIt, isi informasi dan tambah satu File. Jalankan I-11 → I-12 → I-13 → I-12 → I-11, lalu maju lagi | Form mulai di I-11 dengan data kosong. Saat kembali dan maju lagi, isian serta objek File terpilih tetap sama | State awal `langkah: 0`, judul kosong, koordinat `null`, dan media `[]`. Isian serta referensi File bertahan pada seluruh rangkaian (`form-laporan.test.ts`) | Pass |
+| C01-UT02 | `buat_laporan()` → batas isian pada `validasiInformasiDasar()` | Batas | Judul 80/81 karakter dan alamat 255/256 karakter. Tambahkan spasi tepi pada judul 80 karakter | Batas inklusif 80/255 lolos. Nilai yang melebihi batas ditolak pada field terkait. Spasi tepi tidak ikut dihitung | Judul 80 dan alamat 255 lolos. Judul 81 menghasilkan `fields.judul` dan alamat 256 menghasilkan `fields.lokasi`. Judul 80 dengan spasi tepi tetap lolos (`informasi-dasar.test.ts`) | Pass |
+| C01-UT03 | `buat_laporan()` → kelengkapan, format, dan waktu pembersihan | Negatif | Validasi ReportIt kosong, koordinat `NaN`, serta waktu CleanIt 1 ms sebelum waktu kejadian asal `2026-11-10T02:15:30.500Z` | Data kosong menghasilkan `DATA_TIDAK_LENGKAP`, koordinat `NaN` menghasilkan `FORMAT_TIDAK_VALID`, dan waktu CleanIt ditolak pada `waktu` | Kedua kode sesuai harapan. CleanIt `09:15:30.499` WIB ditolak dengan pesan waktu sebelum kejadian (`informasi-dasar.test.ts`, `form-cleanit.test.ts`) | Pass |
+| C01-UT04 | `ambil_gambar()` → `validasiPilihanMedia()` dan `AntreanMedia` | Normal | Validasi tipe JPG, PNG, dan MP4. Tambah satu File saat antrean aktif dalam keadaan offline, lalu ubah keadaan menjadi online | Ketiga tipe diterima. File menunggu saat offline, lalu unggah mulai satu kali dengan File yang sama | Ketiga MIME lolos. Pemanggilan transport 0 saat offline dan 1 setelah online dengan objek File yang sama (`bukti-media.test.ts`, `antrean-media.test.ts`) | Pass |
+| C01-UT05 | `ambil_gambar()` → batas `validasiPilihanMedia()` | Batas | PNG sintetis berukuran 20.971.520 dan 20.971.521 byte. Tambahkan dua bukti pada daftar yang sudah berisi satu atau dua bukti | Tepat 20 MiB dan total tiga media diterima. Satu byte lebih besar atau total empat media ditolak | Pada batas, validator mengembalikan `null`. Di atas batas, validator mengembalikan pesan 20 MB atau maksimal tiga media (`bukti-media.test.ts`) | Pass |
+| C01-UT06 | `ambil_gambar()` → kesiapan `mediaSiapDikirim()` dan penanganan `AntreanMedia` | Negatif | Bukti kosong, bukti belum mendapat ID, atau dua bukti dengan ID yang sama. Simulasikan unggahan ditolak dengan `409 MEDIA_SUDAH_DIGUNAKAN` | Bukti belum siap dikirim. Konflik meminta penggantian media | `mediaSiapDikirim()` mengembalikan `false` untuk semua masukan tidak siap. Antrean menghasilkan status `gagal` dengan `bisaUlang: false` pada konflik (`bukti-media.test.ts`, `antrean-media.test.ts`) | Pass |
+| C01-UT07 | State `buka_menu_cleanit()` dan `buat_laporan()` → `buatStateFormLaporan()`, `siapkanKirimLaporan()` | Normal | Buat konfigurasi CleanIt dengan nama lokasi Teras Cikapundung. Siapkan payload ReportIt/CleanIt dari fixture waktu 1 Januari 2026 pukul 09.30 WIB dan ID media `[21, 22]` | Judul awal CleanIt mengikuti K7. Payload dikirim sebagai 02.30 UTC. ReportIt membawa lokasi, koordinat, sumber, dan jenis sampah. CleanIt membawa `lokasiId` | Judul awal `Pembersihan Teras Cikapundung`. Kedua payload memakai `2026-01-01T02:30:00.000Z` dan `[21, 22]`. Pada fixture CleanIt, `lokasiId: 7` diteruskan tanpa field khusus ReportIt (`form-cleanit.test.ts`, `kirim-laporan.test.ts`) | Pass |
+| C01-UT08 | `notify(msg)` dan hasil `buat_laporan()` → `kegagalanKirimLaporan()`, `hasilKirimValid()` | Negatif | Petakan error `400` dengan `fields.waktu` dan `idMedia.0`, konflik `409` CleanIt menunggu, dan respons `2xx` dengan ID 0 atau status `VALID` | Error dikelompokkan per bagian. Konflik menawarkan daftar lokasi. Respons dengan ID/status tidak sah ditolak | Pesan masuk bagian `waktu` dan `media`. Konflik mengembalikan `pilihLokasiLain: true`. `hasilKirimValid()` mengembalikan `false` untuk respons rusak (`kirim-laporan.test.ts`) | Pass |
 
 Khusus kelas **Mendalam**:
 
-Tabel 4.2.1b. Ringkasan Cakupan Kelas [C02]
+Tabel 4.2.1b. Ringkasan Cakupan C01
 
 | Informasi | Keterangan |
 | :--- | :--- |
-| Daftar operasi public pada DPPL | *[op1(), op2(), ...]* |
-| Operasi yang diuji | *[op1(), op2(), ...]* |
-| ID Algoritma yang tercakup | *[Algo-001, ...]* |
-| Coverage (wajib ≥ 70%) | *[% baris / % cabang, alat dan bukti pada 4.6]* |
+| Daftar operasi public pada DPPL | `buka_reportit()`, `notify(msg)`, `buka_menu_cleanit()`, `buat_laporan(lokasi, waktu, idMedia, sumber)` (DPPL §5.1). Operasi privat `ambil_gambar()` tercakup pada pemilihan dan antrean bukti |
+| Operasi yang diuji | Inisialisasi ReportIt/CleanIt, reducer, validasi, pemilihan/antrean media, payload, dan pemetaan pesan diuji pada C01-UT01–C01-UT08. Navigasi aktual, tampilan pesan, dan pengiriman browser diuji pada UC01, UC02, dan UC05 di 4.4. |
+| ID Algoritma yang tercakup | Algo-001 (`buka_reportit`, C01-UT01 dan UC01-TC01), Algo-002 (`notify`, C01-UT08 dan pengujian pesan di 4.4), Algo-003 (`buka_menu_cleanit`, C01-UT07 dan UC05-TC01), dan Algo-004 (`buat_laporan`, C01-UT02/03/07/08, UC01, UC05) |
+| Coverage (wajib ≥ 70%) | **98,64% baris (219/222)**, **94,11% cabang (272/289)**, dan **94,11% fungsi (64/68)** sesuai keluaran Vitest Coverage V8. Pengukuran mencakup tujuh modul logika C01 di `lib/`, yaitu `form-laporan.ts`, `informasi-dasar.ts`, `form-cleanit.ts`, `bukti-media.ts`, `antrean-media.ts`, `kirim-laporan.ts`, dan `judul.ts`. Komponen TSX dan jalur HTTP browser diperiksa terpisah di 4.4. Ringkasan tersedia pada BUKTI-39 |
 
 ### 4.2.2 Kelas Laporan
 
@@ -467,6 +476,24 @@ Tabel 4.2.5b. Ringkasan Cakupan C04
 | Operasi yang diuji | `pilih_menu_verifikasi()` dan `buka_laporan_masuk()` (tab, urutan, dan halaman dari URL: `bacaFilterValidasi`, `urlValidasi`), `tampilkan_daftar(list)` (`formatIdLaporan`, `formatWaktuKirim`). `pilih_laporan(idLaporan)` hanya membuka modal I-08 dan diverifikasi pada UC03-TC01 dan UC06-TC01. `daftar_laporan(laporan)` diuji pada C02 |
 | ID Algoritma yang tercakup | Algo-002 (`pilih_menu_verifikasi`), Algo-003 (`tampilkan_daftar`). Algo-001 dipindah ke C02/C15 |
 | Coverage (wajib ≥ 70%) | 98,27% lines (57/58) dan 96,55% branch (56/58) pada `lib/laporan.ts`, 93,33% fungsi (14/15). Satu-satunya fungsi yang tidak tereksekusi adalah `urlPeta` (tautan OpenStreetMap di I-08). File ini dipakai bersama C04 dan C14. Alat: Vitest Coverage V8, bukti pada BUKTI-43 |
+
+### 4.2.8 C07 DaftarLokasi
+
+**ID Kelas:** C07  
+**Nama Kelas:** DaftarLokasi  
+**Tingkat:** Sedang  
+
+`DaftarLokasi` mengoordinasikan pembacaan API dan GPS. `KartuLokasi` menautkan detail dan `LokasiKosong` menampilkan I-10 setelah respons daftar kosong yang sah. Logika pengurutan, jarak, dan validasi respons berada di `lib/lokasi.ts`. Jalur pilih lokasi hingga tampilan detail Masyarakat diuji melalui UC04-TC01 di 4.4.
+
+Tabel 4.2.8. Hasil Pengujian Unit C07
+
+| ID Pengujian | Operasi yang Diuji | Jenis Kasus | Prosedur/Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| C07-UT01 | `tampilkan_daftar(list)` → `ambilPosisiPengguna()`, `jarakHaversineKm()`, `urutkanLokasi()` | Normal | Tiga lokasi fixture `[31, 32, 33]`, GPS `(-6,886; 107,6065)`, urutan Terdekat | Lokasi 32, 31, 33 diurutkan menurut jarak. Seluruh lokasi tetap ditampilkan | GPS mengembalikan posisi fixture. Urutan `[32, 31, 33]`, jarak pertama sekitar 0,111195 km, dan lokasi lebih dari 100 km masih ada. Array input tetap `[31, 32, 33]` (`lokasi.test.ts`) | Pass |
+| C07-UT02 | `buka_fitur_cleanit()` dan `tampilkan_daftar(list)` → `lokasiApi.daftar()`, `bacaDaftarLokasi()` | Batas | Handler `GET /api/lokasi` memakai model fixture yang mengembalikan `[]` | Daftar kosong diterima sebagai hasil sukses untuk I-10 | Client dan parser menerima `[]`. Tampilan I-10 diuji terpisah pada UC04-TC02 (`lokasi-client.test.ts`, `lokasi.test.ts`) | Pass |
+| C07-UT03 | `notify(msg)` dan fallback daftar → `ambilPosisiPengguna()`, `urutkanLokasi()`, `bacaDaftarLokasi()` | Negatif | Simulasikan GPS ditolak (`code: 1`), pengurutan tanpa posisi, dan data daftar dengan status `DIBERSIHKAN` | GPS memberi pesan izin ditolak. Urutan kembali ke Terbaru tanpa label jarak. Respons yang tidak memenuhi kontrak ditolak | Pesan izin ditolak muncul dari helper GPS. ID diurutkan `[31, 32, 33]` dengan seluruh `jarakKm: null`. Parser melempar error untuk status di luar kontrak daftar (`lokasi.test.ts`) | Pass |
+
+BUKTI-08 mencatat hasil pengujian unit dan kontrak C07.
 
 ### 4.2.9 C08 Pengguna (Auth FE)
 
@@ -579,7 +606,7 @@ Tabel 4.2.16b. Ringkasan Cakupan C12
 **Nama Kelas:** LaporanView  
 **Tingkat:** Mendalam  
 
-Note: Bagian ini mencakup operasi Operator pada `components/LaporanView.tsx` (modal I-08, UC03 dan UC06) melalui fungsi murni di `lib/laporan.ts` (`tests/laporan.test.ts`). Operasi Masyarakat (`tampilkan_lokasi`, `konfirmasi_bersihkan`, `tampilkan_konfirmasi`) diimplementasikan FE-B di `components/lokasi/` dan `lib/detail-lokasi.ts`, dan tidak termasuk C14-UT01 sampai C14-UT05.
+Note: Bagian ini mencakup operasi Operator pada `components/LaporanView.tsx` (modal I-08, UC03 dan UC06) melalui fungsi murni di `lib/laporan.ts` (`tests/laporan.test.ts`). Operasi Masyarakat (`tampilkan_lokasi`, `konfirmasi_bersihkan`, `tampilkan_konfirmasi`) diimplementasikan di `components/lokasi/` dan `lib/detail-lokasi.ts`, dan tidak termasuk C14-UT01 sampai C14-UT05.
 
 Tabel 4.2.18. Hasil Pengujian Unit C14
 
@@ -598,7 +625,7 @@ Tabel 4.2.18b. Ringkasan Cakupan C14
 | Informasi | Keterangan |
 | :--- | :--- |
 | Daftar operasi public pada DPPL | `tampilkan_laporan(data)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `notify(msg)`, `tampilkan_lokasi(detail)`, `konfirmasi_bersihkan()`, `tampilkan_konfirmasi(msg)` |
-| Operasi yang diuji | Bagian Operator: `tampilkan_laporan(data)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `notify(msg)`. Fungsi format I-08 lain (`formatWaktuUnggah`, `formatJarak`, `formatKoordinat`) juga diuji di `tests/laporan.test.ts`. Bagian Masyarakat (`tampilkan_lokasi`, `konfirmasi_bersihkan`, `tampilkan_konfirmasi`) diimplementasikan FE-B |
+| Operasi yang diuji | Bagian Operator: `tampilkan_laporan(data)`, `setujui(idLaporan)`, `tolak(idLaporan)`, `notify(msg)`. Fungsi format I-08 lain (`formatWaktuUnggah`, `formatJarak`, `formatKoordinat`) juga diuji di `tests/laporan.test.ts`. Bagian Masyarakat (`tampilkan_lokasi`, `konfirmasi_bersihkan`, `tampilkan_konfirmasi`) juga  diimplementasikan. |
 | ID Algoritma yang tercakup | Algo-001, Algo-002, Algo-003, Algo-004 |
 | Coverage (wajib ≥ 70%) | 98,27% lines (57/58) dan 96,55% branch (56/58) pada `lib/laporan.ts`, 93,33% fungsi (14/15). Satu-satunya fungsi yang tidak tereksekusi adalah `urlPeta` (tautan OpenStreetMap di I-08). File ini dipakai bersama C04 dan C14. Alat: Vitest Coverage V8, bukti pada BUKTI-50 |
 
@@ -662,22 +689,33 @@ Tabel 4.3.2. Hasil Pengujian Integrasi
 
 Pengujian use case dilakukan pada seluruh skenario normal dan alternatif sesuai Subbab 4.4 SKPL, dengan minimal satu test case untuk setiap skenario. Kolom ID KF menunjukkan KF yang diverifikasi oleh test case tersebut.
 
-### 4.4.1 Use Case [Nama Use Case 1]
+Skenario berikut mengacu pada [SKPL §3.4](../M5/K03_G02_SKPL.md#34-skenario-use-case) dan keputusan K4, K6, K7, N2, N4, N5, N11, dan N15 dalam [kontrak v0.8](<../contracts/SoClean — Pembagian Tugas FE & BE v0.8.md>). Pengujian memakai build produksi dari salinan source lokal, Chrome Headless pada viewport 360 × 800 dan 1920 × 1080, serta akun Masyarakat dan media fiktif. Fixture HTTP menyediakan respons daftar/detail lokasi, unggahan, dan pengiriman. Skenario media menjalankan helper watermark server, sedangkan GPS, kuota, dan tile peta disimulasikan. `Pass` di tabel menunjukkan hasil untuk lingkungan uji tersebut. Integrasi PostgreSQL dan RustFS/R2, pengambilan media melalui kamera fisik, serta GPS perangkat nyata belum diverifikasi pada pengujian ini.
 
-**ID Use Case:** *[UC01 sesuai SKPL]*  
-**Nama Use Case:** *[Nama use case sesuai SKPL]*
+### 4.4.1 UC01 Membuat Laporan Pencemaran
 
-Tabel 4.4.1. Hasil Pengujian Use Case [UC01]
+**ID Use Case:** UC01  
+**Nama Use Case:** Membuat Laporan Pencemaran  
+
+Tabel 4.4.1. Hasil Pengujian UC01
 
 | ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| *UC01-TC01* | *KF01* | *Normal* | *1. Buka halaman login.<br>2. Masukkan kredensial.<br>3. Klik tombol "Login".* | *User: rpl@gmail.com<br>Pass: 123456* | *Pengguna diarahkan ke Halaman Dashboard.* | *Pengguna diarahkan ke Halaman Dashboard sesuai hasil yang diharapkan.* | *Pass* |
-| *UC01-TC02* | *KF01* | *Alternatif 1: [Nama skenario]* | *[Langkah-langkah pengujian]* | *[Data masukan]* | *[Hasil yang diharapkan]* | *[Hasil aktual]* | *[Pass/Fail. Jika Fail: penjelasan dan solusi]* |
-| *...* | *...* | *...* | *...* | *...* | *...* | *...* | *...* |
+| UC01-TC01 | KF01, KF03, KF04 | Normal | Dari Beranda pilih ReportIt. Isi I-11 dengan GPS simulasi, unggah PNG di I-12, lalu gunakan Ubah Judul → Simpan Perubahan di I-13 dan kirim | Teras Cikapundung, `(-6.886, 107.6065)`, 11 November 2026 pukul 11.30 WIB, Pengamatan pribadi, Plastik, satu PNG sintetis | Form tiga langkah terbuka. Bukti tetap ada setelah judul diubah. Satu payload ReportIt memakai waktu UTC dan ID unggahan. UI menampilkan laporan menunggu pemeriksaan | I-13 menampilkan judul yang diubah dan bukti yang sama. Fixture menerima satu `POST /api/laporan` dengan `jenis: REPORTIT`, `waktu: 2026-11-11T04:30:00.000Z`, dan satu ID media. UI menampilkan `RPT-0407 · Menunggu pemeriksaan` (BUKTI-23a–b) | Pass |
+| UC01-TC02 | KF03 | Alternatif 1 — Format informasi tidak valid | Isi seluruh field I-11, atur waktu kejadian di masa depan, lalu pilih Lanjut | `2099-11-11T11:30` WIB | Form tetap di I-11 dan menandai waktu. Tidak ada pengiriman laporan | Muncul pesan Waktu kejadian tidak boleh di masa depan. I-11 tetap tampil dan 0 POST laporan tercatat (BUKTI-23c) | Pass |
+| UC01-TC03 | KF03 | Alternatif 2 — Informasi belum lengkap | Isi field I-11 selain judul, lalu pilih Lanjut | Judul kosong, field lain valid | Form tetap di I-11 dan menandai judul wajib diisi | Muncul pesan Judul laporan wajib diisi. I-11 tetap tampil dan 0 POST laporan tercatat (BUKTI-23d) | Pass |
 
-### 4.4.2 Use Case [Nama Use Case 2]
+### 4.4.2 UC02 Mengambil Bukti Foto/Video
 
-*[Lanjutkan untuk seluruh use case dengan pola yang sama, hingga 4.4.N.]*
+**ID Use Case:** UC02  
+**Nama Use Case:** Mengambil Bukti Foto/Video  
+
+Tabel 4.4.2. Hasil Pengujian UC02
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC02-TC01 | KF02 | Normal — Pemilihan foto dari berkas | Masuk I-12 dari ReportIt dan pilih satu PNG pada input bukti. Tunggu respons unggahan | `bukti-sintetis.png`, PNG valid di bawah 20 MiB | File asli diunggah melalui multipart. Setelah menerima ID unggahan, UI menampilkan pratinjau foto yang diberi watermark waktu unggah oleh helper server | Satu POST media diterima fixture. Helper `prosesMediaAsli()` menambahkan watermark. UI menampilkan pratinjau dan Berhasil diunggah (BUKTI-24a) | Pass |
+| UC02-TC02 | KF02 | Alternatif 1 — Kuota lokal tidak cukup (N15) | Simulasikan estimasi kuota situs melalui `navigator.storage.estimate()`, lalu pilih PNG di I-12 | Sisa estimasi 5 byte, berkas lebih besar | Pesan kegagalan tampil sebelum unggah dan tombol Lanjut tetap nonaktif | Pesan Ruang penyimpanan lokal tidak cukup tampil. 0 POST media tercatat dan tombol Lanjut nonaktif (BUKTI-24b) | Pass |
+| UC02-TC03 | KF02 | Alternatif 2 — Antrean saat offline (N5) | Putuskan koneksi browser setelah I-12 terbuka, pilih PNG, lalu sambungkan kembali pada tab yang sama | Satu PNG sintetis dan perubahan jaringan offline → online | File menunggu di memori tab, Lanjut tertahan. Unggah dimulai saat koneksi kembali | UI menampilkan Menunggu koneksi dan Lanjut nonaktif. POST media tercatat 0 saat offline dan 1 setelah online. Status berubah menjadi Berhasil diunggah (BUKTI-24c–d) | Pass |
 
 
 ### 4.4.3 UC03 Memverifikasi Laporan ReportIt
@@ -693,6 +731,29 @@ Tabel 4.4.3. Hasil Pengujian UC03
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | UC03-TC01 | KF05 | Normal | 1. Login sebagai Operator.<br>2. Pada I-07, pastikan tab ReportIt aktif.<br>3. Klik kartu laporan "Sampah plastik mengapung di Pantai Ancol timur".<br>4. Periksa detail di I-08.<br>5. Pilih poin, isi nama lokasi, klik "Setujui".<br>6. Login sebagai Masyarakat dan buka menu Lokasi (I-09). | Email: `operator@soclean.test`<br>Password: `soclean123`<br>Poin: 100<br>Nama lokasi: "Pantai Ancol Timur" | Setelah login, Operator langsung diarahkan ke I-07 berisi laporan menunggu. I-08 menampilkan judul, lokasi, koordinat, waktu WIB, sumber, jenis sampah, dan foto bukti beserta tombol Setujui/Tolak. Setelah disetujui muncul pesan "Laporan disetujui. Lokasi baru ditambahkan ke daftar CleanIt.", tombol dinonaktifkan, dan laporan hilang dari daftar menunggu. "Pantai Ancol Timur" (100 poin) tampil di I-09 | Setelah login, Operator langsung diarahkan ke I-07 yang berisi 3 laporan ReportIt menunggu. I-08 menampilkan judul, lokasi, koordinat, waktu WIB, sumber, jenis sampah, pelapor, dan 2 foto bukti beserta tombol Setujui/Tolak. Setelah disetujui muncul pesan "Laporan disetujui. Lokasi baru ditambahkan ke daftar CleanIt.", tombol Setujui/Tolak nonaktif, dan daftar menunggu menjadi 2. "Pantai Ancol Timur" (+100 poin) tampil di I-09, sesuai hasil yang diharapkan | *Pass* |
 | UC03-TC02 | KF05 | Alternatif 1: Laporan tidak valid | 1. Login sebagai Operator.<br>2. Pada I-07 tab ReportIt, klik kartu "Ban bekas dan plastik di tepi Cikapundung".<br>3. Klik "Tolak", isi alasan, lalu konfirmasi.<br>4. Login sebagai pelapor, buka Profil lalu menu Lokasi. | Email Operator: `operator@soclean.test`<br>Email pelapor: `budi@soclean.test`<br>Password: `soclean123`<br>Alasan: "Foto tidak menunjukkan area perairan" | Muncul pesan "Laporan ditolak. Pelapor akan menerima notifikasi."; laporan hilang dari daftar menunggu. Profil pelapor menampilkan notifikasi "Laporan Anda ditolak Operator." beserta alasannya. Lokasi tersebut tidak muncul di I-09 | Muncul pesan "Laporan ditolak. Pelapor akan menerima notifikasi." dan daftar menunggu menjadi 1. Profil Budi menampilkan notifikasi "Laporan Anda ditolak Operator." dengan alasan "Foto tidak menunjukkan area perairan". Lokasi tersebut tidak muncul di I-09, sesuai hasil yang diharapkan | *Pass* |
+
+### 4.4.4 UC04 Melihat Daftar Lokasi Pencemaran
+
+**ID Use Case:** UC04  
+**Nama Use Case:** Melihat Daftar Lokasi Pencemaran (CleanIt)  
+Tabel 4.4.4. Hasil Pengujian UC04
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC04-TC01 | KF06, KF07 | Normal | Pilih CleanIt dari Beranda. Periksa urutan Terdekat, buka detail Teras Cikapundung, pilih Bersihkan, dan lanjutkan dari modal | Tiga lokasi `TERCEMAR` hasil fixture BE-17, GPS simulasi `(-6.886, 107.6065)`, detail lokasi 32 dengan foto laporan asal | Daftar diurutkan menurut jarak. Detail menampilkan lokasi, waktu kejadian, sumber, status/poin, dan bukti. Konfirmasi membuka form lokasi yang dipilih tanpa POST | Urutan kartu `[32, 31, 33]` dengan jarak pertama 111 m. Info laporan asal dan foto tampil. Konfirmasi membuka `/cleanit/32` dengan 0 POST media/laporan (BUKTI-26a–c) | Pass |
+| UC04-TC02 | KF06 | Alternatif — Daftar lokasi kosong | Buka `/lokasi` dengan respons sukses kosong, lalu pilih Buat Laporan ReportIt | `GET /api/lokasi` merespons `{ data: [] }` | I-10 menampilkan pesan daftar kosong serta tautan ReportIt | Badge menampilkan 0 lokasi menunggu, pesan Belum terdapat lokasi pencemaran tampil, dan CTA membuka `/reportit` (BUKTI-26d) | Pass |
+
+### 4.4.5 UC05 Mengirimkan Bukti Pembersihan
+
+**ID Use Case:** UC05  
+**Nama Use Case:** Mengirimkan Bukti Pembersihan (CleanIt)  
+
+Tabel 4.4.5. Hasil Pengujian UC05
+
+| ID Pengujian | ID KF | Skenario | Prosedur Pengujian | Masukan | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| UC05-TC01 | KF08 | Normal | Buka form dari konfirmasi Bersihkan pada detail lokasi. Isi waktu, unggah bukti, tinjau, lalu kirim | Lokasi 32, waktu kejadian asal 10 November 2026 pukul 09.15 WIB, waktu pembersihan 11 November 2026 pukul 11.30 WIB, satu PNG | Nama lokasi tetap dan judul awal mengikuti K7. Satu POST `CLEANIT` membawa `lokasiId`, judul, waktu UTC, serta ID media. Sukses menampilkan ID dan status menunggu, lalu menghapus draf terkait | Judul awal Pembersihan Teras Cikapundung. Fixture menerima satu payload `CLEANIT` dengan `lokasiId: 32`, `waktu: 2026-11-11T04:30:00.000Z`, dan satu ID media. UI menampilkan `RPT-0417 · Menunggu pemeriksaan` dan draf lokasi 32 terhapus (BUKTI-27a–b) | Pass |
+| UC05-TC02 | KF08 | Alternatif — Bukti tidak dapat dikirim | Coba lanjut dengan waktu sebelum laporan asal. Setelah waktu diperbaiki, pilih file terlalu besar. Ganti dengan PNG valid, lalu kirim ketika fixture menjawab konflik | Pembersihan 10 November 2026 pukul 09.14 WIB, file 20.971.521 byte, lalu `409 CLEANIT_SUDAH_MENUNGGU` | Validasi menahan waktu dan file. Konflik menampilkan pesan dan jalan kembali ke daftar. Isian, bukti, dan draf tetap ada | Waktu ditolak di I-11. File besar ditolak dengan 0 POST media pada upaya itu. Sesudah perbaikan, POST berikutnya mendapat 409, pesan laporan CleanIt menunggu tampil, I-13 dan bukti tetap terlihat, serta draf tidak terhapus (BUKTI-27c–e) | Pass |
 
 ### 4.4.6 UC06 Memverifikasi Laporan Pembersihan
 
@@ -778,6 +839,9 @@ Tabel 4.6. Bukti Hasil Pengujian
 
 | ID Pengujian | Bukti Hasil Pengujian |
 | :--- | :--- |
+| C01-UT01 – C01-UT08 (BUKTI-01) | ![BUKTI-01](assets/BUKTI-01a.png) |
+| C01-UT01 – C01-UT08 (BUKTI-01) | ![BUKTI-01](assets/BUKTI-01b.png) |
+| C07-UT01 – C07-UT03 (BUKTI-08) | ![BUKTI-08](assets/BUKTI-08.png) |
 | C08-UT01 – C08-UT03 (BUKTI-09) | ![BUKTI-09](assets/BUKTI-09.png) |
 | UC07-TC01 – UC07-TC02 (BUKTI-29) | ![BUKTI-29a](assets/BUKTI-29a.jpeg)<br>![BUKTI-29b](assets/BUKTI-29b.jpeg) |
 | KNF07-TC01 (BUKTI-38) | ![BUKTI-38a](assets/BUKTI-38a.png)<br>![BUKTI-38b](assets/BUKTI-38b.png)<br>![BUKTI-38c](assets/BUKTI-38c.png)<br>![BUKTI-38d](assets/BUKTI-38d.png) |
@@ -786,11 +850,16 @@ Tabel 4.6. Bukti Hasil Pengujian
 | C10-UT01 – C10-UT03 (BUKTI-14) | ![BUKTI-14](assets/BUKTI-14.png) |
 | C12-UT01 – C12-UT05 (BUKTI-16) | ![BUKTI-16](assets/BUKTI-16.png) |
 | C14-UT01 – C14-UT05 (BUKTI-18) | ![BUKTI-18](assets/BUKTI-05-18.png) |
+| UC01-TC01 – UC01-TC03 (BUKTI-23) | ![Tinjauan](assets/BUKTI-23a.png)<br>![Sukses kirim](assets/BUKTI-23b.png)<br>![Waktu tidak valid](assets/BUKTI-23c.png)<br>![Judul kosong](assets/BUKTI-23d.png) |
+| UC02-TC01 – UC02-TC03 (BUKTI-24) | ![Pratinjau hasil unggah](assets/BUKTI-24a.png)<br>![Kuota kurang](assets/BUKTI-24b.png)<br>![Antrean offline](assets/BUKTI-24c.png)<br>![Unggah setelah online](assets/BUKTI-24d.png) |
 | UC03-TC01 – UC03-TC02 (BUKTI-25) | ![BUKTI-25a](assets/BUKTI-25a.png)<br>![BUKTI-25b](assets/BUKTI-25b.png)<br>![BUKTI-25c](assets/BUKTI-25c.png)<br>![BUKTI-25d](assets/BUKTI-25d.png)<br>![BUKTI-25e](assets/BUKTI-25e.png)<br>![BUKTI-25f](assets/BUKTI-25f.png)<br>![BUKTI-25g](assets/BUKTI-25g.png)<br>![BUKTI-25h](assets/BUKTI-25h.png) |
+| UC04-TC01 – UC04-TC02 (BUKTI-26) | ![Daftar Terdekat](assets/BUKTI-26a.png)<br>![detail lokasi](assets/BUKTI-26b.png)<br> ![konfirmasi Bersihkan](assets/BUKTI-26c.png)<br> ![daftar kosong](assets/BUKTI-26d.png) |
+| UC05-TC01 – UC05-TC02 (BUKTI-27) | ![Tinjauan](assets/BUKTI-27a.png)<br>![Sukses kirim](assets/BUKTI-27b.png)<br>![Waktu sebelum kejadian asal](assets/BUKTI-27c.png)<br>![Bukti terlalu besar](assets/BUKTI-27d.png)<br>![Konflik CleanIt menunggu](assets/BUKTI-27e.png) |
 | UC06-TC01 – UC06-TC02 (BUKTI-28) | ![BUKTI-28a](assets/BUKTI-28a.png)<br>![BUKTI-28b](assets/BUKTI-28b.png)<br>![BUKTI-28c](assets/BUKTI-28c.png)<br>![BUKTI-28d](assets/BUKTI-28d.png)<br>![BUKTI-28e](assets/BUKTI-28e.png)<br>![BUKTI-28f](assets/BUKTI-28f.png)<br>![BUKTI-28g](assets/BUKTI-28g.png)<br>![BUKTI-28h](assets/BUKTI-28h.png) |
 | UC08-TC01 – UC08-TC02 (BUKTI-30) | ![BUKTI-30a](assets/BUKTI-30a.png)<br>![BUKTI-30b](assets/BUKTI-30b.png)<br>![BUKTI-30c](assets/BUKTI-30c.png) |
 | UC09-TC01 – UC09-TC02 (BUKTI-31) | ![BUKTI-31a](assets/BUKTI-31a.png)<br>![BUKTI-31b](assets/BUKTI-31b.png)<br>![BUKTI-31c](assets/BUKTI-31c.png)<br>![BUKTI-31d](assets/BUKTI-31d.png)<br>![BUKTI-31e](assets/BUKTI-31e.png) |
 | KNF03-TC01 (BUKTI-34) | ![BUKTI-34a](assets/BUKTI-34a.png)<br>![BUKTI-34b](assets/BUKTI-34b.png)<br>![BUKTI-34c](assets/BUKTI-34c.png)<br>![BUKTI-34d](assets/BUKTI-34d.png) |
+| Coverage C01 (BUKTI-39) | ![BUKTI-39](assets/BUKTI-39.png) |
 | Coverage C04 (BUKTI-43) | ![BUKTI-43a](assets/BUKTI-43-50-A.png)<br>![BUKTI-43b](assets/BUKTI-43-50-B.png) |
 | Coverage C12 (BUKTI-48) | ![BUKTI-48](assets/BUKTI-48.png) |
 | Coverage C14 (BUKTI-50) | ![BUKTI-50a](assets/BUKTI-43-50-A.png)<br>![BUKTI-50b](assets/BUKTI-43-50-B.png) |
